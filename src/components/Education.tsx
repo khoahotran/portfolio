@@ -1,42 +1,15 @@
 import { GraduationCap } from 'lucide-react';
-
-interface EducationItem {
-  degree: string;
-  institution: string;
-  location: string;
-  period: string;
-  highlights: string[];
-}
-
-const education: EducationItem[] = [
-  {
-    degree: 'Bachelor of Computer Science',
-    institution: 'Ho Chi Minh City University of Technology (HCMUT)',
-    location: 'Ho Chi Minh City, Vietnam',
-    period: 'Dec 2022 - Jun 2026 (Expected)',
-    highlights: [
-      'CGPA: 3.8/4.0',
-      'School awards: All-round Excellent Student Title 2023-2024 and 2024-2025',
-    ],
-  },
-  {
-    degree: 'Master of Computer Science',
-    institution: 'Ho Chi Minh City University of Technology (HCMUT)',
-    location: 'Ho Chi Minh City, Vietnam',
-    period: 'Jan 2026 - Dec 2027 (Expected)',
-    highlights: [],
-  },
-];
+import { educationData } from '../data/portfolioData';
 
 export default function Education() {
   return (
-    <section className="py-24 px-6 bg-white border-t border-slate-50">
+    <section id="education" className="py-24 px-6 bg-white">
       <div className="max-w-4xl mx-auto">
         <h2 className="text-sm uppercase tracking-widest text-teal-600 mb-12 font-medium italic">
-          / Education
+          {educationData.title}
         </h2>
         <div className="space-y-8">
-          {education.map((edu, index) => (
+          {educationData.items.map((edu, index) => (
             <div
               key={index}
               className="group rounded-xl border border-slate-100 p-8 hover:border-teal-200 transition-colors bg-slate-50/50"
@@ -79,3 +52,4 @@ export default function Education() {
     </section>
   );
 }
+

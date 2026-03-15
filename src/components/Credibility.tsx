@@ -1,18 +1,8 @@
 import { Github, PenSquare, Star } from 'lucide-react';
-
-const oss = [
-  { name: 'open-kafka-tools', stars: '1.2k⭐', role: 'Author', focus: 'Kafka consumer lag tooling + chaos scripts' },
-  { name: 'otel-lambda-layer', stars: '740⭐', role: 'Maintainer', focus: 'Serverless OTel distro with batteries-included exporters' },
-  { name: 'infra-runbooks', stars: '320⭐', role: 'Curator', focus: 'Incident playbooks and templates for SLO programs' },
-];
-
-const writing = [
-  { title: 'Designing multi-region payments without global locks', time: '8 min', takeaway: 'How to keep idempotency without sacrificing latency.' },
-  { title: 'Incident drills that actually work', time: '6 min', takeaway: 'Burn-rate alerts, roles, and fast comms beats big dashboards.' },
-  { title: 'Sampling strategies for telemetry pipelines', time: '7 min', takeaway: 'Adaptive sampling while preserving rare error signals.' },
-];
+import { credibilityData } from '../data/portfolioData';
 
 export default function Credibility() {
+  const { oss, writing } = credibilityData;
   return (
     <section className="py-24 px-6 bg-white">
       <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10">
@@ -57,3 +47,4 @@ export default function Credibility() {
     </section>
   );
 }
+

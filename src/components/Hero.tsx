@@ -1,4 +1,5 @@
 import { ChevronDown, Github, Linkedin, Mail } from 'lucide-react';
+import { heroData } from '../data/portfolioData';
 
 export default function Hero() {
   const scrollToContent = () => {
@@ -11,28 +12,23 @@ export default function Hero() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(20,184,166,0.05),transparent_25%),radial-gradient(circle_at_80%_80%,rgba(14,165,233,0.05),transparent_25%)]" />
       <div className="relative text-center px-6 max-w-5xl mx-auto space-y-10">
         <div className="space-y-4 animate-fade-in">
-          <p className="text-sm uppercase tracking-[0.35em] text-teal-600 font-medium">Software Developer</p>
+          <p className="text-sm uppercase tracking-[0.35em] text-teal-600 font-medium">{heroData.role}</p>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-slate-900">
-            Tran Nguyen Anh Khoa
+            {heroData.name}
           </h1>
           <p className="text-xl md:text-2xl text-slate-600 font-light max-w-3xl mx-auto">
-            Architecting robust backend services and high-performance full-stack solutions with NestJS and Firebase.
+            {heroData.tagline}
           </p>
-          <p className="text-sm text-slate-500">Ho Chi Minh City, Vietnam</p>
+          <p className="text-sm text-slate-500">{heroData.location}</p>
           <div className="flex items-center justify-center gap-6 pt-4 text-slate-400">
-            <a href="mailto:trannguyenanhkhoa0104@gmail.com" className="hover:text-teal-600 transition-colors"><Mail size={24} /></a>
-            <a href="https://github.com/khoahotran" target="_blank" rel="noopener noreferrer" className="hover:text-teal-600 transition-colors"><Github size={24} /></a>
-            <a href="https://linkedin.com/in/khoahotran" target="_blank" rel="noopener noreferrer" className="hover:text-teal-600 transition-colors"><Linkedin size={24} /></a>
+            <a href={`mailto:${heroData.email}`} className="hover:text-teal-600 transition-colors"><Mail size={24} /></a>
+            <a href={heroData.github} target="_blank" rel="noopener noreferrer" className="hover:text-teal-600 transition-colors"><Github size={24} /></a>
+            <a href={heroData.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-teal-600 transition-colors"><Linkedin size={24} /></a>
           </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-left">
-          {[
-            { label: 'Latency', value: '150 - 300ms' },
-            { label: 'Scale', value: '1.5k users/min' },
-            { label: 'Transaction Error', value: '< 1%' },
-            { label: 'Response Time', value: '-20-30%' },
-          ].map((stat, index) => (
+          {heroData.stats.map((stat, index) => (
             <div
               key={index}
               className="rounded-2xl border border-slate-100 bg-slate-50/50 px-4 py-3 backdrop-blur-sm"

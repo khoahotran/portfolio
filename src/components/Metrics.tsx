@@ -1,11 +1,4 @@
-const metrics = [
-  { label: 'Store lookup latency', value: '150 - 300 ms', detail: 'SeensioGO (Algolia geo-search)' },
-  { label: 'Consistency errors', value: '< 1%', detail: 'SeensioGO transactions' },
-  { label: 'API response', value: '~20 - 30% faster', detail: 'SeensioGO caching' },
-  { label: 'Quest load', value: '500 - 1,500 users/min', detail: 'Jujuja daily quest jobs' },
-  { label: 'Reporting APIs', value: '5 - 7 s', detail: 'Jujuja owner reports' },
-  { label: 'CRUD latency', value: '< 200 ms', detail: 'Uynex common operations' },
-];
+import { metricsData as metrics } from '../data/portfolioData';
 
 export default function Metrics() {
   return (

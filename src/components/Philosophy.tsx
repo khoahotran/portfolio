@@ -1,21 +1,4 @@
-const pillars = [
-  {
-    title: 'Reliability > features',
-    detail: 'Ship with explicit SLOs, error budgets, and rollback paths before adding complexity.',
-  },
-  {
-    title: 'Make it observable',
-    detail: 'Traces + metrics + logs with shared context; every alert links to a runbook.',
-  },
-  {
-    title: 'Bias to idempotency',
-    detail: 'Design APIs and jobs to replay safely; simplify recovery and reduce page load.',
-  },
-  {
-    title: 'Cost-aware scaling',
-    detail: 'Measure cost per 1k requests and enforce guardrails alongside performance goals.',
-  },
-];
+import { philosophyData as pillars } from '../data/portfolioData';
 
 export default function Philosophy() {
   return (
@@ -37,3 +20,4 @@ export default function Philosophy() {
     </section>
   );
 }
+

@@ -1,37 +1,5 @@
 import { Briefcase } from 'lucide-react';
-
-interface ExperienceItem {
-  title: string;
-  company: string;
-  location: string;
-  period: string;
-  description: string[];
-  impact: string[];
-}
-
-const experiences: ExperienceItem[] = [
-  {
-    title: 'Software Developer (Intern → Part-time → Full-time)',
-    company: 'JK Technologies',
-    location: 'Ho Chi Minh City, Vietnam',
-    period: 'Jun 2025 - Present',
-    description: [
-      'SeensioGO: Implemented NestJS + Firebase Functions backend for store management and Sio in-app currency flows.',
-      'SeensioGO: Added Algolia geo-search for store discovery; built audit logging and transaction tracking.',
-      'SeensioGO: Introduced caching for frequently accessed store data; built admin dashboard pages in Next.js/React.',
-      'Jujuja: Built store onboarding with multi-channel registration and approval workflows.',
-      'Jujuja: Implemented daily quest async jobs and j-point loyalty system with atomic transactions.',
-      'Jujuja: Developed owner reporting APIs with Excel export and Algolia geo-search in Ionic app.',
-    ],
-    impact: [
-      'Store lookup latency: 150-300 ms (Algolia)',
-      'Transaction consistency errors: <1%',
-      'API response improvement: ~20-30% via caching',
-      'Daily quest load: ~500-1,500 users/min during runs',
-      'Reporting APIs: 5-7s responses',
-    ],
-  },
-];
+import { experienceData as experiences } from '../data/portfolioData';
 
 export default function Experience() {
   return (

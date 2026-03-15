@@ -1,25 +1,5 @@
 import { ArrowRight, Shield, Workflow } from 'lucide-react';
-
-const diagrams = [
-  {
-    title: 'SeensioGO',
-    description: 'NestJS services on Firebase Functions; Firestore + Algolia geo-search; caching layer; audit logging for transactions.',
-    mode: 'Backend + search',
-    link: 'https://apps.apple.com/app/seensiogo/id6474233078',
-  },
-  {
-    title: 'Jujuja',
-    description: 'NestJS/Firebase backend with async quest jobs, Algolia for store discovery, Twilio integration; Angular/Ionic client.',
-    mode: 'Async jobs + mobile',
-    link: 'https://apps.apple.com/app/jujuja/id6553972212',
-  },
-  {
-    title: 'Uynex',
-    description: 'NestJS REST API with modular services, MongoDB data layer, cookie-session auth; ReactJS + shadcn/ui frontend.',
-    mode: 'Full-stack web',
-    link: 'https://github.com/MinhPham131204/expense_management',
-  },
-];
+import { architectureData as diagrams } from '../data/portfolioData';
 
 export default function Architecture() {
   return (

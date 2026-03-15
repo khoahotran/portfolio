@@ -1,34 +1,4 @@
-interface SkillCategory {
-  category: string;
-  skills: string[];
-}
-
-const skillCategories: SkillCategory[] = [
-  {
-    category: 'Programming',
-    skills: ['HTML/CSS/JavaScript/TypeScript', 'Python', 'Go', 'SQL'],
-  },
-  {
-    category: 'Backend',
-    skills: ['NestJS', 'NodeJS', 'Firebase Functions', 'Firestore', 'REST APIs'],
-  },
-  {
-    category: 'Frontend',
-    skills: ['ReactJS', 'NextJS', 'Angular', 'Ionic', 'TailwindCSS'],
-  },
-  {
-    category: 'Database',
-    skills: ['PostgreSQL', 'MongoDB', 'Firebase/Firestore'],
-  },
-  {
-    category: 'Search & Cache',
-    skills: ['Algolia', 'In-memory caching'],
-  },
-  {
-    category: 'Infra & Tools',
-    skills: ['Docker', 'Git', 'GCP', 'Postman', 'Figma'],
-  },
-];
+import { skillCategoriesData as skillCategories } from '../data/portfolioData';
 
 export default function Skills() {
   return (

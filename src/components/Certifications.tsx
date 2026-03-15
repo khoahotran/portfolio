@@ -1,19 +1,5 @@
 import { Award } from 'lucide-react';
-
-interface Certification {
-  name: string;
-  issuer: string;
-  date: string;
-  credentialId?: string;
-}
-
-const certifications: Certification[] = [
-  {
-    name: 'TOEIC Listening & Reading',
-    issuer: 'ETS',
-    date: 'Score: 730/990',
-  },
-];
+import { certificationsData as certifications } from '../data/portfolioData';
 
 export default function Certifications() {
   return (
@@ -38,11 +24,6 @@ export default function Certifications() {
                   </h3>
                   <p className="text-sm text-slate-600 mb-1">{cert.issuer}</p>
                   <p className="text-sm text-slate-500">{cert.date}</p>
-                  {cert.credentialId && (
-                    <p className="text-xs text-slate-400 mt-2">
-                      ID: {cert.credentialId}
-                    </p>
-                  )}
                 </div>
               </div>
             </div>
