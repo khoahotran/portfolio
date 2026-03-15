@@ -1,24 +1,43 @@
 export default function About() {
   return (
     <section id="about" className="py-24 px-6 bg-white">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-sm uppercase tracking-widest text-teal-600 mb-4 font-medium">
-          About
+      <div className="max-w-5xl mx-auto">
+        <h2 className="text-sm uppercase tracking-widest text-teal-600 mb-8 font-medium italic">
+          / Positioning
         </h2>
-        <p className="text-3xl md:text-4xl text-slate-800 font-light leading-relaxed mb-8">
-          I'm a passionate developer who transforms complex challenges into
-          intuitive, impactful digital experiences.
-        </p>
-        <div className="space-y-4 text-lg text-slate-600 leading-relaxed">
-          <p>
-            With a foundation in modern web technologies and a keen eye for design,
-            I specialize in building scalable applications that users love. My approach
-            combines technical excellence with empathy for the end user.
-          </p>
-          <p>
-            When I'm not coding, you'll find me exploring new technologies, contributing
-            to open source, or sharing knowledge with the developer community.
-          </p>
+        <div className="grid md:grid-cols-[2fr,1fr] gap-12 items-start">
+          <div>
+            <p className="text-3xl md:text-4xl text-slate-900 font-bold leading-tight mb-8">
+              Detail-oriented developer specializing in modern web and mobile technologies.
+            </p>
+            <div className="space-y-6 text-lg text-slate-600 leading-relaxed font-light">
+              <p>
+                I architect robust backend services, implement caching mechanisms, and deliver high-performance full-stack solutions with NestJS and Firebase.
+              </p>
+              <p>
+                Focus areas: NestJS backend services, Firebase Functions, Firestore, Algolia search, and React/Angular frontends.
+              </p>
+            </div>
+          </div>
+          <div className="rounded-xl border border-slate-100 bg-slate-50 p-8 space-y-6">
+            <div>
+              <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-4">Values</p>
+              <ul className="space-y-3 text-slate-700 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-teal-500 font-bold">01</span>
+                  <span>Modular, scalable backend services.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-teal-500 font-bold">02</span>
+                  <span>Fast, reliable APIs with caching and search.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-teal-500 font-bold">03</span>
+                  <span>Full-stack delivery across web and mobile clients.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </section>
