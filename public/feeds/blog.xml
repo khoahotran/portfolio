@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Khoa Tran Engineering Portfolio - blog</title>
+    <link>https://khoahotran.github.io/portfolio/blog</link>
+    <description>blog articles from Khoa Tran Engineering Portfolio.</description>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 21 Mar 2026 06:09:04 GMT</lastBuildDate>
+    <item>
+      <title>Architecture Breakdown: CQRS for Mid-size Products</title>
+      <link>https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>When CQRS helps, when it hurts, and the migration path for pragmatic teams.</description>
+    </item>
+    <item>
+      <title>Engineering Lessons from a Failed Rollout</title>
+      <link>https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>What a rollback taught us about blast-radius control and release safety.</description>
+    </item>
+    <item>
+      <title>System Design Notes: Idempotency</title>
+      <link>https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Practical patterns for making writes replay-safe under retries and partial failures.</description>
+    </item>
+  </channel>
+</rss>

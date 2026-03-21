@@ -1,0 +1,37 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "Khoa Tran Engineering Portfolio - experiments",
+  "home_page_url": "https://khoahotran.github.io/portfolio",
+  "feed_url": "https://khoahotran.github.io/portfolio/feeds/experiments.json",
+  "description": "experiments articles from Khoa Tran Engineering Portfolio.",
+  "icon": "https://khoahotran.github.io/portfolio/favicon.ico",
+  "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
+  "items": [
+    {
+      "id": "https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes",
+      "url": "https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes",
+      "title": "Queue vs Pub/Sub Comparison Notes",
+      "summary": "How delivery semantics and fan-out requirements influence architecture choice.",
+      "date_published": "2026-03-21T00:00:00.000Z",
+      "tags": [
+        "experiment",
+        "queue",
+        "pubsub"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/queue-vs-pub-sub-comparison-notes.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes",
+      "url": "https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes",
+      "title": "Throughput Simulation Notes",
+      "summary": "Experiment notes on balancing worker count and tail latency under failure pressure.",
+      "date_published": "2026-03-21T00:00:00.000Z",
+      "tags": [
+        "experiment",
+        "throughput",
+        "capacity"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/throughput-simulation-notes.svg"
+    }
+  ]
+}

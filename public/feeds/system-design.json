@@ -1,0 +1,37 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "Khoa Tran Engineering Portfolio - system-design",
+  "home_page_url": "https://khoahotran.github.io/portfolio",
+  "feed_url": "https://khoahotran.github.io/portfolio/feeds/system-design.json",
+  "description": "system-design articles from Khoa Tran Engineering Portfolio.",
+  "icon": "https://khoahotran.github.io/portfolio/favicon.ico",
+  "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
+  "items": [
+    {
+      "id": "https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture",
+      "url": "https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture",
+      "title": "Building an Event-Driven Architecture",
+      "summary": "A practical blueprint for introducing domain events without losing delivery guarantees.",
+      "date_published": "2026-03-21T00:00:00.000Z",
+      "tags": [
+        "event-driven",
+        "architecture",
+        "messaging"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/building-an-event-driven-architecture.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/system-design/system-design-trade-offs-in-practice",
+      "url": "https://khoahotran.github.io/portfolio/system-design/system-design-trade-offs-in-practice",
+      "title": "System Design Trade-offs in Practice",
+      "summary": "A framework to communicate architecture trade-offs with product and operations teams.",
+      "date_published": "2026-03-21T00:00:00.000Z",
+      "tags": [
+        "trade-offs",
+        "architecture",
+        "decision-making"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/system-design-trade-offs-in-practice.svg"
+    }
+  ]
+}

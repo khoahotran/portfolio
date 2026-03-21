@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Khoa Tran Engineering Portfolio - experiments</title>
+    <link>https://khoahotran.github.io/portfolio/experiments</link>
+    <description>experiments articles from Khoa Tran Engineering Portfolio.</description>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 21 Mar 2026 06:09:04 GMT</lastBuildDate>
+    <item>
+      <title>Queue vs Pub/Sub Comparison Notes</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>How delivery semantics and fan-out requirements influence architecture choice.</description>
+    </item>
+    <item>
+      <title>Throughput Simulation Notes</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Experiment notes on balancing worker count and tail latency under failure pressure.</description>
+    </item>
+  </channel>
+</rss>

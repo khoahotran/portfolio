@@ -1,0 +1,50 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "Khoa Tran Engineering Portfolio - blog",
+  "home_page_url": "https://khoahotran.github.io/portfolio",
+  "feed_url": "https://khoahotran.github.io/portfolio/feeds/blog.json",
+  "description": "blog articles from Khoa Tran Engineering Portfolio.",
+  "icon": "https://khoahotran.github.io/portfolio/favicon.ico",
+  "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
+  "items": [
+    {
+      "id": "https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products",
+      "url": "https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products",
+      "title": "Architecture Breakdown: CQRS for Mid-size Products",
+      "summary": "When CQRS helps, when it hurts, and the migration path for pragmatic teams.",
+      "date_published": "2026-03-21T00:00:00.000Z",
+      "tags": [
+        "cqrs",
+        "architecture",
+        "backend"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/architecture-breakdown-cqrs-for-mid-size-products.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout",
+      "url": "https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout",
+      "title": "Engineering Lessons from a Failed Rollout",
+      "summary": "What a rollback taught us about blast-radius control and release safety.",
+      "date_published": "2026-03-21T00:00:00.000Z",
+      "tags": [
+        "incident",
+        "release",
+        "lessons"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/engineering-lessons-from-a-failed-rollout.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency",
+      "url": "https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency",
+      "title": "System Design Notes: Idempotency",
+      "summary": "Practical patterns for making writes replay-safe under retries and partial failures.",
+      "date_published": "2026-03-21T00:00:00.000Z",
+      "tags": [
+        "idempotency",
+        "api",
+        "resilience"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/system-design-notes-idempotency.svg"
+    }
+  ]
+}

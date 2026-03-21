@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Khoa Tran Engineering Portfolio - system-design</title>
+    <link>https://khoahotran.github.io/portfolio/system-design</link>
+    <description>system-design articles from Khoa Tran Engineering Portfolio.</description>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 21 Mar 2026 06:09:04 GMT</lastBuildDate>
+    <item>
+      <title>Building an Event-Driven Architecture</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>A practical blueprint for introducing domain events without losing delivery guarantees.</description>
+    </item>
+    <item>
+      <title>System Design Trade-offs in Practice</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/system-design-trade-offs-in-practice</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/system-design-trade-offs-in-practice</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>A framework to communicate architecture trade-offs with product and operations teams.</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Khoa Tran Engineering Portfolio</title>
+    <link>https://khoahotran.github.io/portfolio</link>
+    <description>Case studies, system design notes, and interactive engineering experiments.</description>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 21 Mar 2026 06:09:04 GMT</lastBuildDate>
+    <item>
+      <title>Architecture Breakdown: CQRS for Mid-size Products</title>
+      <link>https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>When CQRS helps, when it hurts, and the migration path for pragmatic teams.</description>
+    </item>
+    <item>
+      <title>Engineering Lessons from a Failed Rollout</title>
+      <link>https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>What a rollback taught us about blast-radius control and release safety.</description>
+    </item>
+    <item>
+      <title>System Design Notes: Idempotency</title>
+      <link>https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Practical patterns for making writes replay-safe under retries and partial failures.</description>
+    </item>
+    <item>
+      <title>Designing a Permission System</title>
+      <link>https://khoahotran.github.io/portfolio/research/designing-a-permission-system</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/designing-a-permission-system</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>How to evolve from role checks to maintainable policy-based authorization.</description>
+    </item>
+    <item>
+      <title>Scaling Background Jobs</title>
+      <link>https://khoahotran.github.io/portfolio/research/scaling-background-jobs</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/scaling-background-jobs</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Operational patterns for scaling async jobs while keeping failure rates predictable.</description>
+    </item>
+    <item>
+      <title>Queue vs Pub/Sub Comparison Notes</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>How delivery semantics and fan-out requirements influence architecture choice.</description>
+    </item>
+    <item>
+      <title>Throughput Simulation Notes</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Experiment notes on balancing worker count and tail latency under failure pressure.</description>
+    </item>
+    <item>
+      <title>Building an Event-Driven Architecture</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>A practical blueprint for introducing domain events without losing delivery guarantees.</description>
+    </item>
+    <item>
+      <title>System Design Trade-offs in Practice</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/system-design-trade-offs-in-practice</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/system-design-trade-offs-in-practice</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>A framework to communicate architecture trade-offs with product and operations teams.</description>
+    </item>
+  </channel>
+</rss>

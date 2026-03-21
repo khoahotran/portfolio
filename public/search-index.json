@@ -1,0 +1,164 @@
+[
+  {
+    "title": "Architecture Breakdown: CQRS for Mid-size Products",
+    "date": "2026-03-21",
+    "tags": [
+      "cqrs",
+      "architecture",
+      "backend"
+    ],
+    "summary": "When CQRS helps, when it hurts, and the migration path for pragmatic teams.",
+    "reading_time": "8 min read",
+    "draft": false,
+    "slug": "architecture-breakdown-cqrs-for-mid-size-products",
+    "collection": "blog",
+    "ogImage": "/og/architecture-breakdown-cqrs-for-mid-size-products.svg",
+    "readingMinutes": 1,
+    "readingText": "8 min read",
+    "searchableText": "Architecture Breakdown: CQRS for Mid-size Products When CQRS helps, when it hurts, and the migration path for pragmatic teams. cqrs architecture backend \n# Architecture Breakdown: CQRS for Mid-size Products\n\n## Context\n\nThe read model was overloaded with joins while write workflows became harder to evolve.\n\n## What changed\n\nWe split write commands from read projections for two bounded contexts only.\n\n## Trade-off\n\nClearer models and faster reads, but more moving pieces and operational tooling needs.\n\n## Lesson\n\nAdopt CQRS surgically, not as a default architecture slogan.\r\n"
+  },
+  {
+    "title": "Engineering Lessons from a Failed Rollout",
+    "date": "2026-03-21",
+    "tags": [
+      "incident",
+      "release",
+      "lessons"
+    ],
+    "summary": "What a rollback taught us about blast-radius control and release safety.",
+    "reading_time": "7 min read",
+    "draft": false,
+    "slug": "engineering-lessons-from-a-failed-rollout",
+    "collection": "blog",
+    "ogImage": "/og/engineering-lessons-from-a-failed-rollout.svg",
+    "readingMinutes": 1,
+    "readingText": "7 min read",
+    "searchableText": "Engineering Lessons from a Failed Rollout What a rollback taught us about blast-radius control and release safety. incident release lessons \n# Engineering Lessons from a Failed Rollout\n\n## Incident\n\nA feature flag was enabled globally without canary guardrails.\n\n## Impact\n\nOrder write latency spiked and downstream retries amplified load.\n\n## Fix\n\nWe introduced staged rollout, error budget gates, and automatic rollback criteria.\n\n## Lessons learned\n\nDeployment safety should be part of product velocity, not a separate concern.\r\n"
+  },
+  {
+    "title": "System Design Notes: Idempotency",
+    "date": "2026-03-21",
+    "tags": [
+      "idempotency",
+      "api",
+      "resilience"
+    ],
+    "summary": "Practical patterns for making writes replay-safe under retries and partial failures.",
+    "reading_time": "6 min read",
+    "draft": false,
+    "slug": "system-design-notes-idempotency",
+    "collection": "blog",
+    "ogImage": "/og/system-design-notes-idempotency.svg",
+    "readingMinutes": 1,
+    "readingText": "6 min read",
+    "searchableText": "System Design Notes: Idempotency Practical patterns for making writes replay-safe under retries and partial failures. idempotency api resilience \n# System Design Notes: Idempotency\n\n## Why this matters\n\nRetries are healthy, duplicate side effects are not.\n\n## Pattern\n\nUse an idempotency key scoped by actor and operation intent.\n\n## Edge case\n\nIf payloads differ under the same key, fail fast with explicit conflict details.\n\n## Rule of thumb\n\nMake idempotency persistence durable before issuing side effects.\r\n"
+  },
+  {
+    "title": "Designing a Permission System",
+    "date": "2026-03-21",
+    "tags": [
+      "authorization",
+      "rbac",
+      "policy"
+    ],
+    "summary": "How to evolve from role checks to maintainable policy-based authorization.",
+    "reading_time": "8 min read",
+    "draft": false,
+    "slug": "designing-a-permission-system",
+    "collection": "research",
+    "ogImage": "/og/designing-a-permission-system.svg",
+    "readingMinutes": 1,
+    "readingText": "8 min read",
+    "searchableText": "Designing a Permission System How to evolve from role checks to maintainable policy-based authorization. authorization rbac policy \n# Designing a Permission System\n\n## Problem\n\nRole-only checks became brittle when feature-level permissions expanded.\n\n## Context\n\nThe platform had admin, owner, and staff roles but needed granular scope control across resources.\n\n## Architecture\n\nWe introduced a policy engine with `subject`, `resource`, `action`, and `context` evaluation.\n\n### Policy Evaluation Flow\n\n1. Resolve principal role and org scope.\n2. Load policy rules for resource/action.\n3. Evaluate dynamic constraints (time, ownership, status).\n\n## Trade-offs\n\nPolicy engines add flexibility but can hide logic if rules are not observable.\n\n## Performance\n\nPolicy decision cache reduced authorization overhead to sub-5ms in hot paths.\n\n## Lessons learned\n\nLog every denied decision with rule id to keep support and debugging fast.\r\n"
+  },
+  {
+    "title": "Scaling Background Jobs",
+    "date": "2026-03-21",
+    "tags": [
+      "queues",
+      "workers",
+      "scaling"
+    ],
+    "summary": "Operational patterns for scaling async jobs while keeping failure rates predictable.",
+    "reading_time": "10 min read",
+    "draft": false,
+    "slug": "scaling-background-jobs",
+    "collection": "research",
+    "ogImage": "/og/scaling-background-jobs.svg",
+    "readingMinutes": 1,
+    "readingText": "10 min read",
+    "searchableText": "Scaling Background Jobs Operational patterns for scaling async jobs while keeping failure rates predictable. queues workers scaling \n# Scaling Background Jobs\n\n## Problem\n\nDaily quest jobs caused spikes and uneven queue lag during campaign windows.\n\n## Context\n\nTraffic increased in narrow time windows, making static worker counts expensive or insufficient.\n\n## Architecture\n\nA queue-driven worker pool with adaptive concurrency and dead-letter routing.\n\n### Worker Control Loop\n\n- Monitor queue lag and worker success rate.\n- Increase worker replicas when lag crosses threshold.\n- Reduce replicas when lag recovers and error budget depletes.\n\n## Trade-offs\n\nAutoscaling improves cost/performance but adds control-loop tuning complexity.\n\n## Performance\n\nQueue lag p95 improved from 18m to 3m after adaptive scaling.\n\n## Lessons learned\n\nRetries must be bounded and observable, otherwise queue depth lies.\r\n"
+  },
+  {
+    "title": "Queue vs Pub/Sub Comparison Notes",
+    "date": "2026-03-21",
+    "tags": [
+      "experiment",
+      "queue",
+      "pubsub"
+    ],
+    "summary": "How delivery semantics and fan-out requirements influence architecture choice.",
+    "reading_time": "6 min read",
+    "draft": false,
+    "slug": "queue-vs-pub-sub-comparison-notes",
+    "collection": "experiments",
+    "ogImage": "/og/queue-vs-pub-sub-comparison-notes.svg",
+    "readingMinutes": 1,
+    "readingText": "6 min read",
+    "searchableText": "Queue vs Pub/Sub Comparison Notes How delivery semantics and fan-out requirements influence architecture choice. experiment queue pubsub \n# Queue vs Pub/Sub Comparison Notes\n\n## Problem\n\nTeams often choose messaging patterns based on habit instead of requirement fit.\n\n## Context\n\nOne workload needed strict single-consumer ordering, another needed fan-out to many services.\n\n## Architecture\n\nQueue model for work distribution; pub/sub model for broadcast and independent consumption.\n\n## Trade-offs\n\nQueue simplifies ordering and backpressure. Pub/sub simplifies fan-out and team autonomy.\n\n## Performance\n\nQueue throughput remains stable under bounded consumer concurrency.\n\n## Lessons learned\n\nMatch messaging semantics to domain behavior first, then optimize implementation.\r\n"
+  },
+  {
+    "title": "Throughput Simulation Notes",
+    "date": "2026-03-21",
+    "tags": [
+      "experiment",
+      "throughput",
+      "capacity"
+    ],
+    "summary": "Experiment notes on balancing worker count and tail latency under failure pressure.",
+    "reading_time": "5 min read",
+    "draft": false,
+    "slug": "throughput-simulation-notes",
+    "collection": "experiments",
+    "ogImage": "/og/throughput-simulation-notes.svg",
+    "readingMinutes": 1,
+    "readingText": "5 min read",
+    "searchableText": "Throughput Simulation Notes Experiment notes on balancing worker count and tail latency under failure pressure. experiment throughput capacity \n# Throughput Simulation Notes\n\n## Problem\n\nCapacity planning often relies on averages and misses tail behavior.\n\n## Context\n\nWe needed a quick way to reason about throughput and p95 latency under varying worker counts.\n\n## Architecture\n\nA client-side simulator models workers, processing latency, and failure rate.\n\n## Trade-offs\n\nFast iteration and no backend dependency, but simplified assumptions.\n\n## Performance\n\nThe simulator computes instantly and supports interactive tuning.\n\n## Lessons learned\n\nSimple models are useful if assumptions are explicit and validated against production traces.\r\n"
+  },
+  {
+    "title": "Building an Event-Driven Architecture",
+    "date": "2026-03-21",
+    "tags": [
+      "event-driven",
+      "architecture",
+      "messaging"
+    ],
+    "summary": "A practical blueprint for introducing domain events without losing delivery guarantees.",
+    "reading_time": "9 min read",
+    "draft": false,
+    "slug": "building-an-event-driven-architecture",
+    "collection": "system-design",
+    "ogImage": "/og/building-an-event-driven-architecture.svg",
+    "readingMinutes": 1,
+    "readingText": "9 min read",
+    "searchableText": "Building an Event-Driven Architecture A practical blueprint for introducing domain events without losing delivery guarantees. event-driven architecture messaging \n# Building an Event-Driven Architecture\n\n## Problem\n\nOur monolith service was slowing feature delivery because each write operation triggered multiple synchronous side effects.\n\n## Context\n\nThe system handled store onboarding, inventory sync, and promotion updates in a single request lifecycle.\n\n## Architecture\n\nWe introduced an outbox table, then published domain events to a queue worker.\n\n### Event Sourcing Architecture\n\n- Command handler writes business state and outbox record atomically.\n- Publisher worker streams outbox rows to the event bus.\n- Downstream consumers are idempotent by `event_id`.\n\n## Trade-offs\n\n- Better decoupling and deployment speed.\n- Higher operational complexity around retries and dead-letter queues.\n\n## Performance\n\nMedian write latency dropped from 420ms to 180ms by removing synchronous side effects.\n\n## Lessons learned\n\nEvent contracts need ownership and versioning policy from day one.\r\n"
+  },
+  {
+    "title": "System Design Trade-offs in Practice",
+    "date": "2026-03-21",
+    "tags": [
+      "trade-offs",
+      "architecture",
+      "decision-making"
+    ],
+    "summary": "A framework to communicate architecture trade-offs with product and operations teams.",
+    "reading_time": "7 min read",
+    "draft": false,
+    "slug": "system-design-trade-offs-in-practice",
+    "collection": "system-design",
+    "ogImage": "/og/system-design-trade-offs-in-practice.svg",
+    "readingMinutes": 1,
+    "readingText": "7 min read",
+    "searchableText": "System Design Trade-offs in Practice A framework to communicate architecture trade-offs with product and operations teams. trade-offs architecture decision-making \n# System Design Trade-offs in Practice\n\n## Problem\n\nTeams were debating architecture decisions without shared evaluation criteria.\n\n## Context\n\nEach project had different priorities: latency, reliability, delivery speed, and operating cost.\n\n## Architecture\n\nWe used a four-axis scorecard: performance, reliability, complexity, and cost.\n\n## Trade-offs\n\nNo architecture choice was best on all axes; explicit scoring reduced opinion-based deadlocks.\n\n## Performance\n\nDecision cycle time for new architecture proposals dropped by 35%.\n\n## Lessons learned\n\nWhen trade-offs are explicit, cross-functional alignment is faster and calmer.\r\n"
+  }
+]
