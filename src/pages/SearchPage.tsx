@@ -1,0 +1,101 @@
+import Fuse from 'fuse.js';
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { getSearchIndex } from '../content-engine/content-service';
+import type { ContentCollection, SearchIndexItem } from '../content-engine/types';
+import { useSeo } from '../seo/useSeo';
+
+function routeByCollection(collection: ContentCollection): string {
+  if (collection === 'system-design') {
+    return '/system-design';
+  }
+
+  return `/${collection}`;
+}
+
+function SearchPage() {
+  const [params, setParams] = useSearchParams();
+  const [docs, setDocs] = useState<SearchIndexItem[]>([]);
+  const query = params.get('q') ?? '';
+
+  useSeo({
+    title: 'Search Engineering Articles',
+    description: 'Find system design notes, research write-ups, and experiment logs.',
+  });
+
+  useEffect(() => {
+    let active = true;
+
+    const load = async () => {
+      const nextDocs = await getSearchIndex();
+      if (active) {
+        setDocs(nextDocs);
+      }
+    };
+
+    void load();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const fuse = useMemo(
+    () =>
+      new Fuse(docs, {
+        includeScore: true,
+        threshold: 0.34,
+        minMatchCharLength: 2,
+        keys: [
+          { name: 'title', weight: 0.45 },
+          { name: 'summary', weight: 0.3 },
+          { name: 'tags', weight: 0.15 },
+          { name: 'searchableText', weight: 0.1 },
+        ],
+      }),
+    [docs]
+  );
+
+  const results = useMemo(() => {
+    if (!query.trim()) {
+      return docs.slice(0, 12);
+    }
+
+    return fuse.search(query).map((item) => item.item).slice(0, 20);
+  }, [docs, fuse, query]);
+
+  return (
+    <main className="mx-auto w-full max-w-5xl px-4 py-10 md:px-6">
+      <h1 className="text-3xl font-bold tracking-tight text-slate-900">Search Articles</h1>
+      <p className="mt-2 text-sm text-slate-600">Search across blog, research, system design, and experiment notes.</p>
+
+      <label className="mt-6 block">
+        <span className="sr-only">Search query</span>
+        <input
+          value={query}
+          onChange={(event) => setParams(event.target.value ? { q: event.target.value } : {})}
+          placeholder="Search architecture, retries, event-driven..."
+          className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none ring-teal-500 transition focus:ring"
+        />
+      </label>
+
+      <section className="mt-6 grid gap-4">
+        {results.map((item) => (
+          <article key={`${item.collection}-${item.slug}`} className="rounded-xl border border-slate-200 bg-white p-4">
+            <p className="text-[11px] uppercase tracking-wide text-slate-500">{item.collection}</p>
+            <h2 className="mt-1 text-lg font-semibold text-slate-900">
+              <Link to={`${routeByCollection(item.collection)}/${item.slug}`} className="hover:text-teal-600">
+                {item.title}
+              </Link>
+            </h2>
+            <p className="mt-2 text-sm text-slate-600">{item.summary}</p>
+          </article>
+        ))}
+
+        {results.length === 0 && <p className="text-sm text-slate-500">No articles matched your query.</p>}
+      </section>
+    </main>
+  );
+}
+
+export default SearchPage;
