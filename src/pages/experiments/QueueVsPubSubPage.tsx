@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useSeo } from '../../seo/useSeo';
 
 function QueueVsPubSubPage() {
@@ -21,6 +22,9 @@ function QueueVsPubSubPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 md:px-6">
+      <Link to="/experiments" className="mb-4 inline-block text-xs text-teal-600 hover:underline">
+        Back to Experiments
+      </Link>
       <h1 className="text-3xl font-bold text-slate-900">Queue vs Pub/Sub Comparison</h1>
       <p className="mt-2 text-sm text-slate-600">Compare delivery behavior under changing message rates.</p>
 

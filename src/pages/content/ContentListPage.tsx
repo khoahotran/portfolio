@@ -36,7 +36,6 @@ const ContentCard = memo(function ContentCard({
     <article className="rounded-2xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-teal-400">
       <div className="mb-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
         <span>{formatDate(item.date)}</span>
-        <span>•</span>
         <span>{item.readingText}</span>
       </div>
       <h2 className="text-xl font-semibold tracking-tight text-slate-900">
@@ -107,6 +106,9 @@ function ContentListPage({ collection, title, description }: Props) {
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-10 md:px-6 md:py-14">
+      <Link to="/" className="mb-4 inline-block text-xs text-teal-600 hover:underline">
+        Back to Portfolio
+      </Link>
       <section className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">{title}</h1>
         <p className="mt-3 max-w-2xl text-sm text-slate-600">{description}</p>
