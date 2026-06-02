@@ -31,6 +31,16 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://khoahotran.github.io/portfolio/system-design/atomic-financial-transactions-in-nosql</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://khoahotran.github.io/portfolio/system-design/designing-a-burst-traffic-async-job-pipeline</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

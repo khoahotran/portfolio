@@ -11,12 +11,14 @@
       "id": "https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products",
       "url": "https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products",
       "title": "Architecture Breakdown: CQRS for Mid-size Products",
-      "summary": "When CQRS helps, when it hurts, and the migration path for pragmatic teams.",
+      "summary": "A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
         "cqrs",
         "architecture",
-        "backend"
+        "backend",
+        "system-design",
+        "database"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/architecture-breakdown-cqrs-for-mid-size-products.svg"
     },
@@ -24,11 +26,13 @@
       "id": "https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout",
       "url": "https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout",
       "title": "Engineering Lessons from a Failed Rollout",
-      "summary": "What a rollback taught us about blast-radius control and release safety.",
+      "summary": "What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
-        "incident",
-        "release",
+        "incident-response",
+        "release-engineering",
+        "devops",
+        "sre",
         "lessons"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/engineering-lessons-from-a-failed-rollout.svg"
@@ -37,11 +41,12 @@
       "id": "https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency",
       "url": "https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency",
       "title": "System Design Notes: Idempotency",
-      "summary": "Practical patterns for making writes replay-safe under retries and partial failures.",
+      "summary": "Practical patterns for making API writes replay-safe under network retries and partial distributed failures.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
         "idempotency",
-        "api",
+        "api-design",
+        "distributed-systems",
         "resilience"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/system-design-notes-idempotency.svg"

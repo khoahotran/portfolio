@@ -5,20 +5,34 @@
     <link>https://khoahotran.github.io/portfolio/system-design</link>
     <description>system-design articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Sat, 21 Mar 2026 06:09:04 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 02 Jun 2026 18:52:26 GMT</lastBuildDate>
+    <item>
+      <title>Atomic Financial Transactions in a NoSQL World: Building the J-Point Loyalty Engine</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/atomic-financial-transactions-in-nosql</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/atomic-financial-transactions-in-nosql</guid>
+      <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
+      <description>Implementing virtual currency transactions on Firestore with &lt;1% consistency errors, covering atomic operation design and edge case handling.</description>
+    </item>
+    <item>
+      <title>Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/designing-a-burst-traffic-async-job-pipeline</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/designing-a-burst-traffic-async-job-pipeline</guid>
+      <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
+      <description>How we redesigned daily quest processing from synchronous handlers to a queue-driven worker pool that handles 1,500 concurrent users during campaign windows.</description>
+    </item>
     <item>
       <title>Building an Event-Driven Architecture</title>
       <link>https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture</guid>
       <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
-      <description>A practical blueprint for introducing domain events without losing delivery guarantees.</description>
+      <description>A practical blueprint for introducing domain events to untangle a monolith without losing delivery guarantees.</description>
     </item>
     <item>
       <title>System Design Trade-offs in Practice</title>
       <link>https://khoahotran.github.io/portfolio/system-design/system-design-trade-offs-in-practice</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/system-design-trade-offs-in-practice</guid>
       <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
-      <description>A framework to communicate architecture trade-offs with product and operations teams.</description>
+      <description>A structured framework to communicate architecture trade-offs with product, operations, and engineering teams.</description>
     </item>
   </channel>
 </rss>

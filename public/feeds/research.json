@@ -10,26 +10,30 @@
     {
       "id": "https://khoahotran.github.io/portfolio/research/designing-a-permission-system",
       "url": "https://khoahotran.github.io/portfolio/research/designing-a-permission-system",
-      "title": "Designing a Permission System",
-      "summary": "How to evolve from role checks to maintainable policy-based authorization.",
+      "title": "Designing a Permission System: Beyond Simple Roles",
+      "summary": "How to evolve from brittle role checks to a maintainable, high-performance policy-based authorization engine.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
         "authorization",
         "rbac",
-        "policy"
+        "security",
+        "policy-engine",
+        "architecture"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/designing-a-permission-system.svg"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/scaling-background-jobs",
       "url": "https://khoahotran.github.io/portfolio/research/scaling-background-jobs",
-      "title": "Scaling Background Jobs",
-      "summary": "Operational patterns for scaling async jobs while keeping failure rates predictable.",
+      "title": "Scaling Background Jobs: Adaptive Concurrency",
+      "summary": "Operational patterns and practical lessons for scaling asynchronous jobs while keeping failure rates and costs predictable.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
         "queues",
         "workers",
-        "scaling"
+        "scaling",
+        "backend",
+        "performance"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/scaling-background-jobs.svg"
     }

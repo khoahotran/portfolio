@@ -5,20 +5,20 @@
     <link>https://khoahotran.github.io/portfolio/research</link>
     <description>research articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Sat, 21 Mar 2026 06:09:04 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 02 Jun 2026 18:52:26 GMT</lastBuildDate>
     <item>
-      <title>Designing a Permission System</title>
+      <title>Designing a Permission System: Beyond Simple Roles</title>
       <link>https://khoahotran.github.io/portfolio/research/designing-a-permission-system</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/designing-a-permission-system</guid>
       <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
-      <description>How to evolve from role checks to maintainable policy-based authorization.</description>
+      <description>How to evolve from brittle role checks to a maintainable, high-performance policy-based authorization engine.</description>
     </item>
     <item>
-      <title>Scaling Background Jobs</title>
+      <title>Scaling Background Jobs: Adaptive Concurrency</title>
       <link>https://khoahotran.github.io/portfolio/research/scaling-background-jobs</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/scaling-background-jobs</guid>
       <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
-      <description>Operational patterns for scaling async jobs while keeping failure rates predictable.</description>
+      <description>Operational patterns and practical lessons for scaling asynchronous jobs while keeping failure rates and costs predictable.</description>
     </item>
   </channel>
 </rss>

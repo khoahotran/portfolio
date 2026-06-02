@@ -8,6 +8,6 @@
   </defs>
   <rect width="1200" height="630" fill="url(#bg)" />
   <text x="72" y="120" font-family="Inter, Arial, sans-serif" font-size="28" fill="#99f6e4" font-weight="600">Khoa Tran Engineering Portfolio</text>
-  <text x="72" y="260" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Queue vs Pub/Sub Comparison Notes</text>
-  <text x="72" y="350" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems.</text>
+  <text x="72" y="260" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System</text>
+  <text x="72" y="350" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">How we redesigned daily quest processing from synchronous handlers to a queue-driven worker pool that handles 1,500 concurrent users during campaign windows.</text>
 </svg>

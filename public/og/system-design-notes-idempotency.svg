@@ -9,5 +9,5 @@
   <rect width="1200" height="630" fill="url(#bg)" />
   <text x="72" y="120" font-family="Inter, Arial, sans-serif" font-size="28" fill="#99f6e4" font-weight="600">Khoa Tran Engineering Portfolio</text>
   <text x="72" y="260" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">System Design Notes: Idempotency</text>
-  <text x="72" y="350" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">Practical patterns for making writes replay-safe under retries and partial failures.</text>
+  <text x="72" y="350" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">Practical patterns for making API writes replay-safe under network retries and partial distributed failures.</text>
 </svg>
