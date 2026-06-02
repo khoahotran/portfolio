@@ -63,7 +63,7 @@ function ContentDetailPage({ collection }: Props) {
       mainEntityOfPage: window.location.href,
       author: {
         '@type': 'Person',
-        name: 'Anh Khoa Tran',
+        name: 'Tran Nguyen Anh Khoa',
       },
     };
   }, [detail]);
@@ -187,16 +187,15 @@ function ContentDetailPage({ collection }: Props) {
       <div className="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200">
         <div className="h-full bg-teal-500 transition-[width]" style={{ width: `${progress}%` }} />
       </div>
-      <div className="grid gap-8 md:grid-cols-[1fr_280px]">
+      <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]">
         <article id="article-content">
           <Link to={backRoute} className="mb-4 inline-block text-xs text-teal-600 hover:underline">
-            ? Back
+            Back
           </Link>
           <header className="mb-6 border-b border-slate-200 pb-6">
             <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">{detail.title}</h1>
             <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-500">
               <span>{formatDate(detail.date)}</span>
-              <span>•</span>
               <span>{detail.readingText}</span>
             </div>
             <p className="mt-3 text-sm text-slate-600">{detail.summary}</p>
