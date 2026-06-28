@@ -101,18 +101,29 @@ export default function Projects() {
                       </ul>
                     </div>
 
-                    <div className="mt-auto pt-6 border-t border-slate-50">
-                      <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-3">Stack</p>
-                      <div className="flex flex-wrap gap-2">
-                        {project.stack.map((tech, i) => (
-                          <span
-                            key={i}
-                            className="text-[10px] font-bold px-2 py-1 rounded-sm bg-slate-900 text-white flex items-center gap-2"
-                          >
-                            {tech}
-                          </span>
-                        ))}
+                    <div className="mt-auto pt-6 border-t border-slate-50 flex items-end justify-between">
+                      <div className="flex-1 pr-4">
+                        <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-3">Stack</p>
+                        <div className="flex flex-wrap gap-2">
+                          {project.stack.map((tech, i) => (
+                            <span
+                              key={i}
+                              className="text-[10px] font-bold px-2 py-1 rounded-sm bg-slate-900 text-white flex items-center gap-2"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
                       </div>
+                      
+                      {project.slug && (
+                        <a 
+                          href={`/projects/${project.slug}`}
+                          className="shrink-0 bg-teal-50 text-teal-700 hover:bg-teal-600 hover:text-white px-4 py-2 rounded-lg text-xs font-bold transition-colors border border-teal-100 hover:border-teal-600"
+                        >
+                          Read Case Study
+                        </a>
+                      )}
                     </div>
                   </div>
                 ))}

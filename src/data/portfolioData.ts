@@ -54,7 +54,24 @@ export const experienceData = [
   },
 ];
 
-export const caseStudiesData = [
+export interface Project {
+  title: string;
+  role: string;
+  scale: string;
+  section: string;
+  summary: string;
+  metrics: string[];
+  stack: string[];
+  architecture: string[];
+  links?: {
+    deck?: string;
+    github?: string;
+    live?: string;
+  };
+  slug?: string;
+}
+
+export const caseStudiesData: Project[] = [
   // ── Experience (Professional) ────────────────────────────────────────────
   {
     title: 'SeensioGO',
@@ -97,6 +114,7 @@ export const caseStudiesData = [
   // ── Personal Projects ────────────────────────────────────────────────────
   {
     title: 'Aegis',
+    slug: 'aegis',
     role: 'Author — Backend Engineer',
     scale: 'Personal Project',
     section: 'personal',
@@ -122,6 +140,7 @@ export const caseStudiesData = [
   },
   {
     title: 'Event-Driven Core Banking',
+    slug: 'core-banking',
     role: 'Author — Backend Engineer',
     scale: 'Personal Project',
     section: 'personal',
@@ -147,6 +166,7 @@ export const caseStudiesData = [
   },
   {
     title: 'QuantAlpha Lab (HFT)',
+    slug: 'quant-alpha',
     role: 'Contributor — Backend + ML',
     scale: 'Academic Research Platform',
     section: 'personal',
@@ -397,16 +417,25 @@ export const credibilityData = {
       title: 'Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System',
       time: '10 min',
       takeaway: 'How queue-driven workers handle 1,500 concurrent users and why synchronous handlers fail under burst.',
+      route: '/system-design/designing-a-burst-traffic-async-job-pipeline',
     },
     {
       title: 'Atomic Financial Transactions in a NoSQL World: The J-Point Loyalty Engine',
       time: '8 min',
       takeaway: 'Building <1% error-rate virtual currency on Firestore with atomic transactions and balance reconciliation.',
+      route: '/system-design/atomic-financial-transactions-in-nosql',
     },
     {
-      title: 'Event-Driven Architecture: The Outbox Pattern Deep Dive',
-      time: '9 min',
-      takeaway: 'Guarantee domain event delivery without distributed transactions using the transactional outbox.',
+      title: 'gRPC Service Mesh in Go: Designing the Aegis Auth Platform',
+      time: '12 min',
+      takeaway: 'Protobuf contracts, interceptor chains, OTel trace propagation, and Kafka audit logging across 4 microservices.',
+      route: '/blog/grpc-service-mesh-in-go-aegis-architecture',
+    },
+    {
+      title: 'Implementing the Saga Pattern for Distributed Money Transfers',
+      time: '11 min',
+      takeaway: 'Orchestrator-style saga state machine in Go — compensation flows, crash recovery, and the COMPENSATION_FAILED terminal state.',
+      route: '/system-design/implementing-the-saga-pattern-for-distributed-transfers',
     },
   ],
 };
