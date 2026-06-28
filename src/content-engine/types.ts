@@ -1,4 +1,4 @@
-export type ContentCollection = 'blog' | 'research' | 'experiments' | 'system-design';
+export type ContentCollection = 'blog' | 'research' | 'experiments' | 'system-design' | 'field-notes' | 'projects';
 
 export interface ContentFrontmatter {
   title: string;

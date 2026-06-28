@@ -174,3 +174,53 @@ body {
     transform: translateY(0);
   }
 }
+
+/* ── Mermaid diagram container ─────────────────────────────────────────── */
+
+.mermaid-diagram {
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 0.85rem;
+  background: rgb(248 250 252);
+  overflow-x: auto;
+  min-height: 48px;
+  /* Skeleton loading animation while mermaid.js is initializing */
+  background-image: linear-gradient(
+    90deg,
+    rgb(241 245 249) 25%,
+    rgb(226 232 240) 50%,
+    rgb(241 245 249) 75%
+  );
+  background-size: 200% 100%;
+  animation: mermaidSkeleton 1.4s ease infinite;
+}
+
+.mermaid-diagram.mermaid-rendered {
+  background-image: none;
+  background: rgb(248 250 252);
+  animation: none;
+  display: flex;
+  justify-content: center;
+}
+
+.mermaid-diagram.mermaid-rendered svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.mermaid-diagram .mermaid-error {
+  background: rgb(254 242 242);
+  border: 1px solid rgb(254 202 202);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 0.82rem;
+  color: rgb(153 27 27);
+  overflow-x: auto;
+}
+
+@keyframes mermaidSkeleton {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+

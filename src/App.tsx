@@ -4,6 +4,8 @@ import SiteHeader from './components/content/SiteHeader';
 import RouteVitalsTracker from './performance/RouteVitalsTracker';
 
 const PortfolioHome = lazy(() => import('./pages/PortfolioHome'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const KnowledgeGraphPage = lazy(() => import('./pages/KnowledgeGraphPage'));
 const ContentListPage = lazy(() => import('./pages/content/ContentListPage'));
 const ContentDetailPage = lazy(() => import('./pages/content/ContentDetailPage'));
 const SearchPage = lazy(() => import('./pages/SearchPage'));
@@ -11,6 +13,11 @@ const ThroughputSimulationPage = lazy(() => import('./pages/experiments/Throughp
 const RetryStrategyVisualizerPage = lazy(() => import('./pages/experiments/RetryStrategyVisualizerPage'));
 const FailureInjectionDemoPage = lazy(() => import('./pages/experiments/FailureInjectionDemoPage'));
 const QueueVsPubSubPage = lazy(() => import('./pages/experiments/QueueVsPubSubPage'));
+const SagaStateMachinePage = lazy(() => import('./pages/experiments/SagaStateMachinePage'));
+const EventSourcingReplayPage = lazy(() => import('./pages/experiments/EventSourcingReplayPage'));
+const RedisVsBullMQPage = lazy(() => import('./pages/experiments/RedisVsBullMQPage'));
+const GoVsTsConcurrencyPage = lazy(() => import('./pages/experiments/GoVsTsConcurrencyPage'));
+const DbEventReplayBenchmarkPage = lazy(() => import('./pages/experiments/DbEventReplayBenchmarkPage'));
 
 function LoadingFallback() {
   return <div className="mx-auto max-w-6xl px-4 py-16 text-sm text-slate-500">Loading page...</div>;
@@ -25,6 +32,8 @@ function App() {
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
             <Route path="/" element={<PortfolioHome />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/graph" element={<KnowledgeGraphPage />} />
             <Route
               path="/blog"
               element={
@@ -61,6 +70,11 @@ function App() {
             <Route path="/experiments/retry-strategy" element={<RetryStrategyVisualizerPage />} />
             <Route path="/experiments/failure-injection" element={<FailureInjectionDemoPage />} />
             <Route path="/experiments/queue-vs-pubsub" element={<QueueVsPubSubPage />} />
+            <Route path="/experiments/saga-state-machine" element={<SagaStateMachinePage />} />
+            <Route path="/experiments/event-sourcing-replay" element={<EventSourcingReplayPage />} />
+            <Route path="/experiments/redis-vs-bullmq" element={<RedisVsBullMQPage />} />
+            <Route path="/experiments/go-vs-ts-concurrency" element={<GoVsTsConcurrencyPage />} />
+            <Route path="/experiments/db-event-replay-benchmark" element={<DbEventReplayBenchmarkPage />} />
             <Route path="/experiments/:slug" element={<ContentDetailPage collection="experiments" />} />
             <Route
               path="/system-design"
@@ -73,6 +87,18 @@ function App() {
               }
             />
             <Route path="/system-design/:slug" element={<ContentDetailPage collection="system-design" />} />
+            <Route
+              path="/field-notes"
+              element={
+                <ContentListPage
+                  collection="field-notes"
+                  title="Field Notes"
+                  description="Short, opinionated notes on real engineering decisions — framework choices, language trade-offs, and hard-won lessons."
+                />
+              }
+            />
+            <Route path="/field-notes/:slug" element={<ContentDetailPage collection="field-notes" />} />
+            <Route path="/projects/:slug" element={<ContentDetailPage collection="projects" />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

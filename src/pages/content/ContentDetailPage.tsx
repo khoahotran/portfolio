@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { getContentDetail, prefetchNextArticle } from '../../content-engine/content-service';
-import type { ContentCollection, ContentDetail } from '../../content-engine/types';
+import { getContentDetail, getRelatedArticles, prefetchNextArticle } from '../../content-engine/content-service';
+import type { ContentCollection, ContentDetail, ContentIndexItem } from '../../content-engine/types';
 import { useSeo } from '../../seo/useSeo';
 
 interface Props {
@@ -13,6 +13,8 @@ const routeByCollection: Record<ContentCollection, string> = {
   research: '/research',
   experiments: '/experiments',
   'system-design': '/system-design',
+  'field-notes': '/field-notes',
+  projects: '/projects',
 };
 
 function formatDate(value: string): string {
@@ -44,8 +46,10 @@ function ContentDetailPage({ collection }: Props) {
   const { slug } = useParams();
   const location = useLocation();
   const [detail, setDetail] = useState<ContentDetail | null>(null);
+  const [related, setRelated] = useState<ContentIndexItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
+  const mermaidInitialized = useRef(false);
 
   const jsonLd = useMemo(() => {
     if (!detail) {
@@ -88,10 +92,12 @@ function ContentDetailPage({ collection }: Props) {
       const data = await getContentDetail(collection, slug);
       if (active) {
         setDetail(data);
-        setLoading(false);
         if (data) {
+          const relatedArticles = await getRelatedArticles(slug, data.tags, 3);
+          if (active) setRelated(relatedArticles);
           void prefetchNextArticle(collection, slug);
         }
+        setLoading(false);
       }
     };
 
@@ -165,6 +171,55 @@ function ContentDetailPage({ collection }: Props) {
     };
   }, [detail]);
 
+  // Render Mermaid diagrams after HTML content is injected into the DOM.
+  // Uses dynamic import so mermaid's large bundle is only loaded on article
+  // pages that actually contain diagrams.
+  useEffect(() => {
+    if (!detail) {
+      return;
+    }
+
+    const containers = document.querySelectorAll<HTMLElement>('.mermaid-diagram');
+    if (containers.length === 0) {
+      return;
+    }
+
+    // Prevent double-rendering on hot-reload in dev
+    mermaidInitialized.current = false;
+
+    void import('mermaid').then(({ default: mermaid }) => {
+      if (mermaidInitialized.current) {
+        return;
+      }
+      mermaidInitialized.current = true;
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'neutral',
+        fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif',
+        securityLevel: 'loose',
+        flowchart: { curve: 'basis' },
+      });
+
+      let counter = 0;
+      containers.forEach((container) => {
+        const source = container.getAttribute('data-diagram') ?? '';
+        if (!source.trim()) {
+          return;
+        }
+
+        const id = `mermaid-${Date.now()}-${counter++}`;
+        void mermaid.render(id, source).then(({ svg }) => {
+          container.innerHTML = svg;
+          container.classList.add('mermaid-rendered');
+        }).catch(() => {
+          // On parse error show the raw source in a code block
+          container.innerHTML = `<pre class="mermaid-error"><code>${source}</code></pre>`;
+        });
+      });
+    });
+  }, [detail]);
+
   const backRoute = useMemo(() => routeByCollection[collection], [collection]);
 
   if (loading) {
@@ -208,6 +263,32 @@ function ContentDetailPage({ collection }: Props) {
             </div>
           </header>
           <div className="markdown-body" dangerouslySetInnerHTML={{ __html: detail.html }} />
+          
+          {/* Related Articles Component */}
+          {related.length > 0 && (
+            <div className="mt-16 pt-8 border-t border-slate-200">
+              <h2 className="text-lg font-bold text-slate-900 mb-6 uppercase tracking-wider text-sm">Read Next</h2>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {related.map(item => (
+                  <Link 
+                    key={item.slug} 
+                    to={`/${item.collection}/${item.slug}`}
+                    className="group flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 hover:border-teal-500 hover:shadow-lg transition-all duration-300"
+                  >
+                    <div>
+                      <div className="text-[10px] uppercase tracking-widest text-teal-600 font-bold mb-2">{item.collection.replace('-', ' ')}</div>
+                      <h3 className="font-bold text-slate-900 group-hover:text-teal-700 transition-colors line-clamp-2">{item.title}</h3>
+                      <p className="mt-2 text-xs text-slate-500 line-clamp-2">{item.summary}</p>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400 font-medium">
+                      <span>{formatDate(item.date)}</span>
+                      <span>{item.readingText}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </article>
 
         <aside className="hidden md:block">

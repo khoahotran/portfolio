@@ -15,6 +15,8 @@ const routeByCollection: Record<ContentCollection, string> = {
   research: '/research',
   experiments: '/experiments',
   'system-design': '/system-design',
+  'field-notes': '/field-notes',
+  projects: '/projects',
 };
 
 function formatDate(value: string): string {
@@ -136,9 +138,8 @@ function ContentListPage({ collection, title, description }: Props) {
       <section className="mb-8 flex flex-wrap gap-2">
         <button
           type="button"
-          className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-            !selectedTag ? 'border-teal-500 bg-teal-500 text-white' : 'border-slate-300 text-slate-700'
-          }`}
+          className={`rounded-full border px-3 py-1 text-xs font-semibold ${!selectedTag ? 'border-teal-500 bg-teal-500 text-white' : 'border-slate-300 text-slate-700'
+            }`}
           onClick={() => setSearchParams(keyword ? { q: keyword } : {})}
         >
           All
@@ -147,9 +148,8 @@ function ContentListPage({ collection, title, description }: Props) {
           <button
             key={tag}
             type="button"
-            className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-              selectedTag === tag ? 'border-teal-500 bg-teal-500 text-white' : 'border-slate-300 text-slate-700'
-            }`}
+            className={`rounded-full border px-3 py-1 text-xs font-semibold ${selectedTag === tag ? 'border-teal-500 bg-teal-500 text-white' : 'border-slate-300 text-slate-700'
+              }`}
             onClick={() => setSearchParams(keyword ? { tag, q: keyword } : { tag })}
           >
             #{tag}

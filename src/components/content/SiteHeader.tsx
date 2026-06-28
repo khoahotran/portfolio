@@ -19,6 +19,12 @@ function SiteHeader() {
         </NavLink>
 
         <nav className="flex items-center gap-3 sm:gap-5">
+          <NavLink to="/about" className={navClass}>
+            About
+          </NavLink>
+          <NavLink to="/graph" className={navClass}>
+            Ecosystem
+          </NavLink>
           <NavLink to="/blog" className={navClass}>
             Blog
           </NavLink>
@@ -30,6 +36,9 @@ function SiteHeader() {
           </NavLink>
           <NavLink to="/system-design" className={navClass}>
             System Design
+          </NavLink>
+          <NavLink to="/field-notes" className={navClass}>
+            Field Notes
           </NavLink>
           <NavLink to="/search" className={navClass}>
             Search

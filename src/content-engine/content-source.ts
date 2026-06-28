@@ -1,6 +1,6 @@
 import type { ContentCollection } from './types';
 
-const markdownLoaders = import.meta.glob('../../content/{blog,research,experiments,system-design}/*.md', {
+const markdownLoaders = import.meta.glob('../../content/{blog,research,experiments,system-design,field-notes,projects}/*.md', {
   import: 'default',
   query: '?raw',
 }) as Record<string, () => Promise<string>>;
@@ -17,7 +17,7 @@ function slugify(value: string): string {
 }
 
 function parseCollection(filePath: string): ContentCollection | null {
-  const match = filePath.match(/\/content\/(blog|research|experiments|system-design)\//);
+  const match = filePath.match(/\/content\/(blog|research|experiments|system-design|field-notes|projects)\//);
   if (!match) {
     return null;
   }

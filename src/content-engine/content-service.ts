@@ -65,6 +65,48 @@ export async function getLatestContent(limit = 6): Promise<ContentIndexItem[]> {
   return items.filter(shouldInclude).slice(0, limit).map(toIndex);
 }
 
+export async function getRelatedArticles(
+  currentSlug: string,
+  tags: string[],
+  limit = 3
+): Promise<ContentIndexItem[]> {
+  const items = await loadContentIndex();
+  
+  // Exclude current article and only include published ones
+  const eligibleItems = items.filter(item => shouldInclude(item) && item.slug !== currentSlug);
+  
+  // Score based on matching tags
+  const scoredItems = eligibleItems.map(item => {
+    const matchCount = item.tags.filter(tag => tags.includes(tag)).length;
+    return { item, score: matchCount };
+  });
+  
+  // Filter items with at least one matching tag, sort by score (desc), then date (desc)
+  const related = scoredItems
+    .filter(x => x.score > 0)
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return new Date(b.item.date).getTime() - new Date(a.item.date).getTime();
+    })
+    .slice(0, limit)
+    .map(x => toIndex(x.item));
+    
+  // If not enough related by tags, fill with latest
+  if (related.length < limit) {
+    const relatedSlugs = new Set(related.map(r => r.slug));
+    relatedSlugs.add(currentSlug);
+    
+    const fill = eligibleItems
+      .filter(item => !relatedSlugs.has(item.slug))
+      .slice(0, limit - related.length)
+      .map(toIndex);
+      
+    related.push(...fill);
+  }
+  
+  return related;
+}
+
 export async function getContentTags(collection: ContentCollection): Promise<string[]> {
   const index = await getContentIndex(collection);
   const tags = new Set<string>();

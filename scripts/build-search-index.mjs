@@ -15,8 +15,8 @@ const ogDir = path.join(publicDir, 'og');
 const siteUrl = 'https://khoahotran.github.io/portfolio';
 const siteTitle = 'Khoa Tran Engineering Portfolio';
 const siteDescription = 'Case studies, system design notes, and interactive engineering experiments.';
-const collections = ['blog', 'research', 'experiments', 'system-design'];
-const staticRoutes = ['/', '/blog', '/research', '/experiments', '/system-design', '/search'];
+const collections = ['blog', 'research', 'experiments', 'system-design', 'field-notes', 'projects'];
+const staticRoutes = ['/', '/blog', '/research', '/experiments', '/system-design', '/field-notes', '/projects', '/search'];
 
 function slugify(value) {
   return value
