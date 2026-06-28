@@ -8,6 +8,52 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system",
+      "url": "https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system",
+      "title": "Building Jujuja: A Production Quest System for Burst Traffic",
+      "summary": "How we built the Jujuja backend to handle 1,500 concurrent users per minute during campaign bursts, processing daily quests and loyalty points using BullMQ and NestJS.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "case-study",
+        "nestjs",
+        "redis",
+        "bullmq",
+        "firestore"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/building-jujuja-a-production-quest-system.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/blog/designing-a-multi-role-hft-research-platform",
+      "url": "https://khoahotran.github.io/portfolio/blog/designing-a-multi-role-hft-research-platform",
+      "title": "Designing a Multi-Role HFT Research Platform",
+      "summary": "How I architected QuantAlpha Lab, a distributed research platform that bridges the gap between Python data science and Go backend engineering.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "system-design",
+        "go",
+        "python",
+        "redis-streams",
+        "hft"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-multi-role-hft-research-platform.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture",
+      "url": "https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture",
+      "title": "gRPC Service Mesh in Go: Designing the Aegis Auth Platform",
+      "summary": "A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "go",
+        "grpc",
+        "microservices",
+        "auth",
+        "opentelemetry",
+        "protobuf"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/grpc-service-mesh-in-go-aegis-architecture.svg"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products",
       "url": "https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products",
       "title": "Architecture Breakdown: CQRS for Mid-size Products",

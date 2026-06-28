@@ -1,0 +1,42 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "Khoa Tran Engineering Portfolio - field-notes",
+  "home_page_url": "https://khoahotran.github.io/portfolio",
+  "feed_url": "https://khoahotran.github.io/portfolio/feeds/field-notes.json",
+  "description": "field-notes articles from Khoa Tran Engineering Portfolio.",
+  "icon": "https://khoahotran.github.io/portfolio/favicon.ico",
+  "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
+  "items": [
+    {
+      "id": "https://khoahotran.github.io/portfolio/field-notes/go-vs-typescript-for-backend-services",
+      "url": "https://khoahotran.github.io/portfolio/field-notes/go-vs-typescript-for-backend-services",
+      "title": "Field Note: Go vs TypeScript for Backend Services",
+      "summary": "A working engineer's honest comparison of Go and TypeScript for backend services, based on using both in production — and a framework for choosing between them.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "go",
+        "typescript",
+        "backend",
+        "language-comparison",
+        "architecture",
+        "trade-offs"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/go-vs-typescript-for-backend-services.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/field-notes/why-i-chose-firebase-functions-over-cloud-run",
+      "url": "https://khoahotran.github.io/portfolio/field-notes/why-i-chose-firebase-functions-over-cloud-run",
+      "title": "Field Note: Why I Chose Firebase Functions Over Cloud Run",
+      "summary": "A practical evaluation of Firebase Functions vs Cloud Run, and why the simplest serverless model won out for our specific workloads.",
+      "date_published": "2026-06-03T00:00:00.000Z",
+      "tags": [
+        "system-architecture",
+        "serverless",
+        "firebase",
+        "gcp",
+        "trade-offs"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/why-i-chose-firebase-functions-over-cloud-run.svg"
+    }
+  ]
+}

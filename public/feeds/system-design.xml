@@ -5,7 +5,28 @@
     <link>https://khoahotran.github.io/portfolio/system-design</link>
     <description>system-design articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 Jun 2026 18:52:26 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 28 Jun 2026 18:23:57 GMT</lastBuildDate>
+    <item>
+      <title>Designing a Multi-Service Auth Platform: The Aegis Architecture</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/designing-a-multi-service-auth-platform</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/designing-a-multi-service-auth-platform</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A deep dive into Aegis, a high-performance authorization platform using gRPC microservices, a GraphQL gateway, Kafka audit logging, and OpenTelemetry.</description>
+    </item>
+    <item>
+      <title>Designing a Real-Time Fraud Detection Engine with Velocity Rules</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/designing-a-real-time-fraud-detection-engine</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/designing-a-real-time-fraud-detection-engine</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>How I built a real-time fraud detection engine using Event Sourcing, CQRS, and velocity rules to automatically freeze malicious accounts in a core banking system.</description>
+    </item>
+    <item>
+      <title>Implementing the Saga Pattern for Distributed Money Transfers</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>How we built a two-phase distributed transfer between account aggregates using the Saga orchestrator pattern, with automatic compensation and dead-letter recovery.</description>
+    </item>
     <item>
       <title>Atomic Financial Transactions in a NoSQL World: Building the J-Point Loyalty Engine</title>
       <link>https://khoahotran.github.io/portfolio/system-design/atomic-financial-transactions-in-nosql</link>

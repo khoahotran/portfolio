@@ -8,6 +8,97 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/research/adr-firestore-vs-postgresql-event-sourcing",
+      "url": "https://khoahotran.github.io/portfolio/research/adr-firestore-vs-postgresql-event-sourcing",
+      "title": "ADR: Firestore vs PostgreSQL for Event Sourcing in Core Banking",
+      "summary": "An Architecture Decision Record detailing why Firestore was chosen over PostgreSQL as the primary EventStore for the Event-Driven Core Banking platform.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "adr",
+        "event-sourcing",
+        "firestore",
+        "postgresql",
+        "architecture"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/adr-firestore-vs-postgresql-event-sourcing.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/research/adr-graphql-gateway-over-rest",
+      "url": "https://khoahotran.github.io/portfolio/research/adr-graphql-gateway-over-rest",
+      "title": "ADR: Choosing a GraphQL Gateway Over REST for Aegis",
+      "summary": "An Architecture Decision Record detailing why Aegis uses a GraphQL API Gateway to aggregate internal gRPC microservices instead of a traditional REST API.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "adr",
+        "graphql",
+        "api-gateway",
+        "architecture",
+        "go"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/adr-graphql-gateway-over-rest.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/research/algolia-geo-search-for-store-discovery",
+      "url": "https://khoahotran.github.io/portfolio/research/algolia-geo-search-for-store-discovery",
+      "title": "Sub-300ms Store Discovery: Designing Geo-Search with Algolia",
+      "summary": "How we leveraged Algolia to build a blazing fast, geo-aware store discovery engine for SeensioGO and Jujuja, achieving 150-300ms latency.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "system-design",
+        "algolia",
+        "search",
+        "geolocation"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/algolia-geo-search-for-store-discovery.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/research/distributed-tracing-with-opentelemetry-and-jaeger",
+      "url": "https://khoahotran.github.io/portfolio/research/distributed-tracing-with-opentelemetry-and-jaeger",
+      "title": "Distributed Tracing with OpenTelemetry and Jaeger",
+      "summary": "A practical guide to instrumenting Go microservices with OpenTelemetry: from SDK setup to trace context propagation, sampling strategies, and reading Jaeger flame graphs.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "opentelemetry",
+        "jaeger",
+        "observability",
+        "go",
+        "distributed-systems",
+        "tracing"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/distributed-tracing-with-opentelemetry-and-jaeger.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/research/event-sourcing-vs-crud-when-to-choose-each",
+      "url": "https://khoahotran.github.io/portfolio/research/event-sourcing-vs-crud-when-to-choose-each",
+      "title": "Event Sourcing vs CRUD: When to Choose Each",
+      "summary": "A decision framework for choosing between Event Sourcing and traditional CRUD, based on building both a CRUD loyalty API and a full event-sourced core banking system.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "event-sourcing",
+        "cqrs",
+        "architecture",
+        "database",
+        "go",
+        "trade-offs"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/event-sourcing-vs-crud-when-to-choose-each.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/research/order-book-imbalance-hft-signal",
+      "url": "https://khoahotran.github.io/portfolio/research/order-book-imbalance-hft-signal",
+      "title": "Order Book Imbalance (OBI) as a Signal for Short-Term Price Prediction",
+      "summary": "Research notes on extracting Order Book Imbalance (OBI) features from Level-3 market data (VN30F2112) to train rolling-window ML classifiers for High-Frequency Trading.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "machine-learning",
+        "finance",
+        "python",
+        "hft",
+        "research"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/order-book-imbalance-hft-signal.svg"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/research/designing-a-permission-system",
       "url": "https://khoahotran.github.io/portfolio/research/designing-a-permission-system",
       "title": "Designing a Permission System: Beyond Simple Roles",
