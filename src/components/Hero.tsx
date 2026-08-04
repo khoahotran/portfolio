@@ -21,9 +21,9 @@ export default function Hero() {
           </p>
           <p className="text-sm text-slate-500">{heroData.location}</p>
           <div className="flex items-center justify-center gap-6 pt-4 text-slate-400">
-            <a href={`mailto:${heroData.email}`} className="hover:text-teal-600 transition-colors"><Mail size={24} /></a>
-            <a href={heroData.github} target="_blank" rel="noopener noreferrer" className="hover:text-teal-600 transition-colors"><Github size={24} /></a>
-            <a href={heroData.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-teal-600 transition-colors"><Linkedin size={24} /></a>
+            <a href={`mailto:${heroData.email}`} aria-label="Email" className="hover:text-teal-600 transition-colors"><Mail size={24} /></a>
+            <a href={heroData.github} aria-label="GitHub Profile" target="_blank" rel="noopener noreferrer" className="hover:text-teal-600 transition-colors"><Github size={24} /></a>
+            <a href={heroData.linkedin} aria-label="LinkedIn Profile" target="_blank" rel="noopener noreferrer" className="hover:text-teal-600 transition-colors"><Linkedin size={24} /></a>
           </div>
         </div>
 
