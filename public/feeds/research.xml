@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Khoa Tran Engineering Portfolio - research</title>
+    <link>https://khoahotran.github.io/portfolio/research</link>
+    <description>research articles from Khoa Tran Engineering Portfolio.</description>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 04 Aug 2026 14:39:24 GMT</lastBuildDate>
+    <item>
+      <title>ADR: Firestore vs PostgreSQL for Event Sourcing in Core Banking</title>
+      <link>https://khoahotran.github.io/portfolio/research/adr-firestore-vs-postgresql-event-sourcing</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/adr-firestore-vs-postgresql-event-sourcing</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>An Architecture Decision Record detailing why Firestore was chosen over PostgreSQL as the primary EventStore for the Event-Driven Core Banking platform.</description>
+    </item>
+    <item>
+      <title>ADR: Choosing a GraphQL Gateway Over REST for Aegis</title>
+      <link>https://khoahotran.github.io/portfolio/research/adr-graphql-gateway-over-rest</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/adr-graphql-gateway-over-rest</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>An Architecture Decision Record detailing why Aegis uses a GraphQL API Gateway to aggregate internal gRPC microservices instead of a traditional REST API.</description>
+    </item>
+    <item>
+      <title>Sub-300ms Store Discovery: Designing Geo-Search with Algolia</title>
+      <link>https://khoahotran.github.io/portfolio/research/algolia-geo-search-for-store-discovery</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/algolia-geo-search-for-store-discovery</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>How we leveraged Algolia to build a blazing fast, geo-aware store discovery engine for SeensioGO and Jujuja, achieving 150-300ms latency.</description>
+    </item>
+    <item>
+      <title>Distributed Tracing with OpenTelemetry and Jaeger</title>
+      <link>https://khoahotran.github.io/portfolio/research/distributed-tracing-with-opentelemetry-and-jaeger</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/distributed-tracing-with-opentelemetry-and-jaeger</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A practical guide to instrumenting Go microservices with OpenTelemetry: from SDK setup to trace context propagation, sampling strategies, and reading Jaeger flame graphs.</description>
+    </item>
+    <item>
+      <title>Event Sourcing vs CRUD: When to Choose Each</title>
+      <link>https://khoahotran.github.io/portfolio/research/event-sourcing-vs-crud-when-to-choose-each</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/event-sourcing-vs-crud-when-to-choose-each</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A decision framework for choosing between Event Sourcing and traditional CRUD, based on building both a CRUD loyalty API and a full event-sourced core banking system.</description>
+    </item>
+    <item>
+      <title>Order Book Imbalance (OBI) as a Signal for Short-Term Price Prediction</title>
+      <link>https://khoahotran.github.io/portfolio/research/order-book-imbalance-hft-signal</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/order-book-imbalance-hft-signal</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>Research notes on extracting Order Book Imbalance (OBI) features from Level-3 market data (VN30F2112) to train rolling-window ML classifiers for High-Frequency Trading.</description>
+    </item>
+    <item>
+      <title>Designing a Permission System: Beyond Simple Roles</title>
+      <link>https://khoahotran.github.io/portfolio/research/designing-a-permission-system</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/designing-a-permission-system</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>How to evolve from brittle role checks to a maintainable, high-performance policy-based authorization engine.</description>
+    </item>
+    <item>
+      <title>Scaling Background Jobs: Adaptive Concurrency</title>
+      <link>https://khoahotran.github.io/portfolio/research/scaling-background-jobs</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/scaling-background-jobs</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Operational patterns and practical lessons for scaling asynchronous jobs while keeping failure rates and costs predictable.</description>
+    </item>
+  </channel>
+</rss>

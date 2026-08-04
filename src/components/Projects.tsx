@@ -2,95 +2,135 @@ import { ExternalLink, Github, Network } from 'lucide-react';
 import { caseStudiesData as caseStudies } from '../data/portfolioData';
 
 export default function Projects() {
+  const sections = [
+    { id: 'experience', label: 'Professional Experience' },
+    { id: 'personal', label: 'Personal Projects' },
+    { id: 'university', label: 'University' },
+  ];
+
   return (
     <section id="projects" className="py-24 px-6 bg-slate-50">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-baseline justify-between mb-12">
           <h2 className="text-sm uppercase tracking-widest text-teal-600 font-medium italic">
-            / Projects
+            / Projects & Case Studies
           </h2>
           <div className="text-sm text-slate-500 font-light">Technical breakdowns and impact analysis.</div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {caseStudies.map((project, index) => (
-            <div
-              key={index}
-              className="group rounded-xl border border-slate-100 bg-white p-8 hover:border-teal-500 hover:shadow-2xl hover:shadow-slate-100 transition-all duration-500"
-            >
-              <div className="flex items-start justify-between gap-4 mb-4">
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">{project.role}</p>
-                  <h3 className="text-2xl font-bold text-slate-900 mt-1">{project.title}</h3>
-                  <p className="text-xs text-slate-400 mt-1 font-mono">{project.scale}</p>
-                </div>
-                <div className="flex gap-3 text-slate-300">
-                  {project.links.deck && (
-                    <a
-                      href={project.links.deck}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-teal-600 transition-colors"
-                      aria-label="View link"
-                    >
-                      <ExternalLink size={20} />
-                    </a>
-                  )}
-                  {project.links.github && (
-                    <a
-                      href={project.links.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-teal-600 transition-colors"
-                      aria-label="View code"
-                    >
-                      <Github size={20} />
-                    </a>
-                  )}
-                </div>
-              </div>
+        {sections.map(section => {
+          const sectionProjects = caseStudies.filter(p => p.section === section.id);
+          if (sectionProjects.length === 0) return null;
 
-              <p className="text-slate-600 text-sm leading-relaxed mb-6 font-light">{project.summary}</p>
-
-              <div className="flex flex-wrap gap-2 mb-6">
-                {project.metrics.map((metric, i) => (
-                  <span
-                    key={i}
-                    className="text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-sm bg-slate-50 text-teal-700 border border-teal-50"
+          return (
+            <div key={section.id} className="mb-20 last:mb-0">
+              <h3 className="text-xl font-bold text-slate-800 mb-8 pb-2 border-b border-slate-200">
+                {section.label}
+              </h3>
+              <div className="grid md:grid-cols-2 gap-8">
+                {sectionProjects.map((project, index) => (
+                  <div
+                    key={index}
+                    className="group rounded-xl border border-slate-100 bg-white p-8 hover:border-teal-500 hover:shadow-2xl hover:shadow-slate-100 transition-all duration-500 flex flex-col h-full"
                   >
-                    {metric}
-                  </span>
+                    <div className="flex items-start justify-between gap-4 mb-4">
+                      <div>
+                        <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">{project.role}</p>
+                        <h4 className="text-2xl font-bold text-slate-900 mt-1">{project.title}</h4>
+                        <p className="text-xs text-slate-400 mt-1 font-mono">{project.scale}</p>
+                      </div>
+                      <div className="flex gap-3 text-slate-300">
+                        {project.links?.deck && (
+                          <a
+                            href={project.links?.deck}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-teal-600 transition-colors"
+                            aria-label="View link"
+                          >
+                            <ExternalLink size={20} />
+                          </a>
+                        )}
+                        {project.links?.live && (
+                          <a
+                            href={project.links?.live}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-teal-600 transition-colors"
+                            aria-label="View live site"
+                          >
+                            <ExternalLink size={20} />
+                          </a>
+                        )}
+                        {project.links?.github && (
+                          <a
+                            href={project.links?.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-teal-600 transition-colors"
+                            aria-label="View code"
+                          >
+                            <Github size={20} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+
+                    <p className="text-slate-600 text-sm leading-relaxed mb-6 font-light">{project.summary}</p>
+
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {project.metrics.map((metric, i) => (
+                        <span
+                          key={i}
+                          className="text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-sm bg-slate-50 text-teal-700 border border-teal-50"
+                        >
+                          {metric}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="mb-6 flex-grow">
+                      <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-3">Architecture</p>
+                      <ul className="space-y-2 text-slate-600 text-sm">
+                        {project.architecture.map((item, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <span className="text-teal-500 mt-1 opacity-50"><Network size={14} /></span>
+                            <span className="font-light">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="mt-auto pt-6 border-t border-slate-50 flex items-end justify-between">
+                      <div className="flex-1 pr-4">
+                        <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-3">Stack</p>
+                        <div className="flex flex-wrap gap-2">
+                          {project.stack.map((tech, i) => (
+                            <span
+                              key={i}
+                              className="text-[10px] font-bold px-2 py-1 rounded-sm bg-slate-900 text-white flex items-center gap-2"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {project.slug && (
+                        <a 
+                          href={`/projects/${project.slug}`}
+                          className="shrink-0 bg-teal-50 text-teal-700 hover:bg-teal-600 hover:text-white px-4 py-2 rounded-lg text-xs font-bold transition-colors border border-teal-100 hover:border-teal-600"
+                        >
+                          Read Case Study
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 ))}
               </div>
-
-              <div className="mb-6">
-                <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-3">Architecture</p>
-                <ul className="space-y-2 text-slate-600 text-sm">
-                  {project.architecture.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <span className="text-teal-500 mt-1 opacity-50"><Network size={14} /></span>
-                      <span className="font-light">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="mb-6">
-                <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-3">Stack</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.stack.map((tech, i) => (
-                    <span
-                      key={i}
-                      className="text-[10px] font-bold px-2 py-1 rounded-sm bg-slate-900 text-white flex items-center gap-2"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </section>
   );

@@ -1,4 +1,5 @@
 import { Github, PenSquare, Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { credibilityData } from '../data/portfolioData';
 
 export default function Credibility() {
@@ -35,10 +36,20 @@ export default function Credibility() {
           </div>
           <div className="space-y-4">
             {writing.map((post, idx) => (
-              <div key={idx} className="rounded-xl bg-white p-4 border border-slate-200">
-                <p className="text-lg font-semibold text-slate-900">{post.title}</p>
-                <p className="text-sm text-slate-600">{post.takeaway}</p>
-                <p className="text-xs uppercase tracking-wide text-slate-500 mt-2">{post.time} read</p>
+              <div key={idx} className="rounded-xl bg-white p-4 border border-slate-200 hover:border-teal-400 transition-colors">
+                {post.route ? (
+                  <Link to={post.route} className="block group">
+                    <p className="text-lg font-semibold text-slate-900 group-hover:text-teal-600 transition-colors">{post.title}</p>
+                    <p className="text-sm text-slate-600 mt-1">{post.takeaway}</p>
+                    <p className="text-xs uppercase tracking-wide text-slate-500 mt-2">{post.time} read</p>
+                  </Link>
+                ) : (
+                  <>
+                    <p className="text-lg font-semibold text-slate-900">{post.title}</p>
+                    <p className="text-sm text-slate-600 mt-1">{post.takeaway}</p>
+                    <p className="text-xs uppercase tracking-wide text-slate-500 mt-2">{post.time} read</p>
+                  </>
+                )}
               </div>
             ))}
           </div>
@@ -47,4 +58,3 @@ export default function Credibility() {
     </section>
   );
 }
-

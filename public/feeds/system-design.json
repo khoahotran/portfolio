@@ -1,0 +1,116 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "Khoa Tran Engineering Portfolio - system-design",
+  "home_page_url": "https://khoahotran.github.io/portfolio",
+  "feed_url": "https://khoahotran.github.io/portfolio/feeds/system-design.json",
+  "description": "system-design articles from Khoa Tran Engineering Portfolio.",
+  "icon": "https://khoahotran.github.io/portfolio/favicon.ico",
+  "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
+  "items": [
+    {
+      "id": "https://khoahotran.github.io/portfolio/system-design/designing-a-multi-service-auth-platform",
+      "url": "https://khoahotran.github.io/portfolio/system-design/designing-a-multi-service-auth-platform",
+      "title": "Designing a Multi-Service Auth Platform: The Aegis Architecture",
+      "summary": "A deep dive into Aegis, a high-performance authorization platform using gRPC microservices, a GraphQL gateway, Kafka audit logging, and OpenTelemetry.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "system-design",
+        "go",
+        "grpc",
+        "kafka",
+        "architecture"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-multi-service-auth-platform.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/system-design/designing-a-real-time-fraud-detection-engine",
+      "url": "https://khoahotran.github.io/portfolio/system-design/designing-a-real-time-fraud-detection-engine",
+      "title": "Designing a Real-Time Fraud Detection Engine with Velocity Rules",
+      "summary": "How I built a real-time fraud detection engine using Event Sourcing, CQRS, and velocity rules to automatically freeze malicious accounts in a core banking system.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "system-design",
+        "go",
+        "finance",
+        "event-driven",
+        "architecture"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-real-time-fraud-detection-engine.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers",
+      "url": "https://khoahotran.github.io/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers",
+      "title": "Implementing the Saga Pattern for Distributed Money Transfers",
+      "summary": "How we built a two-phase distributed transfer between account aggregates using the Saga orchestrator pattern, with automatic compensation and dead-letter recovery.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "saga",
+        "distributed-systems",
+        "event-sourcing",
+        "go",
+        "firestore",
+        "banking"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/implementing-the-saga-pattern-for-distributed-transfers.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/system-design/atomic-financial-transactions-in-nosql",
+      "url": "https://khoahotran.github.io/portfolio/system-design/atomic-financial-transactions-in-nosql",
+      "title": "Atomic Financial Transactions in a NoSQL World: Building the J-Point Loyalty Engine",
+      "summary": "Implementing virtual currency transactions on Firestore with <1% consistency errors, covering atomic operation design and edge case handling.",
+      "date_published": "2026-06-03T00:00:00.000Z",
+      "tags": [
+        "firestore",
+        "nosql",
+        "distributed-systems",
+        "transactions",
+        "atomic-operations"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/atomic-financial-transactions-in-nosql.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/system-design/designing-a-burst-traffic-async-job-pipeline",
+      "url": "https://khoahotran.github.io/portfolio/system-design/designing-a-burst-traffic-async-job-pipeline",
+      "title": "Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System",
+      "summary": "How we redesigned daily quest processing from synchronous handlers to a queue-driven worker pool that handles 1,500 concurrent users during campaign windows.",
+      "date_published": "2026-06-03T00:00:00.000Z",
+      "tags": [
+        "nestjs",
+        "async-jobs",
+        "scalability",
+        "queues",
+        "firebase-functions"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-burst-traffic-async-job-pipeline.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture",
+      "url": "https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture",
+      "title": "Building an Event-Driven Architecture",
+      "summary": "A practical blueprint for introducing domain events to untangle a monolith without losing delivery guarantees.",
+      "date_published": "2026-03-21T00:00:00.000Z",
+      "tags": [
+        "event-driven",
+        "architecture",
+        "messaging",
+        "system-design",
+        "kafka"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/building-an-event-driven-architecture.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/system-design/system-design-trade-offs-in-practice",
+      "url": "https://khoahotran.github.io/portfolio/system-design/system-design-trade-offs-in-practice",
+      "title": "System Design Trade-offs in Practice",
+      "summary": "A structured framework to communicate architecture trade-offs with product, operations, and engineering teams.",
+      "date_published": "2026-03-21T00:00:00.000Z",
+      "tags": [
+        "trade-offs",
+        "architecture",
+        "decision-making",
+        "engineering-management"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/system-design-trade-offs-in-practice.svg"
+    }
+  ]
+}

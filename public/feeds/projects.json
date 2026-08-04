@@ -1,0 +1,57 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "Khoa Tran Engineering Portfolio - projects",
+  "home_page_url": "https://khoahotran.github.io/portfolio",
+  "feed_url": "https://khoahotran.github.io/portfolio/feeds/projects.json",
+  "description": "projects articles from Khoa Tran Engineering Portfolio.",
+  "icon": "https://khoahotran.github.io/portfolio/favicon.ico",
+  "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
+  "items": [
+    {
+      "id": "https://khoahotran.github.io/portfolio/projects/core-banking",
+      "url": "https://khoahotran.github.io/portfolio/projects/core-banking",
+      "title": "Event-Driven Core Banking System",
+      "summary": "A production-grade core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers.",
+      "date_published": "2026-06-15T00:00:00.000Z",
+      "tags": [
+        "event-sourcing",
+        "cqrs",
+        "saga-pattern",
+        "golang",
+        "firestore"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/core-banking.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/projects/aegis",
+      "url": "https://khoahotran.github.io/portfolio/projects/aegis",
+      "title": "Aegis: High-Performance Auth & Authorization Platform",
+      "summary": "A modular, high-performance Identity and Policy microservice platform in Go, featuring sub-5ms RBAC evaluations and distributed tracing.",
+      "date_published": "2026-04-10T00:00:00.000Z",
+      "tags": [
+        "go",
+        "grpc",
+        "microservices",
+        "redis",
+        "kafka",
+        "opentelemetry"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/aegis.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/projects/quant-alpha",
+      "url": "https://khoahotran.github.io/portfolio/projects/quant-alpha",
+      "title": "QuantAlpha: High-Frequency Trading Research Platform",
+      "summary": "A distributed research platform for High-Frequency Trading (HFT) utilizing Redis Streams for asynchronous model training and order book imbalance (OBI) analysis.",
+      "date_published": "2026-02-20T00:00:00.000Z",
+      "tags": [
+        "go",
+        "python",
+        "redis-streams",
+        "machine-learning",
+        "hft"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/quant-alpha.svg"
+    }
+  ]
+}

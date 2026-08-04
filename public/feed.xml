@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Khoa Tran Engineering Portfolio</title>
+    <link>https://khoahotran.github.io/portfolio</link>
+    <description>Case studies, system design notes, and interactive engineering experiments.</description>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 04 Aug 2026 14:39:24 GMT</lastBuildDate>
+    <item>
+      <title>Building Jujuja: A Production Quest System for Burst Traffic</title>
+      <link>https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>How we built the Jujuja backend to handle 1,500 concurrent users per minute during campaign bursts, processing daily quests and loyalty points using BullMQ and NestJS.</description>
+    </item>
+    <item>
+      <title>Designing a Multi-Role HFT Research Platform</title>
+      <link>https://khoahotran.github.io/portfolio/blog/designing-a-multi-role-hft-research-platform</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/designing-a-multi-role-hft-research-platform</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>How I architected QuantAlpha Lab, a distributed research platform that bridges the gap between Python data science and Go backend engineering.</description>
+    </item>
+    <item>
+      <title>gRPC Service Mesh in Go: Designing the Aegis Auth Platform</title>
+      <link>https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.</description>
+    </item>
+    <item>
+      <title>ADR: Firestore vs PostgreSQL for Event Sourcing in Core Banking</title>
+      <link>https://khoahotran.github.io/portfolio/research/adr-firestore-vs-postgresql-event-sourcing</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/adr-firestore-vs-postgresql-event-sourcing</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>An Architecture Decision Record detailing why Firestore was chosen over PostgreSQL as the primary EventStore for the Event-Driven Core Banking platform.</description>
+    </item>
+    <item>
+      <title>ADR: Choosing a GraphQL Gateway Over REST for Aegis</title>
+      <link>https://khoahotran.github.io/portfolio/research/adr-graphql-gateway-over-rest</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/adr-graphql-gateway-over-rest</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>An Architecture Decision Record detailing why Aegis uses a GraphQL API Gateway to aggregate internal gRPC microservices instead of a traditional REST API.</description>
+    </item>
+    <item>
+      <title>Sub-300ms Store Discovery: Designing Geo-Search with Algolia</title>
+      <link>https://khoahotran.github.io/portfolio/research/algolia-geo-search-for-store-discovery</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/algolia-geo-search-for-store-discovery</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>How we leveraged Algolia to build a blazing fast, geo-aware store discovery engine for SeensioGO and Jujuja, achieving 150-300ms latency.</description>
+    </item>
+    <item>
+      <title>Distributed Tracing with OpenTelemetry and Jaeger</title>
+      <link>https://khoahotran.github.io/portfolio/research/distributed-tracing-with-opentelemetry-and-jaeger</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/distributed-tracing-with-opentelemetry-and-jaeger</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A practical guide to instrumenting Go microservices with OpenTelemetry: from SDK setup to trace context propagation, sampling strategies, and reading Jaeger flame graphs.</description>
+    </item>
+    <item>
+      <title>Event Sourcing vs CRUD: When to Choose Each</title>
+      <link>https://khoahotran.github.io/portfolio/research/event-sourcing-vs-crud-when-to-choose-each</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/event-sourcing-vs-crud-when-to-choose-each</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A decision framework for choosing between Event Sourcing and traditional CRUD, based on building both a CRUD loyalty API and a full event-sourced core banking system.</description>
+    </item>
+    <item>
+      <title>Order Book Imbalance (OBI) as a Signal for Short-Term Price Prediction</title>
+      <link>https://khoahotran.github.io/portfolio/research/order-book-imbalance-hft-signal</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/order-book-imbalance-hft-signal</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>Research notes on extracting Order Book Imbalance (OBI) features from Level-3 market data (VN30F2112) to train rolling-window ML classifiers for High-Frequency Trading.</description>
+    </item>
+    <item>
+      <title>Interactive Event Sourcing Replay</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/event-sourcing-replay</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/event-sourcing-replay</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>An interactive visualization of how application state is derived from an immutable, append-only event log.</description>
+    </item>
+    <item>
+      <title>Redis Streams vs BullMQ: Choosing Your Job Queue</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/redis-streams-vs-bullmq-job-queue-comparison</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/redis-streams-vs-bullmq-job-queue-comparison</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns.</description>
+    </item>
+    <item>
+      <title>Interactive Saga State Machine Visualizer</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/saga-state-machine-visualizer</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/saga-state-machine-visualizer</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>An interactive visualization of the Saga distributed transaction pattern, demonstrating automated compensating rollbacks.</description>
+    </item>
+    <item>
+      <title>Designing a Multi-Service Auth Platform: The Aegis Architecture</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/designing-a-multi-service-auth-platform</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/designing-a-multi-service-auth-platform</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A deep dive into Aegis, a high-performance authorization platform using gRPC microservices, a GraphQL gateway, Kafka audit logging, and OpenTelemetry.</description>
+    </item>
+    <item>
+      <title>Designing a Real-Time Fraud Detection Engine with Velocity Rules</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/designing-a-real-time-fraud-detection-engine</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/designing-a-real-time-fraud-detection-engine</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>How I built a real-time fraud detection engine using Event Sourcing, CQRS, and velocity rules to automatically freeze malicious accounts in a core banking system.</description>
+    </item>
+    <item>
+      <title>Implementing the Saga Pattern for Distributed Money Transfers</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>How we built a two-phase distributed transfer between account aggregates using the Saga orchestrator pattern, with automatic compensation and dead-letter recovery.</description>
+    </item>
+    <item>
+      <title>Field Note: Go vs TypeScript for Backend Services</title>
+      <link>https://khoahotran.github.io/portfolio/field-notes/go-vs-typescript-for-backend-services</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/field-notes/go-vs-typescript-for-backend-services</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A working engineer&apos;s honest comparison of Go and TypeScript for backend services, based on using both in production — and a framework for choosing between them.</description>
+    </item>
+    <item>
+      <title>Benchmark: Event Replay in PostgreSQL vs Firestore</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/db-event-replay-benchmark</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/db-event-replay-benchmark</guid>
+      <pubDate>Sat, 27 Jun 2026 00:00:00 GMT</pubDate>
+      <description>An interactive benchmark comparing the time it takes to replay tens of thousands of immutable events into a Read Projection.</description>
+    </item>
+    <item>
+      <title>Benchmark: Go vs TypeScript Concurrency</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/go-vs-ts-concurrency</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/go-vs-ts-concurrency</guid>
+      <pubDate>Fri, 26 Jun 2026 00:00:00 GMT</pubDate>
+      <description>An interactive benchmark visualizing memory footprint and execution time for handling tens of thousands of concurrent network-bound tasks.</description>
+    </item>
+    <item>
+      <title>Benchmark: Redis Streams (Go) vs BullMQ (TS)</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/redis-vs-bullmq</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/redis-vs-bullmq</guid>
+      <pubDate>Thu, 25 Jun 2026 00:00:00 GMT</pubDate>
+      <description>An interactive benchmark visualizing queue throughput and latency between native Redis Streams in Go vs BullMQ in TypeScript.</description>
+    </item>
+    <item>
+      <title>Event-Driven Core Banking System</title>
+      <link>https://khoahotran.github.io/portfolio/projects/core-banking</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/projects/core-banking</guid>
+      <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A production-grade core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers.</description>
+    </item>
+    <item>
+      <title>Atomic Financial Transactions in a NoSQL World: Building the J-Point Loyalty Engine</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/atomic-financial-transactions-in-nosql</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/atomic-financial-transactions-in-nosql</guid>
+      <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
+      <description>Implementing virtual currency transactions on Firestore with &lt;1% consistency errors, covering atomic operation design and edge case handling.</description>
+    </item>
+    <item>
+      <title>Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/designing-a-burst-traffic-async-job-pipeline</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/designing-a-burst-traffic-async-job-pipeline</guid>
+      <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
+      <description>How we redesigned daily quest processing from synchronous handlers to a queue-driven worker pool that handles 1,500 concurrent users during campaign windows.</description>
+    </item>
+    <item>
+      <title>Field Note: Why I Chose Firebase Functions Over Cloud Run</title>
+      <link>https://khoahotran.github.io/portfolio/field-notes/why-i-chose-firebase-functions-over-cloud-run</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/field-notes/why-i-chose-firebase-functions-over-cloud-run</guid>
+      <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A practical evaluation of Firebase Functions vs Cloud Run, and why the simplest serverless model won out for our specific workloads.</description>
+    </item>
+    <item>
+      <title>Aegis: High-Performance Auth &amp; Authorization Platform</title>
+      <link>https://khoahotran.github.io/portfolio/projects/aegis</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/projects/aegis</guid>
+      <pubDate>Fri, 10 Apr 2026 00:00:00 GMT</pubDate>
+      <description>A modular, high-performance Identity and Policy microservice platform in Go, featuring sub-5ms RBAC evaluations and distributed tracing.</description>
+    </item>
+    <item>
+      <title>Architecture Breakdown: CQRS for Mid-size Products</title>
+      <link>https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path.</description>
+    </item>
+    <item>
+      <title>Engineering Lessons from a Failed Rollout</title>
+      <link>https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.</description>
+    </item>
+    <item>
+      <title>System Design Notes: Idempotency</title>
+      <link>https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Practical patterns for making API writes replay-safe under network retries and partial distributed failures.</description>
+    </item>
+    <item>
+      <title>Designing a Permission System: Beyond Simple Roles</title>
+      <link>https://khoahotran.github.io/portfolio/research/designing-a-permission-system</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/designing-a-permission-system</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>How to evolve from brittle role checks to a maintainable, high-performance policy-based authorization engine.</description>
+    </item>
+    <item>
+      <title>Scaling Background Jobs: Adaptive Concurrency</title>
+      <link>https://khoahotran.github.io/portfolio/research/scaling-background-jobs</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/scaling-background-jobs</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Operational patterns and practical lessons for scaling asynchronous jobs while keeping failure rates and costs predictable.</description>
+    </item>
+    <item>
+      <title>Queue vs Pub/Sub Comparison Notes</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems.</description>
+    </item>
+    <item>
+      <title>Throughput Simulation Notes</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations.</description>
+    </item>
+    <item>
+      <title>Building an Event-Driven Architecture</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>A practical blueprint for introducing domain events to untangle a monolith without losing delivery guarantees.</description>
+    </item>
+    <item>
+      <title>System Design Trade-offs in Practice</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/system-design-trade-offs-in-practice</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/system-design-trade-offs-in-practice</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>A structured framework to communicate architecture trade-offs with product, operations, and engineering teams.</description>
+    </item>
+    <item>
+      <title>QuantAlpha: High-Frequency Trading Research Platform</title>
+      <link>https://khoahotran.github.io/portfolio/projects/quant-alpha</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/projects/quant-alpha</guid>
+      <pubDate>Fri, 20 Feb 2026 00:00:00 GMT</pubDate>
+      <description>A distributed research platform for High-Frequency Trading (HFT) utilizing Redis Streams for asynchronous model training and order book imbalance (OBI) analysis.</description>
+    </item>
+  </channel>
+</rss>
