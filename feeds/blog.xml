@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Khoa Tran Engineering Portfolio - blog</title>
+    <link>https://khoahotran.github.io/portfolio/blog</link>
+    <description>blog articles from Khoa Tran Engineering Portfolio.</description>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 04 Aug 2026 15:00:55 GMT</lastBuildDate>
+    <item>
+      <title>Building Jujuja: A Production Quest System for Burst Traffic</title>
+      <link>https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>How we built the Jujuja backend to handle 1,500 concurrent users per minute during campaign bursts, processing daily quests and loyalty points using BullMQ and NestJS.</description>
+    </item>
+    <item>
+      <title>Designing a Multi-Role HFT Research Platform</title>
+      <link>https://khoahotran.github.io/portfolio/blog/designing-a-multi-role-hft-research-platform</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/designing-a-multi-role-hft-research-platform</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>How I architected QuantAlpha Lab, a distributed research platform that bridges the gap between Python data science and Go backend engineering.</description>
+    </item>
+    <item>
+      <title>gRPC Service Mesh in Go: Designing the Aegis Auth Platform</title>
+      <link>https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.</description>
+    </item>
+    <item>
+      <title>Architecture Breakdown: CQRS for Mid-size Products</title>
+      <link>https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path.</description>
+    </item>
+    <item>
+      <title>Engineering Lessons from a Failed Rollout</title>
+      <link>https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.</description>
+    </item>
+    <item>
+      <title>System Design Notes: Idempotency</title>
+      <link>https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Practical patterns for making API writes replay-safe under network retries and partial distributed failures.</description>
+    </item>
+  </channel>
+</rss>

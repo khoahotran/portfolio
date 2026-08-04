@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Khoa Tran Engineering Portfolio - projects</title>
+    <link>https://khoahotran.github.io/portfolio/projects</link>
+    <description>projects articles from Khoa Tran Engineering Portfolio.</description>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 04 Aug 2026 15:00:55 GMT</lastBuildDate>
+    <item>
+      <title>Event-Driven Core Banking System</title>
+      <link>https://khoahotran.github.io/portfolio/projects/core-banking</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/projects/core-banking</guid>
+      <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A production-grade core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers.</description>
+    </item>
+    <item>
+      <title>Aegis: High-Performance Auth &amp; Authorization Platform</title>
+      <link>https://khoahotran.github.io/portfolio/projects/aegis</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/projects/aegis</guid>
+      <pubDate>Fri, 10 Apr 2026 00:00:00 GMT</pubDate>
+      <description>A modular, high-performance Identity and Policy microservice platform in Go, featuring sub-5ms RBAC evaluations and distributed tracing.</description>
+    </item>
+    <item>
+      <title>QuantAlpha: High-Frequency Trading Research Platform</title>
+      <link>https://khoahotran.github.io/portfolio/projects/quant-alpha</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/projects/quant-alpha</guid>
+      <pubDate>Fri, 20 Feb 2026 00:00:00 GMT</pubDate>
+      <description>A distributed research platform for High-Frequency Trading (HFT) utilizing Redis Streams for asynchronous model training and order book imbalance (OBI) analysis.</description>
+    </item>
+  </channel>
+</rss>

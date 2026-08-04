@@ -1,0 +1,101 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "Khoa Tran Engineering Portfolio - blog",
+  "home_page_url": "https://khoahotran.github.io/portfolio",
+  "feed_url": "https://khoahotran.github.io/portfolio/feeds/blog.json",
+  "description": "blog articles from Khoa Tran Engineering Portfolio.",
+  "icon": "https://khoahotran.github.io/portfolio/favicon.ico",
+  "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
+  "items": [
+    {
+      "id": "https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system",
+      "url": "https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system",
+      "title": "Building Jujuja: A Production Quest System for Burst Traffic",
+      "summary": "How we built the Jujuja backend to handle 1,500 concurrent users per minute during campaign bursts, processing daily quests and loyalty points using BullMQ and NestJS.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "case-study",
+        "nestjs",
+        "redis",
+        "bullmq",
+        "firestore"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/building-jujuja-a-production-quest-system.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/blog/designing-a-multi-role-hft-research-platform",
+      "url": "https://khoahotran.github.io/portfolio/blog/designing-a-multi-role-hft-research-platform",
+      "title": "Designing a Multi-Role HFT Research Platform",
+      "summary": "How I architected QuantAlpha Lab, a distributed research platform that bridges the gap between Python data science and Go backend engineering.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "system-design",
+        "go",
+        "python",
+        "redis-streams",
+        "hft"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-multi-role-hft-research-platform.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture",
+      "url": "https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture",
+      "title": "gRPC Service Mesh in Go: Designing the Aegis Auth Platform",
+      "summary": "A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.",
+      "date_published": "2026-06-28T00:00:00.000Z",
+      "tags": [
+        "go",
+        "grpc",
+        "microservices",
+        "auth",
+        "opentelemetry",
+        "protobuf"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/grpc-service-mesh-in-go-aegis-architecture.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products",
+      "url": "https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products",
+      "title": "Architecture Breakdown: CQRS for Mid-size Products",
+      "summary": "A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path.",
+      "date_published": "2026-03-21T00:00:00.000Z",
+      "tags": [
+        "cqrs",
+        "architecture",
+        "backend",
+        "system-design",
+        "database"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/architecture-breakdown-cqrs-for-mid-size-products.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout",
+      "url": "https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout",
+      "title": "Engineering Lessons from a Failed Rollout",
+      "summary": "What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.",
+      "date_published": "2026-03-21T00:00:00.000Z",
+      "tags": [
+        "incident-response",
+        "release-engineering",
+        "devops",
+        "sre",
+        "lessons"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/engineering-lessons-from-a-failed-rollout.svg"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency",
+      "url": "https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency",
+      "title": "System Design Notes: Idempotency",
+      "summary": "Practical patterns for making API writes replay-safe under network retries and partial distributed failures.",
+      "date_published": "2026-03-21T00:00:00.000Z",
+      "tags": [
+        "idempotency",
+        "api-design",
+        "distributed-systems",
+        "resilience"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/system-design-notes-idempotency.svg"
+    }
+  ]
+}

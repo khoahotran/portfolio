@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Khoa Tran Engineering Portfolio - field-notes</title>
+    <link>https://khoahotran.github.io/portfolio/field-notes</link>
+    <description>field-notes articles from Khoa Tran Engineering Portfolio.</description>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 04 Aug 2026 15:00:55 GMT</lastBuildDate>
+    <item>
+      <title>Field Note: Go vs TypeScript for Backend Services</title>
+      <link>https://khoahotran.github.io/portfolio/field-notes/go-vs-typescript-for-backend-services</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/field-notes/go-vs-typescript-for-backend-services</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A working engineer&apos;s honest comparison of Go and TypeScript for backend services, based on using both in production — and a framework for choosing between them.</description>
+    </item>
+    <item>
+      <title>Field Note: Why I Chose Firebase Functions Over Cloud Run</title>
+      <link>https://khoahotran.github.io/portfolio/field-notes/why-i-chose-firebase-functions-over-cloud-run</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/field-notes/why-i-chose-firebase-functions-over-cloud-run</guid>
+      <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A practical evaluation of Firebase Functions vs Cloud Run, and why the simplest serverless model won out for our specific workloads.</description>
+    </item>
+  </channel>
+</rss>

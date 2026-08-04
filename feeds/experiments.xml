@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Khoa Tran Engineering Portfolio - experiments</title>
+    <link>https://khoahotran.github.io/portfolio/experiments</link>
+    <description>experiments articles from Khoa Tran Engineering Portfolio.</description>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 04 Aug 2026 15:00:55 GMT</lastBuildDate>
+    <item>
+      <title>Interactive Event Sourcing Replay</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/event-sourcing-replay</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/event-sourcing-replay</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>An interactive visualization of how application state is derived from an immutable, append-only event log.</description>
+    </item>
+    <item>
+      <title>Redis Streams vs BullMQ: Choosing Your Job Queue</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/redis-streams-vs-bullmq-job-queue-comparison</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/redis-streams-vs-bullmq-job-queue-comparison</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns.</description>
+    </item>
+    <item>
+      <title>Interactive Saga State Machine Visualizer</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/saga-state-machine-visualizer</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/saga-state-machine-visualizer</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+      <description>An interactive visualization of the Saga distributed transaction pattern, demonstrating automated compensating rollbacks.</description>
+    </item>
+    <item>
+      <title>Benchmark: Event Replay in PostgreSQL vs Firestore</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/db-event-replay-benchmark</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/db-event-replay-benchmark</guid>
+      <pubDate>Sat, 27 Jun 2026 00:00:00 GMT</pubDate>
+      <description>An interactive benchmark comparing the time it takes to replay tens of thousands of immutable events into a Read Projection.</description>
+    </item>
+    <item>
+      <title>Benchmark: Go vs TypeScript Concurrency</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/go-vs-ts-concurrency</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/go-vs-ts-concurrency</guid>
+      <pubDate>Fri, 26 Jun 2026 00:00:00 GMT</pubDate>
+      <description>An interactive benchmark visualizing memory footprint and execution time for handling tens of thousands of concurrent network-bound tasks.</description>
+    </item>
+    <item>
+      <title>Benchmark: Redis Streams (Go) vs BullMQ (TS)</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/redis-vs-bullmq</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/redis-vs-bullmq</guid>
+      <pubDate>Thu, 25 Jun 2026 00:00:00 GMT</pubDate>
+      <description>An interactive benchmark visualizing queue throughput and latency between native Redis Streams in Go vs BullMQ in TypeScript.</description>
+    </item>
+    <item>
+      <title>Queue vs Pub/Sub Comparison Notes</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems.</description>
+    </item>
+    <item>
+      <title>Throughput Simulation Notes</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes</guid>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations.</description>
+    </item>
+  </channel>
+</rss>
