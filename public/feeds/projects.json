@@ -11,16 +11,16 @@
       "id": "https://khoahotran.github.io/portfolio/projects/core-banking",
       "url": "https://khoahotran.github.io/portfolio/projects/core-banking",
       "title": "Event-Driven Core Banking System",
-      "summary": "A production-grade core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers.",
+      "summary": "A core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers.",
       "date_published": "2026-06-15T00:00:00.000Z",
       "tags": [
         "event-sourcing",
         "cqrs",
         "saga-pattern",
-        "golang",
+        "go",
         "firestore"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/core-banking.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/core-banking.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/projects/aegis",
@@ -36,7 +36,7 @@
         "kafka",
         "opentelemetry"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/aegis.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/aegis.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/projects/quant-alpha",
@@ -51,7 +51,7 @@
         "machine-learning",
         "hft"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/quant-alpha.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/quant-alpha.png"
     }
   ]
 }

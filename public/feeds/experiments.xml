@@ -5,7 +5,7 @@
     <link>https://khoahotran.github.io/portfolio/experiments</link>
     <description>experiments articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 04 Aug 2026 14:39:24 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 14 Aug 2026 09:19:01 GMT</lastBuildDate>
     <item>
       <title>Interactive Event Sourcing Replay</title>
       <link>https://khoahotran.github.io/portfolio/experiments/event-sourcing-replay</link>
@@ -40,13 +40,6 @@
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/go-vs-ts-concurrency</guid>
       <pubDate>Fri, 26 Jun 2026 00:00:00 GMT</pubDate>
       <description>An interactive benchmark visualizing memory footprint and execution time for handling tens of thousands of concurrent network-bound tasks.</description>
-    </item>
-    <item>
-      <title>Benchmark: Redis Streams (Go) vs BullMQ (TS)</title>
-      <link>https://khoahotran.github.io/portfolio/experiments/redis-vs-bullmq</link>
-      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/redis-vs-bullmq</guid>
-      <pubDate>Thu, 25 Jun 2026 00:00:00 GMT</pubDate>
-      <description>An interactive benchmark visualizing queue throughput and latency between native Redis Streams in Go vs BullMQ in TypeScript.</description>
     </item>
     <item>
       <title>Queue vs Pub/Sub Comparison Notes</title>

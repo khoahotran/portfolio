@@ -20,7 +20,7 @@
         "bullmq",
         "firestore"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/building-jujuja-a-production-quest-system.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/building-jujuja-a-production-quest-system.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/blog/designing-a-multi-role-hft-research-platform",
@@ -35,7 +35,7 @@
         "redis-streams",
         "hft"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/designing-a-multi-role-hft-research-platform.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-multi-role-hft-research-platform.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture",
@@ -51,7 +51,7 @@
         "opentelemetry",
         "protobuf"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/grpc-service-mesh-in-go-aegis-architecture.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/grpc-service-mesh-in-go-aegis-architecture.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products",
@@ -66,7 +66,7 @@
         "system-design",
         "database"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/architecture-breakdown-cqrs-for-mid-size-products.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/architecture-breakdown-cqrs-for-mid-size-products.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout",
@@ -81,7 +81,7 @@
         "sre",
         "lessons"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/engineering-lessons-from-a-failed-rollout.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/engineering-lessons-from-a-failed-rollout.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency",
@@ -95,7 +95,7 @@
         "distributed-systems",
         "resilience"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/system-design-notes-idempotency.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/system-design-notes-idempotency.png"
     }
   ]
 }

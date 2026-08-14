@@ -20,7 +20,7 @@
         "kafka",
         "architecture"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/designing-a-multi-service-auth-platform.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-multi-service-auth-platform.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/system-design/designing-a-real-time-fraud-detection-engine",
@@ -35,23 +35,23 @@
         "event-driven",
         "architecture"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/designing-a-real-time-fraud-detection-engine.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-real-time-fraud-detection-engine.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers",
       "url": "https://khoahotran.github.io/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers",
       "title": "Implementing the Saga Pattern for Distributed Money Transfers",
-      "summary": "How we built a two-phase distributed transfer between account aggregates using the Saga orchestrator pattern, with automatic compensation and dead-letter recovery.",
+      "summary": "How I designed a Saga orchestrator pattern for two-phase distributed transfers between account aggregates, with automatic compensation and dead-letter recovery.",
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
-        "saga",
+        "saga-pattern",
         "distributed-systems",
         "event-sourcing",
         "go",
         "firestore",
         "banking"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/implementing-the-saga-pattern-for-distributed-transfers.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/implementing-the-saga-pattern-for-distributed-transfers.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/system-design/atomic-financial-transactions-in-nosql",
@@ -66,7 +66,7 @@
         "transactions",
         "atomic-operations"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/atomic-financial-transactions-in-nosql.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/atomic-financial-transactions-in-nosql.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/system-design/designing-a-burst-traffic-async-job-pipeline",
@@ -81,7 +81,7 @@
         "queues",
         "firebase-functions"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/designing-a-burst-traffic-async-job-pipeline.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-burst-traffic-async-job-pipeline.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture",
@@ -96,7 +96,7 @@
         "system-design",
         "kafka"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/building-an-event-driven-architecture.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/building-an-event-driven-architecture.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/system-design/system-design-trade-offs-in-practice",
@@ -107,10 +107,9 @@
       "tags": [
         "trade-offs",
         "architecture",
-        "decision-making",
         "engineering-management"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/system-design-trade-offs-in-practice.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/system-design-trade-offs-in-practice.png"
     }
   ]
 }

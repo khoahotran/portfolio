@@ -8,6 +8,8 @@
   </defs>
   <rect width="1200" height="630" fill="url(#bg)" />
   <text x="72" y="120" font-family="Inter, Arial, sans-serif" font-size="28" fill="#99f6e4" font-weight="600">Khoa Tran Engineering Portfolio</text>
-  <text x="72" y="260" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Sub-300ms Store Discovery: Designing Geo-Search with Algolia</text>
-  <text x="72" y="350" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">How we leveraged Algolia to build a blazing fast, geo-aware store discovery engine for SeensioGO and Jujuja, achieving 150-300ms latency.</text>
+  <text x="72" y="260" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Sub-300ms Store Discovery:</text>
+  <text x="72" y="324" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Designing Geo-Search with…</text>
+  <text x="72" y="414" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">How we leveraged Algolia to build a blazing fast,</text>
+  <text x="72" y="454" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">geo-aware store discovery engine for SeensioGO and…</text>
 </svg>

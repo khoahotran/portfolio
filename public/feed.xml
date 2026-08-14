@@ -5,7 +5,7 @@
     <link>https://khoahotran.github.io/portfolio</link>
     <description>Case studies, system design notes, and interactive engineering experiments.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 04 Aug 2026 14:39:24 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 14 Aug 2026 09:19:01 GMT</lastBuildDate>
     <item>
       <title>Building Jujuja: A Production Quest System for Burst Traffic</title>
       <link>https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system</link>
@@ -109,7 +109,7 @@
       <link>https://khoahotran.github.io/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers</guid>
       <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
-      <description>How we built a two-phase distributed transfer between account aggregates using the Saga orchestrator pattern, with automatic compensation and dead-letter recovery.</description>
+      <description>How I designed a Saga orchestrator pattern for two-phase distributed transfers between account aggregates, with automatic compensation and dead-letter recovery.</description>
     </item>
     <item>
       <title>Field Note: Go vs TypeScript for Backend Services</title>
@@ -133,18 +133,11 @@
       <description>An interactive benchmark visualizing memory footprint and execution time for handling tens of thousands of concurrent network-bound tasks.</description>
     </item>
     <item>
-      <title>Benchmark: Redis Streams (Go) vs BullMQ (TS)</title>
-      <link>https://khoahotran.github.io/portfolio/experiments/redis-vs-bullmq</link>
-      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/redis-vs-bullmq</guid>
-      <pubDate>Thu, 25 Jun 2026 00:00:00 GMT</pubDate>
-      <description>An interactive benchmark visualizing queue throughput and latency between native Redis Streams in Go vs BullMQ in TypeScript.</description>
-    </item>
-    <item>
       <title>Event-Driven Core Banking System</title>
       <link>https://khoahotran.github.io/portfolio/projects/core-banking</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/projects/core-banking</guid>
       <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
-      <description>A production-grade core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers.</description>
+      <description>A core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers.</description>
     </item>
     <item>
       <title>Atomic Financial Transactions in a NoSQL World: Building the J-Point Loyalty Engine</title>

@@ -20,7 +20,7 @@
         "bullmq",
         "firestore"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/building-jujuja-a-production-quest-system.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/building-jujuja-a-production-quest-system.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/blog/designing-a-multi-role-hft-research-platform",
@@ -35,7 +35,7 @@
         "redis-streams",
         "hft"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/designing-a-multi-role-hft-research-platform.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-multi-role-hft-research-platform.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture",
@@ -51,7 +51,7 @@
         "opentelemetry",
         "protobuf"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/grpc-service-mesh-in-go-aegis-architecture.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/grpc-service-mesh-in-go-aegis-architecture.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/adr-firestore-vs-postgresql-event-sourcing",
@@ -66,7 +66,7 @@
         "postgresql",
         "architecture"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/adr-firestore-vs-postgresql-event-sourcing.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/adr-firestore-vs-postgresql-event-sourcing.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/adr-graphql-gateway-over-rest",
@@ -81,7 +81,7 @@
         "architecture",
         "go"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/adr-graphql-gateway-over-rest.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/adr-graphql-gateway-over-rest.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/algolia-geo-search-for-store-discovery",
@@ -95,7 +95,7 @@
         "search",
         "geolocation"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/algolia-geo-search-for-store-discovery.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/algolia-geo-search-for-store-discovery.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/distributed-tracing-with-opentelemetry-and-jaeger",
@@ -111,7 +111,7 @@
         "distributed-systems",
         "tracing"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/distributed-tracing-with-opentelemetry-and-jaeger.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/distributed-tracing-with-opentelemetry-and-jaeger.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/event-sourcing-vs-crud-when-to-choose-each",
@@ -127,7 +127,7 @@
         "go",
         "trade-offs"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/event-sourcing-vs-crud-when-to-choose-each.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/event-sourcing-vs-crud-when-to-choose-each.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/order-book-imbalance-hft-signal",
@@ -142,7 +142,7 @@
         "hft",
         "research"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/order-book-imbalance-hft-signal.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/order-book-imbalance-hft-signal.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/experiments/event-sourcing-replay",
@@ -156,7 +156,7 @@
         "cqrs",
         "interactive-demo"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/event-sourcing-replay.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/event-sourcing-replay.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/experiments/redis-streams-vs-bullmq-job-queue-comparison",
@@ -166,6 +166,7 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "experiment",
+        "benchmark",
         "redis",
         "bullmq",
         "queues",
@@ -173,7 +174,7 @@
         "typescript",
         "async-jobs"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/redis-streams-vs-bullmq-job-queue-comparison.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/redis-streams-vs-bullmq-job-queue-comparison.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/experiments/saga-state-machine-visualizer",
@@ -187,7 +188,7 @@
         "saga-pattern",
         "interactive-demo"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/saga-state-machine-visualizer.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/saga-state-machine-visualizer.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/system-design/designing-a-multi-service-auth-platform",
@@ -202,7 +203,7 @@
         "kafka",
         "architecture"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/designing-a-multi-service-auth-platform.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-multi-service-auth-platform.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/system-design/designing-a-real-time-fraud-detection-engine",
@@ -217,23 +218,23 @@
         "event-driven",
         "architecture"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/designing-a-real-time-fraud-detection-engine.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-real-time-fraud-detection-engine.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers",
       "url": "https://khoahotran.github.io/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers",
       "title": "Implementing the Saga Pattern for Distributed Money Transfers",
-      "summary": "How we built a two-phase distributed transfer between account aggregates using the Saga orchestrator pattern, with automatic compensation and dead-letter recovery.",
+      "summary": "How I designed a Saga orchestrator pattern for two-phase distributed transfers between account aggregates, with automatic compensation and dead-letter recovery.",
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
-        "saga",
+        "saga-pattern",
         "distributed-systems",
         "event-sourcing",
         "go",
         "firestore",
         "banking"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/implementing-the-saga-pattern-for-distributed-transfers.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/implementing-the-saga-pattern-for-distributed-transfers.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/field-notes/go-vs-typescript-for-backend-services",
@@ -249,7 +250,7 @@
         "architecture",
         "trade-offs"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/go-vs-typescript-for-backend-services.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/go-vs-typescript-for-backend-services.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/experiments/db-event-replay-benchmark",
@@ -264,7 +265,7 @@
         "firestore",
         "database"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/db-event-replay-benchmark.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/db-event-replay-benchmark.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/experiments/go-vs-ts-concurrency",
@@ -278,37 +279,22 @@
         "typescript",
         "concurrency"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/go-vs-ts-concurrency.svg"
-    },
-    {
-      "id": "https://khoahotran.github.io/portfolio/experiments/redis-vs-bullmq",
-      "url": "https://khoahotran.github.io/portfolio/experiments/redis-vs-bullmq",
-      "title": "Benchmark: Redis Streams (Go) vs BullMQ (TS)",
-      "summary": "An interactive benchmark visualizing queue throughput and latency between native Redis Streams in Go vs BullMQ in TypeScript.",
-      "date_published": "2026-06-25T00:00:00.000Z",
-      "tags": [
-        "benchmark",
-        "redis",
-        "go",
-        "typescript",
-        "queues"
-      ],
-      "image": "https://khoahotran.github.io/portfolio/og/redis-vs-bullmq.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/go-vs-ts-concurrency.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/projects/core-banking",
       "url": "https://khoahotran.github.io/portfolio/projects/core-banking",
       "title": "Event-Driven Core Banking System",
-      "summary": "A production-grade core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers.",
+      "summary": "A core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers.",
       "date_published": "2026-06-15T00:00:00.000Z",
       "tags": [
         "event-sourcing",
         "cqrs",
         "saga-pattern",
-        "golang",
+        "go",
         "firestore"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/core-banking.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/core-banking.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/system-design/atomic-financial-transactions-in-nosql",
@@ -323,7 +309,7 @@
         "transactions",
         "atomic-operations"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/atomic-financial-transactions-in-nosql.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/atomic-financial-transactions-in-nosql.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/system-design/designing-a-burst-traffic-async-job-pipeline",
@@ -338,7 +324,7 @@
         "queues",
         "firebase-functions"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/designing-a-burst-traffic-async-job-pipeline.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-burst-traffic-async-job-pipeline.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/field-notes/why-i-chose-firebase-functions-over-cloud-run",
@@ -353,7 +339,7 @@
         "gcp",
         "trade-offs"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/why-i-chose-firebase-functions-over-cloud-run.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/why-i-chose-firebase-functions-over-cloud-run.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/projects/aegis",
@@ -369,7 +355,7 @@
         "kafka",
         "opentelemetry"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/aegis.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/aegis.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products",
@@ -384,7 +370,7 @@
         "system-design",
         "database"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/architecture-breakdown-cqrs-for-mid-size-products.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/architecture-breakdown-cqrs-for-mid-size-products.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout",
@@ -399,7 +385,7 @@
         "sre",
         "lessons"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/engineering-lessons-from-a-failed-rollout.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/engineering-lessons-from-a-failed-rollout.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency",
@@ -413,7 +399,7 @@
         "distributed-systems",
         "resilience"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/system-design-notes-idempotency.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/system-design-notes-idempotency.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/designing-a-permission-system",
@@ -428,7 +414,7 @@
         "policy-engine",
         "architecture"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/designing-a-permission-system.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-permission-system.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/scaling-background-jobs",
@@ -443,7 +429,7 @@
         "backend",
         "performance"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/scaling-background-jobs.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/scaling-background-jobs.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes",
@@ -453,12 +439,12 @@
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
         "experiment",
-        "queue",
+        "queues",
         "pubsub",
         "messaging",
         "system-design"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/queue-vs-pub-sub-comparison-notes.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/queue-vs-pub-sub-comparison-notes.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes",
@@ -472,7 +458,7 @@
         "capacity-planning",
         "simulation"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/throughput-simulation-notes.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/throughput-simulation-notes.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture",
@@ -487,7 +473,7 @@
         "system-design",
         "kafka"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/building-an-event-driven-architecture.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/building-an-event-driven-architecture.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/system-design/system-design-trade-offs-in-practice",
@@ -498,10 +484,9 @@
       "tags": [
         "trade-offs",
         "architecture",
-        "decision-making",
         "engineering-management"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/system-design-trade-offs-in-practice.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/system-design-trade-offs-in-practice.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/projects/quant-alpha",
@@ -516,7 +501,7 @@
         "machine-learning",
         "hft"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/quant-alpha.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/quant-alpha.png"
     }
   ]
 }
