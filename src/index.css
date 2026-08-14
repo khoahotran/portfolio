@@ -90,6 +90,16 @@ body {
   text-underline-offset: 2px;
 }
 
+/* CTA buttons embedded as raw HTML (e.g. "View Interactive Benchmark" links to a
+   /labs/<id> lab) set their own Tailwind `text-white` — without this override the
+   blanket `.markdown-body a` rule above wins the cascade (equal specificity, later
+   source order) and renders them teal-on-teal, invisible against their own
+   teal/slate background. */
+.markdown-body a.text-white {
+  color: rgb(255 255 255);
+  text-decoration: none;
+}
+
 .markdown-body table {
   width: 100%;
   display: block;
@@ -129,12 +139,162 @@ body {
   color: rgb(226 232 240);
 }
 
+/* ── Syntax highlighting (rehype-highlight / highlight.js token classes) ──
+   markdown.ts runs rehype-highlight, which emits `.hljs-*` scope classes,
+   but no theme ever styled them — every language-tagged block rendered in
+   one flat color. Palette tuned for the dark `pre` surface above. */
+
+.hljs-comment,
+.hljs-quote {
+  color: rgb(148 163 184);
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #c678dd;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition {
+  color: #98c379;
+}
+
+.hljs-number,
+.hljs-literal {
+  color: #d19a66;
+}
+
+.hljs-title,
+.hljs-title.function_ {
+  color: #61afef;
+}
+
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-type {
+  color: #e5c07b;
+}
+
+.hljs-built_in,
+.hljs-symbol {
+  color: #56b6c2;
+}
+
+.hljs-attr,
+.hljs-property,
+.hljs-variable.constant_ {
+  color: #d19a66;
+}
+
+.hljs-variable,
+.hljs-variable.language_,
+.hljs-deletion {
+  color: #e06c75;
+}
+
+.hljs-params,
+.hljs-punctuation,
+.hljs-operator {
+  color: rgb(226 232 240);
+}
+
+.hljs-meta,
+.hljs-bullet {
+  color: #56b6c2;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: 700;
+}
+
+.hljs-addition {
+  background: rgba(152, 195, 121, 0.15);
+}
+
+.hljs-deletion {
+  background: rgba(224, 108, 117, 0.15);
+}
+
 .markdown-body blockquote {
   border-left: 4px solid rgb(148 163 184);
   margin: 1.2rem 0;
   padding-left: 1rem;
   color: rgb(71 85 105);
   font-style: italic;
+}
+
+/* ── GFM-style callouts (`> [!NOTE]`, `> [!WARNING]`, ...) ──────────────
+   Produced by the rehypeCallout plugin in markdown.ts, which replaces the
+   marked blockquote with one of these divs. Not nested under
+   `.markdown-body blockquote` above — callouts are not italic quotes. */
+
+.markdown-body .callout {
+  margin: 1.2rem 0;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid;
+  border-left-width: 4px;
+  border-radius: 0.5rem;
+  font-style: normal;
+}
+
+.markdown-body .callout > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body .callout-title {
+  margin-top: 0;
+  margin-bottom: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.markdown-body .callout-note {
+  border-color: rgb(191 219 254);
+  background: rgb(239 246 255);
+}
+.markdown-body .callout-note .callout-title {
+  color: rgb(29 78 216);
+}
+
+.markdown-body .callout-tip {
+  border-color: rgb(167 243 208);
+  background: rgb(240 253 244);
+}
+.markdown-body .callout-tip .callout-title {
+  color: rgb(4 120 87);
+}
+
+.markdown-body .callout-important {
+  border-color: rgb(216 180 254);
+  background: rgb(250 245 255);
+}
+.markdown-body .callout-important .callout-title {
+  color: rgb(126 34 206);
+}
+
+.markdown-body .callout-warning {
+  border-color: rgb(253 224 71);
+  background: rgb(254 252 232);
+}
+.markdown-body .callout-warning .callout-title {
+  color: rgb(161 98 7);
+}
+
+.markdown-body .callout-caution {
+  border-color: rgb(254 202 202);
+  background: rgb(254 242 242);
+}
+.markdown-body .callout-caution .callout-title {
+  color: rgb(185 28 28);
 }
 
 .markdown-body .heading-anchor {
