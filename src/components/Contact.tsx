@@ -47,15 +47,6 @@ export default function Contact() {
           <MapPin size={14} className="text-teal-500" />
           <span>{contactData.location}</span>
         </div>
-
-        <footer className="mt-20 pt-12 border-t border-slate-50">
-          <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">
-            (c) {new Date().getFullYear()} Trần Nguyễn Anh Khoa
-          </p>
-          <p className="text-[10px] text-slate-300 mt-2 uppercase tracking-tighter">
-            STUDENT @ HCMUT • FULL-STACK DEVELOPER
-          </p>
-        </footer>
       </div>
     </section>
   );
