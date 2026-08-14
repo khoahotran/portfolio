@@ -111,13 +111,17 @@ export const caseStudiesData: Project[] = [
       deck: 'https://apps.apple.com/app/jujuja/id6553972212',
     },
   },
-  // ── Personal Projects ────────────────────────────────────────────────────
+  // ── Flagship Case Studies ────────────────────────────────────────────────
+  // The three deep-dive projects with their own content/projects/*.md page
+  // (see .ai/flagship-projects.md's "Big Three") — kept in their own section,
+  // distinct from `personal` below, so this label doesn't also cover
+  // ScrapeAndDown, which has no deep-dive page.
   {
     title: 'Aegis',
     slug: 'aegis',
     role: 'Author — Backend Engineer',
-    scale: 'Personal Project',
-    section: 'personal',
+    scale: 'Independent Engineering Project',
+    section: 'flagship',
     summary:
       'Modular, high-performance Auth & Authorization platform in Go. Separate Identity, Policy, and Gateway microservices connected via gRPC, with a GraphQL API gateway, Kafka-based audit logging, and OpenTelemetry tracing.',
     metrics: [
@@ -142,8 +146,8 @@ export const caseStudiesData: Project[] = [
     title: 'Event-Driven Core Banking',
     slug: 'core-banking',
     role: 'Author — Backend Engineer',
-    scale: 'Personal Project',
-    section: 'personal',
+    scale: 'Independent Engineering Project',
+    section: 'flagship',
     summary:
       'Production-grade core banking system in Go using Event Sourcing and CQRS on Firestore. Includes distributed Saga transfers, real-time fraud detection with velocity rules, Prometheus metrics, and snapshotting every 100 events.',
     metrics: [
@@ -169,7 +173,7 @@ export const caseStudiesData: Project[] = [
     slug: 'quant-alpha',
     role: 'Contributor — Backend + ML',
     scale: 'Academic Research Platform',
-    section: 'personal',
+    section: 'flagship',
     summary:
       'High-Frequency Trading research platform with decoupled Go API, Angular 18 frontend, and async Python worker backed by Redis Streams and PostgreSQL. Models trained on VN30F2112 Level-3 order-book data with rolling-window ML classifiers.',
     metrics: [
@@ -189,6 +193,7 @@ export const caseStudiesData: Project[] = [
       github: 'https://github.com/khoahotran/HFT',
     },
   },
+  // ── Personal Projects ────────────────────────────────────────────────────
   {
     title: 'ScrapeAndDown',
     role: 'Author — Backend Engineer',
