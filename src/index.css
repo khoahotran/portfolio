@@ -467,3 +467,19 @@ body {
   100% { background-position: -200% 0; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-fade-in,
+  .animate-fade-in-delay-1,
+  .animate-fade-in-delay-2,
+  .animate-bounce-slow,
+  .mermaid-diagram {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
