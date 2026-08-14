@@ -136,7 +136,7 @@ export const caseStudiesData: Project[] = [
       'Modular, high-performance Auth & Authorization platform in Go. Separate Identity, Policy, and Gateway microservices connected via gRPC, with a GraphQL API gateway, Kafka-based audit logging, and OpenTelemetry tracing.',
     metrics: [
       'Argon2id password hashing',
-      'Token bucket rate limiting',
+      'Redis-backed rate limiting',
       'Sub-5ms policy cache hits (Redis)',
       'Full OTel trace propagation',
     ],
@@ -159,7 +159,7 @@ export const caseStudiesData: Project[] = [
     scale: 'Independent Engineering Project',
     section: 'flagship',
     summary:
-      'Production-grade core banking system in Go using Event Sourcing and CQRS on Firestore. Includes distributed Saga transfers, real-time fraud detection with velocity rules, Prometheus metrics, and snapshotting every 100 events.',
+      'Core banking system in Go using Event Sourcing and CQRS on Firestore. Includes distributed Saga transfers, real-time fraud detection with velocity rules, Prometheus metrics, and snapshotting every 100 events.',
     metrics: [
       'Event sourcing with O(1) read projections',
       'Optimistic concurrency control on writes',
@@ -170,7 +170,7 @@ export const caseStudiesData: Project[] = [
     architecture: [
       'Write side: append-only EventStore on Firestore with OCC.',
       'Read side: ProjectionRepository for fast O(1) account reads.',
-      'Saga worker: orchestrates Debit A → Credit B across aggregates.',
+      'Saga worker: event-driven compensation across Debit A → Credit B aggregates.',
       'Fraud engine: velocity rules trigger automatic account freeze.',
       'Prometheus /metrics endpoint for business + fraud observability.',
     ],
@@ -188,9 +188,7 @@ export const caseStudiesData: Project[] = [
       'High-Frequency Trading research platform with decoupled Go API, Angular 18 frontend, and async Python worker backed by Redis Streams and PostgreSQL. Models trained on VN30F2112 Level-3 order-book data with rolling-window ML classifiers.',
     metrics: [
       'VN30F2112 order-book (2021-04-19 → 2021-12-16)',
-      'Rolling 30-min train → 10-sec prediction windows',
       'Redis Streams for async job dispatch',
-      'Live at hft-mauve.vercel.app',
     ],
     stack: ['Go', 'Angular 18', 'Python', 'Redis Streams', 'PostgreSQL', 'scikit-learn'],
     architecture: [

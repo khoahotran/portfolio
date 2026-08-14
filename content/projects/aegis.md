@@ -15,7 +15,7 @@ reading_time: "10 min"
 1. Centralize Identity (Authentication) and Policy (Authorization).
 2. Achieve **sub-5ms** authorization checks so downstream services aren't penalized.
 3. Provide a unified GraphQL API gateway for clients, while keeping internal service-to-service communication on high-speed gRPC.
-4. Guarantee a 100% reliable audit log for compliance.
+4. Build a durable audit log — every auth event delivered at-least-once and safely deduplicated, rather than best-effort — as a foundation for compliance.
 
 ## Architecture
 
@@ -79,9 +79,9 @@ C4Container
 
 ## Production Engineering
 
-- **Rate Limiting:** A Token Bucket algorithm is implemented in Redis at the Gateway layer to prevent brute-force attacks.
+- **Rate Limiting:** The Gateway rate-limits requests via Redis to blunt brute-force and credential-stuffing attempts. The current repository implements this as a fixed-window `INCR`/`EXPIRE` counter (separate IP and per-user limits); a Lua-scripted token-bucket variant — shown as the more precise reference pattern in the [gRPC service mesh walkthrough](/blog/grpc-service-mesh-in-go-aegis-architecture) — is not what's currently running.
 - **Distributed Tracing:** OpenTelemetry is instrumented across all gRPC calls. Every request has a `trace_id` injected into the context, allowing us to visualize the exact latency breakdown between the Gateway, Identity Service, and Database in Jaeger.
-- **Graceful Shutdown:** All Go servers trap `SIGTERM`, stop accepting new connections, and drain existing requests before exiting, ensuring zero-downtime Kubernetes rollouts.
+- **Graceful Shutdown:** The Audit worker traps `SIGTERM`, stops pulling new work, and lets in-flight processing finish before exiting — this is one piece of a zero-downtime Kubernetes rollout design, though it is not the whole story (readiness probes, PodDisruptionBudgets, and drain-timeout tuning also matter and aren't demonstrated here). The Gateway, Identity, and Policy services do not yet implement the same signal handling in the current repository.
 
 ## Reflection
 

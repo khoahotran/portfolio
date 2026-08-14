@@ -70,7 +70,9 @@ We could have exposed a Flask/FastAPI endpoint on the Python worker and had the 
 
 However, training a Random Forest on 30 minutes of tick data takes 10 to 45 seconds. An HTTP connection held open for 45 seconds wastes resources and is vulnerable to timeouts. 
 
-Instead, we used Redis Streams to implement an asynchronous job queue with Consumer Groups. The Go API uses `XADD` to push a job payload (e.g., "Train model on VN30F2112 for 09:30-10:00"). The Python workers use `XREADGROUP` to reliably claim jobs. If a Python worker crashes mid-training, the job remains in the Pending Entries List (PEL) and is eventually reassigned.
+Instead, we used Redis Streams to implement an asynchronous job queue with Consumer Groups. The Go API uses `XADD` to push a job payload (e.g., "Train model on VN30F2112 for 09:30-10:00"). The Python workers use `XREADGROUP` to reliably claim jobs. If a Python worker crashes mid-training, the job remains in the Pending Entries List (PEL) rather than being lost.
+
+> **Current implementation vs. target design:** today, PEL recovery happens once, at worker startup, when a worker reclaims *its own* pending jobs — there's no separate watchdog process, and the consumer identity is currently a fixed, hardcoded value rather than one assigned per running instance. A dedicated watchdog that reassigns an abandoned job to a *different*, healthy worker — which is what would be needed to genuinely support running several Python workers in parallel — is the target design, not what's currently implemented.
 
 ## The Job Dispatch Flowchart
 
@@ -96,6 +98,8 @@ flowchart TD
     
     UpdateDB -.-> API
 ```
+
+> **Known limitation (updated):** the Postgres status write and the Redis `XADD` above are two separate operations issued from the API — the dual-write boundary remains non-atomic. The backtest submission path now includes a compensating rollback (the created Postgres row is deleted) when the Redis publish call fails, plus a check that rejects a duplicate submission for the same alpha and parameters while one is already in flight; this closes the most common failure case for that path and is covered by an automated test. It does not provide a general atomic transaction across PostgreSQL and Redis — a crash between the two writes, rather than a clean Redis-side error, can still leave a `PENDING` row with no corresponding stream entry — and the training job path does not have the same rollback mitigation yet. A transactional outbox would close the remaining gap for both paths; the current dispatch path does not have that guarantee.
 
 ## Designing for the Portfolio Manager
 

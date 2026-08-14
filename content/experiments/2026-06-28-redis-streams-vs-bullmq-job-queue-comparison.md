@@ -56,7 +56,7 @@ Failed jobs move to DLQ (separate sorted set).
 
 ## Implementation: Redis Streams (Go)
 
-In QuantAlpha Lab, the Go API publishes a prediction request and Python workers in each consumer group read it:
+Here's the general pattern for a multi-consumer-group Redis Streams dispatcher in Go — the reference design behind QuantAlpha Lab's job-queue architecture (see the note after this section for how it compares to what's currently committed):
 
 ```go
 package dispatch
@@ -173,6 +173,8 @@ func reclaimStalePending(ctx context.Context, rdb *redis.Client, group, consumer
     }
 }
 ```
+
+> **Current implementation vs. this pattern:** the QuantAlpha Lab (`HFT`) repository's actual dispatch code is simpler than the reference pattern above — one stream (`job_queue`), one consumer group (`worker_group`), and no `XAutoClaim`/`XClaim` anywhere in the codebase. Recovery of stuck jobs is a startup-time PEL scan by the worker's own consumer identity, not a periodic cross-consumer reclaim goroutine, and there's no multi-group fan-out by role (Data Scientist / Quant Researcher / Portfolio Manager) in the committed code. The pattern above remains the reference design this comparison illustrates; it is not what's currently running.
 
 ---
 

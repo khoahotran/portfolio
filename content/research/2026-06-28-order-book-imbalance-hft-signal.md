@@ -27,11 +27,13 @@ An OBI of `+1.0` means overwhelming buy pressure (everyone wants to buy, no one 
 
 ### Beyond Level 1: Depth Imbalance
 
-While Level 1 OBI is a strong signal, smart money often spoofs the top of the book while placing real liquidity at Levels 2 through 5. To capture this, our Python worker computed a weighted depth imbalance:
+While Level 1 OBI is a strong signal, smart money often spoofs the top of the book while placing real liquidity at Levels 2 through 5. To capture this, the research design behind this depth-imbalance work called for a weighted depth imbalance:
 
 $$ OBI_{weighted} = \sum_{i=1}^{5} \left( \frac{V_{bid,i} - V_{ask,i}}{V_{bid,i} + V_{ask,i}} \times e^{-\alpha (i-1)} \right) $$
 
 This equation decays the importance of the imbalance exponentially as we look deeper into the book.
+
+> **Current implementation vs. this formula:** the weighted, multi-level depth imbalance above is the research methodology this project explored, not a formula computed anywhere in the committed `HFT` repository. The one OBI calculation that does exist in code is a simpler single-level version — `(bid_depth − ask_depth) / (bid_depth + ask_depth)` — used as a seeded example user alpha script (a demonstration of the platform's user-scriptable signal feature), not an automatic feature the training pipeline computes for every model.
 
 ## The Rolling Window Training Pipeline
 
@@ -49,9 +51,9 @@ timeline
     09:40 - 09:50 : Window 2 (Trade) : Switch to new model
 ```
 
-Instead of a single global model, the QuantAlpha system trains hundreds of micro-models throughout the day using `scikit-learn` (specifically `RandomForestClassifier` and `GradientBoostingClassifier`). 
+Instead of a single global model, the target design for QuantAlpha is to train hundreds of micro-models throughout the day using `scikit-learn` (specifically `RandomForestClassifier` and `GradientBoostingClassifier`), continuously rolling the window forward: every 10 seconds, the worker would receive a job via **Redis Streams** from the Go API, pull the last 30 minutes of tick data, compute the OBI features, train a fresh model, and push the serialized weights back out.
 
-Every 10 minutes, the Python worker receives a job via **Redis Streams** from the Go API. It pulls the last 30 minutes of tick data, computes the OBI features, trains a fresh model, and pushes the serialized weights back to PostgreSQL.
+> **Current implementation vs. this pipeline:** the committed `HFT` repository's `train` job runs a single fit per request — a user or the API submits one training job over a CSV-sourced, date-range-bounded slice of tick data, the worker performs one chronological 80/20 train/validation split, and saves the resulting model artifact and metrics. There is no scheduler or loop that automatically re-triggers training every 10 seconds, and tick data itself is read directly from CSV rather than stored in or queried back out of PostgreSQL. The continuous rolling-window design above remains the intended methodology; it is not what's currently running.
 
 ## Predicting the Next 10 Seconds
 
