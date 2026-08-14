@@ -2,6 +2,7 @@
 title: "Designing a Multi-Service Auth Platform: The Aegis Architecture"
 date: "2026-06-28"
 tags: ["system-design", "go", "grpc", "kafka", "architecture"]
+related: ["projects/aegis", "blog/grpc-service-mesh-in-go-aegis-architecture", "research/distributed-tracing-with-opentelemetry-and-jaeger", "research/adr-graphql-gateway-over-rest"]
 summary: "A deep dive into Aegis, a high-performance authorization platform using gRPC microservices, a GraphQL gateway, Kafka audit logging, and OpenTelemetry."
 reading_time: "15 min"
 ---

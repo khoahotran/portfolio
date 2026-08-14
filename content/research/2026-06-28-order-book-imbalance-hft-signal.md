@@ -2,6 +2,7 @@
 title: "Order Book Imbalance (OBI) as a Signal for Short-Term Price Prediction"
 date: "2026-06-28"
 tags: ["machine-learning", "finance", "python", "hft", "research"]
+related: ["projects/quant-alpha", "blog/designing-a-multi-role-hft-research-platform"]
 summary: "Research notes on extracting Order Book Imbalance (OBI) features from Level-3 market data (VN30F2112) to train rolling-window ML classifiers for High-Frequency Trading."
 reading_time: "10 min"
 ---

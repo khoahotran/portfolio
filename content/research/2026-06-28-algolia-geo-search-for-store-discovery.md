@@ -2,6 +2,7 @@
 title: "Sub-300ms Store Discovery: Designing Geo-Search with Algolia"
 date: "2026-06-28"
 tags: ["system-design", "algolia", "search", "geolocation"]
+related: ["blog/building-jujuja-a-production-quest-system", "field-notes/why-i-chose-firebase-functions-over-cloud-run"]
 summary: "How we leveraged Algolia to build a blazing fast, geo-aware store discovery engine for SeensioGO and Jujuja, achieving 150-300ms latency."
 reading_time: "9 min"
 ---

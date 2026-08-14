@@ -2,6 +2,7 @@
 title: "Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System"
 date: "2026-06-03"
 tags: ["nestjs", "async-jobs", "scalability", "queues", "firebase-functions"]
+related: ["blog/building-jujuja-a-production-quest-system", "field-notes/why-i-chose-firebase-functions-over-cloud-run"]
 summary: "How we redesigned daily quest processing from synchronous handlers to a queue-driven worker pool that handles 1,500 concurrent users during campaign windows."
 reading_time: "9 min read"
 ---

@@ -2,6 +2,7 @@
 title: "Designing a Real-Time Fraud Detection Engine with Velocity Rules"
 date: "2026-06-28"
 tags: ["system-design", "go", "finance", "event-driven", "architecture"]
+related: ["projects/core-banking", "system-design/implementing-the-saga-pattern-for-distributed-transfers"]
 summary: "How I built a real-time fraud detection engine using Event Sourcing, CQRS, and velocity rules to automatically freeze malicious accounts in a core banking system."
 reading_time: "14 min"
 ---

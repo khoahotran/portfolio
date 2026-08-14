@@ -2,6 +2,7 @@
 title: "Benchmark: Go vs TypeScript Concurrency"
 date: "2026-06-26"
 tags: ["benchmark", "go", "typescript", "concurrency"]
+related: ["blog/grpc-service-mesh-in-go-aegis-architecture", "field-notes/go-vs-typescript-for-backend-services"]
 summary: "An interactive benchmark visualizing memory footprint and execution time for handling tens of thousands of concurrent network-bound tasks."
 reading_time: "4 min"
 ---

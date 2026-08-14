@@ -2,6 +2,7 @@
 title: "Aegis: High-Performance Auth & Authorization Platform"
 date: "2026-04-10"
 tags: ["go", "grpc", "microservices", "redis", "kafka", "opentelemetry"]
+related: ["blog/grpc-service-mesh-in-go-aegis-architecture", "system-design/designing-a-multi-service-auth-platform", "research/distributed-tracing-with-opentelemetry-and-jaeger", "research/adr-graphql-gateway-over-rest"]
 summary: "A modular, high-performance Identity and Policy microservice platform in Go, featuring sub-5ms RBAC evaluations and distributed tracing."
 reading_time: "10 min"
 ---

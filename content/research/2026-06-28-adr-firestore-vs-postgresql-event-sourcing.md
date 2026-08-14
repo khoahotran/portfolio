@@ -2,6 +2,7 @@
 title: "ADR: Firestore vs PostgreSQL for Event Sourcing in Core Banking"
 date: "2026-06-28"
 tags: ["adr", "event-sourcing", "firestore", "postgresql", "architecture"]
+related: ["projects/core-banking", "experiments/db-event-replay-benchmark"]
 summary: "An Architecture Decision Record detailing why Firestore was chosen over PostgreSQL as the primary EventStore for the Event-Driven Core Banking platform."
 reading_time: "6 min"
 ---

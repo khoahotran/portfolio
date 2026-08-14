@@ -2,6 +2,7 @@
 title: "Event-Driven Core Banking System"
 date: "2026-06-15"
 tags: ["event-sourcing", "cqrs", "saga-pattern", "golang", "firestore"]
+related: ["system-design/implementing-the-saga-pattern-for-distributed-transfers", "system-design/designing-a-real-time-fraud-detection-engine", "research/adr-firestore-vs-postgresql-event-sourcing", "research/event-sourcing-vs-crud-when-to-choose-each", "experiments/event-sourcing-replay", "experiments/saga-state-machine-visualizer"]
 summary: "A production-grade core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers."
 reading_time: "12 min"
 ---

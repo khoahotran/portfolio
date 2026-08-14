@@ -2,6 +2,7 @@
 title: "Interactive Saga State Machine Visualizer"
 date: "2026-06-28"
 tags: ["distributed-systems", "microservices", "saga-pattern", "interactive-demo"]
+related: ["projects/core-banking"]
 summary: "An interactive visualization of the Saga distributed transaction pattern, demonstrating automated compensating rollbacks."
 reading_time: "5 min"
 ---
