@@ -1,7 +1,72 @@
+import { Link, useNavigate, type NavigateFunction } from 'react-router-dom';
 import MermaidDiagram from '../components/content/MermaidDiagram';
 import { useSeo } from '../seo/useSeo';
 
+/**
+ * Reading paths from `.ai/knowledge-graph.md` ("Recommended Reading Paths"),
+ * kept as plain in-app links here as the reliable fallback next-action for
+ * this page — independent of whether the diagram's node-click wiring below
+ * works in a given browser. Each `to` is verified to resolve to a real route.
+ */
+const READING_PATHS = [
+  {
+    title: 'The FinTech Architect',
+    steps: [
+      { label: 'Core Banking', kind: 'Flagship', to: '/projects/core-banking' },
+      { label: 'Atomic Financial Transactions in NoSQL', kind: 'Deep Dive', to: '/system-design/atomic-financial-transactions-in-nosql' },
+      { label: 'Saga State Machine', kind: 'Lab', to: '/labs/saga-state-machine' },
+      { label: 'DB Event Replay Benchmark', kind: 'Benchmark', to: '/labs/db-event-replay-benchmark' },
+    ],
+  },
+  {
+    title: 'High-Performance Go Backend',
+    steps: [
+      { label: 'Aegis', kind: 'Flagship', to: '/projects/aegis' },
+      { label: 'gRPC Service Mesh in Go', kind: 'Architecture Note', to: '/blog/grpc-service-mesh-in-go-aegis-architecture' },
+      { label: 'Go vs TS Concurrency', kind: 'Benchmark', to: '/labs/go-vs-ts-concurrency' },
+    ],
+  },
+];
+
+/**
+ * Wires the diagram's `click <nodeId> href "/path" "_self"` anchors (see the
+ * `click` lines in graphDefinition below) to client-side navigation instead
+ * of a full page reload. Mermaid emits these as real SVG `<a>` elements using
+ * `xlink:href` (not `href`) — confirmed against the rendered output, not
+ * assumed. Same convention as MarkdownContent's normalizeLinks/handleLinkClick:
+ * the visible href is rewritten to include the app's base path (correct
+ * without JS / on view-source), while the original app-relative path is
+ * kept in a data attribute for `navigate()` so it isn't double-prefixed.
+ */
+function wireGraphLinks(container: HTMLElement, navigate: NavigateFunction) {
+  const XLINK = 'http://www.w3.org/1999/xlink';
+  const base = import.meta.env.BASE_URL;
+
+  container.querySelectorAll<SVGAElement>('a').forEach((anchor) => {
+    const appPath = anchor.getAttributeNS(XLINK, 'href') ?? anchor.getAttribute('href');
+    if (!appPath || !appPath.startsWith('/')) {
+      return;
+    }
+
+    (anchor as unknown as HTMLElement).dataset.appPath = appPath;
+    anchor.setAttributeNS(XLINK, 'xlink:href', `${base}${appPath.slice(1)}`);
+  });
+
+  container.addEventListener('click', (event) => {
+    const anchor = (event.target as Element).closest('a') as (SVGAElement & HTMLElement) | null;
+    const appPath = anchor?.dataset.appPath;
+    if (!appPath) {
+      return;
+    }
+
+    event.preventDefault();
+    navigate(appPath);
+  });
+}
+
 function KnowledgeGraphPage() {
+  const navigate = useNavigate();
+
   useSeo({ title: 'Ecosystem Graph', description: 'Interactive ecosystem graph of the portfolio.' });
 
   // Scoped to the 3 flagship projects (content/projects/*.md, ".ai/flagship-projects.md"'s
@@ -11,6 +76,10 @@ function KnowledgeGraphPage() {
   // instead. Drawing them as flagship projects overstated what exists. Every
   // edge below is cross-checked against .ai/flagship-projects.md and each
   // project's own frontmatter tags, not carried over from the previous version.
+  //
+  // The three `click` lines make the flagship nodes navigate to their project
+  // pages (wired to client-side routing by wireGraphLinks above) — this used
+  // to be a diagram with zero links anywhere on the page.
   const graphDefinition = `
 graph TD
     %% Styling
@@ -62,10 +131,15 @@ graph TD
     C_EventSourcing -.-> P_Banking
     C_CQRS -.-> P_Banking
     C_Saga -.-> P_Banking
-    
+
     C_RBAC -.-> P_Aegis
     C_Microservices -.-> P_Aegis
     C_CQRS -.-> P_Aegis
+
+    %% Click-through to the flagship project pages
+    click P_Aegis href "/projects/aegis" "_self"
+    click P_Banking href "/projects/core-banking" "_self"
+    click P_Quant href "/projects/quant-alpha" "_self"
   `;
 
   return (
@@ -77,10 +151,19 @@ graph TD
         </p>
       </header>
 
-      <section className="bg-white p-8 rounded-3xl shadow-xl border border-slate-200 overflow-x-auto">
-        <div className="min-w-[800px]">
-          <MermaidDiagram chart={graphDefinition} />
+      <section className="bg-white p-4 md:p-8 rounded-3xl shadow-xl border border-slate-200 overflow-x-auto">
+        {/* The 800px floor only applies from md: up. Below that, the SVG scales down to fit the
+            viewport via the `.mermaid-rendered svg { max-width: 100% }` rule in index.css instead
+            of forcing a fixed-width diagram that leaves most of it permanently off-screen. */}
+        <div className="md:min-w-[800px]">
+          <MermaidDiagram
+            chart={graphDefinition}
+            onRendered={(container) => wireGraphLinks(container, navigate)}
+          />
         </div>
+        <p className="mt-4 text-center text-xs text-slate-400">
+          Dark nodes (Aegis, Core Banking, QuantAlpha) link to their project page.
+        </p>
       </section>
 
       <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto text-sm">
@@ -97,6 +180,36 @@ graph TD
           <span className="font-semibold text-slate-700">Architecture Concepts</span>
         </div>
       </div>
+
+      <section className="mt-16 max-w-4xl mx-auto">
+        <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 mb-6 text-center">
+          Recommended Reading Paths
+        </h2>
+        <div className="grid gap-6 md:grid-cols-2">
+          {READING_PATHS.map((path) => (
+            <div key={path.title} className="rounded-2xl border border-slate-200 bg-white p-6">
+              <h3 className="mb-4 font-bold text-slate-900">{path.title}</h3>
+              <ol className="space-y-3">
+                {path.steps.map((step, i) => (
+                  <li key={step.to} className="flex items-start gap-3 text-sm">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-slate-500">
+                      {i + 1}
+                    </span>
+                    <Link to={step.to} className="min-w-0 flex-1 group">
+                      <span className="mr-1.5 text-[10px] font-bold uppercase tracking-widest text-teal-600">
+                        {step.kind}
+                      </span>
+                      <span className="text-slate-700 group-hover:text-teal-700 group-hover:underline">
+                        {step.label}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }

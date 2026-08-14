@@ -32,12 +32,12 @@ from the UI. The filename stays `knowledge-graph.md`; other `.ai/` docs referenc
 **Path 1: The FinTech Architect**
 1. Read `/projects/core-banking` (Flagship)
 2. Read `/system-design/atomic-financial-transactions-in-nosql` (Deep Dive)
-3. Interact with `/experiments/saga-state-machine-visualizer` (Lab)
-4. Interact with `/experiments/db-event-replay-benchmark` (Benchmark)
+3. Interact with `/labs/saga-state-machine` (Lab) — write-up at `/experiments/saga-state-machine-visualizer`
+4. Interact with `/labs/db-event-replay-benchmark` (Benchmark) — write-up at `/experiments/db-event-replay-benchmark`
 
 **Path 2: High-Performance Go Backend**
 1. Read `/projects/aegis` (Flagship)
 2. Read `/blog/grpc-service-mesh-in-go-aegis-architecture` (Architecture Note)
-3. Interact with `/experiments/go-vs-ts-concurrency` (Benchmark)
+3. Interact with `/labs/go-vs-ts-concurrency` (Benchmark) — write-up at `/experiments/go-vs-ts-concurrency`
 
 *Note: You can view the visual representation of this graph in the actual app at the `/graph` route.*
