@@ -7,6 +7,8 @@ const markdownLoaders = import.meta.glob('../../content/{blog,research,experimen
 
 const rawLoaderMap = new Map<string, () => Promise<string>>();
 
+// Kept identical to the slugify() in scripts/build-search-index.mjs, which produces
+// the canonical slugs stored in the generated content index.
 function slugify(value: string): string {
   return value
     .toLowerCase()
@@ -44,11 +46,68 @@ function getRawKey(collection: ContentCollection, slug: string): string {
   return `${collection}:${slug}`;
 }
 
+// build-search-index.mjs honours an explicit `slug:` frontmatter field, so the
+// canonical slug in the generated index can differ from the filename-derived one
+// this module keys its loader map by. That only matters for the rare file that
+// sets `slug:` — extracting it means reading the file's raw text, so this stays
+// a fallback triggered only when the cheap filename-based lookup above misses,
+// rather than parsing frontmatter for every file up front on module load.
+function extractFrontmatterSlug(raw: string): string | null {
+  const match = raw.match(/^---\n([\s\S]*?)\n---\n?/);
+  if (!match) {
+    return null;
+  }
+
+  const slugLine = match[1].split('\n').find((line) => /^slug\s*:/.test(line.trim()));
+  if (!slugLine) {
+    return null;
+  }
+
+  const value = slugLine
+    .slice(slugLine.indexOf(':') + 1)
+    .trim()
+    .replace(/^['"]|['"]$/g, '');
+
+  return value ? slugify(value) : null;
+}
+
+async function findLoaderByFrontmatterSlug(
+  collection: ContentCollection,
+  slug: string
+): Promise<(() => Promise<string>) | null> {
+  const prefix = `${collection}:`;
+
+  for (const [key, loader] of rawLoaderMap) {
+    if (!key.startsWith(prefix)) {
+      continue;
+    }
+
+    const raw = await loader();
+    if (extractFrontmatterSlug(raw) === slug) {
+      return () => Promise.resolve(raw);
+    }
+  }
+
+  return null;
+}
+
+async function resolveLoader(
+  collection: ContentCollection,
+  slug: string
+): Promise<(() => Promise<string>) | null> {
+  const direct = rawLoaderMap.get(getRawKey(collection, slug));
+  if (direct) {
+    return direct;
+  }
+
+  return findLoaderByFrontmatterSlug(collection, slug);
+}
+
 export async function getRawContentBySlug(
   collection: ContentCollection,
   slug: string
 ): Promise<string | null> {
-  const loader = rawLoaderMap.get(getRawKey(collection, slug));
+  const loader = await resolveLoader(collection, slug);
   if (!loader) {
     return null;
   }
@@ -57,7 +116,7 @@ export async function getRawContentBySlug(
 }
 
 export async function prefetchRawContentBySlug(collection: ContentCollection, slug: string): Promise<void> {
-  const loader = rawLoaderMap.get(getRawKey(collection, slug));
+  const loader = await resolveLoader(collection, slug);
   if (!loader) {
     return;
   }
