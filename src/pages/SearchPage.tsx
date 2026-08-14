@@ -1,6 +1,7 @@
 import Fuse from 'fuse.js';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import ErrorNotice from '../components/content/ErrorNotice';
 import { getSearchIndex } from '../content-engine/content-service';
 import { routeForCollection } from '../content-engine/format';
 import type { ContentCollection, SearchIndexItem } from '../content-engine/types';
@@ -9,6 +10,9 @@ import { useSeo } from '../seo/useSeo';
 function SearchPage() {
   const [params, setParams] = useSearchParams();
   const [docs, setDocs] = useState<SearchIndexItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [retryToken, setRetryToken] = useState(0);
   const query = params.get('q') ?? '';
 
   useSeo({
@@ -20,9 +24,22 @@ function SearchPage() {
     let active = true;
 
     const load = async () => {
-      const nextDocs = await getSearchIndex();
-      if (active) {
-        setDocs(nextDocs);
+      setLoading(true);
+      setError(false);
+
+      try {
+        const nextDocs = await getSearchIndex();
+        if (active) {
+          setDocs(nextDocs);
+        }
+      } catch {
+        if (active) {
+          setError(true);
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
       }
     };
 
@@ -31,7 +48,7 @@ function SearchPage() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [retryToken]);
 
   const fuse = useMemo(
     () =>
@@ -73,19 +90,30 @@ function SearchPage() {
       </label>
 
       <section className="mt-6 grid gap-4">
-        {results.map((item) => (
-          <article key={`${item.collection}-${item.slug}`} className="rounded-xl border border-slate-200 bg-white p-4">
-            <p className="text-[11px] uppercase tracking-wide text-slate-500">{item.collection}</p>
-            <h2 className="mt-1 text-lg font-semibold text-slate-900">
-              <Link to={`${routeForCollection(item.collection)}/${item.slug}`} className="hover:text-teal-600">
-                {item.title}
-              </Link>
-            </h2>
-            <p className="mt-2 text-sm text-slate-600">{item.summary}</p>
-          </article>
-        ))}
+        {loading && !error && <p className="text-sm text-slate-500">Loading search index...</p>}
+        {error && (
+          <ErrorNotice
+            message="Couldn't load the search index. Check your connection and try again."
+            onRetry={() => setRetryToken((token) => token + 1)}
+          />
+        )}
+        {!loading &&
+          !error &&
+          results.map((item) => (
+            <article key={`${item.collection}-${item.slug}`} className="rounded-xl border border-slate-200 bg-white p-4">
+              <p className="text-[11px] uppercase tracking-wide text-slate-500">{item.collection}</p>
+              <h2 className="mt-1 text-lg font-semibold text-slate-900">
+                <Link to={`${routeForCollection(item.collection)}/${item.slug}`} className="hover:text-teal-600">
+                  {item.title}
+                </Link>
+              </h2>
+              <p className="mt-2 text-sm text-slate-600">{item.summary}</p>
+            </article>
+          ))}
 
-        {results.length === 0 && <p className="text-sm text-slate-500">No articles matched your query.</p>}
+        {!loading && !error && results.length === 0 && (
+          <p className="text-sm text-slate-500">No articles matched your query.</p>
+        )}
       </section>
     </main>
   );
