@@ -1,6 +1,7 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getContentIndex, getContentTags } from '../../content-engine/content-service';
+import { formatDate, routeForCollection } from '../../content-engine/format';
 import type { ContentCollection, ContentIndexItem } from '../../content-engine/types';
 import { useSeo } from '../../seo/useSeo';
 
@@ -8,23 +9,6 @@ interface Props {
   collection: ContentCollection;
   title: string;
   description: string;
-}
-
-const routeByCollection: Record<ContentCollection, string> = {
-  blog: '/blog',
-  research: '/research',
-  experiments: '/experiments',
-  'system-design': '/system-design',
-  'field-notes': '/field-notes',
-  projects: '/projects',
-};
-
-function formatDate(value: string): string {
-  return new Date(`${value}T00:00:00`).toLocaleDateString('en-US', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
 }
 
 const ContentCard = memo(function ContentCard({
@@ -41,7 +25,7 @@ const ContentCard = memo(function ContentCard({
         <span>{item.readingText}</span>
       </div>
       <h2 className="text-xl font-semibold tracking-tight text-slate-900">
-        <Link to={`${routeByCollection[collection]}/${item.slug}`} className="hover:text-teal-600">
+        <Link to={`${routeForCollection(collection)}/${item.slug}`} className="hover:text-teal-600">
           {item.title}
         </Link>
       </h2>

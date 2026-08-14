@@ -2,16 +2,9 @@ import Fuse from 'fuse.js';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchIndex } from '../content-engine/content-service';
+import { routeForCollection } from '../content-engine/format';
 import type { ContentCollection, SearchIndexItem } from '../content-engine/types';
 import { useSeo } from '../seo/useSeo';
-
-function routeByCollection(collection: ContentCollection): string {
-  if (collection === 'system-design') {
-    return '/system-design';
-  }
-
-  return `/${collection}`;
-}
 
 function SearchPage() {
   const [params, setParams] = useSearchParams();
@@ -84,7 +77,7 @@ function SearchPage() {
           <article key={`${item.collection}-${item.slug}`} className="rounded-xl border border-slate-200 bg-white p-4">
             <p className="text-[11px] uppercase tracking-wide text-slate-500">{item.collection}</p>
             <h2 className="mt-1 text-lg font-semibold text-slate-900">
-              <Link to={`${routeByCollection(item.collection)}/${item.slug}`} className="hover:text-teal-600">
+              <Link to={`${routeForCollection(item.collection)}/${item.slug}`} className="hover:text-teal-600">
                 {item.title}
               </Link>
             </h2>
