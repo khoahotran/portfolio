@@ -9,7 +9,7 @@ A high-level map of the portfolio's architecture and ownership.
 
 ### `/content/`
 **Purpose:** The raw Markdown files that power the portfolio's articles and case studies. 
-- `/projects/`: Long-form architectural deep dives of the Flagship Projects.
+- `/projects/`: Long-form architectural deep dives of the Flagship Projects. Listed at `/projects`.
 - `/blog/`: Engineering narratives and storytelling.
 - `/research/`: Technical explorations and ADRs.
 - `/system-design/`: System design notes and diagrams.
@@ -26,6 +26,7 @@ A high-level map of the portfolio's architecture and ownership.
 - `/pages/`: Route-level React components.
   - `/experiments/`: The interactive lab page components. Folder name is a historical holdover — these render at `/labs/<id>`, not `/experiments/<id>`; see `/src/labs/registry.ts`.
   - `LabsIndexPage.tsx`: renders `/labs`, the lab directory.
+- `/components/content/`: Composable article-rendering pieces (`MarkdownContent`, `ArticleHeader`, `TableOfContents`, `RelatedContent`, `ArticleNav`, `ReadingProgress`, `MermaidDiagram`) consumed by `ContentDetailPage`.
 - `/components/`: Reusable UI elements (Buttons, Headers, Project Cards).
 - `/data/`: Static configuration (e.g., `portfolioData.ts`).
 - `/seo/`: Hooks and utilities for metadata and web vitals.
