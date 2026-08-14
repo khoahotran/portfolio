@@ -6,6 +6,19 @@ interface SeoOptions {
   type?: 'website' | 'article';
   image?: string;
   jsonLd?: Record<string, unknown>;
+  /**
+   * Skip this call entirely — no meta tag is touched, including document.title.
+   * For ContentDetailPage: while the article is still loading, `title`/`description`
+   * would otherwise have to be a generic placeholder ("Article" / "Technical
+   * article"), which briefly becomes the real first-paint meta for every one of
+   * the 33 articles. Leaving whatever meta the previous page (or the static
+   * index.html defaults, on a fresh load) already set is strictly more accurate
+   * than overwriting it with a placeholder for that one render.
+   */
+  skip?: boolean;
+  /** Emits <meta name="robots" content="noindex"> — for pages like the 404
+   * that should never rank or appear in search results. */
+  noindex?: boolean;
 }
 
 const siteName = 'Khoa Tran Engineering Portfolio';
@@ -25,6 +38,11 @@ function upsertMeta(name: string, content: string, property = false) {
   }
 
   element.setAttribute('content', content);
+}
+
+function removeMeta(name: string, property = false) {
+  const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+  document.head.querySelector(selector)?.remove();
 }
 
 function upsertCanonical(url: string) {
@@ -67,9 +85,15 @@ function upsertJsonLd(data: Record<string, unknown>) {
   script.text = JSON.stringify(data);
 }
 
-function resolveImageUrl(image?: string): string {
+function removeJsonLd() {
+  document.getElementById('portfolio-jsonld')?.remove();
+}
+
+// Exported for ContentDetailPage's JSON-LD `image` field, which needs the same
+// absolute-URL resolution this hook already applies to og:image/twitter:image.
+export function resolveImageUrl(image?: string): string {
   if (!image) {
-    return `${window.location.origin}${import.meta.env.BASE_URL}og-default.svg`;
+    return `${window.location.origin}${import.meta.env.BASE_URL}og-default.png`;
   }
 
   if (image.startsWith('http://') || image.startsWith('https://')) {
@@ -79,10 +103,17 @@ function resolveImageUrl(image?: string): string {
   return `${window.location.origin}${import.meta.env.BASE_URL}${image.replace(/^\//, '')}`;
 }
 
-export function useSeo({ title, description, type = 'website', image, jsonLd }: SeoOptions) {
+export function useSeo({ title, description, type = 'website', image, jsonLd, skip = false, noindex = false }: SeoOptions) {
   useEffect(() => {
+    if (skip) {
+      return;
+    }
+
     const fullTitle = `${title} | ${siteName}`;
-    const url = window.location.href;
+    // Query strings (e.g. /blog?tag=go) are a filtered view of the same
+    // content as /blog, not a distinct page — canonical/og:url should point
+    // at the clean URL so they don't register as near-duplicates.
+    const url = `${window.location.origin}${window.location.pathname}`;
     const imageUrl = resolveImageUrl(image);
     const rssHref = `${window.location.origin}${import.meta.env.BASE_URL}feed.xml`;
     const jsonFeedHref = `${window.location.origin}${import.meta.env.BASE_URL}feed.json`;
@@ -103,8 +134,23 @@ export function useSeo({ title, description, type = 'website', image, jsonLd }: 
     upsertAlternateFeed('RSS Feed', 'application/rss+xml', rssHref);
     upsertAlternateFeed('JSON Feed', 'application/feed+json', jsonFeedHref);
 
+    // Same reasoning as JSON-LD below: noindex only applies to specific pages
+    // (currently just the 404), so it must be actively removed on every other
+    // page rather than just never set, or it would stick from a prior route.
+    if (noindex) {
+      upsertMeta('robots', 'noindex');
+    } else {
+      removeMeta('robots');
+    }
+
+    // Unlike the meta tags above, JSON-LD is only present on some pages
+    // (articles). Without the else branch, navigating from an article to a
+    // page with no jsonLd left the previous article's structured data in
+    // the head, now describing a page it no longer matches.
     if (jsonLd) {
       upsertJsonLd(jsonLd);
+    } else {
+      removeJsonLd();
     }
-  }, [description, image, jsonLd, title, type]);
+  }, [description, image, jsonLd, noindex, skip, title, type]);
 }
