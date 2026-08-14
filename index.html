@@ -27,6 +27,22 @@
   </head>
   <body>
     <div id="root"></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '%BASE_URL%';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

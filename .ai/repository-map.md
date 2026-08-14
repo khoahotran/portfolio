@@ -36,4 +36,5 @@ A high-level map of the portfolio's architecture and ownership.
 
 ### `/public/`
 **Purpose:** Static and dynamically generated assets served at the root.
+- `404.html`: GitHub Pages has no server-side rewrites, so this implements the standard SPA-fallback redirect (encode the path as `?redirect=`, decode it in `index.html` via `history.replaceState` before React Router mounts) so a hard refresh or shared deep link resolves instead of 404ing.
 - **NOTE:** The generated files (`content-index.json`, `search-index.json`, `og/`, `feeds/`, `sitemap.xml`) are tracked in git via dedicated `chore(build)` commits. Feature commits should exclude them.
