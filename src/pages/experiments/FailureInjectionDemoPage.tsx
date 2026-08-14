@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import LabBackLink from '../../labs/LabBackLink';
 import { useSeo } from '../../seo/useSeo';
 
 function FailureInjectionDemoPage() {
@@ -18,14 +18,12 @@ function FailureInjectionDemoPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 md:px-6 animate-fade-in">
-      <Link to="/experiments" className="mb-4 inline-block text-xs font-semibold uppercase tracking-widest text-teal-600 hover:text-teal-700 transition-colors">
-        &larr; Back to Experiments
-      </Link>
+      <LabBackLink labId="failure-injection" />
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Failure Injection Demo</h1>
       <p className="mt-2 text-slate-600">Inject synthetic failure and observe the Circuit Breaker pattern protect downstream services.</p>
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="space-y-4">
             <label className="block text-sm font-semibold text-slate-700">
               <div className="flex justify-between">
@@ -76,7 +74,7 @@ function FailureInjectionDemoPage() {
           </div>
         </section>
 
-        <section className="md:col-span-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col items-center justify-center relative min-h-[350px] overflow-hidden">
+        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col items-center justify-center relative min-h-[350px] overflow-hidden">
           
           {/* Background pulse effect when breaker opens */}
           <div className={`absolute inset-0 transition-opacity duration-1000 ${simulation.breakerOpen ? 'bg-rose-50 opacity-100' : 'opacity-0'}`} />

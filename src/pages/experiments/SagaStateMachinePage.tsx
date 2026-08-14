@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import LabBackLink from '../../labs/LabBackLink';
 import { useSeo } from '../../seo/useSeo';
 import { CheckCircle2, XCircle, ArrowRight, RotateCcw } from 'lucide-react';
 
@@ -105,16 +105,14 @@ function SagaStateMachinePage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 md:px-6 animate-fade-in">
-      <Link to="/experiments" className="mb-4 inline-block text-xs font-semibold uppercase tracking-widest text-teal-600 hover:text-teal-700 transition-colors">
-        &larr; Back to Experiments
-      </Link>
+      <LabBackLink labId="saga-state-machine" />
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Saga State Machine</h1>
       <p className="mt-2 text-slate-600">Visualize distributed transactions and automatic compensating rollbacks.</p>
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="space-y-4">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-4">Configuration</h3>
+            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-4">Configuration</h2>
             
             <label className="block text-sm font-semibold text-slate-700 pt-2">
               Inject Failure At
@@ -146,38 +144,45 @@ function SagaStateMachinePage() {
           </div>
         </section>
 
-        <section className="md:col-span-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm flex flex-col justify-center">
-          
-          <div className="flex items-center justify-between relative">
-            <StepBox 
-              title="Order Service" 
-              status={state.order} 
-              desc="Create Pending Order" 
-            />
-            
-            <div className="flex-1 flex items-center justify-center relative h-12">
-              <div className="absolute w-full border-t-2 border-slate-200 border-dashed" />
-              <ArrowRight className={`relative z-10 w-6 h-6 transition-colors duration-300 ${state.payment === 'active' || state.payment === 'completed' || state.payment === 'failed' ? 'text-teal-500' : 'text-slate-300'}`} />
-              <RotateCcw className={`absolute top-0 right-1/2 translate-x-1/2 -translate-y-full w-4 h-4 transition-opacity duration-300 ${state.order === 'compensating' ? 'text-amber-500 opacity-100' : 'opacity-0'}`} />
-            </div>
+        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm flex flex-col justify-center">
 
-            <StepBox 
-              title="Payment Service" 
-              status={state.payment} 
-              desc="Charge Credit Card" 
-            />
-            
-            <div className="flex-1 flex items-center justify-center relative h-12">
-              <div className="absolute w-full border-t-2 border-slate-200 border-dashed" />
-              <ArrowRight className={`relative z-10 w-6 h-6 transition-colors duration-300 ${state.inventory === 'active' || state.inventory === 'completed' || state.inventory === 'failed' ? 'text-teal-500' : 'text-slate-300'}`} />
-              <RotateCcw className={`absolute top-0 right-1/2 translate-x-1/2 -translate-y-full w-4 h-4 transition-opacity duration-300 ${state.payment === 'compensating' ? 'text-amber-500 opacity-100' : 'opacity-0'}`} />
-            </div>
+          {/* Three StepBoxes + connectors are ~526px at their natural width — narrower than
+              some phones. overflow-x-auto contains that as a scroll instead of a page-level
+              overflow (same pattern as the /graph Mermaid diagram), but the load-bearing fix
+              is `min-w-0` on this section: without it, the grid item's automatic minimum size
+              is driven by this row's unshrinkable content regardless of the scroll wrapper. */}
+          <div className="overflow-x-auto">
+            <div className="flex items-center justify-between relative">
+              <StepBox
+                title="Order Service"
+                status={state.order}
+                desc="Create Pending Order"
+              />
 
-            <StepBox 
-              title="Inventory Service" 
-              status={state.inventory} 
-              desc="Reserve Stock" 
-            />
+              <div className="flex-1 flex items-center justify-center relative h-12">
+                <div className="absolute w-full border-t-2 border-slate-200 border-dashed" />
+                <ArrowRight className={`relative z-10 w-6 h-6 transition-colors duration-300 ${state.payment === 'active' || state.payment === 'completed' || state.payment === 'failed' ? 'text-teal-500' : 'text-slate-300'}`} />
+                <RotateCcw className={`absolute top-0 right-1/2 translate-x-1/2 -translate-y-full w-4 h-4 transition-opacity duration-300 ${state.order === 'compensating' ? 'text-amber-500 opacity-100' : 'opacity-0'}`} />
+              </div>
+
+              <StepBox
+                title="Payment Service"
+                status={state.payment}
+                desc="Charge Credit Card"
+              />
+
+              <div className="flex-1 flex items-center justify-center relative h-12">
+                <div className="absolute w-full border-t-2 border-slate-200 border-dashed" />
+                <ArrowRight className={`relative z-10 w-6 h-6 transition-colors duration-300 ${state.inventory === 'active' || state.inventory === 'completed' || state.inventory === 'failed' ? 'text-teal-500' : 'text-slate-300'}`} />
+                <RotateCcw className={`absolute top-0 right-1/2 translate-x-1/2 -translate-y-full w-4 h-4 transition-opacity duration-300 ${state.payment === 'compensating' ? 'text-amber-500 opacity-100' : 'opacity-0'}`} />
+              </div>
+
+              <StepBox
+                title="Inventory Service"
+                status={state.inventory}
+                desc="Reserve Stock"
+              />
+            </div>
           </div>
 
           <div className="mt-12 bg-slate-50 p-6 rounded-xl border border-slate-100 text-sm text-slate-600">
