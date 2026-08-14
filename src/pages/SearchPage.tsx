@@ -3,9 +3,18 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import ErrorNotice from '../components/content/ErrorNotice';
 import { getSearchIndex } from '../content-engine/content-service';
-import { routeForCollection } from '../content-engine/format';
+import { collectionLabel, routeForCollection } from '../content-engine/format';
 import type { ContentCollection, SearchIndexItem } from '../content-engine/types';
 import { useSeo } from '../seo/useSeo';
+
+const ALL_COLLECTIONS: ContentCollection[] = [
+  'blog',
+  'research',
+  'experiments',
+  'system-design',
+  'field-notes',
+  'projects',
+];
 
 /**
  * ignoreLocation (see the Fuse config below) fixes recall but on its own
@@ -46,6 +55,7 @@ function SearchPage() {
   const [error, setError] = useState(false);
   const [retryToken, setRetryToken] = useState(0);
   const query = params.get('q') ?? '';
+  const selectedCollection = params.get('collection') as ContentCollection | null;
 
   useSeo({
     title: 'Search Engineering Articles',
@@ -116,8 +126,9 @@ function SearchPage() {
   const RESULT_CAP = 20;
 
   const matched = useMemo(() => {
-    return query.trim() ? boostExactTitleMatches(fuse.search(query), query) : docs;
-  }, [docs, fuse, query]);
+    const base = query.trim() ? boostExactTitleMatches(fuse.search(query), query) : docs;
+    return selectedCollection ? base.filter((item) => item.collection === selectedCollection) : base;
+  }, [docs, fuse, query, selectedCollection]);
 
   const results = useMemo(() => {
     // The empty-query default listing shows 12 as a lighter "browse" cap; an
@@ -136,11 +147,38 @@ function SearchPage() {
         <span className="sr-only">Search query</span>
         <input
           value={query}
-          onChange={(event) => setParams(event.target.value ? { q: event.target.value } : {})}
+          onChange={(event) => {
+            const next: Record<string, string> = {};
+            if (event.target.value) next.q = event.target.value;
+            if (selectedCollection) next.collection = selectedCollection;
+            setParams(next);
+          }}
           placeholder="Search architecture, retries, event-driven..."
           className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none ring-teal-500 transition focus:ring"
         />
       </label>
+
+      <section className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Filter by collection">
+        <button
+          type="button"
+          aria-pressed={!selectedCollection}
+          className={`rounded-full border px-3 py-1 text-xs font-semibold ${!selectedCollection ? 'border-teal-500 bg-teal-500 text-white' : 'border-slate-300 text-slate-700'}`}
+          onClick={() => setParams(query ? { q: query } : {})}
+        >
+          All
+        </button>
+        {ALL_COLLECTIONS.map((collection) => (
+          <button
+            key={collection}
+            type="button"
+            aria-pressed={selectedCollection === collection}
+            className={`rounded-full border px-3 py-1 text-xs font-semibold capitalize ${selectedCollection === collection ? 'border-teal-500 bg-teal-500 text-white' : 'border-slate-300 text-slate-700'}`}
+            onClick={() => setParams(query ? { q: query, collection } : { collection })}
+          >
+            {collectionLabel(collection)}
+          </button>
+        ))}
+      </section>
 
       <section className="mt-6 grid gap-4">
         {loading && !error && <p className="text-sm text-slate-500">Loading search index...</p>}
