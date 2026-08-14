@@ -1,5 +1,5 @@
 export const heroData = {
-  role: 'Software Engineer',
+  role: 'Backend & Distributed Systems Engineer',
   name: 'Trần Nguyễn Anh Khoa',
   tagline:
     'Building high-performance backend systems and event-driven architectures in Go and TypeScript.',
@@ -7,11 +7,21 @@ export const heroData = {
   email: 'trannguyenanhkhoa0104@gmail.com',
   github: 'https://github.com/khoahotran',
   linkedin: 'https://linkedin.com/in/khoahotran',
+  // Each stat is attributed to the system it was measured on (see
+  // experienceData.impact below) rather than left as an unlabeled number —
+  // otherwise "Latency 150-300ms" reads as decoration, not evidence.
+  //
+  // `route` is optional and only set for the 2 stats that have a dedicated
+  // article deriving the number (see Hero.tsx, which renders the label as a
+  // Link only when `route` is present). Transaction Consistency and API
+  // Response are sourced only from experienceData.impact below, with no
+  // article — they intentionally have no `route` and stay plain text rather
+  // than link to a bare bullet point.
   stats: [
-    { label: 'Latency', value: '150 - 300ms' },
-    { label: 'Scale', value: '1.5k users/min' },
-    { label: 'Transaction Error', value: '< 1%' },
-    { label: 'Response Time', value: '- 20-30%' }
+    { label: 'Store Lookup Latency', value: '150 - 300ms', route: '/research/algolia-geo-search-for-store-discovery' },
+    { label: 'Quest Load (Peak)', value: '1.5k users/min', route: '/blog/building-jujuja-a-production-quest-system' },
+    { label: 'Transaction Consistency', value: '< 1% error' },
+    { label: 'API Response (Caching)', value: '↓ 20-30%' }
   ]
 };
 
