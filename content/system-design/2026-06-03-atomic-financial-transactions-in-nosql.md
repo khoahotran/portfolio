@@ -181,7 +181,7 @@ async function reconcileUserBalance(userId: string) {
 
 | Dimension | SQL (PostgreSQL / MySQL) | Firestore (NoSQL OCC) |
 | :--- | :--- | :--- |
-| **Locking Strategy** | Pessimistic (Locks rows on reads) | Optimistic (Checks versions on commit) |
+| **Locking Strategy** | Pessimistic (Locks rows on writes) | Optimistic (Checks versions on commit) |
 | **Resource Contention** | Requests wait in line (increases latency) | Aborts immediately and retries |
 | **Scale Constraints** | Limited by connection pool | Limit of 1 write/sec per document |
 | **Fail Behavior** | Blocks until timeout | Throws exception on collision |

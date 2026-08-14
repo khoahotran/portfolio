@@ -41,14 +41,17 @@ Financial data is notoriously non-stationary. The market microstructure dynamics
 
 If you train a model on Monday's data and trade it on Tuesday, it will likely lose money. To counteract this, we designed a **Rolling Window Pipeline**.
 
+<!-- Periods use "09h00" not "09:00" on purpose — a colon is unescapable in a
+     Mermaid timeline period (fails even quoted: `"09:00"` still errors). Don't
+     "restore" real clock notation here without re-testing against the renderer. -->
 ```mermaid
 timeline
     title Rolling Window ML Training (VN30F2112)
-    09:00 : Market Open
-    09:00 - 09:30 : Window 1 (Train) : Collect 30m of tick data, compute OBI
-    09:30 - 09:40 : Window 1 (Trade) : Predict next 10s price direction
-    09:10 - 09:40 : Window 2 (Train) : Train new model instance
-    09:40 - 09:50 : Window 2 (Trade) : Switch to new model
+    09h00 : Market Open
+    09h00-09h30 : Window 1 Train, collect 30m of tick data, compute OBI
+    09h30-09h40 : Window 1 Trade, predict next 10s price direction
+    09h10-09h40 : Window 2 Train, train new model instance
+    09h40-09h50 : Window 2 Trade, switch to new model
 ```
 
 Instead of a single global model, the target design for QuantAlpha is to train hundreds of micro-models throughout the day using `scikit-learn` (specifically `RandomForestClassifier` and `GradientBoostingClassifier`), continuously rolling the window forward: every 10 seconds, the worker would receive a job via **Redis Streams** from the Go API, pull the last 30 minutes of tick data, compute the OBI features, train a fresh model, and push the serialized weights back out.

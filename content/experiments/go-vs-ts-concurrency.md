@@ -24,7 +24,7 @@ Node.js handles concurrency remarkably well given its single-threaded nature. Th
 
 However, the major differentiator is **Memory Overhead**. A Goroutine starts with a tiny 2KB stack that grows dynamically. A JavaScript Promise carries significant V8 object overhead. When spawning 50,000 concurrent tasks, the Node.js process balloons to nearly 500MB of memory just to track the Promises, whereas the Go binary remains extremely lean at under 50MB.
 
-<a href="/experiments/go-vs-ts-concurrency" class="not-prose inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 hover:shadow-md transition-all mt-4 mb-8">
+<a href="/labs/go-vs-ts-concurrency" class="not-prose inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 hover:shadow-md transition-all mt-4 mb-8">
   View Interactive Benchmark
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
 </a>

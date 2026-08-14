@@ -25,7 +25,7 @@ from the UI. The filename stays `knowledge-graph.md`; other `.ai/` docs referenc
 ### Concepts -> Articles & Labs
 - **Event Sourcing** -> explained in -> `event-sourcing-vs-crud-when-to-choose-each.md`, `db-event-replay-benchmark.md`
 - **Saga Pattern** -> visualized in -> `implementing-the-saga-pattern-for-distributed-transfers.md`, `saga-state-machine-visualizer.md`
-- **Queueing (Redis/BullMQ)** -> benchmarked in -> `redis-streams-vs-bullmq-job-queue-comparison.md`, `redis-vs-bullmq.md`
+- **Queueing (Redis/BullMQ)** -> benchmarked in -> `redis-streams-vs-bullmq-job-queue-comparison.md` (includes the raw-throughput numbers previously in the now-merged `redis-vs-bullmq.md`)
 
 ## Recommended Reading Paths
 

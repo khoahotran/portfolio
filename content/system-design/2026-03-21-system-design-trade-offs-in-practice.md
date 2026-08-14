@@ -1,7 +1,7 @@
 ---
 title: "System Design Trade-offs in Practice"
 date: "2026-03-21"
-tags: ["trade-offs", "architecture", "decision-making", "engineering-management"]
+tags: ["trade-offs", "architecture", "engineering-management"]
 summary: "A structured framework to communicate architecture trade-offs with product, operations, and engineering teams."
 reading_time: "8 min read"
 ---

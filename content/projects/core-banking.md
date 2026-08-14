@@ -1,7 +1,7 @@
 ---
 title: "Event-Driven Core Banking System"
 date: "2026-06-15"
-tags: ["event-sourcing", "cqrs", "saga-pattern", "golang", "firestore"]
+tags: ["event-sourcing", "cqrs", "saga-pattern", "go", "firestore"]
 related: ["system-design/implementing-the-saga-pattern-for-distributed-transfers", "system-design/designing-a-real-time-fraud-detection-engine", "research/adr-firestore-vs-postgresql-event-sourcing", "research/event-sourcing-vs-crud-when-to-choose-each", "experiments/event-sourcing-replay", "experiments/saga-state-machine-visualizer"]
 summary: "A core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers."
 reading_time: "12 min"
@@ -41,6 +41,13 @@ C4Container
   Rel(fraud, event_store, "Analyzes event stream for anomalies")
 ```
 
+<div class="mt-8 mb-12">
+  <a href="/labs/event-sourcing-replay" class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 transition-all">
+    Try the Interactive Event Sourcing Replay Lab
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+  </a>
+</div>
+
 ### Saga Pattern for Distributed Transfers
 
 Transferring money between Account A and Account B requires altering two distinct aggregates. The target design is an orchestration-based Saga — see the [Saga pattern deep dive](/system-design/implementing-the-saga-pattern-for-distributed-transfers) for how that design compares to the simpler, choreography-style Saga manager currently committed to the repository.
@@ -69,7 +76,7 @@ sequenceDiagram
 ```
 
 <div class="mt-8 mb-12">
-  <a href="/experiments/saga-state-machine" class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 transition-all">
+  <a href="/labs/saga-state-machine" class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 transition-all">
     Try the Interactive Saga Lab
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
   </a>
@@ -95,3 +102,5 @@ sequenceDiagram
 **Lessons Learned:**
 - **Event Versioning:** You must think carefully about event schema evolution. An event is immutable; you cannot change it once it's written. We had to implement an `Upcaster` pattern to transform V1 events into V2 shapes during replay.
 - **Eventual Consistency:** The UI must be designed to handle eventual consistency. When a user deposits money, the API returns `202 Accepted`, and the Read Projector asynchronously folds the new event into the read model before a balance query reflects it. The exact lag is implementation- and environment-dependent — no load test or SLO is measured for it here — so the UI copes by polling or subscribing rather than assuming immediate consistency. The Fraud Engine consumes the raw event stream directly rather than the projected read model (see the architecture diagram above), so fraud detection itself is not delayed by projection lag; a balance read made in that same window, however, can briefly reflect stale state.
+
+<a href="/graph" class="inline-block mt-8 text-sm text-slate-500 hover:text-slate-700 hover:underline transition-colors">See how this project connects to the rest of the ecosystem &rarr;</a>

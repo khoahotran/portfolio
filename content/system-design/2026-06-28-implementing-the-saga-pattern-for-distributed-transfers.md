@@ -1,9 +1,9 @@
 ---
 title: "Implementing the Saga Pattern for Distributed Money Transfers"
 date: "2026-06-28"
-tags: ["saga", "distributed-systems", "event-sourcing", "go", "firestore", "banking"]
+tags: ["saga-pattern", "distributed-systems", "event-sourcing", "go", "firestore", "banking"]
 related: ["projects/core-banking", "system-design/designing-a-real-time-fraud-detection-engine"]
-summary: "How we built a two-phase distributed transfer between account aggregates using the Saga orchestrator pattern, with automatic compensation and dead-letter recovery."
+summary: "How I designed a Saga orchestrator pattern for two-phase distributed transfers between account aggregates, with automatic compensation and dead-letter recovery."
 reading_time: "11 min read"
 ---
 

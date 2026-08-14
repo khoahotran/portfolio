@@ -111,7 +111,7 @@ class QueueSimulator {
         if (this.workers[w] <= currentTimeMs && this.queue.length > 0) {
           const job = this.queue.shift();
           
-          // DB Contention scales latency quadratically based on active worker density
+          // DB Contention scales latency linearly with the configured worker count
           const contentionMultiplier = 1 + (this.workerCount * this.dbContentionFactor);
           let processingTime = this.getLognormalLatency(this.baseProcessTimeMs) * contentionMultiplier;
           
@@ -200,3 +200,8 @@ Running this model under varying configurations revealed how resource contention
 Simple client-side simulations are incredibly powerful tools for reasoning about distributed systems, provided their assumptions are explicit and eventually validated against production traces.
 
 Before spending weeks building autoscaling infrastructure, spend an afternoon writing a script to simulate the math. You might discover that the bottleneck isn't your worker count, but your retry strategy.
+
+<a href="/labs/throughput-simulation" class="not-prose inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 hover:shadow-md transition-all mt-4 mb-8">
+  Run the Interactive Simulation
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+</a>

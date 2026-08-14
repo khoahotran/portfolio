@@ -44,7 +44,7 @@ flowchart TB
     Fraud -->|Append AccountFrozen| ES
     Fraud -->|Push Stats| Metrics
     
-    API -.->|Query O(1)| PR
+    API -.->|"Query O(1)"| PR
 
     classDef service fill:#f0fdf4,stroke:#86efac,stroke-width:2px;
     classDef db fill:#eff6ff,stroke:#93c5fd,stroke-width:2px;

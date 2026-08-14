@@ -67,7 +67,14 @@ C4Container
 **Trade-offs:** 
 - *Pros:* Protobuf serialization is drastically faster and more compact than JSON. Strongly typed contracts prevent runtime parsing errors. HTTP/2 multiplexing reduces connection overhead.
 - *Cons:* Harder to debug with `curl`.
-- *Mitigation:* We use `grpcurl` and expose a GraphQL Gateway to the frontend, so web clients never have to speak gRPC directly.
+- *Mitigation:* We use `grpcurl` and expose a GraphQL Gateway to the frontend, so web clients never have to speak gRPC directly. See the [ADR: Why GraphQL Gateway over REST](/research/adr-graphql-gateway-over-rest) for the full trade-off analysis behind that gateway choice.
+
+<div class="mt-8 mb-12">
+  <a href="/labs/go-vs-ts-concurrency" class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 transition-all">
+    Benchmark: Go vs TypeScript Concurrency
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+  </a>
+</div>
 
 ### 2. Lock-Free RBAC Cache
 **Decision:** The Policy Service evaluates permissions using a Redis-backed cache instead of querying PostgreSQL on every request.
@@ -91,3 +98,5 @@ C4Container
 
 **Future Evolution:**
 I plan to migrate the API Gateway from a custom Go GraphQL server to an Apollo Federation setup to allow downstream services to seamlessly extend the GraphQL schema.
+
+<a href="/graph" class="inline-block mt-8 text-sm text-slate-500 hover:text-slate-700 hover:underline transition-colors">See how this project connects to the rest of the ecosystem &rarr;</a>

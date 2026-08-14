@@ -72,7 +72,7 @@ C4Container
 **Decision:** We chose Redis Streams to bridge the Go API and the Python worker.
 **Trade-offs:** 
 - We needed a reliable queue that supported Consumer Groups (so we could easily scale up to 10 Python workers in parallel).
-- RabbitMQ was too heavy to operate for this scale. BullMQ is excellent, but it requires Node.js/TypeScript. Since our API is Go and our worker is Python, Redis Streams provided the perfect language-agnostic, low-latency queue built directly into a data store we were already using for caching.
+- RabbitMQ was too heavy to operate for this scale. BullMQ is excellent, but it requires Node.js/TypeScript. Since our API is Go and our worker is Python, Redis Streams provided the perfect language-agnostic, low-latency queue built directly into a data store we were already using for caching. See the [Redis Streams vs BullMQ benchmark](/experiments/redis-streams-vs-bullmq-job-queue-comparison) for the measured throughput/latency comparison behind this choice.
 
 ### 2. Rolling Window Machine Learning
 **Decision:** Financial data is highly non-stationary (market regimes change rapidly). A static model trained on yesterday's data will fail today.
@@ -96,3 +96,5 @@ C4Container
 
 **Future Evolution:**
 If the dataset grows beyond a few hundred million rows, I plan to migrate the market data storage from PostgreSQL to TimescaleDB or ClickHouse to better handle specialized time-series aggregations.
+
+<a href="/graph" class="inline-block mt-8 text-sm text-slate-500 hover:text-slate-700 hover:underline transition-colors">See how this project connects to the rest of the ecosystem &rarr;</a>
