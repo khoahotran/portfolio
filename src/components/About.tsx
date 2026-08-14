@@ -4,15 +4,19 @@ export default function About() {
   return (
     <section id="about" className="py-24 px-6 bg-slate-50">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-sm uppercase tracking-widest text-teal-600 mb-12 font-medium italic">
+        {/* Not a heading — a decorative kicker above the real section title below.
+            Previously an <h2>, which inverted the semantic hierarchy: a screen
+            reader would announce this 12px label before the visually-dominant
+            headline, which is the section's actual heading. */}
+        <p className="text-sm uppercase tracking-widest text-teal-600 mb-12 font-medium italic">
           {aboutData.title}
-        </h2>
-        
+        </p>
+
         <div className="grid md:grid-cols-2 gap-16">
           <div>
-            <h3 className="text-3xl font-bold text-slate-900 mb-6 leading-tight">
+            <h2 className="text-3xl font-bold text-slate-900 mb-6 leading-tight">
               {aboutData.headline}
-            </h3>
+            </h2>
             <div className="space-y-4 text-slate-600 leading-relaxed font-light">
               <p>{aboutData.paragraph1}</p>
               <p>{aboutData.paragraph2}</p>
