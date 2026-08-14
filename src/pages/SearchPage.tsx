@@ -59,7 +59,12 @@ function SearchPage() {
 
   useSeo({
     title: 'Search Engineering Articles',
-    description: 'Find system design notes, research write-ups, and experiment logs.',
+    // Was undercounting scope (named only 3 of 6 searchable collections) —
+    // aligned with the visible subhead just below, which already lists all 6.
+    description: 'Search across projects, blog posts, research, system design, experiments, and field notes.',
+    // Internal search-result pages are a standard noindex candidate (no
+    // unique static content of their own; same reasoning as NotFoundPage.tsx).
+    noindex: true,
   });
 
   useEffect(() => {
@@ -141,7 +146,7 @@ function SearchPage() {
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-10 md:px-6">
       <h1 className="text-3xl font-bold tracking-tight text-slate-900">Search Articles</h1>
-      <p className="mt-2 text-sm text-slate-600">Search across blog, research, system design, and experiment notes.</p>
+      <p className="mt-2 text-sm text-slate-600">Search across projects, blog posts, research, system design, experiments, and field notes.</p>
 
       <label className="mt-6 block">
         <span className="sr-only">Search query</span>
