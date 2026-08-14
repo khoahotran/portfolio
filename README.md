@@ -25,8 +25,17 @@
 
 - `content/blog`
 - `content/research`
-- `content/experiments`
+- `content/experiments` — pairs with an interactive lab at `/labs/<id>` (see `src/labs/registry.ts`)
 - `content/system-design`
+- `content/field-notes`
+- `content/projects` — flagship project case studies, listed at `/projects`
+
+## Interactive labs
+
+Nine interactive React demos under `src/pages/experiments/`, routed at `/labs/<id>` via the single
+source of truth in `src/labs/registry.ts`. Old `/experiments/<id>` URLs redirect to `/labs/<id>`
+except where the id collides with an article slug (see the registry's `collidesWithArticleSlug`
+comment) — those keep `/experiments/<slug>` resolving to the article instead.
 
 ## Web vitals
 

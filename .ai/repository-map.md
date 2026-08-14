@@ -14,13 +14,18 @@ A high-level map of the portfolio's architecture and ownership.
 - `/research/`: Technical explorations and ADRs.
 - `/system-design/`: System design notes and diagrams.
 - `/field-notes/`: Pragmatic, boots-on-the-ground engineering lessons.
-- `/experiments/`: Markdown wrappers for the interactive lab components.
+- `/experiments/`: Standalone write-ups (methodology, benchmarks, comparisons). Several also
+  link out to an interactive lab at `/labs/<id>` via a CTA button — see `/src/labs/`. The
+  article and the lab are two separate routes; an article's slug and a lab's id may be the
+  same string without colliding (`/experiments/:slug` and `/labs/:id` are disjoint paths).
 
 ### `/src/`
 **Purpose:** The React + TypeScript frontend codebase (Vite).
 - `/content-engine/`: The custom JAMstack core. Uses Vite's `import.meta.glob` to parse Markdown, render HTML, and extract Mermaid diagrams. `content-index.ts` fetches two generated artifacts — `content-index.json` (lean, used almost everywhere) and `search-index.json` (full article text, used only by `/search`) — see `.ai/decision-log.md` Decision 4.
+- `/labs/`: `registry.ts` is the single source of truth for interactive labs — id, title, description, and the lazy-loaded component. `App.tsx` maps over it to register `/labs/:id` routes and (for non-colliding ids) `/experiments/:id` -> `/labs/:id` redirects.
 - `/pages/`: Route-level React components.
-  - `/experiments/`: The interactive laboratory components (e.g., Benchmarks, Visualizers).
+  - `/experiments/`: The interactive lab page components. Folder name is a historical holdover — these render at `/labs/<id>`, not `/experiments/<id>`; see `/src/labs/registry.ts`.
+  - `LabsIndexPage.tsx`: renders `/labs`, the lab directory.
 - `/components/`: Reusable UI elements (Buttons, Headers, Project Cards).
 - `/data/`: Static configuration (e.g., `portfolioData.ts`).
 - `/seo/`: Hooks and utilities for metadata and web vitals.

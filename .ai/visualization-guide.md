@@ -20,8 +20,8 @@ We use Mermaid.js embedded in Markdown files for maintainable, version-controlle
 - **Spacing:** Avoid spaces in Node IDs (use `subgraph My_Subgraph [My Subgraph]` instead of `subgraph My Subgraph`).
 - **Complexity:** Do not make the diagram too large; break it down into smaller, focused diagrams if necessary.
 
-## 3. Interactive React Laboratories (`/experiments`)
-When a simple diagram is insufficient—especially when demonstrating performance, scale, or algorithms over time—we build Interactive Labs in React (`src/pages/experiments/`).
+## 3. Interactive React Laboratories (`/labs`)
+When a simple diagram is insufficient—especially when demonstrating performance, scale, or algorithms over time—we build Interactive Labs in React (`src/pages/experiments/`, routed at `/labs/<id>`).
 
 ### When to build a Lab:
 - **Benchmarking:** Comparing the throughput of two tools (e.g., Redis vs BullMQ).
@@ -31,4 +31,5 @@ When a simple diagram is insufficient—especially when demonstrating performanc
 ### Lab Implementation Rules:
 - **No external heavy charting libs:** Use `lucide-react` for icons and native SVG + CSS for visualizations (bar charts, line graphs, animated nodes).
 - **Stateful:** Use React `useState` to let the user change parameters (e.g., Number of Workers, Payload Size) and watch the visualization react.
-- **Integration:** Always create an accompanying `.md` file in `content/experiments/` that includes an `<a href="/experiments/my-lab">` button, so the lab shows up in the content lists and search index.
+- **Register the route:** Add an entry to `src/labs/registry.ts` (`id`, `title`, `description`, `component`). `App.tsx` and `LabsIndexPage` both derive their routes/cards from this registry — a lab isn't reachable from `/labs` without it. If the `id` collides with an existing article slug in the same collection, set `collidesWithArticleSlug: true` so the redirect from the old `/experiments/<id>` path is skipped (that path must keep rendering the article instead).
+- **Integration:** Create an accompanying `.md` file in `content/experiments/` that includes an `<a href="/labs/my-lab">` button, so the lab shows up in the content lists and search index. Labs live at `/labs/<id>`, not `/experiments/<id>` — see `.ai/decision-log.md` Decision 5.
