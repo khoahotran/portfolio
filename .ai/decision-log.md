@@ -19,3 +19,9 @@ This log captures major repository-level decisions that dictate the architecture
 **Decision:** Generated assets (`public/search-index.json`, `public/og/`, `public/feeds/`, `public/sitemap.xml`) must be committed separately from feature code, typically in a `chore(build)` commit.
 **Rationale:** Bundling thousands of lines of auto-generated JSON or XML changes into a `feat(content)` commit obscures the actual Markdown changes, making code reviews and history tracking impossible.
 **Consequences:** AI agents must explicitly exclude these files from feature commits and follow up with a dedicated chore commit.
+
+## Decision 4: Split the Generated Index into a Lean and a Full Artifact
+**Date:** 2026-08-11
+**Decision:** `build-search-index.mjs` now emits `content-index.json` (every field except `searchableText`) alongside the original `search-index.json` (which also includes `searchableText`, i.e. the full article body). List pages, detail pages, related-articles, and prev/next all fetch the lean file; only `/search` fetches the full one.
+**Rationale:** `search-index.json` embeds every article's full body so Fuse.js can full-text search it. Measured on the 33-document corpus: 252 KB whole vs 24 KB without `searchableText`. Every route other than `/search` was downloading that whole 252 KB just to render title/date/summary cards.
+**Consequences:** Two generated JSON files now need pruning/regenerating together — `build-search-index.mjs` writes both in one pass, so this is automatic. Any future consumer that only needs list-page fields should fetch `content-index.json`, not `search-index.json`.

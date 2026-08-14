@@ -4,6 +4,10 @@ import path from 'node:path';
 const rootDir = process.cwd();
 const contentDir = path.join(rootDir, 'content');
 const publicDir = path.join(rootDir, 'public');
+// content-index.json (lean, no `searchableText`) is fetched by every list page,
+// detail page, and related-articles lookup. search-index.json (full body text)
+// is fetched only by /search. See src/content-engine/content-index.ts.
+const contentIndexPath = path.join(publicDir, 'content-index.json');
 const outputIndexPath = path.join(publicDir, 'search-index.json');
 const sitemapPath = path.join(publicDir, 'sitemap.xml');
 const robotsPath = path.join(publicDir, 'robots.txt');
@@ -225,6 +229,9 @@ async function buildAssets() {
   const defaultOg = buildOgSvg('Engineering Portfolio', siteDescription);
   await fs.writeFile(path.join(publicDir, 'og-default.svg'), defaultOg, 'utf-8');
 
+  const contentIndexDocs = docs.map(({ searchableText, ...doc }) => doc);
+
+  await fs.writeFile(contentIndexPath, JSON.stringify(contentIndexDocs, null, 2), 'utf-8');
   await fs.writeFile(outputIndexPath, JSON.stringify(docs, null, 2), 'utf-8');
 
   const dynamicRoutes = publicDocs.map((doc) => `/${doc.collection}/${doc.slug}`);
@@ -269,7 +276,7 @@ async function buildAssets() {
     await fs.writeFile(path.join(feedsDir, `${collection}.json`), JSON.stringify(collectionJson, null, 2), 'utf-8');
   }
 
-  console.log(`Generated ${docs.length} documents at ${outputIndexPath}`);
+  console.log(`Generated ${docs.length} documents at ${contentIndexPath} (lean) and ${outputIndexPath} (full)`);
   console.log(`Generated sitemap at ${sitemapPath}`);
   console.log(`Generated robots at ${robotsPath}`);
   console.log(`Generated RSS feed at ${rssFeedPath}`);

@@ -18,7 +18,7 @@ A high-level map of the portfolio's architecture and ownership.
 
 ### `/src/`
 **Purpose:** The React + TypeScript frontend codebase (Vite).
-- `/content-engine/`: The custom JAMstack core. Uses Vite's `import.meta.glob` to parse Markdown, render HTML, and extract Mermaid diagrams.
+- `/content-engine/`: The custom JAMstack core. Uses Vite's `import.meta.glob` to parse Markdown, render HTML, and extract Mermaid diagrams. `content-index.ts` fetches two generated artifacts — `content-index.json` (lean, used almost everywhere) and `search-index.json` (full article text, used only by `/search`) — see `.ai/decision-log.md` Decision 4.
 - `/pages/`: Route-level React components.
   - `/experiments/`: The interactive laboratory components (e.g., Benchmarks, Visualizers).
 - `/components/`: Reusable UI elements (Buttons, Headers, Project Cards).
@@ -31,4 +31,4 @@ A high-level map of the portfolio's architecture and ownership.
 
 ### `/public/`
 **Purpose:** Static and dynamically generated assets served at the root.
-- **NOTE:** The generated files (`search-index.json`, `og/`, `feeds/`, `sitemap.xml`) are tracked in git via dedicated `chore(build)` commits. Feature commits should exclude them.
+- **NOTE:** The generated files (`content-index.json`, `search-index.json`, `og/`, `feeds/`, `sitemap.xml`) are tracked in git via dedicated `chore(build)` commits. Feature commits should exclude them.
