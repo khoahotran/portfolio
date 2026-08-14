@@ -11,13 +11,13 @@
 ## Build pipeline
 
 - `npm run build:search-index`: generate
-  - `public/search-index.json`
-  - `public/sitemap.xml`
-  - `public/robots.txt`
-  - `public/feed.xml`
-  - `public/feed.json`
+  - `public/content-index.json` — lean index (no article body text), fetched by every list page, detail page, and related-articles lookup
+  - `public/search-index.json` — full index (includes searchable body text, with code/Mermaid/HTML stripped), fetched only by `/search`
+  - `public/sitemap.xml`, `public/robots.txt`
+  - `public/feed.xml`, `public/feed.json`
   - `public/feeds/*.xml` and `public/feeds/*.json` by collection
-  - `public/og/*.svg` and `public/og-default.svg`
+  - `public/og/*.png` (social preview images, rasterized at build time) and `public/og/*.svg` (the rasterization source, kept alongside)
+  - Fails the build if any article's `related:` frontmatter references a slug that doesn't exist
 - `npm run build`: run index generation, then Vite build
 - `npm run predeploy` (runs before `npm run deploy`): typecheck, then lint, then build — a type or lint error blocks deploy
 
@@ -29,6 +29,8 @@
 - `content/system-design`
 - `content/field-notes`
 - `content/projects` — flagship project case studies, listed at `/projects`
+
+See `content/README.md` for the frontmatter schema.
 
 ## Interactive labs
 
@@ -54,8 +56,8 @@ In dev console:
 
 - Global RSS: `/feed.xml`
 - Global JSON Feed: `/feed.json`
-- Collection RSS: `/feeds/blog.xml`, `/feeds/research.xml`, `/feeds/experiments.xml`, `/feeds/system-design.xml`
-- Collection JSON Feed: `/feeds/blog.json`, `/feeds/research.json`, `/feeds/experiments.json`, `/feeds/system-design.json`
+- Collection RSS: `/feeds/blog.xml`, `/feeds/research.xml`, `/feeds/experiments.xml`, `/feeds/system-design.xml`, `/feeds/field-notes.xml`, `/feeds/projects.xml`
+- Collection JSON Feed: `/feeds/blog.json`, `/feeds/research.json`, `/feeds/experiments.json`, `/feeds/system-design.json`, `/feeds/field-notes.json`, `/feeds/projects.json`
 
 ## CI
 

@@ -33,7 +33,7 @@ A high-level map of the portfolio's architecture and ownership.
 
 ### `/scripts/`
 **Purpose:** Build and deployment automation.
-- `build-search-index.mjs`: Parses all Markdown in `/content/`, generates the `search-index.json`, builds the RSS/JSON feeds, creates OpenGraph SVG assets, and generates the `sitemap.xml`.
+- `build-search-index.mjs`: Parses all Markdown in `/content/`, generates `content-index.json` and `search-index.json`, builds the RSS/JSON feeds, creates OpenGraph SVG assets (pruning any left over from a renamed/deleted content file), and generates the `sitemap.xml`.
 
 ### `/public/`
 **Purpose:** Static and dynamically generated assets served at the root.
