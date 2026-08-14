@@ -10,6 +10,31 @@ This document prioritizes the future evolution of the portfolio. AI agents shoul
 - [x] Knowledge Graph and Ecosystem visualization.
 - [x] AI Operating System governance `.ai/`.
 
+## 🟢 Completed (Phase 3 — Production UI/UX, A11y & Performance Audit)
+No new articles or labs. Fixed two live production bugs (an unrecoverable blank-screen error path
+on a failed lazy-chunk load, and mobile horizontal overflow on articles/homepage from missing
+`min-w-0`), plus a batch of accessibility, readability, and reliability fixes. Deferred/backlog
+items from this pass are tracked in `.ai/audit-followups.md` — check it before starting new
+frontend work, especially the `min-w-0` convention and the `rehype-raw` sanitization caveat.
+
+## 🟢 Completed (Phase 2.5 — Platform Audit)
+No new articles or labs; this pass fixed rendering/routing defects and content-engine
+architecture. See `.ai/decision-log.md` Decisions 4–5 for the two that change how future
+content should be authored/linked.
+- [x] Fixed production-breaking routing: labs moved to `/labs/*`, a `/experiments` article/lab
+      slug collision that made 3 articles unreachable, missing `/projects` list route, no GH
+      Pages SPA fallback, root-absolute links that 404'd under the `/portfolio/` base.
+- [x] Syntax highlighting was wired but unstyled (`.hljs-*` classes with no CSS) — themed now.
+- [x] Implemented the `> [!NOTE]` callout syntax `.ai/writing-style-guide.md` already documented
+      but that the content engine never actually rendered.
+- [x] Split `ContentDetailPage` into reusable pieces under `src/components/content/`
+      (`MarkdownContent`, `ArticleHeader`, `TableOfContents` w/ scrollspy, `RelatedContent`,
+      `ArticleNav`, `ReadingProgress`), added a code-block copy button + language label, and
+      figure/caption rendering for standalone images.
+- [x] Split the generated index into a lean `content-index.json` and a full `search-index.json`
+      — every route but `/search` now fetches ~24 KB instead of ~252 KB.
+- [x] Merged two overlapping Redis Streams vs BullMQ articles into one.
+
 ## 🟡 In Progress / Up Next (Phase 3)
 *These are the highest priority items for the next AI session.*
 
