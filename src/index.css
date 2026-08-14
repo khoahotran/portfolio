@@ -73,6 +73,15 @@ body {
   font-size: clamp(1.15rem, 2.1vw, 1.35rem);
 }
 
+/* Constrain the text flow to an optimal reading measure (~70ch) without
+   capping tables, code blocks, figures, or diagrams — those stay full width
+   so wide content (e.g. comparison tables) still gets the available column. */
+.markdown-body p,
+.markdown-body li,
+.markdown-body blockquote {
+  max-width: 70ch;
+}
+
 .markdown-body p,
 .markdown-body li {
   color: rgb(51 65 85);
@@ -107,6 +116,27 @@ body {
   border-collapse: collapse;
 }
 
+/* ── Figures (MarkdownContent wraps standalone `p > img` in <figure>) ───── */
+
+.markdown-body figure {
+  margin: 1.4rem 0;
+}
+
+.markdown-body figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.85rem;
+  border: 1px solid rgb(226 232 240);
+}
+
+.markdown-body figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  color: rgb(100 116 139);
+  text-align: center;
+}
+
 .markdown-body thead {
   background: rgb(241 245 249);
 }
@@ -127,10 +157,63 @@ body {
 }
 
 .markdown-body pre {
+  position: relative;
   overflow-x: auto;
   border-radius: 0.85rem;
   background: rgb(15 23 42);
   padding: 1rem;
+}
+
+/* ── Code block toolbar (language label + copy button), added by
+   MarkdownContent's enhanceCodeBlocks. Only present on language-tagged
+   blocks — ASCII-diagram fences have no toolbar and keep the padding above. */
+
+.markdown-body pre.has-toolbar {
+  padding-top: 2.6rem;
+}
+
+.markdown-body .code-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgb(51 65 85);
+}
+
+.markdown-body .code-language {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgb(148 163 184);
+}
+
+.markdown-body .code-copy-button {
+  margin-left: auto;
+  border-radius: 0.4rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgb(203 213 225);
+  background: rgb(30 41 59);
+  border: 1px solid rgb(51 65 85);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.markdown-body .code-copy-button:hover {
+  color: rgb(240 253 250);
+  border-color: rgb(45 212 191);
+}
+
+.markdown-body .code-copy-button--copied {
+  color: rgb(45 212 191);
+  border-color: rgb(45 212 191);
 }
 
 .markdown-body pre code {
