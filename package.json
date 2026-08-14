@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
-    "predeploy": "npm run build",
+    "check:responsive": "node scripts/check-responsive.mjs",
+    "predeploy": "npm run typecheck && npm run lint && npm run build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {

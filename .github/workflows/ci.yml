@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      - run: npm run lint
+
+      # npm run build already runs build:search-index first (see package.json).
+      - run: npm run build
+
+      # Chromium only — the regression check doesn't need Firefox/WebKit for
+      # every push. Resolved from the `playwright` devDependency already in
+      # package.json, not installed ad hoc.
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Start preview server
+        run: npx vite preview --port 4173 --strictPort &
+
+      - name: Wait for preview server
+        run: |
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:4173/portfolio/ > /dev/null && exit 0
+            sleep 1
+          done
+          echo "Preview server did not become ready in time" >&2
+          exit 1
+
+      # Routes x viewports horizontal-overflow + console/page-error check.
+      # See scripts/check-responsive.mjs and .ai/audit-followups.md item 5 —
+      # this is what protects the `min-w-0` convention from silently
+      # regressing as new components are added.
+      - name: Responsive regression check
+        run: npm run check:responsive

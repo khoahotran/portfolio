@@ -5,6 +5,8 @@
 - `npm run dev`
 - `npm run lint`
 - `npm run typecheck`
+- `npm run preview` — serve the production build locally at the real `/portfolio/` base path
+- `npm run check:responsive` — browser regression check (overflow + console/page errors) across every route and 7 viewport widths; requires `npm run preview` (or `dev`) running first
 
 ## Build pipeline
 
@@ -17,6 +19,7 @@
   - `public/feeds/*.xml` and `public/feeds/*.json` by collection
   - `public/og/*.svg` and `public/og-default.svg`
 - `npm run build`: run index generation, then Vite build
+- `npm run predeploy` (runs before `npm run deploy`): typecheck, then lint, then build — a type or lint error blocks deploy
 
 ## Content structure
 
@@ -44,3 +47,8 @@ In dev console:
 - Global JSON Feed: `/feed.json`
 - Collection RSS: `/feeds/blog.xml`, `/feeds/research.xml`, `/feeds/experiments.xml`, `/feeds/system-design.xml`
 - Collection JSON Feed: `/feeds/blog.json`, `/feeds/research.json`, `/feeds/experiments.json`, `/feeds/system-design.json`
+
+## CI
+
+`.github/workflows/ci.yml` runs on every push/PR to `main`/`dev`: typecheck, lint, build, then the
+responsive regression check against a local preview server.
