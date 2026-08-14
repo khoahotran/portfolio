@@ -1,6 +1,9 @@
-# Knowledge Graph
+# Ecosystem Graph
 
-This graph maps the conceptual relationships across the portfolio, ensuring it behaves as a connected engineering knowledge base.
+This graph maps the conceptual relationships across the portfolio, ensuring it behaves as a connected
+engineering knowledge base. Named "Ecosystem Graph" to match the live page (`/graph`, nav label
+"Ecosystem", `<h1>Ecosystem Graph</h1>`) — this file used to be titled "Knowledge Graph", which drifted
+from the UI. The filename stays `knowledge-graph.md`; other `.ai/` docs reference it by that path.
 
 ## Core Relationships
 

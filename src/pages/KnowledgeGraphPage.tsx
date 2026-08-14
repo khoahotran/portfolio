@@ -2,8 +2,15 @@ import MermaidDiagram from '../components/content/MermaidDiagram';
 import { useSeo } from '../seo/useSeo';
 
 function KnowledgeGraphPage() {
-  useSeo({ title: 'Knowledge Graph', description: 'Interactive ecosystem graph of the portfolio.' });
+  useSeo({ title: 'Ecosystem Graph', description: 'Interactive ecosystem graph of the portfolio.' });
 
+  // Scoped to the 3 flagship projects (content/projects/*.md, ".ai/flagship-projects.md"'s
+  // "Big Three") — SeensioGO and Jujuja were previously drawn here as project nodes
+  // identical in style to Aegis/Core Banking/QuantAlpha, but neither has a
+  // content/projects/ page; they're covered via blog/system-design articles
+  // instead. Drawing them as flagship projects overstated what exists. Every
+  // edge below is cross-checked against .ai/flagship-projects.md and each
+  // project's own frontmatter tags, not carried over from the previous version.
   const graphDefinition = `
 graph TD
     %% Styling
@@ -22,14 +29,9 @@ graph TD
         P_Quant(QuantAlpha HFT):::project
     end
 
-    subgraph D_Product [Production Apps]
-        P_Seensio(SeensioGO):::project
-        P_Jujuja(Jujuja):::project
-    end
-
     %% Technologies
     T_Go[Go / Golang]:::tech
-    T_TS[TypeScript / Node]:::tech
+    T_Python[Python]:::tech
     T_Kafka[Kafka / Redpanda]:::tech
     T_Redis[Redis Streams]:::tech
     T_Postgres[PostgreSQL]:::tech
@@ -46,9 +48,7 @@ graph TD
     T_Go --> P_Aegis
     T_Go --> P_Banking
     T_Go --> P_Quant
-    T_TS --> P_Seensio
-    T_TS --> P_Jujuja
-    T_TS --> P_Quant
+    T_Python --> P_Quant
 
     T_Kafka --> P_Aegis
     T_Redis --> P_Aegis
@@ -57,7 +57,6 @@ graph TD
     T_Postgres --> P_Aegis
     T_Postgres --> P_Quant
     T_Firestore --> P_Banking
-    T_Firestore --> P_Seensio
 
     %% Relationships - Concepts to Projects
     C_EventSourcing -.-> P_Banking
@@ -66,6 +65,7 @@ graph TD
     
     C_RBAC -.-> P_Aegis
     C_Microservices -.-> P_Aegis
+    C_CQRS -.-> P_Aegis
   `;
 
   return (
