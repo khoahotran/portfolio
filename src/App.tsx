@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
+import LoadingState from './components/LoadingState';
 import SiteFooter from './components/content/SiteFooter';
 import SiteHeader from './components/content/SiteHeader';
 import { labs } from './labs/registry';
@@ -16,7 +17,7 @@ const ContentDetailPage = lazy(() => import('./pages/content/ContentDetailPage')
 const SearchPage = lazy(() => import('./pages/SearchPage'));
 
 function LoadingFallback() {
-  return <div className="mx-auto max-w-6xl px-4 py-16 text-sm text-slate-500">Loading page...</div>;
+  return <LoadingState label="Loading page…" className="mx-auto max-w-6xl px-4" />;
 }
 
 /**

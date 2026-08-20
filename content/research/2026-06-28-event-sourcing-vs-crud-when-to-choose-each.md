@@ -243,11 +243,11 @@ flowchart TD
 
     A -->|Yes| B
     A -->|No| D
-    B -->|Yes| EventSourcing["✅ Event Sourcing"]
+    B -->|Yes| EventSourcing["Event Sourcing"]
     B -->|No| C
     C -->|Yes| EventSourcing
     C -->|No| D
-    D -->|Yes| CRUD["✅ CRUD with Audit Log"]
+    D -->|Yes| CRUD["CRUD with Audit Log"]
     D -->|No| Evaluate["Evaluate CQRS only\n(separate read/write models)"]
 ```
 

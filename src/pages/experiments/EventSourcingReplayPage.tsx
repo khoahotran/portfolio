@@ -98,7 +98,7 @@ function EventSourcingReplayPage() {
               const isApplied = idx < currentVersion;
               const isCurrent = idx === currentVersion - 1;
               return (
-                <div key={evt.id} className={`p-4 rounded-xl border-2 transition-all duration-300 flex gap-4 items-center ${
+                <div key={evt.id} className={`p-4 ml-2 rounded-xl border-2 transition-all duration-300 flex gap-4 items-center ${
                   isCurrent ? 'border-teal-400 bg-teal-50 shadow-md transform scale-[1.02]' : 
                   isApplied ? 'border-slate-200 bg-white opacity-70' : 
                   'border-slate-100 bg-slate-50 opacity-40'

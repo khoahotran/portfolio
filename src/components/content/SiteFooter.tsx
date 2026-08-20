@@ -12,7 +12,7 @@ function SiteFooter() {
         &copy; {new Date().getFullYear()} Trần Nguyễn Anh Khoa
       </p>
       <p className="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">
-        BACKEND & DISTRIBUTED SYSTEMS &bull; HO CHI MINH CITY
+        HO CHI MINH CITY
       </p>
     </footer>
   );

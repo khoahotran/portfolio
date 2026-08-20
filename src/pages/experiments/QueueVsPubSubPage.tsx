@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
+import { Pause, Play } from 'lucide-react';
 import LabBackLink from '../../labs/LabBackLink';
 import { useSeo } from '../../seo/useSeo';
 
@@ -8,14 +9,21 @@ function QueueVsPubSubPage() {
   const [consumers, setConsumers] = useState(3);
   const [subscribers, setSubscribers] = useState(3);
   const [ticks, setTicks] = useState(0);
+  // Both message-flow animations ran forever with no way to freeze a frame
+  // to inspect it. Pausing stops the shared ticker only — the rate/consumer/
+  // subscriber sliders stay fully live either way.
+  const [isPaused, setIsPaused] = useState(false);
 
   // Animation ticker for message flow
   useEffect(() => {
+    if (isPaused) {
+      return;
+    }
     // Faster ticker based on message rate
     const interval = Math.max(50, 1000 - messageRate / 2);
     const timer = setInterval(() => setTicks(t => (t + 1) % 100), interval);
     return () => clearInterval(timer);
-  }, [messageRate]);
+  }, [messageRate, isPaused]);
 
   const metrics = useMemo(() => {
     const queueLatency = Math.max(20, Math.round(messageRate / Math.max(1, consumers)));
@@ -32,8 +40,21 @@ function QueueVsPubSubPage() {
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 md:px-6 animate-fade-in">
       <LabBackLink labId="queue-vs-pubsub" />
-      <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Queue vs Pub/Sub Comparison</h1>
-      <p className="mt-2 text-slate-600">Visualize the difference in message routing and delivery behavior under changing load.</p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Queue vs Pub/Sub Comparison</h1>
+          <p className="mt-2 text-slate-600">Visualize the difference in message routing and delivery behavior under changing load.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setIsPaused((paused) => !paused)}
+          aria-pressed={isPaused}
+          className="btn-pill shrink-0"
+        >
+          {isPaused ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
+          {isPaused ? 'Resume' : 'Pause'} animation
+        </button>
+      </div>
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
         <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">

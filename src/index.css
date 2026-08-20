@@ -99,6 +99,57 @@ body {
   text-underline-offset: 2px;
 }
 
+/* ── Back-navigation links (ArticleHeader, LabBackLink) ──────────────────
+   Previously a bare inline `text-xs` link — a ~24px-tall tap target next to
+   the site's main content, easy to miss or mis-tap on mobile (WCAG 2.5.5
+   recommends 44x44px). One shared rule so every "back" link updates
+   together instead of drifting per-component. The negative margin keeps the
+   larger padded box optically aligned with the content edge above/below it. */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 2.75rem;
+  margin: -0.5rem 0 -0.5rem -0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgb(13 148 136);
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.btn-back:hover {
+  background: rgb(240 253 250);
+  color: rgb(15 118 110);
+}
+
+.btn-back svg {
+  flex-shrink: 0;
+}
+
+/* ── Pill toggle button (lab pause/resume controls) ──────────────────────
+   Same small rounded-pill treatment used for every play/pause style toggle
+   across the interactive labs — one place to restyle instead of editing
+   each lab page's className string individually. */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  border: 1px solid rgb(226 232 240);
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgb(71 85 105);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.btn-pill:hover {
+  border-color: rgb(20 184 166);
+  color: rgb(13 148 136);
+}
+
 /* CTA buttons embedded as raw HTML (e.g. "View Interactive Benchmark" links to a
    /labs/<id> lab) set their own Tailwind `text-white` — without this override the
    blanket `.markdown-body a` rule above wins the cascade (equal specificity, later
@@ -380,6 +431,26 @@ body {
   color: rgb(185 28 28);
 }
 
+/* ── Status marks (✅/❌ replaced by MarkdownContent's enhanceStatusMarks) ── */
+
+.status-mark {
+  display: inline-flex;
+  vertical-align: -0.15em;
+}
+
+.status-mark svg {
+  width: 1.05em;
+  height: 1.05em;
+}
+
+.status-mark--yes {
+  color: rgb(13 148 136);
+}
+
+.status-mark--no {
+  color: rgb(220 38 38);
+}
+
 .markdown-body .heading-anchor {
   margin-right: 0.35rem;
   text-decoration: none;
@@ -416,6 +487,51 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ── Table of contents (TableOfContents.tsx) ─────────────────────────────
+   Was flat text-sm links with only a color/weight change on the active item —
+   hard to scan and gave depth-2 vs depth-3 headings no visible rank. A
+   continuous left rail plus a solid active segment reads as a position
+   marker; sub-headings get extra indent and a lighter, smaller face so the
+   hierarchy is visible without reading the text. */
+
+.toc-rail {
+  border-left: 2px solid rgb(226 232 240);
+}
+
+.toc-link {
+  display: block;
+  border-left: 2px solid transparent;
+  margin-left: -2px;
+  padding: 0.35rem 0 0.35rem 0.85rem;
+  color: rgb(71 85 105);
+  font-weight: 500;
+  transition: color 0.15s, border-color 0.15s, background-color 0.15s;
+}
+
+.toc-link:hover {
+  color: rgb(15 118 110);
+  background: rgb(240 253 250);
+}
+
+.toc-link--active {
+  border-left-color: rgb(20 184 166);
+  background: rgb(240 253 250);
+  color: rgb(15 118 110);
+  font-weight: 700;
+}
+
+.toc-sub .toc-link {
+  padding-left: 1.6rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: rgb(100 116 139);
+}
+
+.toc-sub .toc-link--active {
+  font-weight: 600;
+  color: rgb(15 118 110);
 }
 
 /* ── Mermaid diagram container ─────────────────────────────────────────── */

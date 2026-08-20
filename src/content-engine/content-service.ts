@@ -150,18 +150,25 @@ export async function getContentDetail(
     return cached;
   }
 
-  const indexItem = await getIndexItem(collection, slug);
+  // Index lookup, raw content, and the markdown-compiler chunk are three
+  // independent fetches (none reads the others' result) — previously each
+  // `await` blocked the next one from even starting, turning a page load
+  // into a fully serial waterfall. Only the final compile step actually
+  // needs all three to have resolved.
+  const [indexItem, raw, markdownModule] = await Promise.all([
+    getIndexItem(collection, slug),
+    getRawContentBySlug(collection, slug),
+    import('./markdown'),
+  ]);
+
   if (!indexItem || !shouldInclude(indexItem)) {
     return null;
   }
-
-  const raw = await getRawContentBySlug(collection, slug);
   if (!raw) {
     return null;
   }
 
   const body = stripFrontmatter(raw);
-  const markdownModule = await import('./markdown');
   const html = await markdownModule.compileMarkdownToHtml(body);
   const toc = markdownModule.extractToc(body);
 

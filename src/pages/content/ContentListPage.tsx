@@ -1,5 +1,7 @@
+import { ArrowLeft } from 'lucide-react';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import LoadingState from '../../components/LoadingState';
 import ErrorNotice from '../../components/content/ErrorNotice';
 import { getContentIndex, getContentTags } from '../../content-engine/content-service';
 import { formatDate, routeForCollection } from '../../content-engine/format';
@@ -105,7 +107,8 @@ function ContentListPage({ collection, title, description }: Props) {
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-10 md:px-6 md:py-14">
-      <Link to="/" className="mb-4 inline-block text-xs text-teal-600 hover:underline">
+      <Link to="/" className="btn-back mb-4">
+        <ArrowLeft size={16} aria-hidden="true" />
         Back to Portfolio
       </Link>
       <section className="mb-8">
@@ -158,7 +161,7 @@ function ContentListPage({ collection, title, description }: Props) {
       </section>
 
       <section className="grid gap-4">
-        {loading && !error && <p className="text-sm text-slate-500">Loading content...</p>}
+        {loading && !error && <LoadingState label="Loading content…" className="col-span-full py-8" />}
         {error && (
           <ErrorNotice
             message="Couldn't load this collection. Check your connection and try again."

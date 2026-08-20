@@ -188,6 +188,75 @@ function enhanceHeadingAnchors(container: HTMLElement) {
   });
 }
 
+// Matches lucide-react's CheckCircle2 / XCircle path data (same stroke props
+// as defaultAttributes.js) so a raw ✅/❌ emoji — inconsistent across
+// platforms/fonts and unreadable to some screen readers — renders as the same
+// icon already used elsewhere in the app (e.g. SagaStateMachinePage), instead
+// of a second, one-off visual language.
+const CHECK_SVG =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>';
+const X_SVG =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>';
+const STATUS_MARK_PATTERN = /[✅❌]\s?/g;
+
+/**
+ * Replaces ✅/❌ glyphs (used across the corpus in comparison tables) with an
+ * inline icon + `role="img"`/`aria-label`, so status is conveyed by shape and
+ * an announced label rather than a font glyph some screen readers skip and
+ * some platforms render inconsistently. Skips code/pre (a real ✅ inside a
+ * code sample should stay literal text) and `.mermaid-diagram` (its label
+ * text lives in a `data-diagram` source string at this point, not text nodes
+ * — mermaid's own SVG output can't host an embedded lucide icon).
+ */
+function enhanceStatusMarks(container: HTMLElement) {
+  const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      if (!node.textContent || !/[✅❌]/.test(node.textContent)) {
+        return NodeFilter.FILTER_SKIP;
+      }
+      if (node.parentElement?.closest('pre, code, .mermaid-diagram')) {
+        return NodeFilter.FILTER_SKIP;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    },
+  });
+
+  const targets: Text[] = [];
+  let current = walker.nextNode();
+  while (current) {
+    targets.push(current as Text);
+    current = walker.nextNode();
+  }
+
+  targets.forEach((textNode) => {
+    const text = textNode.textContent ?? '';
+    const fragment = document.createDocumentFragment();
+    let lastIndex = 0;
+
+    for (const match of text.matchAll(STATUS_MARK_PATTERN)) {
+      if (match.index > lastIndex) {
+        fragment.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+      }
+
+      const isYes = match[0].startsWith('✅');
+      const mark = document.createElement('span');
+      mark.className = isYes ? 'status-mark status-mark--yes' : 'status-mark status-mark--no';
+      mark.innerHTML = isYes ? CHECK_SVG : X_SVG;
+      mark.setAttribute('role', 'img');
+      mark.setAttribute('aria-label', isYes ? 'Yes' : 'No');
+      fragment.appendChild(mark);
+
+      lastIndex = match.index + match[0].length;
+    }
+
+    if (lastIndex < text.length) {
+      fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
+    }
+
+    textNode.replaceWith(fragment);
+  });
+}
+
 function MarkdownContent({ html }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -202,6 +271,7 @@ function MarkdownContent({ html }: Props) {
     enhanceImages(container);
     enhanceCodeBlocks(container);
     enhanceHeadingAnchors(container);
+    enhanceStatusMarks(container);
 
     const onClick = (event: MouseEvent) => handleLinkClick(event, navigate);
     container.addEventListener('click', onClick);

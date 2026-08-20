@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
+import { Pause, Play } from 'lucide-react';
 import LabBackLink from '../../labs/LabBackLink';
 import { useSeo } from '../../seo/useSeo';
 
@@ -8,12 +9,20 @@ function ThroughputSimulationPage() {
   const [processingMs, setProcessingMs] = useState(120);
   const [failureRate, setFailureRate] = useState(2);
   const [ticks, setTicks] = useState(0);
+  // The jitter ticker previously ran forever with no way to freeze the
+  // animation — every parameter was live, but the chart itself was
+  // "watch only". Pausing stops just the decorative noise; the sliders
+  // above still recompute the chart instantly either way.
+  const [isPaused, setIsPaused] = useState(false);
 
   // Animation ticker to simulate a moving graph
   useEffect(() => {
+    if (isPaused) {
+      return;
+    }
     const timer = setInterval(() => setTicks(t => t + 1), 500);
     return () => clearInterval(timer);
-  }, []);
+  }, [isPaused]);
 
   const result = useMemo(() => {
     const capacityPerSecond = (workers * 1000) / processingMs;
@@ -100,6 +109,18 @@ function ThroughputSimulationPage() {
         </section>
 
         <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">Live simulation</h2>
+            <button
+              type="button"
+              onClick={() => setIsPaused((paused) => !paused)}
+              aria-pressed={isPaused}
+              className="btn-pill"
+            >
+              {isPaused ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
+              {isPaused ? 'Resume' : 'Pause'} animation
+            </button>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
               <div className="text-xs uppercase tracking-widest text-slate-500 font-semibold mb-1">Max Capacity</div>

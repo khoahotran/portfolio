@@ -1,5 +1,7 @@
+import { ArrowLeft } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
+import LoadingState from '../../components/LoadingState';
 import ArticleHeader from '../../components/content/ArticleHeader';
 import ArticleNav from '../../components/content/ArticleNav';
 import ErrorNotice from '../../components/content/ErrorNotice';
@@ -146,7 +148,11 @@ function ContentDetailPage({ collection }: Props) {
   const backRoute = useMemo(() => routeForCollection(collection), [collection]);
 
   if (loading) {
-    return <main className="mx-auto max-w-4xl px-4 py-16 text-sm text-slate-500">Loading...</main>;
+    return (
+      <main className="mx-auto max-w-4xl px-4">
+        <LoadingState label="Loading article…" />
+      </main>
+    );
   }
 
   if (error) {
@@ -164,7 +170,8 @@ function ContentDetailPage({ collection }: Props) {
     return (
       <main className="mx-auto max-w-4xl px-4 py-16">
         <h1 className="text-2xl font-bold text-slate-900">Article not found</h1>
-        <Link to={backRoute} className="mt-4 inline-block text-sm text-teal-600 hover:underline">
+        <Link to={backRoute} className="btn-back mt-2">
+          <ArrowLeft size={16} aria-hidden="true" />
           Back to list
         </Link>
       </main>

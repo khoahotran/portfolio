@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getLabById } from './registry';
 
@@ -18,19 +19,18 @@ function LabBackLink({ labId }: Props) {
   const lab = getLabById(labId);
 
   return (
-    <div className="mb-4 flex flex-wrap items-center gap-4">
-      <Link
-        to="/experiments"
-        className="inline-block text-xs font-semibold uppercase tracking-widest text-teal-600 hover:text-teal-700 transition-colors"
-      >
-        &larr; Back to Experiments
+    <div className="mb-4 flex flex-wrap items-center gap-2">
+      <Link to="/experiments" className="btn-back">
+        <ArrowLeft size={16} aria-hidden="true" />
+        Back to Experiments
       </Link>
       {lab?.relatedArticle && (
         <Link
           to={`/experiments/${lab.relatedArticle}`}
-          className="inline-block text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-slate-700 transition-colors"
+          className="btn-back !text-slate-500 hover:!text-slate-700"
         >
-          Read the write-up &rarr;
+          Read the write-up
+          <ArrowRight size={16} aria-hidden="true" />
         </Link>
       )}
     </div>

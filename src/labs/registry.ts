@@ -25,6 +25,15 @@ export interface LabDefinition {
    * are left without this field rather than inventing one.
    */
   relatedArticle?: string;
+  /**
+   * What kind of interaction this lab actually offers — shown as a badge on
+   * LabsIndexPage so a visitor knows what to expect before opening it,
+   * instead of every card looking identical regardless of depth:
+   * - 'live': sliders/toggles recompute the visualization instantly, no run step.
+   * - 'run': has an explicit start (and stop/pause/reset) for a timed sequence.
+   * - 'preset': switches between a small fixed set of precomputed data points.
+   */
+  interaction: 'live' | 'run' | 'preset';
 }
 
 const ThroughputSimulationPage = lazy(() => import('../pages/experiments/ThroughputSimulationPage'));
@@ -49,6 +58,7 @@ export const labs: LabDefinition[] = [
     title: 'Throughput Simulation',
     description: 'Interactive throughput and latency simulation for worker systems.',
     component: ThroughputSimulationPage,
+    interaction: 'live',
     relatedArticle: 'throughput-simulation-notes',
   },
   {
@@ -56,18 +66,21 @@ export const labs: LabDefinition[] = [
     title: 'Retry Strategy Visualizer',
     description: 'Compare linear, exponential, and jitter backoff retry strategies.',
     component: RetryStrategyVisualizerPage,
+    interaction: 'live',
   },
   {
     id: 'failure-injection',
     title: 'Failure Injection Demo',
     description: 'Inject controlled failure and observe circuit breaker behavior.',
     component: FailureInjectionDemoPage,
+    interaction: 'live',
   },
   {
     id: 'queue-vs-pubsub',
     title: 'Queue vs Pub/Sub Comparison',
     description: 'Interactive comparison between queue and pub-sub delivery patterns.',
     component: QueueVsPubSubPage,
+    interaction: 'live',
     relatedArticle: 'queue-vs-pub-sub-comparison-notes',
   },
   {
@@ -75,6 +88,7 @@ export const labs: LabDefinition[] = [
     title: 'Saga State Machine',
     description: 'Interactive visualization of the Saga distributed transaction pattern.',
     component: SagaStateMachinePage,
+    interaction: 'run',
     relatedArticle: 'saga-state-machine-visualizer',
   },
   {
@@ -82,6 +96,7 @@ export const labs: LabDefinition[] = [
     title: 'Event Sourcing Replay',
     description: 'Interactive visualization of Event Sourcing and read projections.',
     component: EventSourcingReplayPage,
+    interaction: 'run',
     collidesWithArticleSlug: true, // content/experiments/2026-06-28-event-sourcing-replay.md
     relatedArticle: 'event-sourcing-replay',
   },
@@ -90,6 +105,7 @@ export const labs: LabDefinition[] = [
     title: 'Benchmark: Redis Streams vs BullMQ',
     description: 'Interactive benchmark visualizing queue throughput and latency.',
     component: RedisVsBullMQPage,
+    interaction: 'preset',
     relatedArticle: 'redis-streams-vs-bullmq-job-queue-comparison',
   },
   {
@@ -97,6 +113,7 @@ export const labs: LabDefinition[] = [
     title: 'Benchmark: Go vs TS Concurrency',
     description: 'Interactive benchmark visualizing memory and execution time for concurrent tasks.',
     component: GoVsTsConcurrencyPage,
+    interaction: 'preset',
     collidesWithArticleSlug: true, // content/experiments/go-vs-ts-concurrency.md
     relatedArticle: 'go-vs-ts-concurrency',
   },
@@ -105,6 +122,7 @@ export const labs: LabDefinition[] = [
     title: 'Benchmark: DB Event Replay',
     description: 'Interactive benchmark visualizing event sourcing replay times across databases.',
     component: DbEventReplayBenchmarkPage,
+    interaction: 'preset',
     collidesWithArticleSlug: true, // content/experiments/db-event-replay-benchmark.md
     relatedArticle: 'db-event-replay-benchmark',
   },

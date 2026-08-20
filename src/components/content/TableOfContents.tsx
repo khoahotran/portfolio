@@ -50,26 +50,33 @@ function TableOfContents({ toc }: Props) {
   }
 
   return (
-    <div className="sticky top-24 rounded-xl border border-slate-200 bg-white p-4">
-      <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">Table of contents</h2>
-      <ul className="space-y-2 text-sm">
-        {toc.map((item) => (
-          <li key={item.id} className={item.depth === 3 ? 'pl-3' : ''}>
-            <a
-              href={`#${item.id}`}
-              onClick={(event) => {
-                event.preventDefault();
-                window.history.replaceState(null, '', `#${item.id}`);
-                scrollToHash(item.id);
-              }}
-              className={`transition-colors ${
-                activeId === item.id ? 'font-semibold text-teal-600' : 'text-slate-600 hover:text-teal-600'
-              }`}
-            >
-              {item.text}
-            </a>
-          </li>
-        ))}
+    <div className="toc sticky top-24 rounded-xl border border-slate-200 bg-white p-4">
+      <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2>
+      {/* The vertical rail is one continuous line (not per-item borders) so the
+          active item's teal segment reads as a moving position marker rather
+          than N disconnected ticks — depth-3 items sit further right, giving
+          the two heading levels a visible rank instead of just a font-weight
+          difference. */}
+      <ul className="toc-rail space-y-0.5 text-[0.85rem] leading-snug">
+        {toc.map((item) => {
+          const isActive = activeId === item.id;
+          return (
+            <li key={item.id} className={item.depth === 3 ? 'toc-sub' : undefined}>
+              <a
+                href={`#${item.id}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  window.history.replaceState(null, '', `#${item.id}`);
+                  scrollToHash(item.id);
+                }}
+                aria-current={isActive ? 'location' : undefined}
+                className={isActive ? 'toc-link toc-link--active' : 'toc-link'}
+              >
+                {item.text}
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

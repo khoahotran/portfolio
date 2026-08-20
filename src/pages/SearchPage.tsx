@@ -1,6 +1,7 @@
 import Fuse, { type FuseResult } from 'fuse.js';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import LoadingState from '../components/LoadingState';
 import ErrorNotice from '../components/content/ErrorNotice';
 import { getSearchIndex } from '../content-engine/content-service';
 import { collectionLabel, routeForCollection } from '../content-engine/format';
@@ -186,7 +187,7 @@ function SearchPage() {
       </section>
 
       <section className="mt-6 grid gap-4">
-        {loading && !error && <p className="text-sm text-slate-500">Loading search index...</p>}
+        {loading && !error && <LoadingState label="Loading search index…" className="py-8" />}
         {error && (
           <ErrorNotice
             message="Couldn't load the search index. Check your connection and try again."

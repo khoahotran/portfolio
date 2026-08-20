@@ -104,12 +104,24 @@ function rehypeMermaidExtract() {
       // Replace <pre><code class="language-mermaid">...</code></pre>
       // with <div class="mermaid-diagram" data-diagram="..."></div>
       if (parent && typeof index === 'number') {
+        // Reserves roughly the diagram's real rendered height *before*
+        // mermaid.js (a lazy chunk) has loaded and rendered it, instead of a
+        // flat 48px skeleton — the mismatch between that skeleton and a real
+        // multi-hundred-px diagram was a measured layout-shift (CLS)
+        // contributor. Source line count is a rough but source-available
+        // proxy for diagram size (no real layout pass has run yet at compile
+        // time); clamped so a 2-line diagram doesn't reserve a huge gap and a
+        // 60-line one doesn't get short-changed.
+        const lineCount = source.split('\n').filter((line) => line.trim().length > 0).length;
+        const estimatedHeight = Math.min(900, Math.max(160, lineCount * 28 + 40));
+
         const replacement: Element = {
           type: 'element',
           tagName: 'div',
           properties: {
             className: ['mermaid-diagram'],
             'data-diagram': source,
+            style: `min-height: ${estimatedHeight}px;`,
           },
           children: [],
         };

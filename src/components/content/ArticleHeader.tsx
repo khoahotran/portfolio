@@ -1,5 +1,6 @@
+import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { formatDate, routeForCollection } from '../../content-engine/format';
+import { collectionLabel, formatDate, routeForCollection } from '../../content-engine/format';
 import type { ContentDetail } from '../../content-engine/types';
 
 interface Props {
@@ -9,8 +10,9 @@ interface Props {
 function ArticleHeader({ detail }: Props) {
   return (
     <>
-      <Link to={routeForCollection(detail.collection)} className="mb-4 inline-block text-xs text-teal-600 hover:underline">
-        Back
+      <Link to={routeForCollection(detail.collection)} className="btn-back mb-2">
+        <ArrowLeft size={16} aria-hidden="true" />
+        Back to {collectionLabel(detail.collection)}
       </Link>
       <header className="mb-6 border-b border-slate-200 pb-6">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">{detail.title}</h1>
