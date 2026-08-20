@@ -20,7 +20,7 @@
         "postgresql",
         "architecture"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/adr-firestore-vs-postgresql-event-sourcing.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/adr-firestore-vs-postgresql-event-sourcing.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/adr-graphql-gateway-over-rest",
@@ -35,7 +35,7 @@
         "architecture",
         "go"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/adr-graphql-gateway-over-rest.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/adr-graphql-gateway-over-rest.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/algolia-geo-search-for-store-discovery",
@@ -49,7 +49,7 @@
         "search",
         "geolocation"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/algolia-geo-search-for-store-discovery.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/algolia-geo-search-for-store-discovery.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/distributed-tracing-with-opentelemetry-and-jaeger",
@@ -65,7 +65,7 @@
         "distributed-systems",
         "tracing"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/distributed-tracing-with-opentelemetry-and-jaeger.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/distributed-tracing-with-opentelemetry-and-jaeger.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/event-sourcing-vs-crud-when-to-choose-each",
@@ -81,7 +81,7 @@
         "go",
         "trade-offs"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/event-sourcing-vs-crud-when-to-choose-each.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/event-sourcing-vs-crud-when-to-choose-each.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/order-book-imbalance-hft-signal",
@@ -96,7 +96,7 @@
         "hft",
         "research"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/order-book-imbalance-hft-signal.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/order-book-imbalance-hft-signal.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/designing-a-permission-system",
@@ -111,7 +111,7 @@
         "policy-engine",
         "architecture"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/designing-a-permission-system.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-permission-system.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/research/scaling-background-jobs",
@@ -126,7 +126,7 @@
         "backend",
         "performance"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/scaling-background-jobs.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/scaling-background-jobs.png"
     }
   ]
 }

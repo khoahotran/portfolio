@@ -8,6 +8,8 @@
   </defs>
   <rect width="1200" height="630" fill="url(#bg)" />
   <text x="72" y="120" font-family="Inter, Arial, sans-serif" font-size="28" fill="#99f6e4" font-weight="600">Khoa Tran Engineering Portfolio</text>
-  <text x="72" y="260" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Designing a Real-Time Fraud Detection Engine with Velocity Rules</text>
-  <text x="72" y="350" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">How I built a real-time fraud detection engine using Event Sourcing, CQRS, and velocity rules to automatically freeze malicious accounts in a core banking system.</text>
+  <text x="72" y="260" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Designing a Real-Time Fraud</text>
+  <text x="72" y="324" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Detection Engine with Velocit…</text>
+  <text x="72" y="414" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">How I built a real-time fraud detection engine using</text>
+  <text x="72" y="454" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">Event Sourcing, CQRS, and velocity rules to…</text>
 </svg>

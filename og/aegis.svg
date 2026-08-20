@@ -8,6 +8,8 @@
   </defs>
   <rect width="1200" height="630" fill="url(#bg)" />
   <text x="72" y="120" font-family="Inter, Arial, sans-serif" font-size="28" fill="#99f6e4" font-weight="600">Khoa Tran Engineering Portfolio</text>
-  <text x="72" y="260" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Aegis: High-Performance Auth &amp; Authorization Platform</text>
-  <text x="72" y="350" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">A modular, high-performance Identity and Policy microservice platform in Go, featuring sub-5ms RBAC evaluations and distributed tracing.</text>
+  <text x="72" y="260" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Aegis: High-Performance Auth &amp;</text>
+  <text x="72" y="324" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Authorization Platform</text>
+  <text x="72" y="414" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">A modular, high-performance Identity and Policy</text>
+  <text x="72" y="454" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">microservice platform in Go, featuring sub-5ms RBAC…</text>
 </svg>
