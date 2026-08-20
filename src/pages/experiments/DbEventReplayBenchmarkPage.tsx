@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import LabBackLink from '../../labs/LabBackLink';
 import { useSeo } from '../../seo/useSeo';
 import { Database, Info } from 'lucide-react';
 
@@ -28,23 +28,23 @@ function DbEventReplayBenchmarkPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 md:px-6 animate-fade-in">
-      <Link to="/experiments" className="mb-4 inline-block text-xs font-semibold uppercase tracking-widest text-teal-600 hover:text-teal-700 transition-colors">
-        &larr; Back to Experiments
-      </Link>
+      <LabBackLink labId="db-event-replay-benchmark" />
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Event Replay: PostgreSQL vs Firestore</h1>
       <p className="mt-2 text-slate-600">Benchmarking the time to fetch and fold thousands of immutable events into a Read Projection.</p>
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="space-y-6">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Dataset</h3>
-            
-            <label className="block text-sm font-semibold text-slate-700">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Dataset</h2>
+
+            <div className="block text-sm font-semibold text-slate-700">
               Total Events to Replay
-              <div className="mt-3 flex gap-2">
+              <div className="mt-3 flex gap-2" role="group" aria-label="Total events to replay">
                 {[10000, 50000, 100000].map(e => (
                   <button
                     key={e}
+                    type="button"
+                    aria-pressed={events === e}
                     onClick={() => setEvents(e as 10000 | 50000 | 100000)}
                     className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-colors ${events === e ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}
                   >
@@ -52,7 +52,7 @@ function DbEventReplayBenchmarkPage() {
                   </button>
                 ))}
               </div>
-            </label>
+            </div>
 
             <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-xs flex gap-3 leading-relaxed mt-8">
               <Database className="w-5 h-5 shrink-0 text-sky-600" />
@@ -66,10 +66,10 @@ function DbEventReplayBenchmarkPage() {
           </div>
         </section>
 
-        <section className="md:col-span-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm flex flex-col justify-center">
-          <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2 text-center w-full justify-center">
+        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm flex flex-col justify-center">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2 text-center w-full justify-center">
             <Database className="w-4 h-4" /> Replay Time (milliseconds)
-          </h3>
+          </h2>
           
           <div className="w-full max-w-md mx-auto space-y-8">
             

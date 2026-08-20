@@ -5,7 +5,7 @@
     <link>https://khoahotran.github.io/portfolio/system-design</link>
     <description>system-design articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 04 Aug 2026 14:39:24 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 20 Aug 2026 03:23:51 GMT</lastBuildDate>
     <item>
       <title>Designing a Multi-Service Auth Platform: The Aegis Architecture</title>
       <link>https://khoahotran.github.io/portfolio/system-design/designing-a-multi-service-auth-platform</link>
@@ -25,7 +25,7 @@
       <link>https://khoahotran.github.io/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers</guid>
       <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
-      <description>How we built a two-phase distributed transfer between account aggregates using the Saga orchestrator pattern, with automatic compensation and dead-letter recovery.</description>
+      <description>How I designed a Saga orchestrator pattern for two-phase distributed transfers between account aggregates, with automatic compensation and dead-letter recovery.</description>
     </item>
     <item>
       <title>Atomic Financial Transactions in a NoSQL World: Building the J-Point Loyalty Engine</title>

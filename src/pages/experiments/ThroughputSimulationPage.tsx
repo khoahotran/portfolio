@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Pause, Play } from 'lucide-react';
+import LabBackLink from '../../labs/LabBackLink';
 import { useSeo } from '../../seo/useSeo';
 
 function ThroughputSimulationPage() {
@@ -8,12 +9,20 @@ function ThroughputSimulationPage() {
   const [processingMs, setProcessingMs] = useState(120);
   const [failureRate, setFailureRate] = useState(2);
   const [ticks, setTicks] = useState(0);
+  // The jitter ticker previously ran forever with no way to freeze the
+  // animation — every parameter was live, but the chart itself was
+  // "watch only". Pausing stops just the decorative noise; the sliders
+  // above still recompute the chart instantly either way.
+  const [isPaused, setIsPaused] = useState(false);
 
   // Animation ticker to simulate a moving graph
   useEffect(() => {
+    if (isPaused) {
+      return;
+    }
     const timer = setInterval(() => setTicks(t => t + 1), 500);
     return () => clearInterval(timer);
-  }, []);
+  }, [isPaused]);
 
   const result = useMemo(() => {
     const capacityPerSecond = (workers * 1000) / processingMs;
@@ -44,14 +53,12 @@ function ThroughputSimulationPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 md:px-6 animate-fade-in">
-      <Link to="/experiments" className="mb-4 inline-block text-xs font-semibold uppercase tracking-widest text-teal-600 hover:text-teal-700 transition-colors">
-        &larr; Back to Experiments
-      </Link>
+      <LabBackLink labId="throughput-simulation" />
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Throughput Simulation</h1>
       <p className="mt-2 text-slate-600">Model how worker count, latency, and failure rates impact effective throughput in an asynchronous processing pipeline.</p>
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="space-y-4">
             <label className="block text-sm font-semibold text-slate-700">
               <div className="flex justify-between">
@@ -101,8 +108,20 @@ function ThroughputSimulationPage() {
           </div>
         </section>
 
-        <section className="md:col-span-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col">
-          <div className="grid grid-cols-3 gap-4 mb-8">
+        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">Live simulation</h2>
+            <button
+              type="button"
+              onClick={() => setIsPaused((paused) => !paused)}
+              aria-pressed={isPaused}
+              className="btn-pill"
+            >
+              {isPaused ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
+              {isPaused ? 'Resume' : 'Pause'} animation
+            </button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
               <div className="text-xs uppercase tracking-widest text-slate-500 font-semibold mb-1">Max Capacity</div>
               <div className="text-2xl font-bold text-slate-900">{result.capacityPerSecond.toFixed(1)} <span className="text-sm font-normal text-slate-500">req/s</span></div>

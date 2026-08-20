@@ -19,7 +19,7 @@
         "cqrs",
         "interactive-demo"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/event-sourcing-replay.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/event-sourcing-replay.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/experiments/redis-streams-vs-bullmq-job-queue-comparison",
@@ -29,6 +29,7 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "experiment",
+        "benchmark",
         "redis",
         "bullmq",
         "queues",
@@ -36,7 +37,7 @@
         "typescript",
         "async-jobs"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/redis-streams-vs-bullmq-job-queue-comparison.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/redis-streams-vs-bullmq-job-queue-comparison.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/experiments/saga-state-machine-visualizer",
@@ -50,7 +51,7 @@
         "saga-pattern",
         "interactive-demo"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/saga-state-machine-visualizer.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/saga-state-machine-visualizer.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/experiments/db-event-replay-benchmark",
@@ -65,7 +66,7 @@
         "firestore",
         "database"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/db-event-replay-benchmark.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/db-event-replay-benchmark.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/experiments/go-vs-ts-concurrency",
@@ -79,22 +80,7 @@
         "typescript",
         "concurrency"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/go-vs-ts-concurrency.svg"
-    },
-    {
-      "id": "https://khoahotran.github.io/portfolio/experiments/redis-vs-bullmq",
-      "url": "https://khoahotran.github.io/portfolio/experiments/redis-vs-bullmq",
-      "title": "Benchmark: Redis Streams (Go) vs BullMQ (TS)",
-      "summary": "An interactive benchmark visualizing queue throughput and latency between native Redis Streams in Go vs BullMQ in TypeScript.",
-      "date_published": "2026-06-25T00:00:00.000Z",
-      "tags": [
-        "benchmark",
-        "redis",
-        "go",
-        "typescript",
-        "queues"
-      ],
-      "image": "https://khoahotran.github.io/portfolio/og/redis-vs-bullmq.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/go-vs-ts-concurrency.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes",
@@ -104,12 +90,12 @@
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
         "experiment",
-        "queue",
+        "queues",
         "pubsub",
         "messaging",
         "system-design"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/queue-vs-pub-sub-comparison-notes.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/queue-vs-pub-sub-comparison-notes.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes",
@@ -123,7 +109,7 @@
         "capacity-planning",
         "simulation"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/throughput-simulation-notes.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/throughput-simulation-notes.png"
     }
   ]
 }

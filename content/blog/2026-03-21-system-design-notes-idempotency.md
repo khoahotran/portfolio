@@ -66,7 +66,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import * as crypto from 'crypto';
 import Redis from 'ioredis';
 
@@ -133,7 +133,7 @@ export class IdempotencyInterceptor implements NestInterceptor {
 
     // 3. Process request and cache output
     return next.handle().pipe(
-      map(async (response) => {
+      mergeMap(async (response) => {
         // Cache the successful response for 24 hours
         await this.redis.set(
           cacheKey,

@@ -2,6 +2,7 @@
 title: "Atomic Financial Transactions in a NoSQL World: Building the J-Point Loyalty Engine"
 date: "2026-06-03"
 tags: ["firestore", "nosql", "distributed-systems", "transactions", "atomic-operations"]
+related: ["blog/building-jujuja-a-production-quest-system", "research/event-sourcing-vs-crud-when-to-choose-each"]
 summary: "Implementing virtual currency transactions on Firestore with <1% consistency errors, covering atomic operation design and edge case handling."
 reading_time: "9 min read"
 ---
@@ -180,7 +181,7 @@ async function reconcileUserBalance(userId: string) {
 
 | Dimension | SQL (PostgreSQL / MySQL) | Firestore (NoSQL OCC) |
 | :--- | :--- | :--- |
-| **Locking Strategy** | Pessimistic (Locks rows on reads) | Optimistic (Checks versions on commit) |
+| **Locking Strategy** | Pessimistic (Locks rows on writes) | Optimistic (Checks versions on commit) |
 | **Resource Contention** | Requests wait in line (increases latency) | Aborts immediately and retries |
 | **Scale Constraints** | Limited by connection pool | Limit of 1 write/sec per document |
 | **Fail Behavior** | Blocks until timeout | Throws exception on collision |

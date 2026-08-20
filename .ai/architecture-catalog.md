@@ -24,7 +24,7 @@ This catalog documents the primary architectural patterns utilized and reference
 **Description:** Decoupling high-throughput data producers from slow consumers using an append-only log with Consumer Groups.
 **Trade-offs:** Excellent for scaling heterogeneous workers (e.g., Go producers, Python consumers). Requires careful memory management (trimming streams) and handling consumer crashes (acknowledgments).
 **Projects:** QuantAlpha.
-**Related Content:** `/projects/quant-alpha`, `/experiments/redis-vs-bullmq`.
+**Related Content:** `/projects/quant-alpha`, `/experiments/redis-streams-vs-bullmq-job-queue-comparison`, `/labs/redis-vs-bullmq`.
 
 ## Idempotency
 **Description:** Ensuring that an API request or event can be processed multiple times without changing the result beyond the initial application.

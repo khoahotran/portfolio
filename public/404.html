@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting…</title>
+    <!--
+      GitHub Pages serves this file for any path it does not recognize as a
+      static asset (i.e. every client-side route in this SPA). It re-encodes
+      the requested path into a query string on the site root and redirects
+      there; the inline script in index.html decodes it and restores the
+      real path via history.replaceState before React Router mounts.
+      Standard pattern: https://github.com/rafgraph/spa-github-pages
+    -->
+    <script>
+      var base = '/portfolio/';
+      var path = location.pathname.slice(base.length);
+      var redirect = base + '?redirect=' + encodeURIComponent(path + location.search + location.hash);
+      location.replace(redirect);
+    </script>
+  </head>
+  <body></body>
+</html>

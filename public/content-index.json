@@ -1,0 +1,735 @@
+[
+  {
+    "title": "Building Jujuja: A Production Quest System for Burst Traffic",
+    "date": "2026-06-28",
+    "tags": [
+      "case-study",
+      "nestjs",
+      "redis",
+      "bullmq",
+      "firestore"
+    ],
+    "summary": "How we built the Jujuja backend to handle 1,500 concurrent users per minute during campaign bursts, processing daily quests and loyalty points using BullMQ and NestJS.",
+    "reading_time": "12 min",
+    "draft": false,
+    "slug": "building-jujuja-a-production-quest-system",
+    "collection": "blog",
+    "ogImage": "/og/building-jujuja-a-production-quest-system.png",
+    "related": [
+      "system-design/designing-a-burst-traffic-async-job-pipeline",
+      "system-design/atomic-financial-transactions-in-nosql",
+      "research/algolia-geo-search-for-store-discovery"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Designing a Multi-Role HFT Research Platform",
+    "date": "2026-06-28",
+    "tags": [
+      "system-design",
+      "go",
+      "python",
+      "redis-streams",
+      "hft"
+    ],
+    "summary": "How I architected QuantAlpha Lab, a distributed research platform that bridges the gap between Python data science and Go backend engineering.",
+    "reading_time": "11 min",
+    "draft": false,
+    "slug": "designing-a-multi-role-hft-research-platform",
+    "collection": "blog",
+    "ogImage": "/og/designing-a-multi-role-hft-research-platform.png",
+    "related": [
+      "projects/quant-alpha",
+      "research/order-book-imbalance-hft-signal"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "gRPC Service Mesh in Go: Designing the Aegis Auth Platform",
+    "date": "2026-06-28",
+    "tags": [
+      "go",
+      "grpc",
+      "microservices",
+      "auth",
+      "opentelemetry",
+      "protobuf"
+    ],
+    "summary": "A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.",
+    "reading_time": "12 min read",
+    "draft": false,
+    "slug": "grpc-service-mesh-in-go-aegis-architecture",
+    "collection": "blog",
+    "ogImage": "/og/grpc-service-mesh-in-go-aegis-architecture.png",
+    "related": [
+      "projects/aegis",
+      "system-design/designing-a-multi-service-auth-platform",
+      "research/distributed-tracing-with-opentelemetry-and-jaeger"
+    ],
+    "readingMinutes": 7,
+    "readingText": "7 min read"
+  },
+  {
+    "title": "ADR: Firestore vs PostgreSQL for Event Sourcing in Core Banking",
+    "date": "2026-06-28",
+    "tags": [
+      "adr",
+      "event-sourcing",
+      "firestore",
+      "postgresql",
+      "architecture"
+    ],
+    "summary": "An Architecture Decision Record detailing why Firestore was chosen over PostgreSQL as the primary EventStore for the Event-Driven Core Banking platform.",
+    "reading_time": "6 min",
+    "draft": false,
+    "slug": "adr-firestore-vs-postgresql-event-sourcing",
+    "collection": "research",
+    "ogImage": "/og/adr-firestore-vs-postgresql-event-sourcing.png",
+    "related": [
+      "projects/core-banking",
+      "experiments/db-event-replay-benchmark"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "ADR: Choosing a GraphQL Gateway Over REST for Aegis",
+    "date": "2026-06-28",
+    "tags": [
+      "adr",
+      "graphql",
+      "api-gateway",
+      "architecture",
+      "go"
+    ],
+    "summary": "An Architecture Decision Record detailing why Aegis uses a GraphQL API Gateway to aggregate internal gRPC microservices instead of a traditional REST API.",
+    "reading_time": "7 min",
+    "draft": false,
+    "slug": "adr-graphql-gateway-over-rest",
+    "collection": "research",
+    "ogImage": "/og/adr-graphql-gateway-over-rest.png",
+    "related": [
+      "projects/aegis",
+      "system-design/designing-a-multi-service-auth-platform"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Sub-300ms Store Discovery: Designing Geo-Search with Algolia",
+    "date": "2026-06-28",
+    "tags": [
+      "system-design",
+      "algolia",
+      "search",
+      "geolocation"
+    ],
+    "summary": "How we leveraged Algolia to build a blazing fast, geo-aware store discovery engine for SeensioGO and Jujuja, achieving 150-300ms latency.",
+    "reading_time": "9 min",
+    "draft": false,
+    "slug": "algolia-geo-search-for-store-discovery",
+    "collection": "research",
+    "ogImage": "/og/algolia-geo-search-for-store-discovery.png",
+    "related": [
+      "blog/building-jujuja-a-production-quest-system",
+      "field-notes/why-i-chose-firebase-functions-over-cloud-run"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Distributed Tracing with OpenTelemetry and Jaeger",
+    "date": "2026-06-28",
+    "tags": [
+      "opentelemetry",
+      "jaeger",
+      "observability",
+      "go",
+      "distributed-systems",
+      "tracing"
+    ],
+    "summary": "A practical guide to instrumenting Go microservices with OpenTelemetry: from SDK setup to trace context propagation, sampling strategies, and reading Jaeger flame graphs.",
+    "reading_time": "10 min read",
+    "draft": false,
+    "slug": "distributed-tracing-with-opentelemetry-and-jaeger",
+    "collection": "research",
+    "ogImage": "/og/distributed-tracing-with-opentelemetry-and-jaeger.png",
+    "related": [
+      "projects/aegis",
+      "blog/grpc-service-mesh-in-go-aegis-architecture"
+    ],
+    "readingMinutes": 6,
+    "readingText": "6 min read"
+  },
+  {
+    "title": "Event Sourcing vs CRUD: When to Choose Each",
+    "date": "2026-06-28",
+    "tags": [
+      "event-sourcing",
+      "cqrs",
+      "architecture",
+      "database",
+      "go",
+      "trade-offs"
+    ],
+    "summary": "A decision framework for choosing between Event Sourcing and traditional CRUD, based on building both a CRUD loyalty API and a full event-sourced core banking system.",
+    "reading_time": "10 min read",
+    "draft": false,
+    "slug": "event-sourcing-vs-crud-when-to-choose-each",
+    "collection": "research",
+    "ogImage": "/og/event-sourcing-vs-crud-when-to-choose-each.png",
+    "related": [
+      "projects/core-banking",
+      "system-design/atomic-financial-transactions-in-nosql",
+      "research/adr-firestore-vs-postgresql-event-sourcing"
+    ],
+    "readingMinutes": 5,
+    "readingText": "5 min read"
+  },
+  {
+    "title": "Order Book Imbalance (OBI) as a Signal for Short-Term Price Prediction",
+    "date": "2026-06-28",
+    "tags": [
+      "machine-learning",
+      "finance",
+      "python",
+      "hft",
+      "research"
+    ],
+    "summary": "Research notes on extracting Order Book Imbalance (OBI) features from Level-3 market data (VN30F2112) to train rolling-window ML classifiers for High-Frequency Trading.",
+    "reading_time": "10 min",
+    "draft": false,
+    "slug": "order-book-imbalance-hft-signal",
+    "collection": "research",
+    "ogImage": "/og/order-book-imbalance-hft-signal.png",
+    "related": [
+      "projects/quant-alpha",
+      "blog/designing-a-multi-role-hft-research-platform"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "Interactive Event Sourcing Replay",
+    "date": "2026-06-28",
+    "tags": [
+      "architecture",
+      "event-sourcing",
+      "cqrs",
+      "interactive-demo"
+    ],
+    "summary": "An interactive visualization of how application state is derived from an immutable, append-only event log.",
+    "reading_time": "5 min",
+    "draft": false,
+    "slug": "event-sourcing-replay",
+    "collection": "experiments",
+    "ogImage": "/og/event-sourcing-replay.png",
+    "related": [
+      "projects/core-banking"
+    ],
+    "readingMinutes": 1,
+    "readingText": "1 min read"
+  },
+  {
+    "title": "Redis Streams vs BullMQ: Choosing Your Job Queue",
+    "date": "2026-06-28",
+    "tags": [
+      "experiment",
+      "benchmark",
+      "redis",
+      "bullmq",
+      "queues",
+      "go",
+      "typescript",
+      "async-jobs"
+    ],
+    "summary": "A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns.",
+    "reading_time": "10 min read",
+    "draft": false,
+    "slug": "redis-streams-vs-bullmq-job-queue-comparison",
+    "collection": "experiments",
+    "ogImage": "/og/redis-streams-vs-bullmq-job-queue-comparison.png",
+    "related": [
+      "projects/quant-alpha",
+      "blog/building-jujuja-a-production-quest-system"
+    ],
+    "readingMinutes": 5,
+    "readingText": "5 min read"
+  },
+  {
+    "title": "Interactive Saga State Machine Visualizer",
+    "date": "2026-06-28",
+    "tags": [
+      "distributed-systems",
+      "microservices",
+      "saga-pattern",
+      "interactive-demo"
+    ],
+    "summary": "An interactive visualization of the Saga distributed transaction pattern, demonstrating automated compensating rollbacks.",
+    "reading_time": "5 min",
+    "draft": false,
+    "slug": "saga-state-machine-visualizer",
+    "collection": "experiments",
+    "ogImage": "/og/saga-state-machine-visualizer.png",
+    "related": [
+      "projects/core-banking"
+    ],
+    "readingMinutes": 1,
+    "readingText": "1 min read"
+  },
+  {
+    "title": "Designing a Multi-Service Auth Platform: The Aegis Architecture",
+    "date": "2026-06-28",
+    "tags": [
+      "system-design",
+      "go",
+      "grpc",
+      "kafka",
+      "architecture"
+    ],
+    "summary": "A deep dive into Aegis, a high-performance authorization platform using gRPC microservices, a GraphQL gateway, Kafka audit logging, and OpenTelemetry.",
+    "reading_time": "15 min",
+    "draft": false,
+    "slug": "designing-a-multi-service-auth-platform",
+    "collection": "system-design",
+    "ogImage": "/og/designing-a-multi-service-auth-platform.png",
+    "related": [
+      "projects/aegis",
+      "blog/grpc-service-mesh-in-go-aegis-architecture",
+      "research/distributed-tracing-with-opentelemetry-and-jaeger",
+      "research/adr-graphql-gateway-over-rest"
+    ],
+    "readingMinutes": 5,
+    "readingText": "5 min read"
+  },
+  {
+    "title": "Designing a Real-Time Fraud Detection Engine with Velocity Rules",
+    "date": "2026-06-28",
+    "tags": [
+      "system-design",
+      "go",
+      "finance",
+      "event-driven",
+      "architecture"
+    ],
+    "summary": "How I built a real-time fraud detection engine using Event Sourcing, CQRS, and velocity rules to automatically freeze malicious accounts in a core banking system.",
+    "reading_time": "14 min",
+    "draft": false,
+    "slug": "designing-a-real-time-fraud-detection-engine",
+    "collection": "system-design",
+    "ogImage": "/og/designing-a-real-time-fraud-detection-engine.png",
+    "related": [
+      "projects/core-banking",
+      "system-design/implementing-the-saga-pattern-for-distributed-transfers"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "Implementing the Saga Pattern for Distributed Money Transfers",
+    "date": "2026-06-28",
+    "tags": [
+      "saga-pattern",
+      "distributed-systems",
+      "event-sourcing",
+      "go",
+      "firestore",
+      "banking"
+    ],
+    "summary": "How I designed a Saga orchestrator pattern for two-phase distributed transfers between account aggregates, with automatic compensation and dead-letter recovery.",
+    "reading_time": "11 min read",
+    "draft": false,
+    "slug": "implementing-the-saga-pattern-for-distributed-transfers",
+    "collection": "system-design",
+    "ogImage": "/og/implementing-the-saga-pattern-for-distributed-transfers.png",
+    "related": [
+      "projects/core-banking",
+      "system-design/designing-a-real-time-fraud-detection-engine"
+    ],
+    "readingMinutes": 5,
+    "readingText": "5 min read"
+  },
+  {
+    "title": "Field Note: Go vs TypeScript for Backend Services",
+    "date": "2026-06-28",
+    "tags": [
+      "go",
+      "typescript",
+      "backend",
+      "language-comparison",
+      "architecture",
+      "trade-offs"
+    ],
+    "summary": "A working engineer's honest comparison of Go and TypeScript for backend services, based on using both in production — and a framework for choosing between them.",
+    "reading_time": "8 min read",
+    "draft": false,
+    "slug": "go-vs-typescript-for-backend-services",
+    "collection": "field-notes",
+    "ogImage": "/og/go-vs-typescript-for-backend-services.png",
+    "related": [
+      "experiments/go-vs-ts-concurrency"
+    ],
+    "readingMinutes": 5,
+    "readingText": "5 min read"
+  },
+  {
+    "title": "Benchmark: Event Replay in PostgreSQL vs Firestore",
+    "date": "2026-06-27",
+    "tags": [
+      "benchmark",
+      "event-sourcing",
+      "postgresql",
+      "firestore",
+      "database"
+    ],
+    "summary": "An interactive benchmark comparing the time it takes to replay tens of thousands of immutable events into a Read Projection.",
+    "reading_time": "5 min",
+    "draft": false,
+    "slug": "db-event-replay-benchmark",
+    "collection": "experiments",
+    "ogImage": "/og/db-event-replay-benchmark.png",
+    "related": [
+      "research/adr-firestore-vs-postgresql-event-sourcing",
+      "projects/core-banking"
+    ],
+    "readingMinutes": 1,
+    "readingText": "1 min read"
+  },
+  {
+    "title": "Benchmark: Go vs TypeScript Concurrency",
+    "date": "2026-06-26",
+    "tags": [
+      "benchmark",
+      "go",
+      "typescript",
+      "concurrency"
+    ],
+    "summary": "An interactive benchmark visualizing memory footprint and execution time for handling tens of thousands of concurrent network-bound tasks.",
+    "reading_time": "4 min",
+    "draft": false,
+    "slug": "go-vs-ts-concurrency",
+    "collection": "experiments",
+    "ogImage": "/og/go-vs-ts-concurrency.png",
+    "related": [
+      "blog/grpc-service-mesh-in-go-aegis-architecture",
+      "field-notes/go-vs-typescript-for-backend-services"
+    ],
+    "readingMinutes": 1,
+    "readingText": "1 min read"
+  },
+  {
+    "title": "Event-Driven Core Banking System",
+    "date": "2026-06-15",
+    "tags": [
+      "event-sourcing",
+      "cqrs",
+      "saga-pattern",
+      "go",
+      "firestore"
+    ],
+    "summary": "A core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers.",
+    "reading_time": "12 min",
+    "draft": false,
+    "slug": "core-banking",
+    "collection": "projects",
+    "ogImage": "/og/core-banking.png",
+    "related": [
+      "system-design/implementing-the-saga-pattern-for-distributed-transfers",
+      "system-design/designing-a-real-time-fraud-detection-engine",
+      "research/adr-firestore-vs-postgresql-event-sourcing",
+      "research/event-sourcing-vs-crud-when-to-choose-each",
+      "experiments/event-sourcing-replay",
+      "experiments/saga-state-machine-visualizer"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "Atomic Financial Transactions in a NoSQL World: Building the J-Point Loyalty Engine",
+    "date": "2026-06-03",
+    "tags": [
+      "firestore",
+      "nosql",
+      "distributed-systems",
+      "transactions",
+      "atomic-operations"
+    ],
+    "summary": "Implementing virtual currency transactions on Firestore with <1% consistency errors, covering atomic operation design and edge case handling.",
+    "reading_time": "9 min read",
+    "draft": false,
+    "slug": "atomic-financial-transactions-in-nosql",
+    "collection": "system-design",
+    "ogImage": "/og/atomic-financial-transactions-in-nosql.png",
+    "related": [
+      "blog/building-jujuja-a-production-quest-system",
+      "research/event-sourcing-vs-crud-when-to-choose-each"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System",
+    "date": "2026-06-03",
+    "tags": [
+      "nestjs",
+      "async-jobs",
+      "scalability",
+      "queues",
+      "firebase-functions"
+    ],
+    "summary": "How we redesigned daily quest processing from synchronous handlers to a queue-driven worker pool that handles 1,500 concurrent users during campaign windows.",
+    "reading_time": "9 min read",
+    "draft": false,
+    "slug": "designing-a-burst-traffic-async-job-pipeline",
+    "collection": "system-design",
+    "ogImage": "/og/designing-a-burst-traffic-async-job-pipeline.png",
+    "related": [
+      "blog/building-jujuja-a-production-quest-system",
+      "field-notes/why-i-chose-firebase-functions-over-cloud-run"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Field Note: Why I Chose Firebase Functions Over Cloud Run",
+    "date": "2026-06-03",
+    "tags": [
+      "system-architecture",
+      "serverless",
+      "firebase",
+      "gcp",
+      "trade-offs"
+    ],
+    "summary": "A practical evaluation of Firebase Functions vs Cloud Run, and why the simplest serverless model won out for our specific workloads.",
+    "reading_time": "8 min read",
+    "draft": false,
+    "slug": "why-i-chose-firebase-functions-over-cloud-run",
+    "collection": "field-notes",
+    "ogImage": "/og/why-i-chose-firebase-functions-over-cloud-run.png",
+    "related": [
+      "system-design/designing-a-burst-traffic-async-job-pipeline",
+      "research/algolia-geo-search-for-store-discovery"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Aegis: High-Performance Auth & Authorization Platform",
+    "date": "2026-04-10",
+    "tags": [
+      "go",
+      "grpc",
+      "microservices",
+      "redis",
+      "kafka",
+      "opentelemetry"
+    ],
+    "summary": "A modular, high-performance Identity and Policy microservice platform in Go, featuring sub-5ms RBAC evaluations and distributed tracing.",
+    "reading_time": "10 min",
+    "draft": false,
+    "slug": "aegis",
+    "collection": "projects",
+    "ogImage": "/og/aegis.png",
+    "related": [
+      "blog/grpc-service-mesh-in-go-aegis-architecture",
+      "system-design/designing-a-multi-service-auth-platform",
+      "research/distributed-tracing-with-opentelemetry-and-jaeger",
+      "research/adr-graphql-gateway-over-rest"
+    ],
+    "readingMinutes": 2,
+    "readingText": "2 min read"
+  },
+  {
+    "title": "Architecture Breakdown: CQRS for Mid-size Products",
+    "date": "2026-03-21",
+    "tags": [
+      "cqrs",
+      "architecture",
+      "backend",
+      "system-design",
+      "database"
+    ],
+    "summary": "A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path.",
+    "reading_time": "10 min read",
+    "draft": false,
+    "slug": "architecture-breakdown-cqrs-for-mid-size-products",
+    "collection": "blog",
+    "ogImage": "/og/architecture-breakdown-cqrs-for-mid-size-products.png",
+    "readingMinutes": 5,
+    "readingText": "5 min read"
+  },
+  {
+    "title": "Engineering Lessons from a Failed Rollout",
+    "date": "2026-03-21",
+    "tags": [
+      "incident-response",
+      "release-engineering",
+      "devops",
+      "sre",
+      "lessons"
+    ],
+    "summary": "What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.",
+    "reading_time": "9 min read",
+    "draft": false,
+    "slug": "engineering-lessons-from-a-failed-rollout",
+    "collection": "blog",
+    "ogImage": "/og/engineering-lessons-from-a-failed-rollout.png",
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "System Design Notes: Idempotency",
+    "date": "2026-03-21",
+    "tags": [
+      "idempotency",
+      "api-design",
+      "distributed-systems",
+      "resilience"
+    ],
+    "summary": "Practical patterns for making API writes replay-safe under network retries and partial distributed failures.",
+    "reading_time": "10 min read",
+    "draft": false,
+    "slug": "system-design-notes-idempotency",
+    "collection": "blog",
+    "ogImage": "/og/system-design-notes-idempotency.png",
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Designing a Permission System: Beyond Simple Roles",
+    "date": "2026-03-21",
+    "tags": [
+      "authorization",
+      "rbac",
+      "security",
+      "policy-engine",
+      "architecture"
+    ],
+    "summary": "How to evolve from brittle role checks to a maintainable, high-performance policy-based authorization engine.",
+    "reading_time": "10 min read",
+    "draft": false,
+    "slug": "designing-a-permission-system",
+    "collection": "research",
+    "ogImage": "/og/designing-a-permission-system.png",
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Scaling Background Jobs: Adaptive Concurrency",
+    "date": "2026-03-21",
+    "tags": [
+      "queues",
+      "workers",
+      "scaling",
+      "backend",
+      "performance"
+    ],
+    "summary": "Operational patterns and practical lessons for scaling asynchronous jobs while keeping failure rates and costs predictable.",
+    "reading_time": "9 min read",
+    "draft": false,
+    "slug": "scaling-background-jobs",
+    "collection": "research",
+    "ogImage": "/og/scaling-background-jobs.png",
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Queue vs Pub/Sub Comparison Notes",
+    "date": "2026-03-21",
+    "tags": [
+      "experiment",
+      "queues",
+      "pubsub",
+      "messaging",
+      "system-design"
+    ],
+    "summary": "How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems.",
+    "reading_time": "9 min read",
+    "draft": false,
+    "slug": "queue-vs-pub-sub-comparison-notes",
+    "collection": "experiments",
+    "ogImage": "/og/queue-vs-pub-sub-comparison-notes.png",
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Throughput Simulation Notes",
+    "date": "2026-03-21",
+    "tags": [
+      "experiment",
+      "throughput",
+      "capacity-planning",
+      "simulation"
+    ],
+    "summary": "Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations.",
+    "reading_time": "8 min read",
+    "draft": false,
+    "slug": "throughput-simulation-notes",
+    "collection": "experiments",
+    "ogImage": "/og/throughput-simulation-notes.png",
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Building an Event-Driven Architecture",
+    "date": "2026-03-21",
+    "tags": [
+      "event-driven",
+      "architecture",
+      "messaging",
+      "system-design",
+      "kafka"
+    ],
+    "summary": "A practical blueprint for introducing domain events to untangle a monolith without losing delivery guarantees.",
+    "reading_time": "9 min read",
+    "draft": false,
+    "slug": "building-an-event-driven-architecture",
+    "collection": "system-design",
+    "ogImage": "/og/building-an-event-driven-architecture.png",
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "System Design Trade-offs in Practice",
+    "date": "2026-03-21",
+    "tags": [
+      "trade-offs",
+      "architecture",
+      "engineering-management"
+    ],
+    "summary": "A structured framework to communicate architecture trade-offs with product, operations, and engineering teams.",
+    "reading_time": "8 min read",
+    "draft": false,
+    "slug": "system-design-trade-offs-in-practice",
+    "collection": "system-design",
+    "ogImage": "/og/system-design-trade-offs-in-practice.png",
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "QuantAlpha: High-Frequency Trading Research Platform",
+    "date": "2026-02-20",
+    "tags": [
+      "go",
+      "python",
+      "redis-streams",
+      "machine-learning",
+      "hft"
+    ],
+    "summary": "A distributed research platform for High-Frequency Trading (HFT) utilizing Redis Streams for asynchronous model training and order book imbalance (OBI) analysis.",
+    "reading_time": "11 min",
+    "draft": false,
+    "slug": "quant-alpha",
+    "collection": "projects",
+    "ogImage": "/og/quant-alpha.png",
+    "related": [
+      "blog/designing-a-multi-role-hft-research-platform",
+      "research/order-book-imbalance-hft-signal",
+      "experiments/redis-streams-vs-bullmq-job-queue-comparison"
+    ],
+    "readingMinutes": 6,
+    "readingText": "6 min read"
+  }
+]

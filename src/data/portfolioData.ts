@@ -1,5 +1,5 @@
 export const heroData = {
-  role: 'Software Engineer',
+  role: 'Backend & Distributed Systems Engineer',
   name: 'Trần Nguyễn Anh Khoa',
   tagline:
     'Building high-performance backend systems and event-driven architectures in Go and TypeScript.',
@@ -7,11 +7,21 @@ export const heroData = {
   email: 'trannguyenanhkhoa0104@gmail.com',
   github: 'https://github.com/khoahotran',
   linkedin: 'https://linkedin.com/in/khoahotran',
+  // Each stat is attributed to the system it was measured on (see
+  // experienceData.impact below) rather than left as an unlabeled number —
+  // otherwise "Latency 150-300ms" reads as decoration, not evidence.
+  //
+  // `route` is optional and only set for the 2 stats that have a dedicated
+  // article deriving the number (see Hero.tsx, which renders the label as a
+  // Link only when `route` is present). Transaction Consistency and API
+  // Response are sourced only from experienceData.impact below, with no
+  // article — they intentionally have no `route` and stay plain text rather
+  // than link to a bare bullet point.
   stats: [
-    { label: 'Latency', value: '150 - 300ms' },
-    { label: 'Scale', value: '1.5k users/min' },
-    { label: 'Transaction Error', value: '< 1%' },
-    { label: 'Response Time', value: '- 20-30%' }
+    { label: 'Store Lookup Latency', value: '150 - 300ms', route: '/research/algolia-geo-search-for-store-discovery' },
+    { label: 'Quest Load (Peak)', value: '1.5k users/min', route: '/blog/building-jujuja-a-production-quest-system' },
+    { label: 'Transaction Consistency', value: '< 1% error' },
+    { label: 'API Response (Caching)', value: '↓ 20-30%' }
   ]
 };
 
@@ -111,18 +121,22 @@ export const caseStudiesData: Project[] = [
       deck: 'https://apps.apple.com/app/jujuja/id6553972212',
     },
   },
-  // ── Personal Projects ────────────────────────────────────────────────────
+  // ── Flagship Case Studies ────────────────────────────────────────────────
+  // The three deep-dive projects with their own content/projects/*.md page
+  // (see .ai/flagship-projects.md's "Big Three") — kept in their own section,
+  // distinct from `personal` below, so this label doesn't also cover
+  // ScrapeAndDown, which has no deep-dive page.
   {
     title: 'Aegis',
     slug: 'aegis',
     role: 'Author — Backend Engineer',
-    scale: 'Personal Project',
-    section: 'personal',
+    scale: 'Independent Engineering Project',
+    section: 'flagship',
     summary:
       'Modular, high-performance Auth & Authorization platform in Go. Separate Identity, Policy, and Gateway microservices connected via gRPC, with a GraphQL API gateway, Kafka-based audit logging, and OpenTelemetry tracing.',
     metrics: [
       'Argon2id password hashing',
-      'Token bucket rate limiting',
+      'Redis-backed rate limiting',
       'Sub-5ms policy cache hits (Redis)',
       'Full OTel trace propagation',
     ],
@@ -142,10 +156,10 @@ export const caseStudiesData: Project[] = [
     title: 'Event-Driven Core Banking',
     slug: 'core-banking',
     role: 'Author — Backend Engineer',
-    scale: 'Personal Project',
-    section: 'personal',
+    scale: 'Independent Engineering Project',
+    section: 'flagship',
     summary:
-      'Production-grade core banking system in Go using Event Sourcing and CQRS on Firestore. Includes distributed Saga transfers, real-time fraud detection with velocity rules, Prometheus metrics, and snapshotting every 100 events.',
+      'Core banking system in Go using Event Sourcing and CQRS on Firestore. Includes distributed Saga transfers, real-time fraud detection with velocity rules, Prometheus metrics, and snapshotting every 100 events.',
     metrics: [
       'Event sourcing with O(1) read projections',
       'Optimistic concurrency control on writes',
@@ -156,7 +170,7 @@ export const caseStudiesData: Project[] = [
     architecture: [
       'Write side: append-only EventStore on Firestore with OCC.',
       'Read side: ProjectionRepository for fast O(1) account reads.',
-      'Saga worker: orchestrates Debit A → Credit B across aggregates.',
+      'Saga worker: event-driven compensation across Debit A → Credit B aggregates.',
       'Fraud engine: velocity rules trigger automatic account freeze.',
       'Prometheus /metrics endpoint for business + fraud observability.',
     ],
@@ -169,14 +183,12 @@ export const caseStudiesData: Project[] = [
     slug: 'quant-alpha',
     role: 'Contributor — Backend + ML',
     scale: 'Academic Research Platform',
-    section: 'personal',
+    section: 'flagship',
     summary:
       'High-Frequency Trading research platform with decoupled Go API, Angular 18 frontend, and async Python worker backed by Redis Streams and PostgreSQL. Models trained on VN30F2112 Level-3 order-book data with rolling-window ML classifiers.',
     metrics: [
       'VN30F2112 order-book (2021-04-19 → 2021-12-16)',
-      'Rolling 30-min train → 10-sec prediction windows',
       'Redis Streams for async job dispatch',
-      'Live at hft-mauve.vercel.app',
     ],
     stack: ['Go', 'Angular 18', 'Python', 'Redis Streams', 'PostgreSQL', 'scikit-learn'],
     architecture: [
@@ -189,6 +201,7 @@ export const caseStudiesData: Project[] = [
       github: 'https://github.com/khoahotran/HFT',
     },
   },
+  // ── Personal Projects ────────────────────────────────────────────────────
   {
     title: 'ScrapeAndDown',
     role: 'Author — Backend Engineer',

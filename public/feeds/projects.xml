@@ -5,13 +5,13 @@
     <link>https://khoahotran.github.io/portfolio/projects</link>
     <description>projects articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 04 Aug 2026 14:39:24 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 20 Aug 2026 03:23:51 GMT</lastBuildDate>
     <item>
       <title>Event-Driven Core Banking System</title>
       <link>https://khoahotran.github.io/portfolio/projects/core-banking</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/projects/core-banking</guid>
       <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
-      <description>A production-grade core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers.</description>
+      <description>A core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers.</description>
     </item>
     <item>
       <title>Aegis: High-Performance Auth &amp; Authorization Platform</title>

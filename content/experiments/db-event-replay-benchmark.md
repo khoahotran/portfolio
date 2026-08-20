@@ -2,6 +2,7 @@
 title: "Benchmark: Event Replay in PostgreSQL vs Firestore"
 date: "2026-06-27"
 tags: ["benchmark", "event-sourcing", "postgresql", "firestore", "database"]
+related: ["research/adr-firestore-vs-postgresql-event-sourcing", "projects/core-banking"]
 summary: "An interactive benchmark comparing the time it takes to replay tens of thousands of immutable events into a Read Projection."
 reading_time: "5 min"
 ---
@@ -25,7 +26,7 @@ PostgreSQL, being a relational database with tight binary wire protocols, excels
 
 If you are building an Event Sourced system and expect long-lived aggregates, a relational database (or a dedicated engine like EventStoreDB) is strictly superior to a Document DB.
 
-<a href="/experiments/db-event-replay-benchmark" class="not-prose inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 hover:shadow-md transition-all mt-4 mb-8">
+<a href="/labs/db-event-replay-benchmark" class="not-prose inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 hover:shadow-md transition-all mt-4 mb-8">
   View Interactive Benchmark
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
 </a>

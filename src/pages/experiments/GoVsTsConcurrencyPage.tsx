@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import LabBackLink from '../../labs/LabBackLink';
 import { useSeo } from '../../seo/useSeo';
 import { Activity } from 'lucide-react';
 
@@ -31,23 +31,23 @@ function GoVsTsConcurrencyPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 md:px-6 animate-fade-in">
-      <Link to="/experiments" className="mb-4 inline-block text-xs font-semibold uppercase tracking-widest text-teal-600 hover:text-teal-700 transition-colors">
-        &larr; Back to Experiments
-      </Link>
+      <LabBackLink labId="go-vs-ts-concurrency" />
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Goroutines vs Node.js Promises</h1>
       <p className="mt-2 text-slate-600">Benchmarking memory footprint and execution time for concurrent network-bound tasks.</p>
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="space-y-6">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Workload</h3>
-            
-            <label className="block text-sm font-semibold text-slate-700">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Workload</h2>
+
+            <div className="block text-sm font-semibold text-slate-700">
               Number of Concurrent Tasks
-              <div className="mt-3 flex gap-2">
+              <div className="mt-3 flex gap-2" role="group" aria-label="Number of concurrent tasks">
                 {[1000, 10000, 50000].map(t => (
                   <button
                     key={t}
+                    type="button"
+                    aria-pressed={tasks === t}
                     onClick={() => setTasks(t as 1000 | 10000 | 50000)}
                     className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-colors ${tasks === t ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}
                   >
@@ -55,7 +55,7 @@ function GoVsTsConcurrencyPage() {
                   </button>
                 ))}
               </div>
-            </label>
+            </div>
 
             <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-xs flex gap-3 leading-relaxed mt-8">
               <Activity className="w-5 h-5 shrink-0 text-sky-600" />
@@ -64,16 +64,16 @@ function GoVsTsConcurrencyPage() {
           </div>
         </section>
 
-        <section className="md:col-span-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm flex flex-col">
-          <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2">
+        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm flex flex-col">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2">
             <Activity className="w-4 h-4" /> Benchmark Results
-          </h3>
-          
+          </h2>
+
           <div className="flex-1 grid md:grid-cols-2 gap-12">
-            
+
             {/* Memory Chart */}
             <div>
-              <h4 className="text-center font-bold text-slate-800 mb-6">Peak Memory (MB)</h4>
+              <h3 className="text-center font-bold text-slate-800 mb-6">Peak Memory (MB)</h3>
               <div className="flex items-end justify-center gap-6 h-64 border-b border-slate-200 pb-2 relative">
                 <div className="w-16 flex flex-col items-center gap-2 group">
                   <div className="text-xs font-bold text-teal-600">{currentData.goMemory} MB</div>
@@ -92,7 +92,7 @@ function GoVsTsConcurrencyPage() {
 
             {/* Time Chart */}
             <div>
-              <h4 className="text-center font-bold text-slate-800 mb-6">Execution Time (ms)</h4>
+              <h3 className="text-center font-bold text-slate-800 mb-6">Execution Time (ms)</h3>
               <div className="flex items-end justify-center gap-6 h-64 border-b border-slate-200 pb-2 relative">
                 <div className="w-16 flex flex-col items-center gap-2 group">
                   <div className="text-xs font-bold text-teal-600">{currentData.goTime} ms</div>

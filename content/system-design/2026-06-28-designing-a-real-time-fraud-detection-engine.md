@@ -2,6 +2,7 @@
 title: "Designing a Real-Time Fraud Detection Engine with Velocity Rules"
 date: "2026-06-28"
 tags: ["system-design", "go", "finance", "event-driven", "architecture"]
+related: ["projects/core-banking", "system-design/implementing-the-saga-pattern-for-distributed-transfers"]
 summary: "How I built a real-time fraud detection engine using Event Sourcing, CQRS, and velocity rules to automatically freeze malicious accounts in a core banking system."
 reading_time: "14 min"
 ---
@@ -43,7 +44,7 @@ flowchart TB
     Fraud -->|Append AccountFrozen| ES
     Fraud -->|Push Stats| Metrics
     
-    API -.->|Query O(1)| PR
+    API -.->|"Query O(1)"| PR
 
     classDef service fill:#f0fdf4,stroke:#86efac,stroke-width:2px;
     classDef db fill:#eff6ff,stroke:#93c5fd,stroke-width:2px;
@@ -110,7 +111,7 @@ sequenceDiagram
     alt Velocity Rule Exceeded
         Mem-->>FE: TRIGGERED (Sum = $12,000)
         FE->>ES: Append AccountFrozen(Account A, reason)
-        FE->>PROM: inc counter(fraud_triggers_total)
+        FE->>PROM: inc counter(banking_fraud_detected_total)
     else Rule Passed
         Mem-->>FE: OK (Sum = $9,000)
     end
@@ -121,13 +122,13 @@ sequenceDiagram
 Because the Fraud Engine needs to evaluate historical context (e.g., "how many transfers happened today"), reading the entire event log for an active account would be O(N) and far too slow.
 
 To solve this, the system creates a `Snapshot` every 100 events. 
-When the Fraud Engine needs historical context, it reads the latest snapshot + any events that occurred *after* that snapshot. This guarantees an O(1) read latency, typically evaluating rules in under 15ms.
+When the Fraud Engine needs historical context, it reads the latest snapshot + any events that occurred *after* that snapshot. This bounds the read to O(1) relative to total event count; "under 15ms" is an expected range for that access pattern rather than a measured figure — no load test, environment, or sample size is claimed here.
 
 ## Handling the Saga Compensation
 
-If the Fraud Engine detects anomaly and appends an `AccountFrozen` event, the Saga Orchestrator (which is executing the multi-step transfer) sees this state change.
+In the target orchestrator design described in the [Saga pattern deep dive](/system-design/implementing-the-saga-pattern-for-distributed-transfers), if the Fraud Engine detects anomaly and appends an `AccountFrozen` event, the Saga Orchestrator (which is executing the multi-step transfer) would see this state change, halt the transfer, execute compensation transactions (refunding any debits already applied), and mark the Saga as `COMPENSATED_FRAUD`.
 
-Because the account is now frozen, the Saga Orchestrator halts the transfer, executes compensation transactions (refunding any debits already applied), and marks the Saga as `COMPENSATED_FRAUD`.
+> **Current implementation vs. this design:** the currently committed Core Banking repository does not implement this centralized orchestrator or the `COMPENSATED_FRAUD` state. Its Saga logic is the choreography-style `SagaManager` described in the linked Saga pattern deep dive, which reacts to domain events — including `AccountFrozen` — directly, rather than through a persisted state machine. The fraud-triggered compensation flow above is the target design this project was working toward, not a description of what's currently running.
 
 ## Conclusion
 

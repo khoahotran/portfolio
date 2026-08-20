@@ -2,6 +2,7 @@
 title: "Field Note: Go vs TypeScript for Backend Services"
 date: "2026-06-28"
 tags: ["go", "typescript", "backend", "language-comparison", "architecture", "trade-offs"]
+related: ["experiments/go-vs-ts-concurrency"]
 summary: "A working engineer's honest comparison of Go and TypeScript for backend services, based on using both in production — and a framework for choosing between them."
 reading_time: "8 min read"
 ---

@@ -2,6 +2,7 @@
 title: "Distributed Tracing with OpenTelemetry and Jaeger"
 date: "2026-06-28"
 tags: ["opentelemetry", "jaeger", "observability", "go", "distributed-systems", "tracing"]
+related: ["projects/aegis", "blog/grpc-service-mesh-in-go-aegis-architecture"]
 summary: "A practical guide to instrumenting Go microservices with OpenTelemetry: from SDK setup to trace context propagation, sampling strategies, and reading Jaeger flame graphs."
 reading_time: "10 min read"
 ---
@@ -239,7 +240,7 @@ With `Extract` called at the start of every Kafka consumer loop, the Audit Servi
 
 ## Sampling Strategies
 
-Sampling 100% of traces is fine in development but unsustainable at production scale. Here is how we configure sampling per environment:
+Sampling 100% of traces is fine in development but unsustainable at production scale. The pattern below is the recommended way to configure sampling per environment — it is a target design, not a description of what the Aegis repository currently runs (see the note after the code):
 
 ```go
 func getSampler(env string) sdktrace.Sampler {
@@ -261,6 +262,8 @@ func getSampler(env string) sdktrace.Sampler {
 ```
 
 > **Critical rule:** Always use `ParentBased` in production. If the gateway samples a trace (5% chance), all downstream services must also sample it — otherwise the trace is incomplete. `ParentBased` ensures child services respect the parent's sampling decision.
+>
+> **Current Aegis implementation:** the tracer, `tracer.go` in the shared observability package, currently calls `AlwaysSample()` unconditionally, with no environment-based branching yet. The general OTel setup — OTLP exporter, resource attributes, `TraceContext`/`Baggage` propagation — is real and matches the rest of this article; the per-environment sampling strategy above is the recommended target, not what's currently wired in.
 
 ---
 

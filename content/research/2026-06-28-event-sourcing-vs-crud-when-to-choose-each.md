@@ -2,6 +2,7 @@
 title: "Event Sourcing vs CRUD: When to Choose Each"
 date: "2026-06-28"
 tags: ["event-sourcing", "cqrs", "architecture", "database", "go", "trade-offs"]
+related: ["projects/core-banking", "system-design/atomic-financial-transactions-in-nosql", "research/adr-firestore-vs-postgresql-event-sourcing"]
 summary: "A decision framework for choosing between Event Sourcing and traditional CRUD, based on building both a CRUD loyalty API and a full event-sourced core banking system."
 reading_time: "10 min read"
 ---
@@ -242,11 +243,11 @@ flowchart TD
 
     A -->|Yes| B
     A -->|No| D
-    B -->|Yes| EventSourcing["✅ Event Sourcing"]
+    B -->|Yes| EventSourcing["Event Sourcing"]
     B -->|No| C
     C -->|Yes| EventSourcing
     C -->|No| D
-    D -->|Yes| CRUD["✅ CRUD with Audit Log"]
+    D -->|Yes| CRUD["CRUD with Audit Log"]
     D -->|No| Evaluate["Evaluate CQRS only\n(separate read/write models)"]
 ```
 

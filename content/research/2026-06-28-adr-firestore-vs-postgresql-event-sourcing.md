@@ -2,6 +2,7 @@
 title: "ADR: Firestore vs PostgreSQL for Event Sourcing in Core Banking"
 date: "2026-06-28"
 tags: ["adr", "event-sourcing", "firestore", "postgresql", "architecture"]
+related: ["projects/core-banking", "experiments/db-event-replay-benchmark"]
 summary: "An Architecture Decision Record detailing why Firestore was chosen over PostgreSQL as the primary EventStore for the Event-Driven Core Banking platform."
 reading_time: "6 min"
 ---
@@ -93,3 +94,4 @@ This guarantees that two concurrent requests attempting to append `version 5` to
 - The architecture requires significantly less infrastructure (no Kafka, no Debezium).
 - Development speed increased because event publishers and consumers just use the Firestore SDK.
 - We trade standard SQL tooling for NoSQL documents, but since the EventStore is an append-only log, query complexity is naturally low (mostly `GET /events WHERE aggregate_id = X ORDER BY version ASC`).
+- Firestore's document-per-lookup model is measurably slower than a relational store at replaying long event histories — a follow-up [replay benchmark](/experiments/db-event-replay-benchmark) found Firestore taking several times longer than PostgreSQL to fold tens of thousands of events for a single aggregate. This does not change the decision above: the two evaluate different requirements (CDC simplicity for writes vs. raw replay throughput for reads), and replay cost in this system is bounded in practice by the Snapshotting strategy on the [Core Banking project page](/projects/core-banking), which caps how many events any single replay needs to fold rather than depending on the datastore alone.

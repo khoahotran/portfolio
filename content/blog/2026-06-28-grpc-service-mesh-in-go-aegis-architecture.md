@@ -2,6 +2,7 @@
 title: "gRPC Service Mesh in Go: Designing the Aegis Auth Platform"
 date: "2026-06-28"
 tags: ["go", "grpc", "microservices", "auth", "opentelemetry", "protobuf"]
+related: ["projects/aegis", "system-design/designing-a-multi-service-auth-platform", "research/distributed-tracing-with-opentelemetry-and-jaeger"]
 summary: "A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation."
 reading_time: "12 min read"
 ---
@@ -291,7 +292,7 @@ This makes tracing authentication failures down to exact database query latency 
 
 ## Kafka Audit Log: At-Least-Once Delivery
 
-Every authentication event (login, failed attempt, token refresh, permission denial) is published to a Kafka topic and consumed by the Audit Service. Because Kafka guarantees at-least-once delivery, the consumer must be idempotent:
+Every authentication event (login, failed attempt, token refresh, permission denial) is published to a Kafka topic and consumed by the Audit Service. Because Kafka guarantees at-least-once delivery, the consumer should be idempotent to avoid duplicate audit rows on redelivery. The snippet below illustrates a standard way to do that with an `EventID`-keyed upsert — it is a reference pattern, not a description of the consumer currently committed to the Aegis repository (see the note after the code):
 
 ```go
 package audit
@@ -335,7 +336,7 @@ func (c *Consumer) Run(ctx context.Context) {
             continue
         }
 
-        // The repository uses INSERT ... ON CONFLICT DO NOTHING
+        // This pattern uses INSERT ... ON CONFLICT DO NOTHING
         // so redelivered events are silently ignored.
         if err := c.db.InsertIfNotExists(ctx, event); err != nil {
             c.logger.Error("failed to persist audit event",
@@ -347,11 +348,13 @@ func (c *Consumer) Run(ctx context.Context) {
 }
 ```
 
+> **Current implementation vs. this snippet:** the Aegis repository's actual consumer, `consumer.go` in the audit service, does not yet implement this deduplication step — it performs a plain insert with no conflict handling, and the `AuditLog` table has no `EventID` or other field to key a conflict on. The pattern above is the standard, recommended way to close that gap; it is not a description of the code currently committed.
+
 ---
 
 ## Token Bucket Rate Limiting
 
-The gateway enforces per-user rate limiting using a Redis token bucket. Each user gets 100 tokens refilled per minute. This prevents credential stuffing attacks even if individual login attempts appear legitimate:
+The gateway enforces per-user rate limiting using Redis. The snippet below illustrates a token-bucket pattern implemented as an atomic Lua script — each user gets 100 tokens refilled per minute, and the script-level atomicity prevents race conditions under concurrent load. This is a reference pattern, not a description of the limiter currently committed to the Aegis repository (see the note after the code):
 
 ```go
 package ratelimit
@@ -417,9 +420,13 @@ func (l *Limiter) Allow(ctx context.Context, subjectID string) (bool, error) {
 }
 ```
 
+> **Current implementation vs. this snippet:** the Aegis repository's actual rate limiter, `ratelimit.go` in the shared rate-limit package, is not a token bucket — it's a simpler Redis `INCR`/`EXPIRE` fixed-window counter (100 requests/minute per IP, 1000/minute per user). Both approaches stop the same class of credential-stuffing abuse; the trade-off is precision, not correctness — a fixed window can allow a short burst right at the window boundary that a token bucket smooths out. The Lua-scripted token bucket above is the more precise pattern, not the code currently running.
+
 ---
 
 ## Performance Characteristics
+
+These figures describe the architecture's intended latency budget — design targets and expected ranges derived from the components involved (a Redis lookup, an intentionally-tuned Argon2id cost parameter, a Kafka consumer's poll cadence), not the output of a controlled load test. No load-testing tool, request volume, hardware environment, or percentile breakdown is claimed for these numbers.
 
 | Component | Metric | Value |
 |:---|:---|:---|
@@ -429,7 +436,12 @@ func (l *Limiter) Allow(ctx context.Context, subjectID string) (bool, error) {
 | **JWT validation (interceptor)** | Overhead | < 1ms per call |
 | **Audit event lag** | Kafka consumer | < 200ms end-to-end |
 
-> Argon2id is deliberately slow — that is the point. A 100ms verification time makes brute-force credential attacks 100× harder than a 1ms bcrypt hash, while remaining imperceptible to legitimate users.
+> Argon2id is deliberately slow — that is the point. Slower verification directly raises the cost of an offline brute-force attack, since an attacker's guess rate is bounded by how fast they can compute the hash — and Argon2id's memory-hardness resists GPU/ASIC acceleration in a way a simple iteration-count increase does not. The exact cost advantage over any specific bcrypt configuration depends on the work factors chosen for each, so no fixed multiplier is claimed here; the goal is a verification cost that stays imperceptible to a real login while meaningfully taxing an attacker.
+
+<a href="/labs/go-vs-ts-concurrency" class="not-prose inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 hover:shadow-md transition-all mt-4 mb-8">
+  View the Interactive Go vs TS Concurrency Benchmark
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+</a>
 
 ---
 

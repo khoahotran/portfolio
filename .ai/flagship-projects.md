@@ -10,7 +10,7 @@ A highly available, multi-tenant Auth & Authorization platform capable of servin
 
 ### Architecture & Tech Stack
 - **Language:** Go (Golang)
-- **API Layer:** gRPC and REST Gateway
+- **API Layer:** GraphQL Gateway (Go, gqlgen) at the edge, internal service-to-service traffic on gRPC
 - **Event Bus:** Kafka (for async audit logging and permission invalidation)
 - **Cache:** Redis (Lock-free RBAC caching)
 - **Database:** PostgreSQL (Core identity datastore)
@@ -52,7 +52,7 @@ A low-latency research and ingestion platform for High-Frequency Trading (HFT) s
 ### Architecture & Tech Stack
 - **Language:** Go (Data Ingestion), Python (Machine Learning / Alpha Generation)
 - **Queue/Buffer:** Redis Streams
-- **Database:** TimescaleDB (PostgreSQL)
+- **Database:** PostgreSQL (BRIN-indexed for time-series queries; migration to TimescaleDB or ClickHouse is a considered future step, not yet done — see `content/projects/quant-alpha.md`)
 
 ### Key Features & Patterns
 - Decoupling high-speed WebSocket market data streams from slow, CPU-bound Python workers.

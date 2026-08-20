@@ -1,6 +1,10 @@
+import { ArrowLeft } from 'lucide-react';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import LoadingState from '../../components/LoadingState';
+import ErrorNotice from '../../components/content/ErrorNotice';
 import { getContentIndex, getContentTags } from '../../content-engine/content-service';
+import { formatDate, routeForCollection } from '../../content-engine/format';
 import type { ContentCollection, ContentIndexItem } from '../../content-engine/types';
 import { useSeo } from '../../seo/useSeo';
 
@@ -8,23 +12,6 @@ interface Props {
   collection: ContentCollection;
   title: string;
   description: string;
-}
-
-const routeByCollection: Record<ContentCollection, string> = {
-  blog: '/blog',
-  research: '/research',
-  experiments: '/experiments',
-  'system-design': '/system-design',
-  'field-notes': '/field-notes',
-  projects: '/projects',
-};
-
-function formatDate(value: string): string {
-  return new Date(`${value}T00:00:00`).toLocaleDateString('en-US', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
 }
 
 const ContentCard = memo(function ContentCard({
@@ -41,7 +28,7 @@ const ContentCard = memo(function ContentCard({
         <span>{item.readingText}</span>
       </div>
       <h2 className="text-xl font-semibold tracking-tight text-slate-900">
-        <Link to={`${routeByCollection[collection]}/${item.slug}`} className="hover:text-teal-600">
+        <Link to={`${routeForCollection(collection)}/${item.slug}`} className="hover:text-teal-600">
           {item.title}
         </Link>
       </h2>
@@ -64,6 +51,8 @@ function ContentListPage({ collection, title, description }: Props) {
   const [items, setItems] = useState<ContentIndexItem[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [retryToken, setRetryToken] = useState(0);
   const selectedTag = searchParams.get('tag');
   const keyword = searchParams.get('q') ?? '';
 
@@ -77,12 +66,22 @@ function ContentListPage({ collection, title, description }: Props) {
 
     const load = async () => {
       setLoading(true);
-      const [nextItems, nextTags] = await Promise.all([getContentIndex(collection), getContentTags(collection)]);
+      setError(false);
 
-      if (active) {
-        setItems(nextItems);
-        setTags(nextTags);
-        setLoading(false);
+      try {
+        const [nextItems, nextTags] = await Promise.all([getContentIndex(collection), getContentTags(collection)]);
+        if (active) {
+          setItems(nextItems);
+          setTags(nextTags);
+        }
+      } catch {
+        if (active) {
+          setError(true);
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
       }
     };
 
@@ -91,7 +90,7 @@ function ContentListPage({ collection, title, description }: Props) {
     return () => {
       active = false;
     };
-  }, [collection]);
+  }, [collection, retryToken]);
 
   const filteredItems = useMemo(() => {
     const normalizedKeyword = keyword.trim().toLowerCase();
@@ -108,7 +107,8 @@ function ContentListPage({ collection, title, description }: Props) {
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-10 md:px-6 md:py-14">
-      <Link to="/" className="mb-4 inline-block text-xs text-teal-600 hover:underline">
+      <Link to="/" className="btn-back mb-4">
+        <ArrowLeft size={16} aria-hidden="true" />
         Back to Portfolio
       </Link>
       <section className="mb-8">
@@ -117,22 +117,25 @@ function ContentListPage({ collection, title, description }: Props) {
       </section>
 
       <section className="mb-6">
-        <input
-          value={keyword}
-          onChange={(event) => {
-            const next: Record<string, string> = {};
-            const inputValue = event.target.value;
-            if (inputValue) {
-              next.q = inputValue;
-            }
-            if (selectedTag) {
-              next.tag = selectedTag;
-            }
-            setSearchParams(next);
-          }}
-          placeholder="Search within this collection"
-          className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none ring-teal-500 focus:ring"
-        />
+        <label className="block">
+          <span className="sr-only">Search within this collection</span>
+          <input
+            value={keyword}
+            onChange={(event) => {
+              const next: Record<string, string> = {};
+              const inputValue = event.target.value;
+              if (inputValue) {
+                next.q = inputValue;
+              }
+              if (selectedTag) {
+                next.tag = selectedTag;
+              }
+              setSearchParams(next);
+            }}
+            placeholder="Search within this collection"
+            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none ring-teal-500 focus:ring"
+          />
+        </label>
       </section>
 
       <section className="mb-8 flex flex-wrap gap-2">
@@ -158,10 +161,17 @@ function ContentListPage({ collection, title, description }: Props) {
       </section>
 
       <section className="grid gap-4">
-        {loading && <p className="text-sm text-slate-500">Loading content...</p>}
+        {loading && !error && <LoadingState label="Loading content…" className="col-span-full py-8" />}
+        {error && (
+          <ErrorNotice
+            message="Couldn't load this collection. Check your connection and try again."
+            onRetry={() => setRetryToken((token) => token + 1)}
+          />
+        )}
         {!loading &&
+          !error &&
           filteredItems.map((item) => <ContentCard key={item.slug} item={item} collection={collection} />)}
-        {!loading && filteredItems.length === 0 && (
+        {!loading && !error && filteredItems.length === 0 && (
           <p className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
             No article matched this filter.
           </p>

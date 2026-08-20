@@ -1,4 +1,5 @@
 import { ChevronDown, Github, Linkedin, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { heroData } from '../data/portfolioData';
 
 export default function Hero() {
@@ -33,7 +34,17 @@ export default function Hero() {
               key={index}
               className="rounded-2xl border border-slate-100 bg-slate-50/50 px-4 py-3 backdrop-blur-sm"
             >
-              <p className="text-xs uppercase tracking-wide text-slate-500">{stat.label}</p>
+              {stat.route ? (
+                // `block` preserves the same layout the replaced <p> had (an <a> is
+                // inline by default) — added only to avoid a layout shift, per the
+                // instruction to change styling only where strictly required to make
+                // the label clickable. No other visual change from the plain-text label.
+                <Link to={stat.route} className="block text-xs uppercase tracking-wide text-slate-500">
+                  {stat.label}
+                </Link>
+              ) : (
+                <p className="text-xs uppercase tracking-wide text-slate-500">{stat.label}</p>
+              )}
               <p className="text-2xl font-semibold text-slate-900">{stat.value}</p>
             </div>
           ))}

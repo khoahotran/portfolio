@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import LabBackLink from '../../labs/LabBackLink';
 import { useSeo } from '../../seo/useSeo';
 import { Play, RotateCcw, Plus, Minus, Check } from 'lucide-react';
 
@@ -66,18 +66,16 @@ function EventSourcingReplayPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 md:px-6 animate-fade-in">
-      <Link to="/experiments" className="mb-4 inline-block text-xs font-semibold uppercase tracking-widest text-teal-600 hover:text-teal-700 transition-colors">
-        &larr; Back to Experiments
-      </Link>
+      <LabBackLink labId="event-sourcing-replay" />
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Event Sourcing Replay</h1>
       <p className="mt-2 text-slate-600">Visualize how application state is derived from an immutable, append-only event log.</p>
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
         
         {/* Left Col: Event Store Log */}
-        <section className="md:col-span-6 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col max-h-[600px]">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">Append-Only Event Log</h3>
+        <section className="min-w-0 md:col-span-6 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col max-h-[600px]">
+          <div className="flex flex-wrap justify-between items-center gap-2 mb-4">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Append-Only Event Log</h2>
             <div className="flex gap-2">
               <button 
                 onClick={() => setIsPlaying(!isPlaying)} 
@@ -100,7 +98,7 @@ function EventSourcingReplayPage() {
               const isApplied = idx < currentVersion;
               const isCurrent = idx === currentVersion - 1;
               return (
-                <div key={evt.id} className={`p-4 rounded-xl border-2 transition-all duration-300 flex gap-4 items-center ${
+                <div key={evt.id} className={`p-4 ml-2 rounded-xl border-2 transition-all duration-300 flex gap-4 items-center ${
                   isCurrent ? 'border-teal-400 bg-teal-50 shadow-md transform scale-[1.02]' : 
                   isApplied ? 'border-slate-200 bg-white opacity-70' : 
                   'border-slate-100 bg-slate-50 opacity-40'
@@ -122,8 +120,8 @@ function EventSourcingReplayPage() {
         </section>
 
         {/* Right Col: Current Projection */}
-        <section className="md:col-span-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm flex flex-col bg-gradient-to-br from-white to-slate-50">
-          <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8">Read Projection (Current State)</h3>
+        <section className="min-w-0 md:col-span-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm flex flex-col bg-gradient-to-br from-white to-slate-50">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8">Read Projection (Current State)</h2>
           
           <div className="flex-1 flex flex-col justify-center">
             
@@ -158,7 +156,7 @@ function EventSourcingReplayPage() {
             </div>
 
             <div className="mt-8 bg-white p-6 rounded-xl border border-slate-100 text-sm text-slate-600 shadow-sm">
-              <h4 className="font-bold text-slate-800 mb-2">Why Event Sourcing?</h4>
+              <h3 className="font-bold text-slate-800 mb-2">Why Event Sourcing?</h3>
               <ul className="list-disc list-inside space-y-2">
                 <li><strong>Auditability:</strong> You never lose history. You can see exactly <em>how</em> a balance reached $500.</li>
                 <li><strong>Time Travel:</strong> By stopping the replay at v3, you can query exactly what the system looked like at 10:14 AM.</li>

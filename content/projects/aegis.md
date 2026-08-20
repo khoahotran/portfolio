@@ -2,6 +2,7 @@
 title: "Aegis: High-Performance Auth & Authorization Platform"
 date: "2026-04-10"
 tags: ["go", "grpc", "microservices", "redis", "kafka", "opentelemetry"]
+related: ["blog/grpc-service-mesh-in-go-aegis-architecture", "system-design/designing-a-multi-service-auth-platform", "research/distributed-tracing-with-opentelemetry-and-jaeger", "research/adr-graphql-gateway-over-rest"]
 summary: "A modular, high-performance Identity and Policy microservice platform in Go, featuring sub-5ms RBAC evaluations and distributed tracing."
 reading_time: "10 min"
 ---
@@ -14,7 +15,7 @@ reading_time: "10 min"
 1. Centralize Identity (Authentication) and Policy (Authorization).
 2. Achieve **sub-5ms** authorization checks so downstream services aren't penalized.
 3. Provide a unified GraphQL API gateway for clients, while keeping internal service-to-service communication on high-speed gRPC.
-4. Guarantee a 100% reliable audit log for compliance.
+4. Build a durable audit log — every auth event delivered at-least-once and safely deduplicated, rather than best-effort — as a foundation for compliance.
 
 ## Architecture
 
@@ -66,7 +67,14 @@ C4Container
 **Trade-offs:** 
 - *Pros:* Protobuf serialization is drastically faster and more compact than JSON. Strongly typed contracts prevent runtime parsing errors. HTTP/2 multiplexing reduces connection overhead.
 - *Cons:* Harder to debug with `curl`.
-- *Mitigation:* We use `grpcurl` and expose a GraphQL Gateway to the frontend, so web clients never have to speak gRPC directly.
+- *Mitigation:* We use `grpcurl` and expose a GraphQL Gateway to the frontend, so web clients never have to speak gRPC directly. See the [ADR: Why GraphQL Gateway over REST](/research/adr-graphql-gateway-over-rest) for the full trade-off analysis behind that gateway choice.
+
+<div class="mt-8 mb-12">
+  <a href="/labs/go-vs-ts-concurrency" class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 transition-all">
+    Benchmark: Go vs TypeScript Concurrency
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+  </a>
+</div>
 
 ### 2. Lock-Free RBAC Cache
 **Decision:** The Policy Service evaluates permissions using a Redis-backed cache instead of querying PostgreSQL on every request.
@@ -78,9 +86,9 @@ C4Container
 
 ## Production Engineering
 
-- **Rate Limiting:** A Token Bucket algorithm is implemented in Redis at the Gateway layer to prevent brute-force attacks.
+- **Rate Limiting:** The Gateway rate-limits requests via Redis to blunt brute-force and credential-stuffing attempts. The current repository implements this as a fixed-window `INCR`/`EXPIRE` counter (separate IP and per-user limits); a Lua-scripted token-bucket variant — shown as the more precise reference pattern in the [gRPC service mesh walkthrough](/blog/grpc-service-mesh-in-go-aegis-architecture) — is not what's currently running.
 - **Distributed Tracing:** OpenTelemetry is instrumented across all gRPC calls. Every request has a `trace_id` injected into the context, allowing us to visualize the exact latency breakdown between the Gateway, Identity Service, and Database in Jaeger.
-- **Graceful Shutdown:** All Go servers trap `SIGTERM`, stop accepting new connections, and drain existing requests before exiting, ensuring zero-downtime Kubernetes rollouts.
+- **Graceful Shutdown:** The Audit worker traps `SIGTERM`, stops pulling new work, and lets in-flight processing finish before exiting — this is one piece of a zero-downtime Kubernetes rollout design, though it is not the whole story (readiness probes, PodDisruptionBudgets, and drain-timeout tuning also matter and aren't demonstrated here). The Gateway, Identity, and Policy services do not yet implement the same signal handling in the current repository.
 
 ## Reflection
 
@@ -90,3 +98,5 @@ C4Container
 
 **Future Evolution:**
 I plan to migrate the API Gateway from a custom Go GraphQL server to an Apollo Federation setup to allow downstream services to seamlessly extend the GraphQL schema.
+
+<a href="/graph" class="inline-block mt-8 text-sm text-slate-500 hover:text-slate-700 hover:underline transition-colors">See how this project connects to the rest of the ecosystem &rarr;</a>

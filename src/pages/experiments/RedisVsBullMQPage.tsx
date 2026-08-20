@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import LabBackLink from '../../labs/LabBackLink';
 import { useSeo } from '../../seo/useSeo';
 import { BarChart3, Info } from 'lucide-react';
 
@@ -36,23 +36,23 @@ function RedisVsBullMQPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 md:px-6 animate-fade-in">
-      <Link to="/experiments" className="mb-4 inline-block text-xs font-semibold uppercase tracking-widest text-teal-600 hover:text-teal-700 transition-colors">
-        &larr; Back to Experiments
-      </Link>
+      <LabBackLink labId="redis-vs-bullmq" />
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Redis Streams (Go) vs BullMQ (Node.js)</h1>
-      <p className="mt-2 text-slate-600">A reproducible benchmark comparing raw queueing performance.</p>
+      <p className="mt-2 text-slate-600">A measured benchmark comparing raw queueing performance.</p>
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="space-y-6">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Parameters</h3>
-            
-            <label className="block text-sm font-semibold text-slate-700">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Parameters</h2>
+
+            <div className="block text-sm font-semibold text-slate-700">
               Payload Size
-              <div className="mt-3 flex gap-2">
+              <div className="mt-3 flex gap-2" role="group" aria-label="Payload size">
                 {['1KB', '10KB', '100KB'].map(size => (
                   <button
                     key={size}
+                    type="button"
+                    aria-pressed={payloadSize === size}
                     onClick={() => setPayloadSize(size as '1KB' | '10KB' | '100KB')}
                     className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-colors ${payloadSize === size ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}
                   >
@@ -60,14 +60,16 @@ function RedisVsBullMQPage() {
                   </button>
                 ))}
               </div>
-            </label>
+            </div>
 
-            <label className="block text-sm font-semibold text-slate-700">
+            <div className="block text-sm font-semibold text-slate-700">
               Consumer Workers
-              <div className="mt-3 flex gap-2">
+              <div className="mt-3 flex gap-2" role="group" aria-label="Consumer workers">
                 {[1, 5].map(w => (
                   <button
                     key={w}
+                    type="button"
+                    aria-pressed={workers === w}
                     onClick={() => setWorkers(w as 1 | 5)}
                     className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-colors ${workers === w ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}
                   >
@@ -75,7 +77,7 @@ function RedisVsBullMQPage() {
                   </button>
                 ))}
               </div>
-            </label>
+            </div>
 
             <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-xs flex gap-3 leading-relaxed mt-8">
               <Info className="w-5 h-5 shrink-0 text-sky-600" />
@@ -84,16 +86,16 @@ function RedisVsBullMQPage() {
           </div>
         </section>
 
-        <section className="md:col-span-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm flex flex-col">
-          <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2">
+        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm flex flex-col">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2">
             <BarChart3 className="w-4 h-4" /> Benchmark Results
-          </h3>
-          
+          </h2>
+
           <div className="flex-1 grid md:grid-cols-2 gap-12">
-            
+
             {/* Throughput Chart */}
             <div>
-              <h4 className="text-center font-bold text-slate-800 mb-6">Throughput (Jobs/sec)</h4>
+              <h3 className="text-center font-bold text-slate-800 mb-6">Throughput (Jobs/sec)</h3>
               <div className="flex items-end justify-center gap-6 h-64 border-b border-slate-200 pb-2 relative">
                 {/* Redis Bar */}
                 <div className="w-16 flex flex-col items-center gap-2 group">
@@ -114,7 +116,7 @@ function RedisVsBullMQPage() {
 
             {/* Latency Chart */}
             <div>
-              <h4 className="text-center font-bold text-slate-800 mb-6">Avg Latency (ms)</h4>
+              <h3 className="text-center font-bold text-slate-800 mb-6">Avg Latency (ms)</h3>
               <div className="flex items-end justify-center gap-6 h-64 border-b border-slate-200 pb-2 relative">
                 {/* Redis Bar */}
                 <div className="w-16 flex flex-col items-center gap-2 group">

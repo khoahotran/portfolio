@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import LabBackLink from '../../labs/LabBackLink';
 import { useSeo } from '../../seo/useSeo';
 
 function RetryStrategyVisualizerPage() {
@@ -29,14 +29,12 @@ function RetryStrategyVisualizerPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 md:px-6 animate-fade-in">
-      <Link to="/experiments" className="mb-4 inline-block text-xs font-semibold uppercase tracking-widest text-teal-600 hover:text-teal-700 transition-colors">
-        &larr; Back to Experiments
-      </Link>
+      <LabBackLink labId="retry-strategy" />
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Retry Strategy Visualizer</h1>
       <p className="mt-2 text-slate-600">Visualize how different backoff algorithms distribute network retries over time.</p>
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="space-y-4">
             <label className="block text-sm font-semibold text-slate-700">
               <div className="flex justify-between">
@@ -71,8 +69,10 @@ function RetryStrategyVisualizerPage() {
 
             <div className="pt-2">
               <span className="block text-sm font-semibold text-slate-700 mb-3">Algorithm</span>
-              <div className="flex gap-2">
+              <div className="flex gap-2" role="group" aria-label="Backoff algorithm">
                 <button
+                  type="button"
+                  aria-pressed={strategy === 'exponential'}
                   className={`flex-1 rounded-lg px-3 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
                     strategy === 'exponential' ? 'bg-teal-600 text-white shadow-md' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                   }`}
@@ -81,6 +81,8 @@ function RetryStrategyVisualizerPage() {
                   Exponential
                 </button>
                 <button
+                  type="button"
+                  aria-pressed={strategy === 'linear'}
                   className={`flex-1 rounded-lg px-3 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
                     strategy === 'linear' ? 'bg-teal-600 text-white shadow-md' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                   }`}
@@ -92,10 +94,15 @@ function RetryStrategyVisualizerPage() {
             </div>
 
             <label className="flex items-center gap-3 pt-4 cursor-pointer">
-              <div className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${useJitter ? 'bg-teal-500' : 'bg-slate-200'}`}>
+              {/* The checkbox itself is sr-only (clipped to 1x1px) so tabbing to it left no
+                  visible focus indicator — `focus-within` on the visible track (an ancestor of
+                  the input) puts the ring where a keyboard user can actually see it. */}
+              <div
+                className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus-within:ring-2 focus-within:ring-teal-500 focus-within:ring-offset-2 ${useJitter ? 'bg-teal-500' : 'bg-slate-200'}`}
+              >
                 <input
                   type="checkbox"
-                  className="sr-only flex-1"
+                  className="sr-only"
                   checked={useJitter}
                   onChange={(e) => setUseJitter(e.target.checked)}
                 />
@@ -106,9 +113,10 @@ function RetryStrategyVisualizerPage() {
           </div>
         </section>
 
-        <section className="md:col-span-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col">
+        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col">
           <div className="flex justify-between items-end mb-6">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400">Time to abandon: <span className="text-slate-800 text-lg">{(maxTime / 1000).toFixed(2)}s</span></h2>
+            {/* Not a heading — it's a dynamic status readout, not a section title. */}
+            <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Time to abandon: <span className="text-slate-800 text-lg">{(maxTime / 1000).toFixed(2)}s</span></p>
             <button 
               onClick={() => setUseJitter(!useJitter)} 
               className="text-xs font-semibold text-teal-600 bg-teal-50 px-3 py-1.5 rounded-md hover:bg-teal-100 transition-colors"

@@ -2,12 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="%BASE_URL%favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dan Tran | Software Developer Portfolio</title>
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>Trần Nguyễn Anh Khoa - Software Engineer | Khoa Tran Engineering Portfolio</title>
     <meta
       name="description"
-      content="Software Developer portfolio of Trần Nguyễn Anh Khoa - Architecting robust backend services and high-performance full-stack solutions."
+      content="Backend systems developer portfolio, featuring architecture case studies, event-driven banking systems, and technical experiments."
     />
     <meta
       name="keywords"
@@ -15,18 +19,34 @@
     />
     <meta
       property="og:title"
-      content="Trần Nguyễn Anh Khoa | Software Developer Portfolio"
+      content="Trần Nguyễn Anh Khoa - Software Engineer | Khoa Tran Engineering Portfolio"
     />
     <meta
       property="og:description"
-      content="Architecting robust backend services and high-performance full-stack solutions."
+      content="Backend systems developer portfolio, featuring architecture case studies, event-driven banking systems, and technical experiments."
     />
-    <meta property="og:image" content="/og-image.webp" />
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og-default.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="/og-image.webp" />
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og-default.png" />
   </head>
   <body>
     <div id="root"></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '%BASE_URL%';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

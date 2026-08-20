@@ -5,12 +5,13 @@ export default function Contact() {
   return (
     <section id="contact" className="py-24 px-6 bg-white">
       <div className="max-w-5xl mx-auto text-center font-light">
-        <h2 className="text-sm uppercase tracking-widest text-teal-600 mb-6 font-medium italic">
+        {/* Decorative kicker, not a heading — see the matching note in About.tsx. */}
+        <p className="text-sm uppercase tracking-widest text-teal-600 mb-6 font-medium italic">
           {contactData.title}
-        </h2>
-        <h3 className="text-4xl md:text-5xl text-slate-900 font-bold mb-8">
+        </p>
+        <h2 className="text-4xl md:text-5xl text-slate-900 font-bold mb-8">
           {contactData.headline}
-        </h3>
+        </h2>
         <p className="text-lg text-slate-500 mb-12 max-w-2xl mx-auto leading-relaxed">
           {contactData.description}
         </p>
@@ -47,15 +48,6 @@ export default function Contact() {
           <MapPin size={14} className="text-teal-500" />
           <span>{contactData.location}</span>
         </div>
-
-        <footer className="mt-20 pt-12 border-t border-slate-50">
-          <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">
-            (c) {new Date().getFullYear()} Trần Nguyễn Anh Khoa
-          </p>
-          <p className="text-[10px] text-slate-300 mt-2 uppercase tracking-tighter">
-            STUDENT @ HCMUT • FULL-STACK DEVELOPER
-          </p>
-        </footer>
       </div>
     </section>
   );

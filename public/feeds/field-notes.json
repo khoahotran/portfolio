@@ -21,7 +21,7 @@
         "architecture",
         "trade-offs"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/go-vs-typescript-for-backend-services.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/go-vs-typescript-for-backend-services.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/field-notes/why-i-chose-firebase-functions-over-cloud-run",
@@ -36,7 +36,7 @@
         "gcp",
         "trade-offs"
       ],
-      "image": "https://khoahotran.github.io/portfolio/og/why-i-chose-firebase-functions-over-cloud-run.svg"
+      "image": "https://khoahotran.github.io/portfolio/og/why-i-chose-firebase-functions-over-cloud-run.png"
     }
   ]
 }

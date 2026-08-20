@@ -2,6 +2,7 @@
 title: "Order Book Imbalance (OBI) as a Signal for Short-Term Price Prediction"
 date: "2026-06-28"
 tags: ["machine-learning", "finance", "python", "hft", "research"]
+related: ["projects/quant-alpha", "blog/designing-a-multi-role-hft-research-platform"]
 summary: "Research notes on extracting Order Book Imbalance (OBI) features from Level-3 market data (VN30F2112) to train rolling-window ML classifiers for High-Frequency Trading."
 reading_time: "10 min"
 ---
@@ -26,11 +27,13 @@ An OBI of `+1.0` means overwhelming buy pressure (everyone wants to buy, no one 
 
 ### Beyond Level 1: Depth Imbalance
 
-While Level 1 OBI is a strong signal, smart money often spoofs the top of the book while placing real liquidity at Levels 2 through 5. To capture this, our Python worker computed a weighted depth imbalance:
+While Level 1 OBI is a strong signal, smart money often spoofs the top of the book while placing real liquidity at Levels 2 through 5. To capture this, the research design behind this depth-imbalance work called for a weighted depth imbalance:
 
 $$ OBI_{weighted} = \sum_{i=1}^{5} \left( \frac{V_{bid,i} - V_{ask,i}}{V_{bid,i} + V_{ask,i}} \times e^{-\alpha (i-1)} \right) $$
 
 This equation decays the importance of the imbalance exponentially as we look deeper into the book.
+
+> **Current implementation vs. this formula:** the weighted, multi-level depth imbalance above is the research methodology this project explored, not a formula computed anywhere in the committed `HFT` repository. The one OBI calculation that does exist in code is a simpler single-level version — `(bid_depth − ask_depth) / (bid_depth + ask_depth)` — used as a seeded example user alpha script (a demonstration of the platform's user-scriptable signal feature), not an automatic feature the training pipeline computes for every model.
 
 ## The Rolling Window Training Pipeline
 
@@ -38,19 +41,22 @@ Financial data is notoriously non-stationary. The market microstructure dynamics
 
 If you train a model on Monday's data and trade it on Tuesday, it will likely lose money. To counteract this, we designed a **Rolling Window Pipeline**.
 
+<!-- Periods use "09h00" not "09:00" on purpose — a colon is unescapable in a
+     Mermaid timeline period (fails even quoted: `"09:00"` still errors). Don't
+     "restore" real clock notation here without re-testing against the renderer. -->
 ```mermaid
 timeline
     title Rolling Window ML Training (VN30F2112)
-    09:00 : Market Open
-    09:00 - 09:30 : Window 1 (Train) : Collect 30m of tick data, compute OBI
-    09:30 - 09:40 : Window 1 (Trade) : Predict next 10s price direction
-    09:10 - 09:40 : Window 2 (Train) : Train new model instance
-    09:40 - 09:50 : Window 2 (Trade) : Switch to new model
+    09h00 : Market Open
+    09h00-09h30 : Window 1 Train, collect 30m of tick data, compute OBI
+    09h30-09h40 : Window 1 Trade, predict next 10s price direction
+    09h10-09h40 : Window 2 Train, train new model instance
+    09h40-09h50 : Window 2 Trade, switch to new model
 ```
 
-Instead of a single global model, the QuantAlpha system trains hundreds of micro-models throughout the day using `scikit-learn` (specifically `RandomForestClassifier` and `GradientBoostingClassifier`). 
+Instead of a single global model, the target design for QuantAlpha is to train hundreds of micro-models throughout the day using `scikit-learn` (specifically `RandomForestClassifier` and `GradientBoostingClassifier`), continuously rolling the window forward: every 10 seconds, the worker would receive a job via **Redis Streams** from the Go API, pull the last 30 minutes of tick data, compute the OBI features, train a fresh model, and push the serialized weights back out.
 
-Every 10 minutes, the Python worker receives a job via **Redis Streams** from the Go API. It pulls the last 30 minutes of tick data, computes the OBI features, trains a fresh model, and pushes the serialized weights back to PostgreSQL.
+> **Current implementation vs. this pipeline:** the committed `HFT` repository's `train` job runs a single fit per request — a user or the API submits one training job over a CSV-sourced, date-range-bounded slice of tick data, the worker performs one chronological 80/20 train/validation split, and saves the resulting model artifact and metrics. There is no scheduler or loop that automatically re-triggers training every 10 seconds, and tick data itself is read directly from CSV rather than stored in or queried back out of PostgreSQL. The continuous rolling-window design above remains the intended methodology; it is not what's currently running.
 
 ## Predicting the Next 10 Seconds
 

@@ -2,6 +2,7 @@
 title: "Sub-300ms Store Discovery: Designing Geo-Search with Algolia"
 date: "2026-06-28"
 tags: ["system-design", "algolia", "search", "geolocation"]
+related: ["blog/building-jujuja-a-production-quest-system", "field-notes/why-i-chose-firebase-functions-over-cloud-run"]
 summary: "How we leveraged Algolia to build a blazing fast, geo-aware store discovery engine for SeensioGO and Jujuja, achieving 150-300ms latency."
 reading_time: "9 min"
 ---
@@ -82,4 +83,4 @@ Because Algolia computes this at the edge, the mobile client receives a perfectl
 
 ## Conclusion
 
-By treating search as a separate concern from our transactional database, we achieved sub-300ms latency for our most critical user flow. Algolia acts as a highly optimized read-projection of our Firestore data, proving that sometimes the best way to scale a backend is to let the client query a specialized CDN directly.
+By treating search as a separate concern from our transactional database, we designed for sub-300ms latency on our most critical user flow — the 150-300ms range reflects the expected behavior of querying Algolia's edge network directly from the client, not a formally logged production measurement with a stated methodology or sample size. Algolia acts as a highly optimized read-projection of our Firestore data, proving that sometimes the best way to scale a backend is to let the client query a specialized CDN directly.

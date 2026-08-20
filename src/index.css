@@ -73,6 +73,15 @@ body {
   font-size: clamp(1.15rem, 2.1vw, 1.35rem);
 }
 
+/* Constrain the text flow to an optimal reading measure (~70ch) without
+   capping tables, code blocks, figures, or diagrams — those stay full width
+   so wide content (e.g. comparison tables) still gets the available column. */
+.markdown-body p,
+.markdown-body li,
+.markdown-body blockquote {
+  max-width: 70ch;
+}
+
 .markdown-body p,
 .markdown-body li {
   color: rgb(51 65 85);
@@ -90,11 +99,93 @@ body {
   text-underline-offset: 2px;
 }
 
+/* ── Back-navigation links (ArticleHeader, LabBackLink) ──────────────────
+   Previously a bare inline `text-xs` link — a ~24px-tall tap target next to
+   the site's main content, easy to miss or mis-tap on mobile (WCAG 2.5.5
+   recommends 44x44px). One shared rule so every "back" link updates
+   together instead of drifting per-component. The negative margin keeps the
+   larger padded box optically aligned with the content edge above/below it. */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 2.75rem;
+  margin: -0.5rem 0 -0.5rem -0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgb(13 148 136);
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.btn-back:hover {
+  background: rgb(240 253 250);
+  color: rgb(15 118 110);
+}
+
+.btn-back svg {
+  flex-shrink: 0;
+}
+
+/* ── Pill toggle button (lab pause/resume controls) ──────────────────────
+   Same small rounded-pill treatment used for every play/pause style toggle
+   across the interactive labs — one place to restyle instead of editing
+   each lab page's className string individually. */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  border: 1px solid rgb(226 232 240);
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgb(71 85 105);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.btn-pill:hover {
+  border-color: rgb(20 184 166);
+  color: rgb(13 148 136);
+}
+
+/* CTA buttons embedded as raw HTML (e.g. "View Interactive Benchmark" links to a
+   /labs/<id> lab) set their own Tailwind `text-white` — without this override the
+   blanket `.markdown-body a` rule above wins the cascade (equal specificity, later
+   source order) and renders them teal-on-teal, invisible against their own
+   teal/slate background. */
+.markdown-body a.text-white {
+  color: rgb(255 255 255);
+  text-decoration: none;
+}
+
 .markdown-body table {
   width: 100%;
   display: block;
   overflow-x: auto;
   border-collapse: collapse;
+}
+
+/* ── Figures (MarkdownContent wraps standalone `p > img` in <figure>) ───── */
+
+.markdown-body figure {
+  margin: 1.4rem 0;
+}
+
+.markdown-body figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.85rem;
+  border: 1px solid rgb(226 232 240);
+}
+
+.markdown-body figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  color: rgb(100 116 139);
+  text-align: center;
 }
 
 .markdown-body thead {
@@ -117,10 +208,63 @@ body {
 }
 
 .markdown-body pre {
+  position: relative;
   overflow-x: auto;
   border-radius: 0.85rem;
   background: rgb(15 23 42);
   padding: 1rem;
+}
+
+/* ── Code block toolbar (language label + copy button), added by
+   MarkdownContent's enhanceCodeBlocks. Only present on language-tagged
+   blocks — ASCII-diagram fences have no toolbar and keep the padding above. */
+
+.markdown-body pre.has-toolbar {
+  padding-top: 2.6rem;
+}
+
+.markdown-body .code-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgb(51 65 85);
+}
+
+.markdown-body .code-language {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgb(148 163 184);
+}
+
+.markdown-body .code-copy-button {
+  margin-left: auto;
+  border-radius: 0.4rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgb(203 213 225);
+  background: rgb(30 41 59);
+  border: 1px solid rgb(51 65 85);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.markdown-body .code-copy-button:hover {
+  color: rgb(240 253 250);
+  border-color: rgb(45 212 191);
+}
+
+.markdown-body .code-copy-button--copied {
+  color: rgb(45 212 191);
+  border-color: rgb(45 212 191);
 }
 
 .markdown-body pre code {
@@ -129,12 +273,182 @@ body {
   color: rgb(226 232 240);
 }
 
+/* ── Syntax highlighting (rehype-highlight / highlight.js token classes) ──
+   markdown.ts runs rehype-highlight, which emits `.hljs-*` scope classes,
+   but no theme ever styled them — every language-tagged block rendered in
+   one flat color. Palette tuned for the dark `pre` surface above. */
+
+.hljs-comment,
+.hljs-quote {
+  color: rgb(148 163 184);
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #c678dd;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition {
+  color: #98c379;
+}
+
+.hljs-number,
+.hljs-literal {
+  color: #d19a66;
+}
+
+.hljs-title,
+.hljs-title.function_ {
+  color: #61afef;
+}
+
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-type {
+  color: #e5c07b;
+}
+
+.hljs-built_in,
+.hljs-symbol {
+  color: #56b6c2;
+}
+
+.hljs-attr,
+.hljs-property,
+.hljs-variable.constant_ {
+  color: #d19a66;
+}
+
+.hljs-variable,
+.hljs-variable.language_,
+.hljs-deletion {
+  color: #e06c75;
+}
+
+.hljs-params,
+.hljs-punctuation,
+.hljs-operator {
+  color: rgb(226 232 240);
+}
+
+.hljs-meta,
+.hljs-bullet {
+  color: #56b6c2;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: 700;
+}
+
+.hljs-addition {
+  background: rgba(152, 195, 121, 0.15);
+}
+
+.hljs-deletion {
+  background: rgba(224, 108, 117, 0.15);
+}
+
 .markdown-body blockquote {
   border-left: 4px solid rgb(148 163 184);
   margin: 1.2rem 0;
   padding-left: 1rem;
   color: rgb(71 85 105);
   font-style: italic;
+}
+
+/* ── GFM-style callouts (`> [!NOTE]`, `> [!WARNING]`, ...) ──────────────
+   Produced by the rehypeCallout plugin in markdown.ts, which replaces the
+   marked blockquote with one of these divs. Not nested under
+   `.markdown-body blockquote` above — callouts are not italic quotes. */
+
+.markdown-body .callout {
+  margin: 1.2rem 0;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid;
+  border-left-width: 4px;
+  border-radius: 0.5rem;
+  font-style: normal;
+}
+
+.markdown-body .callout > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body .callout-title {
+  margin-top: 0;
+  margin-bottom: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.markdown-body .callout-note {
+  border-color: rgb(191 219 254);
+  background: rgb(239 246 255);
+}
+.markdown-body .callout-note .callout-title {
+  color: rgb(29 78 216);
+}
+
+.markdown-body .callout-tip {
+  border-color: rgb(167 243 208);
+  background: rgb(240 253 244);
+}
+.markdown-body .callout-tip .callout-title {
+  color: rgb(4 120 87);
+}
+
+.markdown-body .callout-important {
+  border-color: rgb(216 180 254);
+  background: rgb(250 245 255);
+}
+.markdown-body .callout-important .callout-title {
+  color: rgb(126 34 206);
+}
+
+.markdown-body .callout-warning {
+  border-color: rgb(253 224 71);
+  background: rgb(254 252 232);
+}
+.markdown-body .callout-warning .callout-title {
+  color: rgb(161 98 7);
+}
+
+.markdown-body .callout-caution {
+  border-color: rgb(254 202 202);
+  background: rgb(254 242 242);
+}
+.markdown-body .callout-caution .callout-title {
+  color: rgb(185 28 28);
+}
+
+/* ── Status marks (✅/❌ replaced by MarkdownContent's enhanceStatusMarks) ── */
+
+.status-mark {
+  display: inline-flex;
+  vertical-align: -0.15em;
+}
+
+.status-mark svg {
+  width: 1.05em;
+  height: 1.05em;
+}
+
+.status-mark--yes {
+  color: rgb(13 148 136);
+}
+
+.status-mark--no {
+  color: rgb(220 38 38);
 }
 
 .markdown-body .heading-anchor {
@@ -173,6 +487,51 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ── Table of contents (TableOfContents.tsx) ─────────────────────────────
+   Was flat text-sm links with only a color/weight change on the active item —
+   hard to scan and gave depth-2 vs depth-3 headings no visible rank. A
+   continuous left rail plus a solid active segment reads as a position
+   marker; sub-headings get extra indent and a lighter, smaller face so the
+   hierarchy is visible without reading the text. */
+
+.toc-rail {
+  border-left: 2px solid rgb(226 232 240);
+}
+
+.toc-link {
+  display: block;
+  border-left: 2px solid transparent;
+  margin-left: -2px;
+  padding: 0.35rem 0 0.35rem 0.85rem;
+  color: rgb(71 85 105);
+  font-weight: 500;
+  transition: color 0.15s, border-color 0.15s, background-color 0.15s;
+}
+
+.toc-link:hover {
+  color: rgb(15 118 110);
+  background: rgb(240 253 250);
+}
+
+.toc-link--active {
+  border-left-color: rgb(20 184 166);
+  background: rgb(240 253 250);
+  color: rgb(15 118 110);
+  font-weight: 700;
+}
+
+.toc-sub .toc-link {
+  padding-left: 1.6rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: rgb(100 116 139);
+}
+
+.toc-sub .toc-link--active {
+  font-weight: 600;
+  color: rgb(15 118 110);
 }
 
 /* ── Mermaid diagram container ─────────────────────────────────────────── */
@@ -222,5 +581,21 @@ body {
 @keyframes mermaidSkeleton {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-fade-in,
+  .animate-fade-in-delay-1,
+  .animate-fade-in-delay-2,
+  .animate-bounce-slow,
+  .mermaid-diagram {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 

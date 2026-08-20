@@ -1,8 +1,9 @@
 ---
 title: "Implementing the Saga Pattern for Distributed Money Transfers"
 date: "2026-06-28"
-tags: ["saga", "distributed-systems", "event-sourcing", "go", "firestore", "banking"]
-summary: "How we built a two-phase distributed transfer between account aggregates using the Saga orchestrator pattern, with automatic compensation and dead-letter recovery."
+tags: ["saga-pattern", "distributed-systems", "event-sourcing", "go", "firestore", "banking"]
+related: ["projects/core-banking", "system-design/designing-a-real-time-fraud-detection-engine"]
+summary: "How I designed a Saga orchestrator pattern for two-phase distributed transfers between account aggregates, with automatic compensation and dead-letter recovery."
 reading_time: "11 min read"
 ---
 
@@ -36,7 +37,7 @@ SagaOrchestrator ──► commands Debit(AccountA)
                  ──► marks Saga COMPLETE
 ```
 
-We chose the **Orchestrator style** for our Core Banking system for one reason: **observability**. With choreography, reconstructing what went wrong in a failed transfer requires correlating events across multiple aggregates. With an orchestrator, the entire state machine lives in one place.
+We chose the **Orchestrator style** as the target design for this system, for one reason: **observability**. With choreography, reconstructing what went wrong in a failed transfer requires correlating events across multiple aggregates. With an orchestrator, the entire state machine lives in one place.
 
 ---
 
@@ -65,7 +66,7 @@ stateDiagram-v2
 
 ## Technical Implementation
 
-Here is the full Go implementation from our Event-Driven Core Banking project.
+Here is a reference implementation of that orchestrator design — see the note after this section for how it compares to what's currently committed in the Core Banking repository.
 
 ### 1. The Saga Document (Firestore State Machine)
 
@@ -298,17 +299,21 @@ func (w *SagaWorker) processActiveSagas(ctx context.Context) {
 }
 ```
 
+> **Current implementation vs. this design:** the Core Banking repository's actual Saga logic, `saga_manager.go` in the application layer, is not the centralized orchestrator shown above. There is no `TransferSaga` document, no `Orchestrator.Execute()`, and no persisted state machine with the states listed here. The real `SagaManager` is choreography-style — it reacts to domain events published by the account aggregates themselves and issues compensating commands directly, tracking only a simple last-processed-event checkpoint for crash recovery, not a per-transfer state document. The orchestrator above remains the target design and the reasoning for why it would be preferable (see the trade-off table below); it is not a description of what's currently running.
+
 ---
 
 ## Failure Mode Analysis
 
-| Failure Point | Saga State at Crash | Recovery Action | Data Safety |
+| Failure Point | Saga State at Crash | Recovery Action | Designed Data Safety |
 |:---|:---|:---|:---|
 | **Process crash before debit** | `PENDING` | Worker re-drives from `PENDING` → retries debit | ✅ No money moved |
 | **Process crash during debit** | `DEBITING` | Worker polls debit event store to check outcome | ✅ Idempotent debit via saga ID |
 | **Debit succeeds, credit fails** | `CREDITING` → `COMPENSATING` | Orchestrator issues reversal credit to source | ✅ Balance restored |
 | **Compensation also fails** | `COMPENSATION_FAILED` | Alert fires; DBA manually inspects ledger | ⚠️ Manual intervention |
 | **Duplicate saga submission** | `COMPLETE` (already) | Orchestrator returns early — no re-execution | ✅ Idempotency key guards |
+
+> **On the "Designed Data Safety" column:** these outcomes describe the recovery behavior the state machine and idempotency keys above are *designed* to guarantee. They are not backed by a dedicated reconciliation script, chaos test, or audit procedure for this project — read each ✅ as "the code is designed to ensure this," not "this has been empirically verified in production."
 
 ---
 
