@@ -1,7 +1,7 @@
 ---
 title: "System Design Notes: Idempotency"
 date: "2026-03-21"
-tags: ["idempotency", "api-design", "distributed-systems", "resilience"]
+tags: ["idempotency", "api-design", "distributed-systems"]
 summary: "Practical patterns for making API writes replay-safe under network retries and partial distributed failures."
 ---
 

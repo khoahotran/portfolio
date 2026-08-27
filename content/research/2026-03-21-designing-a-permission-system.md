@@ -1,7 +1,7 @@
 ---
 title: "Designing a Permission System: Beyond Simple Roles"
 date: "2026-03-21"
-tags: ["authorization", "rbac", "security", "policy-engine", "architecture"]
+tags: ["security", "architecture"]
 summary: "How to evolve from brittle role checks to a maintainable, high-performance policy-based authorization engine."
 ---
 

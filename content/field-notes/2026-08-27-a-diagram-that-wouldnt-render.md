@@ -1,7 +1,7 @@
 ---
 title: "Field Note: A Diagram That Wouldn't Render"
 date: "2026-08-27"
-tags: ["mermaid", "markdown", "debugging"]
+tags: ["frontend-architecture", "testing"]
 related: ["projects/pfm"]
 summary: "A sequence diagram in a new case study failed to parse. The cause wasn't the character I suspected first — and the fix I tried second broke the same way for a different reason."
 ---

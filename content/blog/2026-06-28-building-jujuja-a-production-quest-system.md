@@ -1,7 +1,7 @@
 ---
 title: "Building Jujuja: A Production Quest System for Burst Traffic"
 date: "2026-06-28"
-tags: ["case-study", "nestjs", "redis", "bullmq", "firestore"]
+tags: ["architecture", "typescript", "redis", "queues", "firestore"]
 related: ["system-design/designing-a-burst-traffic-async-job-pipeline", "system-design/atomic-financial-transactions-in-nosql", "research/algolia-geo-search-for-store-discovery"]
 summary: "How we built the Jujuja backend to handle 1,500 concurrent users per minute during campaign bursts, processing daily quests and loyalty points using BullMQ and NestJS."
 ---

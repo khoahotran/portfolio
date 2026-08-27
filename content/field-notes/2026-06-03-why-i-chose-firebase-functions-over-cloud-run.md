@@ -1,7 +1,7 @@
 ---
 title: "Field Note: Why I Chose Firebase Functions Over Cloud Run"
 date: "2026-06-03"
-tags: ["system-architecture", "serverless", "firebase", "gcp", "trade-offs"]
+tags: ["serverless", "trade-offs"]
 related: ["system-design/designing-a-burst-traffic-async-job-pipeline", "research/algolia-geo-search-for-store-discovery"]
 summary: "A practical evaluation of Firebase Functions vs Cloud Run, and why the simplest serverless model won out for our specific workloads."
 ---

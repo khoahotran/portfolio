@@ -15,7 +15,7 @@
 //        npm run check:contrast -- --base=http://localhost:5173
 
 import { chromium } from 'playwright';
-import { readArticleRoutes, staticRoutes } from './lib/site-routes.mjs';
+import { readArticleRoutes, readTagRoutes, staticRoutes } from './lib/site-routes.mjs';
 
 const CONCURRENCY = 4;
 
@@ -131,7 +131,7 @@ function auditPage() {
 
 async function main() {
   const { base } = parseArgs();
-  const routes = [...staticRoutes, '/search', ...readArticleRoutes('check-contrast')];
+  const routes = [...staticRoutes, '/search', ...readArticleRoutes('check-contrast'), ...readTagRoutes('check-contrast')];
   const browser = await chromium.launch();
   const results = [];
 

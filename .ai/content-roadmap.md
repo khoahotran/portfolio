@@ -161,7 +161,7 @@ weight — ~1,200 words each, shorter than several blog posts, despite being the
   QuantAlpha's existing BRIN-indexed time-series design, already mentioned in
   `.ai/flagship-projects.md` but never explained on its own.
 
-### 5.5 Tag taxonomy + cross-collection browse
+### 5.5 ✅ Tag taxonomy + cross-collection browse — DONE (2026-08-27)
 **Measured problem:** 80 distinct tags across 34 articles; **47 (59%) are used exactly once.** Tags
 also only filter within a single collection today (`ContentListPage.tsx`'s `selectedTag` state) —
 there is no route that lists everything tagged `go` across `blog`+`research`+`system-design` at
@@ -185,6 +185,12 @@ once. This gets worse, not better, as more articles land without a fix first.
 4. **Enforce it going forward the same way `related:` is already enforced:** have
    `scripts/build-search-index.mjs` fail the build if any article uses a tag outside the canonical
    vocabulary in `.ai/tag-taxonomy.md`. Cheap now (34 files); expensive to retrofit at 100.
+
+**Result:** 92 tags -> 35 (62% reduction), 56 singleton tags -> 5, all 5 justified per
+`.ai/tag-taxonomy.md` rule 1. Canonical list lives in `scripts/lib/tag-taxonomy.mjs`; build-time
+enforcement is live and verified (tested with a deliberately fake tag — build failed with a clear
+message, then confirmed clean). `/tags` and `/tags/:tag` routes ship, prerendered, in the sitemap,
+and covered by the responsive/contrast checks (95 routes total now, up from 59).
 
 ### 5.6 "Latest" + series support
 `getLatestContent(limit = 6)` (`src/content-engine/content-service.ts:47`) is fully implemented and

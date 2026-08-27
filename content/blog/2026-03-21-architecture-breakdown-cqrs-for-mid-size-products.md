@@ -1,7 +1,7 @@
 ---
 title: "Architecture Breakdown: CQRS for Mid-size Products"
 date: "2026-03-21"
-tags: ["cqrs", "architecture", "backend", "system-design", "database"]
+tags: ["cqrs", "architecture", "system-design"]
 summary: "A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path."
 ---
 

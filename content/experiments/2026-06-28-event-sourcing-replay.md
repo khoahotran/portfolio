@@ -1,7 +1,7 @@
 ---
 title: "Interactive Event Sourcing Replay"
 date: "2026-06-28"
-tags: ["architecture", "event-sourcing", "cqrs", "interactive-demo"]
+tags: ["architecture", "event-sourcing", "cqrs", "benchmark"]
 related: ["projects/core-banking"]
 summary: "An interactive visualization of how application state is derived from an immutable, append-only event log."
 ---

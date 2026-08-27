@@ -1,7 +1,7 @@
 ---
 title: "QuantAlpha: High-Frequency Trading Research Platform"
 date: "2026-02-20"
-tags: ["go", "python", "redis-streams", "machine-learning", "hft"]
+tags: ["go", "python", "redis", "machine-learning", "hft"]
 related: ["blog/designing-a-multi-role-hft-research-platform", "research/order-book-imbalance-hft-signal", "experiments/redis-streams-vs-bullmq-job-queue-comparison"]
 summary: "A distributed research platform for High-Frequency Trading (HFT) utilizing Redis Streams for asynchronous model training and order book imbalance (OBI) analysis."
 ---

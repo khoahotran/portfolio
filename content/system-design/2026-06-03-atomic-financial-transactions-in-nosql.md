@@ -1,7 +1,7 @@
 ---
 title: "Atomic Financial Transactions in a NoSQL World: Building the J-Point Loyalty Engine"
 date: "2026-06-03"
-tags: ["firestore", "nosql", "distributed-systems", "transactions", "atomic-operations"]
+tags: ["firestore", "distributed-systems", "fintech"]
 related: ["blog/building-jujuja-a-production-quest-system", "research/event-sourcing-vs-crud-when-to-choose-each"]
 summary: "Implementing virtual currency transactions on Firestore with <1% consistency errors, covering atomic operation design and edge case handling."
 ---

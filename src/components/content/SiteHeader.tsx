@@ -74,6 +74,13 @@ function SiteHeader() {
             <NavLink to="/field-notes" className={navClass}>
               Field Notes
             </NavLink>
+            {/* Appended last, not interleaved — the ordering comment above this nav already
+                prioritizes Projects/Search landing inside the un-scrolled window on the narrowest
+                tested viewports; Tags is a secondary browse surface over the same content, not a
+                new destination that ordering was tuned around. */}
+            <NavLink to="/tags" className={navClass}>
+              Tags
+            </NavLink>
           </nav>
         </div>
 

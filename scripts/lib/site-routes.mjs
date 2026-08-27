@@ -32,6 +32,7 @@ export const staticRoutes = [
   ...collections.map((collection) => `/${collection}`),
   '/labs',
   ...labIds.map((id) => `/labs/${id}`),
+  '/tags',
 ];
 
 /**
@@ -52,6 +53,29 @@ export function readArticleRoutes(label = 'site-routes') {
     console.warn(
       `[${label}] Could not read public/content-index.json (${error.message}). ` +
         'Run `npm run build:search-index` first — article routes will be skipped for this run.'
+    );
+    return [];
+  }
+}
+
+/**
+ * `/tags/:tag` for every distinct tag actually in use across non-draft articles. Same
+ * read-from-disk-with-a-graceful-fallback shape as readArticleRoutes, for the same reason: this is
+ * consumed by scripts that run after build-search-index.mjs has already written
+ * public/content-index.json (prerender.mjs, check-responsive.mjs), not by that script itself, which
+ * already has every doc's tags in memory and computes its own sitemap entries directly.
+ */
+export function readTagRoutes(label = 'site-routes') {
+  try {
+    const docs = JSON.parse(
+      readFileSync(new URL('../../public/content-index.json', import.meta.url), 'utf8')
+    );
+    const tags = new Set(docs.filter((doc) => !doc.draft).flatMap((doc) => doc.tags));
+    return [...tags].sort().map((tag) => `/tags/${tag}`);
+  } catch (error) {
+    console.warn(
+      `[${label}] Could not read public/content-index.json (${error.message}). ` +
+        'Run `npm run build:search-index` first — tag routes will be skipped for this run.'
     );
     return [];
   }

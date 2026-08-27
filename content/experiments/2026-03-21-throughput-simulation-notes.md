@@ -1,7 +1,7 @@
 ---
 title: "Throughput Simulation Notes"
 date: "2026-03-21"
-tags: ["experiment", "throughput", "capacity-planning", "simulation"]
+tags: ["benchmark"]
 summary: "Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations."
 ---
 

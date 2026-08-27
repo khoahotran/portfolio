@@ -1,7 +1,7 @@
 ---
 title: "ADR: Why Prerender Instead of Migrating to Next.js"
 date: "2026-08-27"
-tags: ["adr", "jamstack", "react", "seo", "architecture"]
+tags: ["adr", "frontend-architecture", "react", "seo", "architecture"]
 related: ["blog/the-spa-google-never-saw", "field-notes/measuring-contrast-instead-of-guessing"]
 summary: "This portfolio's original decision to build a custom JAMstack instead of using Next.js still held once a crawler-visibility bug surfaced. Here's why the fix was a build step, not a framework migration."
 ---

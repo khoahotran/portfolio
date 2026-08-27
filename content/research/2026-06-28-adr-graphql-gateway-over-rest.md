@@ -1,7 +1,7 @@
 ---
 title: "ADR: Choosing a GraphQL Gateway Over REST for Aegis"
 date: "2026-06-28"
-tags: ["adr", "graphql", "api-gateway", "architecture", "go"]
+tags: ["adr", "api-design", "architecture", "go"]
 related: ["projects/aegis", "system-design/designing-a-multi-service-auth-platform"]
 summary: "An Architecture Decision Record detailing why Aegis uses a GraphQL API Gateway to aggregate internal gRPC microservices instead of a traditional REST API."
 ---

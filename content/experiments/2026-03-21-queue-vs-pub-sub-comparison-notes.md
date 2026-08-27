@@ -1,7 +1,7 @@
 ---
 title: "Queue vs Pub/Sub Comparison Notes"
 date: "2026-03-21"
-tags: ["experiment", "queues", "pubsub", "messaging", "system-design"]
+tags: ["benchmark", "queues", "system-design"]
 summary: "How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems."
 ---
 

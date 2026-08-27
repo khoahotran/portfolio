@@ -50,6 +50,17 @@ export async function getLatestContent(limit = 6): Promise<ContentIndexItem[]> {
 }
 
 /**
+ * Every non-draft article across all six collections, unsliced. Backs `/tags` and `/tags/:tag`
+ * (`TagsIndexPage`, `TagDetailPage`) — tags mean nothing scoped to one collection (`.ai/content-roadmap.md`
+ * §5.5 measured tags only ever being filterable within a single collection as the actual problem),
+ * so both pages need the full corpus, unlike `getContentIndex`'s single-collection scope.
+ */
+export async function getAllContentIndex(): Promise<ContentIndexItem[]> {
+  const items = await loadContentIndex();
+  return items.filter(shouldInclude);
+}
+
+/**
  * Counts for the homepage's "what exists here" strip (see PortfolioHome) —
  * derived from the real index rather than hardcoded, so they can't drift out
  * of date as content is added or removed. `projects` is the flagship-case-study

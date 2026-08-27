@@ -12,6 +12,8 @@ const PortfolioHome = lazy(() => import('./pages/PortfolioHome'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const KnowledgeGraphPage = lazy(() => import('./pages/KnowledgeGraphPage'));
 const LabsIndexPage = lazy(() => import('./pages/LabsIndexPage'));
+const TagsIndexPage = lazy(() => import('./pages/TagsIndexPage'));
+const TagDetailPage = lazy(() => import('./pages/TagDetailPage'));
 const ContentListPage = lazy(() => import('./pages/content/ContentListPage'));
 const ContentDetailPage = lazy(() => import('./pages/content/ContentDetailPage'));
 const SearchPage = lazy(() => import('./pages/SearchPage'));
@@ -121,6 +123,8 @@ function AppRoutes() {
           />
           <Route path="/field-notes/:slug" element={<ContentDetailPage collection="field-notes" />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/tags" element={<TagsIndexPage />} />
+          <Route path="/tags/:tag" element={<TagDetailPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>

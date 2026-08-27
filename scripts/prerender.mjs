@@ -40,7 +40,7 @@ import { readFile, mkdir, writeFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { basePath, origin as publicOrigin, siteUrl } from '../site.config.mjs';
-import { labIds, readArticleRoutes, staticRoutes } from './lib/site-routes.mjs';
+import { labIds, readArticleRoutes, readTagRoutes, staticRoutes } from './lib/site-routes.mjs';
 
 // Snapshots are taken with the colour scheme forced to light so the serialized <html> never
 // carries a `dark` class. The theme is a per-visitor preference, and the inline bootstrap in
@@ -279,7 +279,8 @@ async function main() {
   // /search is prerendered even though it is deliberately absent from the sitemap: it renders
   // an empty search UI with no content to index, but it still needs a real file to exist now
   // that 404.html no longer redirects unknown paths back into the SPA.
-  const routes = [...staticRoutes, '/search', ...articleRoutes];
+  const tagRoutes = readTagRoutes('prerender');
+  const routes = [...staticRoutes, '/search', ...articleRoutes, ...tagRoutes];
   const redirects = redirectRoutes(articleRoutes);
 
   const { server, origin } = await startServer();

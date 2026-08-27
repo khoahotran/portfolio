@@ -262,3 +262,33 @@ samples and bias the comparison before either program does anything.
 - The article's "Key Observations" section was rewritten, not patched — a direction-reversing
   finding can't be represented by swapping numbers into the old prose, since the old prose's own
   causal claim (Promises get proportionally worse at scale) is what the data contradicts.
+
+## Decision 15: Tag Taxonomy, Enforced at Build Time
+**Date:** 2026-08-27
+**Decision:** `.ai/tag-taxonomy.md` and `scripts/lib/tag-taxonomy.mjs` define a canonical ~35-tag
+vocabulary for `content/**/*.md`'s `tags:` frontmatter. `scripts/build-search-index.mjs` fails the
+build if any article uses a tag outside it — the same enforcement pattern already used for `related:`
+references. `/tags` and `/tags/:tag` (`TagsIndexPage`, `TagDetailPage`) give the corpus a
+cross-collection browse surface for the first time.
+**Rationale:** Measured, not assumed: 92 distinct tags across 38 articles, 56 (61%) used exactly
+once. A tag used once cannot group anything, and tags were additionally only ever filterable within
+a single collection (`ContentListPage`'s `selectedTag`) — there was no way to see everything tagged
+`go` across `blog` + `research` + `system-design` at once. Building `/tags` on top of that vocabulary
+without fixing it first would have shipped a browse page over noise.
+**Consequences:**
+- Migration was mechanical once the mapping was designed: a script applied a 90-entry mapping table
+  across all 38 files, deduping per-article and printing every change for review. Confirmed
+  idempotent (a second run reported 0 changes) before committing.
+- Landed at 35 canonical tags, not the ~20-25 the roadmap's original note guessed at — real content
+  breadth (`go`/`typescript`/`python` as genuinely distinct languages, `hft` vs `fintech` as
+  genuinely distinct domains) justified not force-merging further into buckets too broad to mean
+  anything. `.ai/tag-taxonomy.md` states this explicitly rather than silently missing its own target.
+- Only 5 tags remain singletons, and each is a stated exception under rule 1 (a load-bearing concept
+  the portfolio is actively building toward, e.g. `spec-driven-development`), not an oversight.
+- The canonical list lives in code (`scripts/lib/tag-taxonomy.mjs`), not only in the prose doc — a
+  duplicated list between a `.md` file and a script is exactly the kind of drift this decision exists
+  to prevent elsewhere in the corpus.
+- `/tags/:tag` routes are generated dynamically from whatever tags are actually in use (via
+  `readTagRoutes()` in `scripts/lib/site-routes.mjs`, mirroring `readArticleRoutes()`), not from a
+  fixed list — so the sitemap, prerender, and responsive/contrast checks all stay correct as tags are
+  added or removed, the same self-maintaining property `lab-ids.json` already has for labs.

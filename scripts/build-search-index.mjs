@@ -3,6 +3,7 @@ import path from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
 import { siteDescription, siteTitle, siteUrl } from '../site.config.mjs';
 import { collections, staticRoutes } from './lib/site-routes.mjs';
+import { CANONICAL_TAGS } from './lib/tag-taxonomy.mjs';
 import {
   escapeXml,
   estimateReading,
@@ -241,6 +242,22 @@ async function buildAssets() {
     }
   }
 
+  // Same enforcement, same reason, for tags: a tag outside the canonical vocabulary in
+  // scripts/lib/tag-taxonomy.mjs can't group anything — that vocabulary was migrated from 92 tags
+  // (56 used exactly once) down to ~35 precisely to stop that drift starting again silently. See
+  // .ai/tag-taxonomy.md for the rationale and .ai/decision-log.md Decision 15.
+  for (const doc of docs) {
+    for (const tag of doc.tags ?? []) {
+      if (!CANONICAL_TAGS.has(tag)) {
+        throw new Error(
+          `Unknown tag "${tag}" in ${doc.collection}/${doc.slug} — not in the canonical vocabulary. ` +
+            'Either use an existing tag from .ai/tag-taxonomy.md, or add the new tag to both that ' +
+            'doc and scripts/lib/tag-taxonomy.mjs in the same change.'
+        );
+      }
+    }
+  }
+
   const publicDocs = docs.filter((doc) => !doc.draft);
 
   // Remove OG assets (both formats) left over from a renamed or deleted content
@@ -263,12 +280,16 @@ async function buildAssets() {
   await fs.writeFile(outputIndexPath, JSON.stringify(docs, null, 2), 'utf-8');
 
   const dynamicRoutes = publicDocs.map((doc) => `/${doc.collection}/${doc.slug}`);
+  // One /tags/:tag per distinct tag actually in use — computed here rather than via
+  // readTagRoutes() (scripts/lib/site-routes.mjs) because publicDocs is already in memory; that
+  // function exists for scripts that run after this one has already written content-index.json.
+  const tagRoutes = [...new Set(publicDocs.flatMap((doc) => doc.tags))].sort().map((tag) => `/tags/${tag}`);
   // Only dynamic (article) routes have a natural "last modified" date from
-  // frontmatter; static routes (/, /about, /labs, ...) get no <lastmod>,
+  // frontmatter; static routes (/, /about, /labs, /tags/:tag, ...) get no <lastmod>,
   // which is valid per the sitemap spec — it's an optional element.
   const lastmodByRoute = new Map(publicDocs.map((doc) => [`/${doc.collection}/${doc.slug}`, doc.date]));
 
-  const urls = [...new Set([...staticRoutes, ...dynamicRoutes])];
+  const urls = [...new Set([...staticRoutes, ...dynamicRoutes, ...tagRoutes])];
   const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
     .map((route) => {
       const lastmod = lastmodByRoute.get(route);

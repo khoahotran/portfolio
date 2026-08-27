@@ -1,7 +1,7 @@
 ---
 title: "Benchmark: Event Replay in PostgreSQL vs Firestore"
 date: "2026-06-27"
-tags: ["benchmark", "event-sourcing", "postgresql", "firestore", "database"]
+tags: ["benchmark", "event-sourcing", "postgresql", "firestore", "system-design"]
 related: ["research/adr-firestore-vs-postgresql-event-sourcing", "projects/core-banking"]
 summary: "An interactive benchmark comparing the time it takes to replay tens of thousands of immutable events into a Read Projection."
 ---

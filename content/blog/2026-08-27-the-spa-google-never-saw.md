@@ -1,7 +1,7 @@
 ---
 title: "The SPA Google Never Saw"
 date: "2026-08-27"
-tags: ["seo", "react", "vite", "jamstack", "frontend-architecture"]
+tags: ["seo", "react", "frontend-architecture"]
 summary: "This portfolio was a client-rendered SPA on GitHub Pages for months. Every deep link a crawler could find returned 404. Here's how I found it, and what I built instead of migrating frameworks."
 ---
 

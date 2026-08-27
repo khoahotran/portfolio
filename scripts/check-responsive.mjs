@@ -16,7 +16,7 @@
 // `vite preview` (production build) or `vite dev` (fast iteration).
 
 import { chromium } from 'playwright';
-import { readArticleRoutes, staticRoutes } from './lib/site-routes.mjs';
+import { readArticleRoutes, readTagRoutes, staticRoutes } from './lib/site-routes.mjs';
 
 const VIEWPORTS = [
   { name: '320', width: 320, height: 700 },
@@ -256,6 +256,7 @@ async function main() {
     ...staticRoutes,
     ...EXTRA_ROUTES,
     ...readArticleRoutes('check-responsive'),
+    ...readTagRoutes('check-responsive'),
   ];
 
   console.log(

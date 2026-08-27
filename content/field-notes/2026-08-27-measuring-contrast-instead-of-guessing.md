@@ -1,7 +1,7 @@
 ---
 title: "Field Note: Measuring Contrast Instead of Guessing at It"
 date: "2026-08-27"
-tags: ["accessibility", "wcag", "tailwind", "testing", "trade-offs"]
+tags: ["accessibility", "frontend-architecture", "testing", "trade-offs"]
 related: ["blog/the-spa-google-never-saw"]
 summary: "A prior audit flagged 44 text-slate-400 occurrences as 'potentially borderline' and correctly refused to fix them blind. Building a real contrast checker turned that judgment call into a number — and found two unrelated bugs on the way."
 ---

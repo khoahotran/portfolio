@@ -1,7 +1,7 @@
 ---
 title: "PFM: A Spec-Driven, Invite-Only Personal Finance Tracker"
 date: "2026-08-27"
-tags: ["go", "nextjs", "postgresql", "redis", "server-actions", "spec-driven-development"]
+tags: ["go", "frontend-architecture", "postgresql", "redis", "spec-driven-development"]
 related: ["research/designing-a-permission-system", "system-design/designing-a-multi-service-auth-platform"]
 summary: "A React 19 + Go financial tracker built spec-first: every business rule traces from an SRS to an SDS to a passing integration test, with a hard server-side boundary between the browser and the API."
 ---
