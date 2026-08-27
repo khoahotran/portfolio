@@ -5,7 +5,14 @@
     <link>https://khoahotran.github.io/portfolio/blog</link>
     <description>blog articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Aug 2026 03:08:29 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 27 Aug 2026 08:14:13 GMT</lastBuildDate>
+    <item>
+      <title>The SPA Google Never Saw</title>
+      <link>https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw</guid>
+      <pubDate>Thu, 27 Aug 2026 00:00:00 GMT</pubDate>
+      <description>This portfolio was a client-rendered SPA on GitHub Pages for months. Every deep link a crawler could find returned 404. Here&apos;s how I found it, and what I built instead of migrating frameworks.</description>
+    </item>
     <item>
       <title>Building Jujuja: A Production Quest System for Burst Traffic</title>
       <link>https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system</link>

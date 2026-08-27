@@ -5,7 +5,21 @@
     <link>https://khoahotran.github.io/portfolio/field-notes</link>
     <description>field-notes articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Aug 2026 03:08:29 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 27 Aug 2026 08:14:13 GMT</lastBuildDate>
+    <item>
+      <title>Field Note: A Diagram That Wouldn&apos;t Render</title>
+      <link>https://khoahotran.github.io/portfolio/field-notes/a-diagram-that-wouldnt-render</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/field-notes/a-diagram-that-wouldnt-render</guid>
+      <pubDate>Thu, 27 Aug 2026 00:00:00 GMT</pubDate>
+      <description>A sequence diagram in a new case study failed to parse. The cause wasn&apos;t the character I suspected first — and the fix I tried second broke the same way for a different reason.</description>
+    </item>
+    <item>
+      <title>Field Note: Measuring Contrast Instead of Guessing at It</title>
+      <link>https://khoahotran.github.io/portfolio/field-notes/measuring-contrast-instead-of-guessing</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/field-notes/measuring-contrast-instead-of-guessing</guid>
+      <pubDate>Thu, 27 Aug 2026 00:00:00 GMT</pubDate>
+      <description>A prior audit flagged 44 text-slate-400 occurrences as &apos;potentially borderline&apos; and correctly refused to fix them blind. Building a real contrast checker turned that judgment call into a number — and found two unrelated bugs on the way.</description>
+    </item>
     <item>
       <title>Field Note: Go vs TypeScript for Backend Services</title>
       <link>https://khoahotran.github.io/portfolio/field-notes/go-vs-typescript-for-backend-services</link>

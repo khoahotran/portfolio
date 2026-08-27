@@ -8,6 +8,21 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw",
+      "url": "https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw",
+      "title": "The SPA Google Never Saw",
+      "summary": "This portfolio was a client-rendered SPA on GitHub Pages for months. Every deep link a crawler could find returned 404. Here's how I found it, and what I built instead of migrating frameworks.",
+      "date_published": "2026-08-27T00:00:00.000Z",
+      "tags": [
+        "seo",
+        "react",
+        "vite",
+        "jamstack",
+        "frontend-architecture"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/the-spa-google-never-saw.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system",
       "url": "https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system",
       "title": "Building Jujuja: A Production Quest System for Burst Traffic",

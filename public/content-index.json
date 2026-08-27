@@ -1,5 +1,85 @@
 [
   {
+    "title": "The SPA Google Never Saw",
+    "date": "2026-08-27",
+    "tags": [
+      "seo",
+      "react",
+      "vite",
+      "jamstack",
+      "frontend-architecture"
+    ],
+    "summary": "This portfolio was a client-rendered SPA on GitHub Pages for months. Every deep link a crawler could find returned 404. Here's how I found it, and what I built instead of migrating frameworks.",
+    "draft": false,
+    "slug": "the-spa-google-never-saw",
+    "collection": "blog",
+    "ogImage": "/og/the-spa-google-never-saw.png",
+    "readingMinutes": 6,
+    "readingText": "6 min read"
+  },
+  {
+    "title": "ADR: Why Prerender Instead of Migrating to Next.js",
+    "date": "2026-08-27",
+    "tags": [
+      "adr",
+      "jamstack",
+      "react",
+      "seo",
+      "architecture"
+    ],
+    "summary": "This portfolio's original decision to build a custom JAMstack instead of using Next.js still held once a crawler-visibility bug surfaced. Here's why the fix was a build step, not a framework migration.",
+    "draft": false,
+    "slug": "why-prerender-instead-of-migrating-to-next-js",
+    "collection": "research",
+    "ogImage": "/og/why-prerender-instead-of-migrating-to-next-js.png",
+    "related": [
+      "blog/the-spa-google-never-saw",
+      "field-notes/measuring-contrast-instead-of-guessing"
+    ],
+    "readingMinutes": 5,
+    "readingText": "5 min read"
+  },
+  {
+    "title": "Field Note: A Diagram That Wouldn't Render",
+    "date": "2026-08-27",
+    "tags": [
+      "mermaid",
+      "markdown",
+      "debugging"
+    ],
+    "summary": "A sequence diagram in a new case study failed to parse. The cause wasn't the character I suspected first — and the fix I tried second broke the same way for a different reason.",
+    "draft": false,
+    "slug": "a-diagram-that-wouldnt-render",
+    "collection": "field-notes",
+    "ogImage": "/og/a-diagram-that-wouldnt-render.png",
+    "related": [
+      "projects/pfm"
+    ],
+    "readingMinutes": 2,
+    "readingText": "2 min read"
+  },
+  {
+    "title": "Field Note: Measuring Contrast Instead of Guessing at It",
+    "date": "2026-08-27",
+    "tags": [
+      "accessibility",
+      "wcag",
+      "tailwind",
+      "testing",
+      "trade-offs"
+    ],
+    "summary": "A prior audit flagged 44 text-slate-400 occurrences as 'potentially borderline' and correctly refused to fix them blind. Building a real contrast checker turned that judgment call into a number — and found two unrelated bugs on the way.",
+    "draft": false,
+    "slug": "measuring-contrast-instead-of-guessing",
+    "collection": "field-notes",
+    "ogImage": "/og/measuring-contrast-instead-of-guessing.png",
+    "related": [
+      "blog/the-spa-google-never-saw"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
     "title": "PFM: A Spec-Driven, Invite-Only Personal Finance Tracker",
     "date": "2026-08-27",
     "tags": [

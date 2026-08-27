@@ -8,6 +8,21 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/research/why-prerender-instead-of-migrating-to-next-js",
+      "url": "https://khoahotran.github.io/portfolio/research/why-prerender-instead-of-migrating-to-next-js",
+      "title": "ADR: Why Prerender Instead of Migrating to Next.js",
+      "summary": "This portfolio's original decision to build a custom JAMstack instead of using Next.js still held once a crawler-visibility bug surfaced. Here's why the fix was a build step, not a framework migration.",
+      "date_published": "2026-08-27T00:00:00.000Z",
+      "tags": [
+        "adr",
+        "jamstack",
+        "react",
+        "seo",
+        "architecture"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/why-prerender-instead-of-migrating-to-next-js.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/research/adr-firestore-vs-postgresql-event-sourcing",
       "url": "https://khoahotran.github.io/portfolio/research/adr-firestore-vs-postgresql-event-sourcing",
       "title": "ADR: Firestore vs PostgreSQL for Event Sourcing in Core Banking",

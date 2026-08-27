@@ -8,6 +8,64 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw",
+      "url": "https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw",
+      "title": "The SPA Google Never Saw",
+      "summary": "This portfolio was a client-rendered SPA on GitHub Pages for months. Every deep link a crawler could find returned 404. Here's how I found it, and what I built instead of migrating frameworks.",
+      "date_published": "2026-08-27T00:00:00.000Z",
+      "tags": [
+        "seo",
+        "react",
+        "vite",
+        "jamstack",
+        "frontend-architecture"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/the-spa-google-never-saw.png"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/research/why-prerender-instead-of-migrating-to-next-js",
+      "url": "https://khoahotran.github.io/portfolio/research/why-prerender-instead-of-migrating-to-next-js",
+      "title": "ADR: Why Prerender Instead of Migrating to Next.js",
+      "summary": "This portfolio's original decision to build a custom JAMstack instead of using Next.js still held once a crawler-visibility bug surfaced. Here's why the fix was a build step, not a framework migration.",
+      "date_published": "2026-08-27T00:00:00.000Z",
+      "tags": [
+        "adr",
+        "jamstack",
+        "react",
+        "seo",
+        "architecture"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/why-prerender-instead-of-migrating-to-next-js.png"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/field-notes/a-diagram-that-wouldnt-render",
+      "url": "https://khoahotran.github.io/portfolio/field-notes/a-diagram-that-wouldnt-render",
+      "title": "Field Note: A Diagram That Wouldn't Render",
+      "summary": "A sequence diagram in a new case study failed to parse. The cause wasn't the character I suspected first — and the fix I tried second broke the same way for a different reason.",
+      "date_published": "2026-08-27T00:00:00.000Z",
+      "tags": [
+        "mermaid",
+        "markdown",
+        "debugging"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/a-diagram-that-wouldnt-render.png"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/field-notes/measuring-contrast-instead-of-guessing",
+      "url": "https://khoahotran.github.io/portfolio/field-notes/measuring-contrast-instead-of-guessing",
+      "title": "Field Note: Measuring Contrast Instead of Guessing at It",
+      "summary": "A prior audit flagged 44 text-slate-400 occurrences as 'potentially borderline' and correctly refused to fix them blind. Building a real contrast checker turned that judgment call into a number — and found two unrelated bugs on the way.",
+      "date_published": "2026-08-27T00:00:00.000Z",
+      "tags": [
+        "accessibility",
+        "wcag",
+        "tailwind",
+        "testing",
+        "trade-offs"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/measuring-contrast-instead-of-guessing.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/projects/pfm",
       "url": "https://khoahotran.github.io/portfolio/projects/pfm",
       "title": "PFM: A Spec-Driven, Invite-Only Personal Finance Tracker",

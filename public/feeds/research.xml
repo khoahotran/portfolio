@@ -5,7 +5,14 @@
     <link>https://khoahotran.github.io/portfolio/research</link>
     <description>research articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Aug 2026 03:08:29 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 27 Aug 2026 08:14:13 GMT</lastBuildDate>
+    <item>
+      <title>ADR: Why Prerender Instead of Migrating to Next.js</title>
+      <link>https://khoahotran.github.io/portfolio/research/why-prerender-instead-of-migrating-to-next-js</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/why-prerender-instead-of-migrating-to-next-js</guid>
+      <pubDate>Thu, 27 Aug 2026 00:00:00 GMT</pubDate>
+      <description>This portfolio&apos;s original decision to build a custom JAMstack instead of using Next.js still held once a crawler-visibility bug surfaced. Here&apos;s why the fix was a build step, not a framework migration.</description>
+    </item>
     <item>
       <title>ADR: Firestore vs PostgreSQL for Event Sourcing in Core Banking</title>
       <link>https://khoahotran.github.io/portfolio/research/adr-firestore-vs-postgresql-event-sourcing</link>

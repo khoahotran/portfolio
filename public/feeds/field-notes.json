@@ -8,6 +8,34 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/field-notes/a-diagram-that-wouldnt-render",
+      "url": "https://khoahotran.github.io/portfolio/field-notes/a-diagram-that-wouldnt-render",
+      "title": "Field Note: A Diagram That Wouldn't Render",
+      "summary": "A sequence diagram in a new case study failed to parse. The cause wasn't the character I suspected first — and the fix I tried second broke the same way for a different reason.",
+      "date_published": "2026-08-27T00:00:00.000Z",
+      "tags": [
+        "mermaid",
+        "markdown",
+        "debugging"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/a-diagram-that-wouldnt-render.png"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/field-notes/measuring-contrast-instead-of-guessing",
+      "url": "https://khoahotran.github.io/portfolio/field-notes/measuring-contrast-instead-of-guessing",
+      "title": "Field Note: Measuring Contrast Instead of Guessing at It",
+      "summary": "A prior audit flagged 44 text-slate-400 occurrences as 'potentially borderline' and correctly refused to fix them blind. Building a real contrast checker turned that judgment call into a number — and found two unrelated bugs on the way.",
+      "date_published": "2026-08-27T00:00:00.000Z",
+      "tags": [
+        "accessibility",
+        "wcag",
+        "tailwind",
+        "testing",
+        "trade-offs"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/measuring-contrast-instead-of-guessing.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/field-notes/go-vs-typescript-for-backend-services",
       "url": "https://khoahotran.github.io/portfolio/field-notes/go-vs-typescript-for-backend-services",
       "title": "Field Note: Go vs TypeScript for Backend Services",

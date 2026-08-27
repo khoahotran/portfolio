@@ -5,7 +5,35 @@
     <link>https://khoahotran.github.io/portfolio</link>
     <description>Case studies, system design notes, and interactive engineering experiments.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Aug 2026 03:08:29 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 27 Aug 2026 08:14:13 GMT</lastBuildDate>
+    <item>
+      <title>The SPA Google Never Saw</title>
+      <link>https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw</guid>
+      <pubDate>Thu, 27 Aug 2026 00:00:00 GMT</pubDate>
+      <description>This portfolio was a client-rendered SPA on GitHub Pages for months. Every deep link a crawler could find returned 404. Here&apos;s how I found it, and what I built instead of migrating frameworks.</description>
+    </item>
+    <item>
+      <title>ADR: Why Prerender Instead of Migrating to Next.js</title>
+      <link>https://khoahotran.github.io/portfolio/research/why-prerender-instead-of-migrating-to-next-js</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/why-prerender-instead-of-migrating-to-next-js</guid>
+      <pubDate>Thu, 27 Aug 2026 00:00:00 GMT</pubDate>
+      <description>This portfolio&apos;s original decision to build a custom JAMstack instead of using Next.js still held once a crawler-visibility bug surfaced. Here&apos;s why the fix was a build step, not a framework migration.</description>
+    </item>
+    <item>
+      <title>Field Note: A Diagram That Wouldn&apos;t Render</title>
+      <link>https://khoahotran.github.io/portfolio/field-notes/a-diagram-that-wouldnt-render</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/field-notes/a-diagram-that-wouldnt-render</guid>
+      <pubDate>Thu, 27 Aug 2026 00:00:00 GMT</pubDate>
+      <description>A sequence diagram in a new case study failed to parse. The cause wasn&apos;t the character I suspected first — and the fix I tried second broke the same way for a different reason.</description>
+    </item>
+    <item>
+      <title>Field Note: Measuring Contrast Instead of Guessing at It</title>
+      <link>https://khoahotran.github.io/portfolio/field-notes/measuring-contrast-instead-of-guessing</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/field-notes/measuring-contrast-instead-of-guessing</guid>
+      <pubDate>Thu, 27 Aug 2026 00:00:00 GMT</pubDate>
+      <description>A prior audit flagged 44 text-slate-400 occurrences as &apos;potentially borderline&apos; and correctly refused to fix them blind. Building a real contrast checker turned that judgment call into a number — and found two unrelated bugs on the way.</description>
+    </item>
     <item>
       <title>PFM: A Spec-Driven, Invite-Only Personal Finance Tracker</title>
       <link>https://khoahotran.github.io/portfolio/projects/pfm</link>
