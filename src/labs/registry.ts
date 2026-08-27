@@ -1,5 +1,6 @@
 import { lazy } from 'react';
 import type { ComponentType } from 'react';
+import type { LabProvenance } from './provenance';
 
 export interface LabDefinition {
   id: string;
@@ -34,6 +35,16 @@ export interface LabDefinition {
    * - 'preset': switches between a small fixed set of precomputed data points.
    */
   interaction: 'live' | 'run' | 'preset';
+  /**
+   * Where this lab's numbers come from — see `./provenance.ts`. Required, so a new lab cannot be
+   * registered without answering the question a reader will ask first. Rendered by
+   * `ProvenanceNote` at the top of the lab page and badged on `/labs`.
+   *
+   * Note that `interaction` and `provenance` are independent: 'live' describes how the reader
+   * drives the lab, 'implementation'/'model' describes whether the output means anything.
+   * Three of the 'live' labs compute chosen formulas, and saying so is the point.
+   */
+  provenance: LabProvenance;
 }
 
 const ThroughputSimulationPage = lazy(() => import('../pages/experiments/ThroughputSimulationPage'));
@@ -55,6 +66,15 @@ const DbEventReplayBenchmarkPage = lazy(() => import('../pages/experiments/DbEve
 export const labs: LabDefinition[] = [
   {
     id: 'throughput-simulation',
+    provenance: {
+      kind: 'model',
+      basis:
+        'Closed-form arithmetic, not a measurement of any queue: capacity = workers x 1000 / processing_ms, ' +
+        'and effective throughput multiplies that by (1 - failure_rate). p95 latency is modelled as ' +
+        'processing_ms x (1 + failure_rate / 50). The moving chart adds sinusoidal and random noise for ' +
+        'legibility only — it carries no information. The relationship between the sliders is the point; ' +
+        'the absolute numbers are not.',
+    },
     title: 'Throughput Simulation',
     description: 'Interactive throughput and latency simulation for worker systems.',
     component: ThroughputSimulationPage,
@@ -63,6 +83,14 @@ export const labs: LabDefinition[] = [
   },
   {
     id: 'retry-strategy',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'The real backoff schedules, computed in your browser from your inputs: linear is base x attempt, ' +
+        'exponential is base x 2^attempt, and full jitter replaces each delay with a uniform random value ' +
+        'in [0, delay) — the AWS "Exponential Backoff and Jitter" formulation. The cumulative timeline is ' +
+        'the actual sum of those delays, so what you see is what a client using this policy would wait.',
+    },
     title: 'Retry Strategy Visualizer',
     description: 'Compare linear, exponential, and jitter backoff retry strategies.',
     component: RetryStrategyVisualizerPage,
@@ -70,6 +98,15 @@ export const labs: LabDefinition[] = [
   },
   {
     id: 'failure-injection',
+    provenance: {
+      kind: 'model',
+      basis:
+        'A static illustration of the circuit-breaker idea, not a breaker implementation. Failures are ' +
+        'failure_rate x request_count and the breaker is shown as open whenever failure_rate reaches the ' +
+        'threshold. There is no time dimension, no rolling window, and no half-open probe state — the ' +
+        'three things that make a real breaker interesting. Read it as a diagram you can move, and see ' +
+        'the retry-strategy lab for a policy that is genuinely computed.',
+    },
     title: 'Failure Injection Demo',
     description: 'Inject controlled failure and observe circuit breaker behavior.',
     component: FailureInjectionDemoPage,
@@ -77,6 +114,14 @@ export const labs: LabDefinition[] = [
   },
   {
     id: 'queue-vs-pubsub',
+    provenance: {
+      kind: 'model',
+      basis:
+        'Illustrative formulas chosen to show the shape of the difference, not measurements: latency is ' +
+        'message_rate / consumers for the queue and 0.8x that for pub/sub, and delivery rates are ' +
+        '92 + 1.1 x consumers and 90 + 1.5 x subscribers. Those coefficients are picked, not derived from ' +
+        'a benchmark. Use this to reason about fan-out versus work-sharing semantics; do not quote the numbers.',
+    },
     title: 'Queue vs Pub/Sub Comparison',
     description: 'Interactive comparison between queue and pub-sub delivery patterns.',
     component: QueueVsPubSubPage,
@@ -85,6 +130,14 @@ export const labs: LabDefinition[] = [
   },
   {
     id: 'saga-state-machine',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'A real orchestrator-style saga state machine executing in your browser. Each step transitions, ' +
+        'awaits, and on the failure you select runs the compensating transactions for the steps that had ' +
+        'already committed — including the COMPENSATION_FAILED terminal state, which is the case that ' +
+        'actually matters in production. The transitions are the same ones described in the write-up.',
+    },
     title: 'Saga State Machine',
     description: 'Interactive visualization of the Saga distributed transaction pattern.',
     component: SagaStateMachinePage,
@@ -93,6 +146,13 @@ export const labs: LabDefinition[] = [
   },
   {
     id: 'event-sourcing-replay',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'A real left fold over an event log: the projection you see is computed by reducing the sample ' +
+        'events up to the version you scrub to, exactly as a projection rebuild does. The event set is a ' +
+        'small fixed sample so the fold is followable by eye; the fold itself is not faked.',
+    },
     title: 'Event Sourcing Replay',
     description: 'Interactive visualization of Event Sourcing and read projections.',
     component: EventSourcingReplayPage,
@@ -102,6 +162,18 @@ export const labs: LabDefinition[] = [
   },
   {
     id: 'redis-vs-bullmq',
+    provenance: {
+      kind: 'measured',
+      environment:
+        'AWS EC2 c6g.xlarge (4 vCPU), with Redis and the workers in the same VPC. Producer/consumer ' +
+        'on Go 1.22 using go-redis (XADD / XREADGROUP); BullMQ on Node.js 20 using the standard ' +
+        'Worker class.',
+      measuredOn: 'June 2026',
+      caveat:
+        'The harness that produced these numbers is not published, so this run cannot currently be ' +
+        'reproduced from the repository — read the figures as one measurement on one machine, not as ' +
+        'a general benchmark. Rewriting a runnable harness is tracked in .ai/content-roadmap.md.',
+    },
     title: 'Benchmark: Redis Streams vs BullMQ',
     description: 'Interactive benchmark visualizing queue throughput and latency.',
     component: RedisVsBullMQPage,
@@ -110,6 +182,18 @@ export const labs: LabDefinition[] = [
   },
   {
     id: 'go-vs-ts-concurrency',
+    provenance: {
+      kind: 'measured',
+      environment:
+        'N concurrent workers each performing a 50 ms mock network call. Go spawns one goroutine per ' +
+        'task under a sync.WaitGroup; Node.js uses Promise.all over the equivalent async functions. ' +
+        'Peak resident set size and total wall-clock time were recorded.',
+      measuredOn: 'June 2026',
+      caveat:
+        'Host hardware was not recorded at the time, and the harness is not published — so the ' +
+        'absolute memory and time figures are not reproducible and should not be quoted. The ' +
+        'order-of-magnitude gap in memory footprint is the durable finding here, not the exact MB.',
+    },
     title: 'Benchmark: Go vs TS Concurrency',
     description: 'Interactive benchmark visualizing memory and execution time for concurrent tasks.',
     component: GoVsTsConcurrencyPage,
@@ -119,6 +203,19 @@ export const labs: LabDefinition[] = [
   },
   {
     id: 'db-event-replay-benchmark',
+    provenance: {
+      kind: 'measured',
+      environment:
+        'PostgreSQL and Firestore each populated with 100,000 mock events, replayed by a Go ' +
+        'application running on GCP co-located with both datastores.',
+      measuredOn: 'June 2026',
+      caveat:
+        'The harness is not published, so this run cannot currently be reproduced from the ' +
+        'repository. The comparison is also structurally lopsided by design — a sequential range ' +
+        'read against 100k individual document reads — which is the point being made, but it is not ' +
+        'a like-for-like database benchmark. Rewriting a runnable harness is tracked in ' +
+        '.ai/content-roadmap.md.',
+    },
     title: 'Benchmark: DB Event Replay',
     description: 'Interactive benchmark visualizing event sourcing replay times across databases.',
     component: DbEventReplayBenchmarkPage,

@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import LabBackLink from '../../labs/LabBackLink';
+import ProvenanceNote from '../../labs/ProvenanceNote';
 import { useSeo } from '../../seo/useSeo';
 import { BarChart3, Info } from 'lucide-react';
 
@@ -38,10 +39,14 @@ function RedisVsBullMQPage() {
     <main className="mx-auto max-w-5xl px-4 py-10 md:px-6 animate-fade-in">
       <LabBackLink labId="redis-vs-bullmq" />
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Redis Streams (Go) vs BullMQ (Node.js)</h1>
-      <p className="mt-2 text-slate-600">A measured benchmark comparing raw queueing performance.</p>
+      <p className="mt-2 text-slate-600">
+        One measured run comparing raw queueing performance. Read the environment and limits below before quoting any of these numbers.
+      </p>
+
+      <ProvenanceNote labId="redis-vs-bullmq" />
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
           <div className="space-y-6">
             <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Parameters</h2>
 
@@ -54,7 +59,7 @@ function RedisVsBullMQPage() {
                     type="button"
                     aria-pressed={payloadSize === size}
                     onClick={() => setPayloadSize(size as '1KB' | '10KB' | '100KB')}
-                    className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-colors ${payloadSize === size ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}
+                    className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-colors ${payloadSize === size ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
                   >
                     {size}
                   </button>
@@ -71,7 +76,7 @@ function RedisVsBullMQPage() {
                     type="button"
                     aria-pressed={workers === w}
                     onClick={() => setWorkers(w as 1 | 5)}
-                    className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-colors ${workers === w ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}
+                    className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-colors ${workers === w ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
                   >
                     {w} Worker{w > 1 ? 's' : ''}
                   </button>
@@ -86,7 +91,7 @@ function RedisVsBullMQPage() {
           </div>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm flex flex-col">
+        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-8 shadow-sm flex flex-col">
           <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2">
             <BarChart3 className="w-4 h-4" /> Benchmark Results
           </h2>
@@ -99,19 +104,19 @@ function RedisVsBullMQPage() {
               <div className="flex items-end justify-center gap-6 h-64 border-b border-slate-200 pb-2 relative">
                 {/* Redis Bar */}
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-teal-600">{currentData.redisThroughput.toLocaleString()}</div>
+                  <div className="text-xs font-bold text-teal-700">{currentData.redisThroughput.toLocaleString()}</div>
                   <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.redisThroughput / maxThroughput) * 100}%` }} />
                   <div className="text-xs font-semibold text-slate-500 mt-2">Redis+Go</div>
                 </div>
                 
                 {/* BullMQ Bar */}
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-rose-500">{currentData.bullmqThroughput.toLocaleString()}</div>
+                  <div className="text-xs font-bold text-rose-700">{currentData.bullmqThroughput.toLocaleString()}</div>
                   <div className="w-full bg-rose-400 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.bullmqThroughput / maxThroughput) * 100}%` }} />
                   <div className="text-xs font-semibold text-slate-500 mt-2">BullMQ+TS</div>
                 </div>
               </div>
-              <p className="text-center text-xs text-slate-400 mt-4 font-mono">Higher is better &uarr;</p>
+              <p className="text-center text-xs text-slate-500 mt-4 font-mono">Higher is better &uarr;</p>
             </div>
 
             {/* Latency Chart */}
@@ -120,19 +125,19 @@ function RedisVsBullMQPage() {
               <div className="flex items-end justify-center gap-6 h-64 border-b border-slate-200 pb-2 relative">
                 {/* Redis Bar */}
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-teal-600">{currentData.redisLatency.toFixed(1)}ms</div>
+                  <div className="text-xs font-bold text-teal-700">{currentData.redisLatency.toFixed(1)}ms</div>
                   <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.redisLatency / maxLatency) * 100}%` }} />
                   <div className="text-xs font-semibold text-slate-500 mt-2">Redis+Go</div>
                 </div>
                 
                 {/* BullMQ Bar */}
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-rose-500">{currentData.bullmqLatency.toFixed(1)}ms</div>
+                  <div className="text-xs font-bold text-rose-700">{currentData.bullmqLatency.toFixed(1)}ms</div>
                   <div className="w-full bg-rose-400 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.bullmqLatency / maxLatency) * 100}%` }} />
                   <div className="text-xs font-semibold text-slate-500 mt-2">BullMQ+TS</div>
                 </div>
               </div>
-              <p className="text-center text-xs text-slate-400 mt-4 font-mono">Lower is better &darr;</p>
+              <p className="text-center text-xs text-slate-500 mt-4 font-mono">Lower is better &darr;</p>
             </div>
 
           </div>

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import LabBackLink from '../../labs/LabBackLink';
+import ProvenanceNote from '../../labs/ProvenanceNote';
 import { useSeo } from '../../seo/useSeo';
 
 function RetryStrategyVisualizerPage() {
@@ -33,13 +34,15 @@ function RetryStrategyVisualizerPage() {
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Retry Strategy Visualizer</h1>
       <p className="mt-2 text-slate-600">Visualize how different backoff algorithms distribute network retries over time.</p>
 
+      <ProvenanceNote labId="retry-strategy" />
+
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
           <div className="space-y-4">
             <label className="block text-sm font-semibold text-slate-700">
               <div className="flex justify-between">
                 <span>Max Attempts</span>
-                <span className="text-teal-600">{attempts}</span>
+                <span className="text-teal-700">{attempts}</span>
               </div>
               <input
                 type="range"
@@ -54,7 +57,7 @@ function RetryStrategyVisualizerPage() {
             <label className="block text-sm font-semibold text-slate-700 pt-2">
               <div className="flex justify-between">
                 <span>Base Delay</span>
-                <span className="text-teal-600">{baseDelay} ms</span>
+                <span className="text-teal-700">{baseDelay} ms</span>
               </div>
               <input
                 type="range"
@@ -74,7 +77,7 @@ function RetryStrategyVisualizerPage() {
                   type="button"
                   aria-pressed={strategy === 'exponential'}
                   className={`flex-1 rounded-lg px-3 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
-                    strategy === 'exponential' ? 'bg-teal-600 text-white shadow-md' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                    strategy === 'exponential' ? 'bg-accent text-accent-fg shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                   onClick={() => setStrategy('exponential')}
                 >
@@ -84,7 +87,7 @@ function RetryStrategyVisualizerPage() {
                   type="button"
                   aria-pressed={strategy === 'linear'}
                   className={`flex-1 rounded-lg px-3 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
-                    strategy === 'linear' ? 'bg-teal-600 text-white shadow-md' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                    strategy === 'linear' ? 'bg-accent text-accent-fg shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                   onClick={() => setStrategy('linear')}
                 >
@@ -113,13 +116,13 @@ function RetryStrategyVisualizerPage() {
           </div>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col">
+        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm flex flex-col">
           <div className="flex justify-between items-end mb-6">
             {/* Not a heading — it's a dynamic status readout, not a section title. */}
-            <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Time to abandon: <span className="text-slate-800 text-lg">{(maxTime / 1000).toFixed(2)}s</span></p>
+            <p className="text-xs font-bold uppercase tracking-widest text-slate-500">Time to abandon: <span className="text-slate-800 text-lg">{(maxTime / 1000).toFixed(2)}s</span></p>
             <button 
               onClick={() => setUseJitter(!useJitter)} 
-              className="text-xs font-semibold text-teal-600 bg-teal-50 px-3 py-1.5 rounded-md hover:bg-teal-100 transition-colors"
+              className="text-xs font-semibold text-teal-700 bg-teal-50 px-3 py-1.5 rounded-md hover:bg-teal-100 transition-colors"
             >
               Re-simulate Jitter
             </button>
@@ -146,7 +149,7 @@ function RetryStrategyVisualizerPage() {
               const xPos = 5 + (step.totalTime / maxTime) * 90;
               return (
                 <div key={idx} className="absolute top-[60%] -translate-x-1/2 flex flex-col items-center transition-all duration-300 ease-in-out" style={{ left: `${xPos}%` }}>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase">Try {step.attempt}</div>
+                  <div className="text-[10px] font-bold text-slate-500 uppercase">Try {step.attempt}</div>
                   <div className="text-[11px] font-mono text-teal-700 bg-teal-50 px-1.5 py-0.5 rounded border border-teal-100 mt-1 shadow-sm">
                     {Math.round(step.delay)}ms
                   </div>
@@ -154,7 +157,7 @@ function RetryStrategyVisualizerPage() {
               );
             })}
             
-            <div className="absolute top-[42%] left-[2%] text-[10px] font-bold uppercase tracking-widest text-slate-400">First Request</div>
+            <div className="absolute top-[42%] left-[2%] text-[10px] font-bold uppercase tracking-widest text-slate-500">First Request</div>
           </div>
         </section>
       </div>

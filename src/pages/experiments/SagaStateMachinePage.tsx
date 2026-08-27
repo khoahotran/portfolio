@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import LabBackLink from '../../labs/LabBackLink';
+import ProvenanceNote from '../../labs/ProvenanceNote';
 import { useSeo } from '../../seo/useSeo';
 import { CheckCircle2, XCircle, ArrowRight, RotateCcw, Square } from 'lucide-react';
 
@@ -82,7 +83,7 @@ function SagaStateMachinePage() {
       case 'failed': return <XCircle className="text-rose-500 w-6 h-6" />;
       case 'active': return <div className="w-5 h-5 rounded-full border-2 border-teal-500 border-t-transparent animate-spin" />;
       case 'compensating': return <RotateCcw className="text-amber-500 w-6 h-6 animate-reverse-spin" />;
-      case 'compensated': return <RotateCcw className="text-slate-400 w-6 h-6" />;
+      case 'compensated': return <RotateCcw className="text-slate-500 w-6 h-6" />;
       default: return <div className="w-3 h-3 rounded-full bg-slate-200" />;
     }
   };
@@ -95,20 +96,20 @@ function SagaStateMachinePage() {
         case 'failed': return 'border-rose-500 bg-rose-50 shadow-md';
         case 'compensating': return 'border-amber-500 bg-amber-50 shadow-md';
         case 'compensated': return 'border-slate-300 bg-slate-100 opacity-75';
-        default: return 'border-slate-200 bg-white opacity-60';
+        default: return 'border-slate-200 bg-surface opacity-60';
       }
     };
 
     return (
       <div className={`relative p-6 rounded-2xl border-2 transition-all duration-500 flex flex-col items-center text-center ${getStyles()}`}>
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-2 rounded-full border border-slate-200 shadow-sm flex items-center justify-center">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-surface px-2 rounded-full border border-slate-200 shadow-sm flex items-center justify-center">
           <StatusIcon status={status} />
         </div>
         <h3 className="font-bold text-slate-800 mt-2">{title}</h3>
         <p className="text-xs text-slate-500 mt-2">{desc}</p>
 
         {/* Status text badge */}
-        <div className="mt-4 text-[10px] uppercase font-bold tracking-widest px-2 py-1 rounded bg-white bg-opacity-60">
+        <div className="mt-4 text-[10px] uppercase font-bold tracking-widest px-2 py-1 rounded bg-white bg-opacity-60 text-panel">
           {status}
         </div>
       </div>
@@ -121,8 +122,10 @@ function SagaStateMachinePage() {
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Saga State Machine</h1>
       <p className="mt-2 text-slate-600">Visualize distributed transactions and automatic compensating rollbacks.</p>
 
+      <ProvenanceNote labId="saga-state-machine" />
+
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
           <div className="space-y-4">
             <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-4">Configuration</h2>
 
@@ -142,7 +145,7 @@ function SagaStateMachinePage() {
             {state.overall === 'running' ? (
               <button
                 onClick={stopSaga}
-                className="w-full mt-6 flex items-center justify-center gap-2 bg-rose-600 text-white font-bold py-3 rounded-xl shadow-md hover:bg-rose-700 transition-colors"
+                className="w-full mt-6 flex items-center justify-center gap-2 bg-danger text-danger-fg font-bold py-3 rounded-xl shadow-md hover:bg-rose-700 transition-colors"
               >
                 <Square size={16} fill="currentColor" aria-hidden="true" />
                 Stop
@@ -150,7 +153,7 @@ function SagaStateMachinePage() {
             ) : (
               <button
                 onClick={runSaga}
-                className="w-full mt-6 bg-slate-900 text-white font-bold py-3 rounded-xl shadow-md hover:bg-slate-800 transition-colors"
+                className="w-full mt-6 bg-inverse text-inverse-fg font-bold py-3 rounded-xl shadow-md hover:bg-inverse/90 transition-colors"
               >
                 Execute Transaction
               </button>
@@ -182,7 +185,7 @@ function SagaStateMachinePage() {
           </div>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm flex flex-col justify-center">
+        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-8 shadow-sm flex flex-col justify-center">
 
           {/* Three StepBoxes + connectors are ~526px at their natural width — narrower than
               some phones. overflow-x-auto contains that as a scroll instead of a page-level

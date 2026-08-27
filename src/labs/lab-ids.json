@@ -1,0 +1,11 @@
+[
+  "throughput-simulation",
+  "retry-strategy",
+  "failure-injection",
+  "queue-vs-pubsub",
+  "saga-state-machine",
+  "event-sourcing-replay",
+  "redis-vs-bullmq",
+  "go-vs-ts-concurrency",
+  "db-event-replay-benchmark"
+]
