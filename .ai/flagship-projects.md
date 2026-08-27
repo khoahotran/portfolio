@@ -1,6 +1,6 @@
 # Flagship Projects Catalog
 
-This document is the canonical reference for the "Big Three" flagship projects showcased in this portfolio. All future articles, benchmarks, and interactive labs should anchor back to these systems.
+This document is the canonical reference for the four flagship projects showcased in this portfolio. All future articles, benchmarks, and interactive labs should anchor back to these systems. (Named "Big Three" until PFM was added on 2026-08-27 — the phrase is retired but may still appear in older commit messages/comments.)
 
 ## 1. Aegis Auth Platform
 **Path:** `content/projects/aegis.md`
@@ -61,3 +61,33 @@ A low-latency research and ingestion platform for High-Frequency Trading (HFT) s
 ### Engineering Challenges
 - Python's GIL preventing true concurrency; solved by scaling workers horizontally via Redis Streams consumer groups.
 - Memory pressure in Go from tens of thousands of concurrent WebSocket connections.
+
+## 4. PFM (Personal Finance Manager)
+**Path:** `content/projects/pfm.md`
+
+### Summary
+A spec-driven, invite-only personal finance tracker. React 19 Server Actions are the only client
+the Go API accepts — the browser never calls it directly.
+
+### Architecture & Tech Stack
+- **Frontend:** React 19, Next.js App Router / Server Actions (via vinext, an experimental Vite-based
+  reimplementation — a named risk, not a hidden one).
+- **Backend:** Go, Gin, sqlc (no ORM).
+- **Database:** PostgreSQL (sole authoritative store, including invitation TTL).
+- **Cache/Queue:** Redis — exactly two uses: the Asynq email queue and the JWT logout denylist.
+
+### Key Features & Patterns
+- Hard client boundary: the browser never holds a credential the Go API accepts.
+- Package-by-Feature backend, one bounded context per module, enforced by import rules (AR-06).
+- Spec-driven development: SRS -> SDS -> constitution -> code, kept in lockstep as a documented policy.
+
+### Engineering Challenges
+- Financial correctness under concurrency (row-level locking, atomic balance + transaction writes,
+  currency locked on first transaction).
+- A backend originally organized by technical layer, explicitly re-architected to Package-by-Feature
+  mid-project once the layer-first layout made crossing a domain boundary too easy.
+
+### Honest Status
+MVP (21 user stories) complete and through a first post-MVP hardening pass. Work in progress on the
+first new post-MVP story (User Status management). CI does not yet run the Playwright E2E suite.
+Several specified stories (password reset, role management, invitation revocation) are spec-only.

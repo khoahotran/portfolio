@@ -31,3 +31,22 @@ This catalog documents the primary architectural patterns utilized and reference
 **Trade-offs:** Crucial for retry mechanisms. Requires a robust idempotency key store (usually Redis or PostgreSQL) and adds overhead to every mutating request.
 **Projects:** Core Banking.
 **Related Content:** `/system-design/system-design-notes-idempotency`.
+
+## Server Actions as a BFF Boundary
+**Description:** Every client-to-API mutation runs through a server-side Server Action rather than
+the browser calling the API directly. The Server Action reads the actor's session and forwards it as
+a bearer token — no credential the API accepts is ever shipped to the browser.
+**Trade-offs:** Removes an entire class of credential-leak and CSRF concern on the browser-to-API
+hop, since it becomes server-to-server. Costs an extra network hop per mutation and ties the pattern
+to a framework feature (Server Actions) still stabilizing across the ecosystem.
+**Projects:** PFM.
+**Related Content:** `/projects/pfm`.
+
+## Permission-Based Access Control (PBAC)
+**Description:** Roles map to granular permissions (e.g. `CREATE_USER`, `VIEW_WALLET`) rather than
+being checked by name in code. Authorization decisions read permission claims from a validated JWT,
+enforced exclusively in server-side middleware.
+**Trade-offs:** More setup than `if (role === 'admin')`, but a new role is a data change, not a code
+change, and the check can never accidentally live only on the frontend.
+**Projects:** PFM.
+**Related Content:** `/projects/pfm`, `/research/designing-a-permission-system`.

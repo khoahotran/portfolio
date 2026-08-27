@@ -35,8 +35,44 @@ content should be authored/linked.
       — every route but `/search` now fetches ~24 KB instead of ~252 KB.
 - [x] Merged two overlapping Redis Streams vs BullMQ articles into one.
 
-## 🟡 In Progress / Up Next (Phase 3)
-*These are the highest priority items for the next AI session.*
+## 🟡 In Progress (Phase 4 — Distribution, Provenance & Design System)
+See `.ai/decision-log.md` Decisions 6–7 for the two systemic changes in this phase.
+
+- [x] **Honest repositioning.** Removed the Staff/Principal framing from `.ai/` and the site copy;
+      added a "Career Stage" section to `.ai/portfolio-context.md` and a typed `ProjectProvenance`
+      badge to every project card. Rewrote the `/about` timeline, which claimed "Staff-Level
+      Thinking", mentoring that didn't happen, a "Mid-Level" phase, and "HFT matching engines"
+      (QuantAlpha has no matching engine).
+- [x] **Prerendering.** Every route now ships as real HTML at 200 with its own metadata. Fixed a
+      second, independent bug found on the way: nothing in `src/` referenced the 33 generated
+      `public/og/<slug>.png` files, so every article's `og:image` fell back to `og-default.png`.
+- [x] **Benchmark provenance.** All 9 labs now declare where their numbers come from
+      (`src/labs/provenance.ts`) and render it above their controls.
+- [ ] **Design tokens + dark mode.** `tailwind.config.js` has an empty `theme.extend` and there are
+      zero `dark:` classes despite the constitution listing dark mode as a thing not to break.
+- [x] **PFM as flagship #4.** `content/projects/pfm.md` written, registered in `portfolioData.ts`,
+      linked in `.ai/flagship-projects.md`, `.ai/architecture-catalog.md`, `.ai/knowledge-graph.md`,
+      and wired into the `/graph` diagram. The GitHub link (`github.com/khoahotran/PFM`) still 404s
+      as of this writing — the repo is private and is being made public separately. **Follow-up:**
+      verify the link resolves before considering this fully done.
+- [ ] **Custom domain.** `site.config.mjs` now centralises the site URL, so this is a small change
+      once a domain is bought.
+
+### Benchmark harnesses (follow-up from Phase 4)
+The three `measured` labs — `redis-vs-bullmq`, `go-vs-ts-concurrency`, `db-event-replay-benchmark` —
+render figures from real runs whose harnesses were not kept. Each lab and article now says so in its
+provenance/caveat rather than implying reproducibility. To close this properly, write a runnable
+harness under `benchmarks/<name>/`, commit its raw JSON output, and have the lab import that file
+instead of an inline `DATASET`, per the updated `.ai/prompts/benchmark-study.md`. Priority order:
+1. `redis-vs-bullmq` — the environment is fully documented (c6g.xlarge, same VPC, Go 1.22 / Node 20),
+   so this is the cheapest to reconstruct faithfully.
+2. `db-event-replay-benchmark` — environment documented; note the comparison is intentionally
+   lopsided and the harness should make that explicit rather than hide it.
+3. `go-vs-ts-concurrency` — host hardware was never recorded, so a rerun establishes a new baseline
+   rather than reproducing the old one. Re-measure and replace the figures.
+
+## 🟡 Up Next (deferred from Phase 3)
+*Content items, deliberately not started in Phase 4 — that phase was platform and credibility work.*
 
 1. **ADR: Tracing vs Metrics in Microservices**
    - **Type:** Research / ADR

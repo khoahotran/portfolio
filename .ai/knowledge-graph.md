@@ -15,12 +15,15 @@ from the UI. The filename stays `knowledge-graph.md`; other `.ai/` docs referenc
 - **Firestore** -> backs -> [Core Banking]
 - **Redis** -> accelerates -> [Aegis], [QuantAlpha]
 - **Kafka** -> decouples -> [Aegis]
+- **Redis** -> backs the Asynq queue and JWT denylist for -> [PFM]
 
 ### Patterns -> Projects
 - **Event Sourcing** -> implemented in -> [Core Banking]
 - **CQRS** -> implemented in -> [Core Banking], [Aegis]
 - **Saga Pattern** -> implemented in -> [Core Banking]
 - **Microservices** -> implemented in -> [Aegis]
+- **Server Actions as BFF** -> implemented in -> [PFM]
+- **PBAC** -> implemented in -> [PFM]
 
 ### Concepts -> Articles & Labs
 - **Event Sourcing** -> explained in -> `event-sourcing-vs-crud-when-to-choose-each.md`, `db-event-replay-benchmark.md`
