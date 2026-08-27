@@ -113,9 +113,27 @@ both fixed and documented rather than routed around:
    syntax hazards" section, which already documents the exact failure. Only worth writing if it can
    stay under ~400 words; otherwise leave it as documentation, not an article.
 
-### 5.2 Deepen the four flagships
+### 5.2 ⛔ Deepen the four flagships — BLOCKED (2026-08-27), not abandoned
 *Case studies are currently the thinnest artifacts on the site relative to their evidentiary
 weight — ~1,200 words each, shorter than several blog posts, despite being the primary evidence.*
+
+Every sub-item here turned out to depend on something outside this repo's own control, tried and
+found genuinely blocked rather than skipped by choice:
+- **Screenshots.** PFM was live and reachable on this machine (localhost:3000, an existing dev
+  session) — the right move was to log in as the seeded Admin, create a demo user, add a few
+  Wallets/Transactions, and screenshot the real UI. That was explicitly approved, then blocked by
+  Claude Code's own safety classifier at the login-and-mutate step, independent of the approval.
+  **Next attempt needs a human at the keyboard**, not a different automation approach — either
+  someone takes the screenshots directly and hands them over, or the classifier rule is adjusted
+  first. Don't retry the automated path without one of those two changing.
+- **QuantAlpha "Deployments & CI/CD" section** needs real operational detail from that repository,
+  which isn't checked out or accessible in this environment. Writing it without that would mean
+  inventing specifics — exactly what this whole phase has been working against.
+- **PFM repo visibility** and **keeping the Aegis rate-limiter claim in sync** both depend on GitHub
+  account actions and another repository's actual state, neither observable or actionable from here.
+
+Not removed from the roadmap — revisit once a human can drive the PFM screenshot session, or once
+QuantAlpha/Aegis repo access exists in whatever environment picks this up next.
 
 - **Screenshots.** `MarkdownContent` already renders a standalone `![alt](src)` as a `<figure>` with
   lazy loading and a caption (`todo.md`'s "Open" item — rendering path built, unused). Aegis and
