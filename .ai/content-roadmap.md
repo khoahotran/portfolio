@@ -80,10 +80,19 @@ Priority order across the four tracks: **5.1 → 5.8 → 5.5 → 5.2 → 5.6/5.7
 remaining credibility gap, 5.5 should land before more articles add more tags, and 5.3/5.4 are
 lowest-urgency because they don't depend on anything else being true first.
 
-### 5.1 Meta-posts from the Phase 4 evidence
+### 5.1 ✅ Meta-posts from the Phase 4 evidence — DONE (2026-08-27)
 *Do these first — the evidence already exists in this session's own commits and `.ai/decision-log.md`,
 so no new investigation is needed, only writing. Also closes the "Missing Content Gaps: Frontend
 Architecture" item that was open in every prior version of this roadmap.*
+
+All four pieces written, including the optional one. Two more real bugs surfaced writing them —
+both fixed and documented rather than routed around:
+- `scripts/prerender.mjs`'s origin-leak check false-positived on an article that mentions
+  "127.0.0.1" as a topic (Decision 11) — the check now matches the exact server origin, not a bare
+  substring.
+- A Markdown link wrapping inline code (`` [`text`](url) ``) measured 4.44:1 — the first time this
+  pattern appeared anywhere in the corpus. Fixed with a targeted `.markdown-body a code` rule
+  (`src/index.css`) rather than widening it into a global link-color change.
 
 1. **"The SPA Google Never Saw"** — `system-design` or `blog`.
    The prerendering story: cite the `curl -sI` evidence (51/52 sitemap URLs returning 404), walk

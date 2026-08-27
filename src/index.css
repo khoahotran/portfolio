@@ -346,6 +346,20 @@ body {
   text-underline-offset: 2px;
 }
 
+/*
+ * Linked inline code (e.g. a Markdown link wrapping a `code span`) sits on the inline-code
+ * background (--c-slate-200) instead of the page background, and inline code is 0.86em smaller —
+ * both drop it below the "large text" AA exemption. teal-700 measures 5.47:1 on the page background
+ * but only 4.44:1 on slate-200 at that smaller size, just under the 4.5:1 threshold. Caught by
+ * `npm run check:contrast` on the first article that ever used this pattern (see
+ * .ai/decision-log.md — the article in question is literally about measuring contrast).
+ * teal-800 clears it with real margin (6.15:1) without changing the far more common case of a
+ * plain link on the page background, which was already fine.
+ */
+.markdown-body a code {
+  color: rgb(var(--c-teal-800));
+}
+
 /* ── Back-navigation links (ArticleHeader, LabBackLink) ──────────────────
    Previously a bare inline `text-xs` link — a ~24px-tall tap target next to
    the site's main content, easy to miss or mis-tap on mobile (WCAG 2.5.5

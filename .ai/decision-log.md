@@ -160,3 +160,23 @@ Adding the glob fixed the background but exposed a second layer: `.markdown-body
 unmaintainable class string into one name per variant.
 **Consequences:** Class names used in Markdown are now live code. Renaming a utility used in an
 article will change what the article renders, and the contrast check is what catches it.
+
+## Decision 11: Origin Leak Check Matches the Exact Server Origin, Not "127.0.0.1"
+**Date:** 2026-08-27
+**Decision:** `scripts/prerender.mjs`'s post-rewrite safety check now asserts the snapshot doesn't
+contain the exact server origin string (`http://127.0.0.1:<port>`), not the bare substring
+`127.0.0.1`.
+**Rationale:** Found by the prerender build itself, on the article that explains this exact
+mechanism (`content/blog/2026-08-27-the-spa-google-never-saw.md`). That article's prose mentions
+"127.0.0.1" as a topic — describing what `window.location.origin` resolves to during prerendering —
+without that being a real leak; `rewriteOrigin()` had already correctly replaced every occurrence of
+the actual port-qualified origin. The old check (`html.includes('127.0.0.1')`) couldn't distinguish
+"this page discusses the string 127.0.0.1" from "this page leaked an unrewritten URL," and failed
+the build on the former.
+**Consequences:** A future article that mentions a raw IP, a port number, or any other string this
+tooling treats as a safety signal needs the same scrutiny — a build-time assertion is only as
+precise as what it actually compares, and "contains a suspicious substring" is weaker than "contains
+the exact value that would indicate the real failure." This is now documented as its own field note
+([A Diagram That Wouldn't Render](/field-notes/a-diagram-that-wouldnt-render) covers a sibling case —
+Mermaid's HTML-entity parsing bug), and the pattern generalizes: prefer asserting against a known
+exact value over a substring guess whenever one is available.

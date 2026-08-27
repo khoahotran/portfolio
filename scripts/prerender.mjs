@@ -250,7 +250,13 @@ async function renderRoute(page, serverOrigin, route) {
     const serialized = await page.evaluate(() => document.documentElement.outerHTML);
     const html = rewriteOrigin(`<!doctype html>\n${serialized}`, serverOrigin);
 
-    if (html.includes('127.0.0.1')) throw new Error('snapshot still contains a localhost URL after rewrite');
+    // Checks for the exact server origin (scheme + IP + port), not the bare "127.0.0.1" substring —
+    // an article can legitimately mention that IP in its own prose (see
+    // content/blog/2026-08-27-the-spa-google-never-saw.md, which explains this very mechanism) without
+    // that being a real leak. Only the literal, port-qualified origin the rewrite operates on proves one.
+    if (html.includes(serverOrigin)) {
+      throw new Error(`snapshot still contains the local server origin (${serverOrigin}) after rewrite`);
+    }
     if (/<html[^>]*\bclass="[^"]*\bdark\b/.test(html)) {
       throw new Error('snapshot baked in the dark theme — see the colorScheme note above');
     }
