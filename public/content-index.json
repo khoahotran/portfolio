@@ -501,8 +501,8 @@
       "blog/grpc-service-mesh-in-go-aegis-architecture",
       "field-notes/go-vs-typescript-for-backend-services"
     ],
-    "readingMinutes": 1,
-    "readingText": "1 min read"
+    "readingMinutes": 2,
+    "readingText": "2 min read"
   },
   {
     "title": "Event-Driven Core Banking System",
