@@ -1,6 +1,17 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
+import { siteDescription, siteTitle, siteUrl } from '../site.config.mjs';
+import { collections, staticRoutes } from './lib/site-routes.mjs';
+import {
+  escapeXml,
+  estimateReading,
+  parseFrontmatterBlock,
+  parseScalar,
+  slugify,
+  splitFrontmatter,
+  stripSearchNoise,
+} from './lib/content.mjs';
 
 const rootDir = process.cwd();
 const contentDir = path.join(rootDir, 'content');
@@ -17,163 +28,9 @@ const jsonFeedPath = path.join(publicDir, 'feed.json');
 const feedsDir = path.join(publicDir, 'feeds');
 const ogDir = path.join(publicDir, 'og');
 
-const siteUrl = 'https://khoahotran.github.io/portfolio';
-const siteTitle = 'Khoa Tran Engineering Portfolio';
-const siteDescription = 'Case studies, system design notes, and interactive engineering experiments.';
-const collections = ['blog', 'research', 'experiments', 'system-design', 'field-notes', 'projects'];
-
-// Kept in sync manually with src/labs/registry.ts (a plain Node script can't import
-// TSX without an extra loader, and this list rarely changes).
-const labIds = [
-  'throughput-simulation',
-  'retry-strategy',
-  'failure-injection',
-  'queue-vs-pubsub',
-  'saga-state-machine',
-  'event-sourcing-replay',
-  'redis-vs-bullmq',
-  'go-vs-ts-concurrency',
-  'db-event-replay-benchmark',
-];
-
-const staticRoutes = [
-  '/',
-  '/about',
-  '/graph',
-  '/blog',
-  '/research',
-  '/experiments',
-  '/system-design',
-  '/field-notes',
-  '/projects',
-  '/labs',
-  ...labIds.map((id) => `/labs/${id}`),
-];
-
-function slugify(value) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-}
-
-function escapeXml(value) {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
-}
-
-function parseScalar(raw) {
-  const cleaned = raw.trim().replace(/^"|"$/g, '').replace(/^'|'$/g, '');
-  if (cleaned === 'true') {
-    return true;
-  }
-
-  if (cleaned === 'false') {
-    return false;
-  }
-
-  return cleaned;
-}
-
-function parseFrontmatterBlock(block) {
-  const parsed = {};
-
-  block
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line && !line.startsWith('#'))
-    .forEach((line) => {
-      const separatorIndex = line.indexOf(':');
-      if (separatorIndex === -1) {
-        return;
-      }
-
-      const key = line.slice(0, separatorIndex).trim();
-      const value = line.slice(separatorIndex + 1).trim();
-
-      if (value.startsWith('[') && value.endsWith(']')) {
-        parsed[key] = value
-          .slice(1, -1)
-          .split(',')
-          .map((item) => parseScalar(item))
-          .map(String)
-          .map((item) => item.trim())
-          .filter(Boolean);
-        return;
-      }
-
-      parsed[key] = parseScalar(value);
-    });
-
-  return parsed;
-}
-
-function splitFrontmatter(raw) {
-  if (!raw.startsWith('---')) {
-    return { data: {}, body: raw };
-  }
-
-  const match = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
-  if (!match) {
-    return { data: {}, body: raw };
-  }
-
-  return {
-    data: parseFrontmatterBlock(match[1]),
-    body: match[2],
-  };
-}
-
-function stripSearchNoise(body) {
-  return body
-    .replace(/```[\s\S]*?```/g, ' ') // fenced code blocks, incl. Mermaid source
-    .replace(/`[^`]*`/g, ' ') // inline code
-    .replace(/<[^>]+>/g, ' ') // raw HTML (CTA buttons, etc.)
-    .replace(/^\s*\|.*$/gm, ' ') // table rows
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-// Reading time is derived from the article, not from the hand-written
-// `reading_time` frontmatter (kept in the files as authorial intent, but no
-// longer read for display — see .ai/audit-followups.md item 1). Prose reads
-// at 220 wpm; a code block adds ~20s (skimming, not executing); a Mermaid
-// diagram adds ~30s (reading the shape). Measured across the corpus: this
-// produces ~107 total minutes vs. 305 declared and 72 for prose-only, which
-// better reflects that a diagram-heavy or code-heavy article genuinely takes
-// longer to read than its prose word count alone implies.
-function estimateReading(body) {
-  let codeBlocks = 0;
-  let mermaidBlocks = 0;
-
-  const prose = body
-    .replace(/```(\w*)\n[\s\S]*?```/g, (_match, lang) => {
-      if (lang.trim().toLowerCase() === 'mermaid') {
-        mermaidBlocks += 1;
-      } else {
-        codeBlocks += 1;
-      }
-      return ' ';
-    })
-    .replace(/`[^`]*`/g, ' ') // inline code
-    .replace(/<[^>]+>/g, ' ') // raw HTML (CTA buttons, etc.)
-    .replace(/^\s*\|.*$/gm, ' ') // table rows
-    .replace(/\$\$[\s\S]*?\$\$/g, ' ') // block LaTeX
-    .replace(/\$[^$\n]+\$/g, ' ') // inline LaTeX
-    .replace(/^#{1,6}\s+/gm, '') // heading markers (keep the heading text)
-    .replace(/[*_>[\]()#-]/g, ' '); // remaining markdown punctuation
-
-  const proseWords = prose.trim().split(/\s+/).filter(Boolean).length;
-  const minutes = Math.max(1, Math.round(proseWords / 220 + codeBlocks * (20 / 60) + mermaidBlocks * (30 / 60)));
-
-  return { readingMinutes: minutes, readingText: `${minutes} min read` };
-}
+// siteUrl/siteTitle/siteDescription come from site.config.mjs, and the collection + lab-id +
+// static-route lists from scripts/lib/site-routes.mjs, so this script no longer keeps its own
+// copy of either. See the header comments in those two files.
 
 // Word-wraps into at most `maxLines` lines of roughly `maxCharsPerLine` characters,
 // ellipsizing the last line if there's more text than fits. Previously the title
@@ -339,7 +196,6 @@ async function buildAssets() {
         date: String(data.date ?? new Date().toISOString().slice(0, 10)),
         tags,
         summary,
-        reading_time: data.reading_time ? String(data.reading_time) : undefined,
         draft: Boolean(data.draft),
         slug,
         collection,

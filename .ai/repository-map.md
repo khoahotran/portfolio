@@ -31,11 +31,29 @@ A high-level map of the portfolio's architecture and ownership.
 - `/data/`: Static configuration (e.g., `portfolioData.ts`).
 - `/seo/`: Hooks and utilities for metadata and web vitals.
 
+### `/site.config.mjs`
+**Purpose:** The site's public identity — origin, base path, title, description — in one place.
+Previously `siteUrl` was hardcoded in four unrelated files. Every Node-side build script reads it
+from here. `basePath` must stay in sync with `base` in `vite.config.ts`; see `.ai/decision-log.md`
+Decision 7.
+
 ### `/scripts/`
 **Purpose:** Build and deployment automation.
+- `lib/site-routes.mjs`: Single source for the collection list, the nine lab ids (read from
+  `src/labs/lab-ids.json`), the static route list, and the article routes read from the generated
+  index. Shared by all three scripts below.
 - `build-search-index.mjs`: Parses all Markdown in `/content/`, generates `content-index.json` and `search-index.json`, builds the RSS/JSON feeds, creates OpenGraph SVG assets (pruning any left over from a renamed/deleted content file), and generates the `sitemap.xml`.
+- `prerender.mjs`: Runs after `vite build`. Serializes every route to `dist/<route>.html` so
+  crawlers and social cards see real per-page metadata instead of the SPA shell. Fails the build on
+  a route missing its own title/canonical/`og:image`. See `.ai/decision-log.md` Decision 6.
+- `check-responsive.mjs`: Browser regression check — overflow, console/page errors, and mermaid
+  rendering across every route and 7 viewport widths.
 
 ### `/public/`
 **Purpose:** Static and dynamically generated assets served at the root.
-- `404.html`: GitHub Pages has no server-side rewrites, so this implements the standard SPA-fallback redirect (encode the path as `?redirect=`, decode it in `index.html` via `history.replaceState` before React Router mounts) so a hard refresh or shared deep link resolves instead of 404ing.
+- `404.html`: **Overwritten in a full build** by `scripts/prerender.mjs` with a real prerendered
+  "Page not found" page, since every real route now ships as its own HTML file. The committed copy
+  is the SPA-fallback redirect (encode the path as `?redirect=`, decode it in `index.html` via
+  `history.replaceState` before React Router mounts), kept as the fallback for a bare `vite build`
+  and for `?redirect=` links shared from the pre-prerender deployment.
 - **NOTE:** The generated files (`content-index.json`, `search-index.json`, `og/`, `feeds/`, `sitemap.xml`) are tracked in git via dedicated `chore(build)` commits. Feature commits should exclude them.

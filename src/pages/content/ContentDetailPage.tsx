@@ -42,6 +42,18 @@ function ContentDetailPage({ collection }: Props) {
   const [error, setError] = useState(false);
   const [retryToken, setRetryToken] = useState(0);
 
+  /**
+   * The article's social-preview image.
+   *
+   * build-search-index.mjs generates a per-article `public/og/<slug>.png` for all 33 articles
+   * and the JSON feed already links them as `<siteUrl>/og/<slug>.png` — but nothing in the app
+   * did. `detail.ogImage` is the optional frontmatter override, and no content file sets it, so
+   * every article was falling through `resolveImageUrl(undefined)` to the generic
+   * og-default.png. content/README.md documents `ogImage:` as overriding "the auto-generated
+   * /og/<slug>.png", which is the behaviour implemented here.
+   */
+  const ogImagePath = detail ? (detail.ogImage ?? `/og/${detail.slug}.png`) : undefined;
+
   const jsonLd = useMemo(() => {
     if (!detail) {
       return undefined;
@@ -60,7 +72,7 @@ function ContentDetailPage({ collection }: Props) {
       description: detail.summary,
       keywords: detail.tags.join(', '),
       articleSection: detail.collection,
-      image: resolveImageUrl(detail.ogImage),
+      image: resolveImageUrl(detail.ogImage ?? `/og/${detail.slug}.png`),
       url,
       mainEntityOfPage: {
         '@type': 'WebPage',
@@ -81,7 +93,7 @@ function ContentDetailPage({ collection }: Props) {
     title: detail?.title ?? 'Article',
     description: detail?.summary ?? 'Technical article',
     type: 'article',
-    image: detail?.ogImage,
+    image: ogImagePath,
     jsonLd,
     // See the comment on SeoOptions.skip — without this, every article's
     // first paint briefly carries this generic title/description as real

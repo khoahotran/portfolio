@@ -22,14 +22,23 @@ jobs:
 
       - run: npm run lint
 
-      # npm run build already runs build:search-index first (see package.json).
-      - run: npm run build
+      # Pure-logic unit tests: lab registry / lab-ids.json parity, slugify parity between the app
+      # and the build script, and the frontmatter + reading-time helpers. Runs before the build
+      # because a slugify divergence would otherwise produce a green build full of unreachable
+      # articles. See src/content-engine/slugify.test.ts for why that one matters most.
+      - run: npm test
 
-      # Chromium only — the regression check doesn't need Firefox/WebKit for
-      # every push. Resolved from the `playwright` devDependency already in
-      # package.json, not installed ad hoc.
+      # Chromium only — neither the prerender pass nor the regression check needs
+      # Firefox/WebKit. Resolved from the `playwright` devDependency already in
+      # package.json, not installed ad hoc. Must come BEFORE the build: `npm run build`
+      # now ends with `npm run prerender`, which drives headless Chromium.
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
+
+      # build:search-index -> vite build -> prerender (see package.json). The prerender
+      # step fails the build if any route ships without its own title/canonical/og:image,
+      # which is the regression it exists to prevent.
+      - run: npm run build
 
       - name: Start preview server
         run: npx vite preview --port 4173 --strictPort &
@@ -49,3 +58,10 @@ jobs:
       # regressing as new components are added.
       - name: Responsive regression check
         run: npm run check:responsive
+
+      # WCAG AA contrast across every route in BOTH themes. This is what makes the dark theme
+      # verifiable rather than asserted, and it closes .ai/audit-followups.md item 2 with a
+      # measurement instead of an opinion — the whole point of that item was that nobody had
+      # measured which `text-slate-400` uses actually failed.
+      - name: Contrast check
+        run: npm run check:contrast

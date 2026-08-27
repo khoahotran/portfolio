@@ -18,7 +18,13 @@
   - `public/feeds/*.xml` and `public/feeds/*.json` by collection
   - `public/og/*.png` (social preview images, rasterized at build time) and `public/og/*.svg` (the rasterization source, kept alongside)
   - Fails the build if any article's `related:` frontmatter references a slug that doesn't exist
-- `npm run build`: run index generation, then Vite build
+- `npm run prerender`: after `vite build`, loads every route in headless Chromium and writes the
+  rendered DOM to `dist/<route>.html`, so each page ships with its own `<title>`, description,
+  canonical, `og:image` and JSON-LD instead of the shell defaults. Also emits a real prerendered
+  `dist/404.html` and static redirect documents for the legacy `/experiments/<labId>` paths.
+  Fails the build if any route is missing its own metadata. Requires Chromium
+  (`npx playwright install chromium`). See `.ai/decision-log.md` Decision 6.
+- `npm run build`: index generation, then Vite build, then prerender
 - `npm run predeploy` (runs before `npm run deploy`): typecheck, then lint, then build — a type or lint error blocks deploy
 
 ## Content structure

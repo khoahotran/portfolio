@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getContentCounts } from '../content-engine/content-service';
 import { labs } from '../labs/registry';
+import { contactData, educationData, heroData } from '../data/portfolioData';
 import { useSeo } from '../seo/useSeo';
 import Hero from '../components/Hero';
 import About from '../components/About';
 import Experience from '../components/Experience';
+import Metrics from '../components/Metrics';
 import Projects from '../components/Projects';
 import Skills from '../components/Skills';
 import Education from '../components/Education';
@@ -13,6 +15,50 @@ import Certifications from '../components/Certifications';
 import Contact from '../components/Contact';
 
 function PortfolioHome() {
+  /**
+   * Person structured data for the homepage. Articles have carried JSON-LD since
+   * ContentDetailPage was split out, but the homepage — the page that actually identifies
+   * who this is — had none, so search engines had no structured link between the name, the
+   * profiles, and the site.
+   *
+   * `jobTitle` is the real title, not an aspirational one: see `.ai/portfolio-context.md`
+   * "Career Stage". Structured data is the last place to inflate a claim, since it is machine-read
+   * and trivially compared against LinkedIn.
+   */
+  const jsonLd = useMemo(
+    () => ({
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: heroData.name,
+      alternateName: 'Khoa Tran',
+      jobTitle: 'Software Developer',
+      description: heroData.tagline,
+      url: `${window.location.origin}${import.meta.env.BASE_URL}`,
+      email: `mailto:${contactData.email}`,
+      sameAs: [heroData.github, heroData.linkedin],
+      knowsAbout: [
+        'Distributed Systems',
+        'Event Sourcing',
+        'CQRS',
+        'Saga Pattern',
+        'Go',
+        'TypeScript',
+        'PostgreSQL',
+        'gRPC',
+      ],
+      alumniOf: {
+        '@type': 'CollegeOrUniversity',
+        name: educationData.items[0].institution,
+      },
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Ho Chi Minh City',
+        addressCountry: 'VN',
+      },
+    }),
+    []
+  );
+
   useSeo({
     // "Portfolio" is dropped here — useSeo's site-suffix already appends
     // " | Khoa Tran Engineering Portfolio", so the un-trimmed version rendered
@@ -20,6 +66,7 @@ function PortfolioHome() {
     title: 'Trần Nguyễn Anh Khoa - Software Engineer',
     description:
       'Backend systems developer portfolio, featuring architecture case studies, event-driven banking systems, and technical experiments.',
+    jsonLd,
   });
 
   // Article/project counts are fetched (not hardcoded) so they can't drift out
@@ -65,7 +112,7 @@ function PortfolioHome() {
       <section id="engineering-lab" className="py-24 px-6 bg-slate-50 border-t border-slate-100">
         <div className="max-w-5xl mx-auto text-center font-light">
           {/* Decorative kicker, not a heading — see the matching note in About.tsx. */}
-          <p className="text-sm uppercase tracking-widest text-teal-600 mb-6 font-medium italic">
+          <p className="text-sm uppercase tracking-widest text-teal-700 mb-6 font-medium italic">
             / Engineering Lab
           </p>
           <h2 className="text-4xl md:text-5xl text-slate-900 font-bold mb-8">
@@ -93,37 +140,37 @@ function PortfolioHome() {
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               to="/blog"
-              className="px-8 py-3 rounded-full bg-slate-900 text-white font-semibold shadow-lg shadow-slate-200 hover:bg-slate-800 transition-all hover:-translate-y-0.5"
+              className="px-8 py-3 rounded-full bg-inverse text-inverse-fg font-semibold shadow-lg shadow-slate-200 hover:bg-inverse/90 transition-all hover:-translate-y-0.5"
             >
               Blog
             </Link>
             <Link
               to="/projects"
-              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-600 transition-colors"
+              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-700 transition-colors"
             >
               Projects
             </Link>
             <Link
               to="/research"
-              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-600 transition-colors"
+              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-700 transition-colors"
             >
               Research
             </Link>
             <Link
               to="/experiments"
-              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-600 transition-colors"
+              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-700 transition-colors"
             >
               Experiments
             </Link>
             <Link
               to="/labs"
-              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-600 transition-colors"
+              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-700 transition-colors"
             >
               Labs
             </Link>
             <Link
               to="/system-design"
-              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-600 transition-colors"
+              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-700 transition-colors"
             >
               System Design
             </Link>
@@ -133,6 +180,12 @@ function PortfolioHome() {
 
       <About />
       <Experience />
+
+      {/* Was dead code (see todo.md's "Dead code — decision needed"). Wired in rather than deleted
+          because metricsData attributes every number to the system it was measured on — which is
+          exactly the evidence the repositioning in .ai/portfolio-context.md asks the site to lead
+          with. Placed next to Experience, which describes the work these numbers came from. */}
+      <Metrics />
 
       {/* Personal Projects + University — same card component and data as
           before, just no longer sharing a <section> with Flagship. Header
