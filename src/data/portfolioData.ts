@@ -27,11 +27,17 @@ export const heroData = {
 
 export const aboutData = {
   title: 'About Me',
-  headline: 'Systems that scale. Code that ships. Architecture that lasts.',
+  headline: 'Every claim on this site links to the reasoning behind it.',
+  // paragraph2 splits shipped-at-work from built-solo on purpose. Previously it
+  // read "production backend services at scale, Go microservices with gRPC and
+  // Kafka, event-sourced financial systems..." as one list, which let a reader
+  // assume the gRPC/event-sourcing work also shipped to production users. It
+  // didn't — those are self-directed projects, and the cards say so via
+  // `provenance`. See `.ai/portfolio-context.md` "Provenance Is Mandatory".
   paragraph1:
-    "I'm a Backend Engineer focused on building distributed systems, event-driven architectures, and high-performance services using Go and TypeScript. I care about correctness, observability, and operational simplicity.",
+    "I'm a backend engineer focused on distributed systems, event-driven architectures, and high-performance services using Go and TypeScript. I care about correctness, observability, and operational simplicity.",
   paragraph2:
-    'My work spans production backend services at scale, Go microservices with gRPC and Kafka, event-sourced financial systems, and ML-driven research platforms — all grounded in real system-design trade-offs.',
+    'At work I ship production backend services on NestJS and Firebase, handling transaction consistency, caching, and geo-search. On my own time I build the harder architecture end to end — Go microservices on gRPC and Kafka, an event-sourced ledger with Saga transfers — and write up the trade-offs I had to accept.',
   values: [
     'Modular, scalable backend services.',
     'Fast, reliable APIs with caching and search.',
@@ -64,9 +70,23 @@ export const experienceData = [
   },
 ];
 
+/**
+ * Where a project actually came from. Rendered as a badge on every project card
+ * so a reader never has to infer whether something shipped to real users, was
+ * built solo, or was coursework — guessing wrong is what costs credibility.
+ * See `.ai/portfolio-context.md` "Provenance Is Mandatory".
+ *
+ * This is deliberately a closed union rather than a free string: `scale` used to
+ * carry provenance ("Independent Engineering Project") mixed with actual scale
+ * ("Team of 5", "Daily quest load ~500-1,500 users/min"), so neither was
+ * reliable. `scale` now means scale only.
+ */
+export type ProjectProvenance = 'professional' | 'self-directed' | 'academic' | 'coursework';
+
 export interface Project {
   title: string;
   role: string;
+  provenance: ProjectProvenance;
   scale: string;
   section: string;
   summary: string;
@@ -86,7 +106,8 @@ export const caseStudiesData: Project[] = [
   {
     title: 'SeensioGO',
     role: 'Full-stack Developer',
-    scale: 'Mobile + Admin dashboard',
+    provenance: 'professional',
+    scale: 'Mobile client + admin dashboard',
     section: 'experience',
     summary:
       'Backend services for store management and Sio in-app currency transactions; supports Unity-based mobile client and admin web.',
@@ -105,7 +126,8 @@ export const caseStudiesData: Project[] = [
   {
     title: 'Jujuja',
     role: 'Full-stack Developer',
-    scale: 'Daily quest load ~500-1,500 users/min',
+    provenance: 'professional',
+    scale: '~500-1,500 users/min at quest peak',
     section: 'experience',
     summary:
       'Store onboarding workflows, daily quest automation, and j-point loyalty system with atomic transactions; Angular/Ionic client.',
@@ -130,7 +152,8 @@ export const caseStudiesData: Project[] = [
     title: 'Aegis',
     slug: 'aegis',
     role: 'Author — Backend Engineer',
-    scale: 'Independent Engineering Project',
+    provenance: 'self-directed',
+    scale: 'Solo build — 4 Go services',
     section: 'flagship',
     summary:
       'Modular, high-performance Auth & Authorization platform in Go. Separate Identity, Policy, and Gateway microservices connected via gRPC, with a GraphQL API gateway, Kafka-based audit logging, and OpenTelemetry tracing.',
@@ -156,7 +179,8 @@ export const caseStudiesData: Project[] = [
     title: 'Event-Driven Core Banking',
     slug: 'core-banking',
     role: 'Author — Backend Engineer',
-    scale: 'Independent Engineering Project',
+    provenance: 'self-directed',
+    scale: 'Solo build — Go + Firestore',
     section: 'flagship',
     summary:
       'Core banking system in Go using Event Sourcing and CQRS on Firestore. Includes distributed Saga transfers, real-time fraud detection with velocity rules, Prometheus metrics, and snapshotting every 100 events.',
@@ -179,10 +203,37 @@ export const caseStudiesData: Project[] = [
     },
   },
   {
+    title: 'PFM — Personal Finance Manager',
+    slug: 'pfm',
+    role: 'Author — Full-stack Engineer',
+    provenance: 'self-directed',
+    scale: 'Solo build — Go + React 19, spec-driven',
+    section: 'flagship',
+    summary:
+      'An invite-only personal finance tracker built spec-first: every business rule traces from an SRS to an SDS to a passing integration test. React 19 Server Actions are the only client the Go API accepts — the browser never calls it directly.',
+    metrics: [
+      'Invite-only — no open registration',
+      '212 backend integration tests (Testcontainers)',
+      'Atomic wallet balance + transaction writes',
+      'PBAC via JWT claims, enforced server-side only',
+    ],
+    stack: ['Go', 'Gin', 'React 19', 'Next.js (vinext)', 'PostgreSQL', 'Redis', 'Asynq', 'sqlc'],
+    architecture: [
+      'Server Actions are the only client the Go API accepts — no token ever reaches the browser.',
+      'Package-by-Feature backend: one bounded context per module, enforced by import rules.',
+      'Redis backs exactly two things: the Asynq email queue and the JWT logout denylist.',
+      'Wallet balance and transaction writes are atomic; currency locks on first transaction.',
+    ],
+    links: {
+      github: 'https://github.com/khoahotran/PFM',
+    },
+  },
+  {
     title: 'QuantAlpha Lab (HFT)',
     slug: 'quant-alpha',
     role: 'Contributor — Backend + ML',
-    scale: 'Academic Research Platform',
+    provenance: 'academic',
+    scale: 'University research platform',
     section: 'flagship',
     summary:
       'High-Frequency Trading research platform with decoupled Go API, Angular 18 frontend, and async Python worker backed by Redis Streams and PostgreSQL. Models trained on VN30F2112 Level-3 order-book data with rolling-window ML classifiers.',
@@ -205,7 +256,8 @@ export const caseStudiesData: Project[] = [
   {
     title: 'ScrapeAndDown',
     role: 'Author — Backend Engineer',
-    scale: 'Personal Project',
+    provenance: 'self-directed',
+    scale: 'Solo CLI tool',
     section: 'personal',
     summary:
       'Production-quality Go CLI tool for scraping YouTube metadata and downloading video files. Hexagonal architecture with Apify adapter for metadata and yt-dlp for video extraction. Job-based with UUIDs, graceful shutdown, and clean port/adapter separation.',
@@ -230,7 +282,8 @@ export const caseStudiesData: Project[] = [
   {
     title: 'Uynex',
     role: 'Full-stack Developer',
-    scale: 'Personal Project',
+    provenance: 'coursework',
+    scale: 'Team project',
     section: 'university',
     summary:
       'Personal expense management app with real-time tracking and cookie-based session security. Built with a modular NestJS architecture.',
@@ -246,7 +299,8 @@ export const caseStudiesData: Project[] = [
   {
     title: 'Smart Printing Service',
     role: 'Front-end Developer',
-    scale: 'Campus-wide Platform',
+    provenance: 'coursework',
+    scale: 'Team of 7',
     section: 'university',
     summary:
       'Printing management system for HCMUT students featuring PayOS integration and strict role-based access control.',
@@ -262,6 +316,7 @@ export const caseStudiesData: Project[] = [
   {
     title: 'Tesell',
     role: 'Front-end Developer',
+    provenance: 'coursework',
     scale: 'Team of 5',
     section: 'university',
     summary:
@@ -335,44 +390,6 @@ export const educationData = {
   ],
 };
 
-export const architectureData = [
-  {
-    title: 'Aegis — Auth Platform',
-    description:
-      'Identity + Policy + Gateway microservices in Go. gRPC inter-service, GraphQL external API, Kafka audit log, OTel tracing.',
-    mode: 'Microservices + Event-driven',
-    link: 'https://github.com/khoahotran/aegis',
-  },
-  {
-    title: 'Event-Driven Core Banking',
-    description:
-      'Event sourcing + CQRS on Firestore. Saga pattern for distributed transfers. Real-time fraud detection with Prometheus metrics.',
-    mode: 'Event Sourcing + CQRS',
-    link: 'https://github.com/khoahotran/event-driven-core-banking',
-  },
-  {
-    title: 'SeensioGO',
-    description:
-      'NestJS services on Firebase Functions; Firestore + Algolia geo-search; caching layer; audit logging for transactions.',
-    mode: 'Backend + search',
-    link: 'https://apps.apple.com/app/seensiogo/id6474233078',
-  },
-  {
-    title: 'Jujuja',
-    description:
-      'NestJS/Firebase backend with async quest jobs, Algolia for store discovery, Twilio integration; Angular/Ionic client.',
-    mode: 'Async jobs + mobile',
-    link: 'https://apps.apple.com/app/jujuja/id6553972212',
-  },
-  {
-    title: 'QuantAlpha Lab (HFT)',
-    description:
-      'Go API + Angular frontend + Python async worker on Redis Streams. ML classifiers trained on VN30F2112 order-book data.',
-    mode: 'ML + Async pipeline',
-    link: 'https://github.com/khoahotran/hft',
-  },
-];
-
 export const metricsData = [
   { label: 'Store lookup latency', value: '150 - 300 ms', detail: 'SeensioGO (Algolia geo-search)' },
   { label: 'Consistency errors', value: '< 1%', detail: 'SeensioGO transactions' },
@@ -398,76 +415,5 @@ export const certificationsData = [
     name: 'TOEIC Listening & Reading',
     issuer: 'ETS',
     date: 'Score: 730/990',
-  },
-];
-
-export const credibilityData = {
-  oss: [
-    {
-      name: 'event-driven-core-banking',
-      stars: null,
-      role: 'Author',
-      focus: 'Event sourcing + CQRS core banking in Go with Firestore, Sagas, and Prometheus',
-      link: 'https://github.com/khoahotran/event-driven-core-banking',
-    },
-    {
-      name: 'aegis',
-      stars: null,
-      role: 'Author',
-      focus: 'Auth platform: gRPC microservices, GraphQL gateway, Kafka audit log, OTel tracing',
-      link: 'https://github.com/khoahotran/aegis',
-    },
-    {
-      name: 'ScrapeAndDown',
-      stars: null,
-      role: 'Author',
-      focus: 'Go CLI tool with hexagonal architecture for YouTube scraping and downloading',
-      link: 'https://github.com/khoahotran/ScrapeAndDown',
-    },
-  ],
-  writing: [
-    {
-      title: 'Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System',
-      time: '10 min',
-      takeaway: 'How queue-driven workers handle 1,500 concurrent users and why synchronous handlers fail under burst.',
-      route: '/system-design/designing-a-burst-traffic-async-job-pipeline',
-    },
-    {
-      title: 'Atomic Financial Transactions in a NoSQL World: The J-Point Loyalty Engine',
-      time: '8 min',
-      takeaway: 'Building <1% error-rate virtual currency on Firestore with atomic transactions and balance reconciliation.',
-      route: '/system-design/atomic-financial-transactions-in-nosql',
-    },
-    {
-      title: 'gRPC Service Mesh in Go: Designing the Aegis Auth Platform',
-      time: '12 min',
-      takeaway: 'Protobuf contracts, interceptor chains, OTel trace propagation, and Kafka audit logging across 4 microservices.',
-      route: '/blog/grpc-service-mesh-in-go-aegis-architecture',
-    },
-    {
-      title: 'Implementing the Saga Pattern for Distributed Money Transfers',
-      time: '11 min',
-      takeaway: 'Orchestrator-style saga state machine in Go — compensation flows, crash recovery, and the COMPENSATION_FAILED terminal state.',
-      route: '/system-design/implementing-the-saga-pattern-for-distributed-transfers',
-    },
-  ],
-};
-
-export const philosophyData = [
-  {
-    title: 'Reliability > features',
-    detail: 'Ship with explicit SLOs, error budgets, and rollback paths before adding complexity.',
-  },
-  {
-    title: 'Make it observable',
-    detail: 'Traces + metrics + logs with shared context; every alert links to a runbook.',
-  },
-  {
-    title: 'Bias to idempotency',
-    detail: 'Design APIs and jobs to replay safely; simplify recovery and reduce page load.',
-  },
-  {
-    title: 'Cost-aware scaling',
-    detail: 'Measure cost per 1k requests and enforce guardrails alongside performance goals.',
   },
 ];

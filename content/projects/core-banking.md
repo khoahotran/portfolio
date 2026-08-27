@@ -4,8 +4,15 @@ date: "2026-06-15"
 tags: ["event-sourcing", "cqrs", "saga-pattern", "go", "firestore"]
 related: ["system-design/implementing-the-saga-pattern-for-distributed-transfers", "system-design/designing-a-real-time-fraud-detection-engine", "research/adr-firestore-vs-postgresql-event-sourcing", "research/event-sourcing-vs-crud-when-to-choose-each", "experiments/event-sourcing-replay", "experiments/saga-state-machine-visualizer"]
 summary: "A core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers."
-reading_time: "12 min"
 ---
+
+## Provenance & Source
+
+- **Provenance** — Self-directed engineering project. Designed and built solo to production standards;
+  it is not a deployed banking system and holds no real money. The transactional guarantees discussed
+  below are real properties of the code, not of a production deployment.
+- **Role** — Sole author: event store, projections, Saga worker, and fraud engine.
+- **Source** — [github.com/khoahotran/event-driven-core-banking](https://github.com/khoahotran/event-driven-core-banking)
 
 ## Project Foundation
 
@@ -42,7 +49,7 @@ C4Container
 ```
 
 <div class="mt-8 mb-12">
-  <a href="/labs/event-sourcing-replay" class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 transition-all">
+  <a href="/labs/event-sourcing-replay" class="lab-cta-inverse">
     Try the Interactive Event Sourcing Replay Lab
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
   </a>
@@ -76,7 +83,7 @@ sequenceDiagram
 ```
 
 <div class="mt-8 mb-12">
-  <a href="/labs/saga-state-machine" class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 transition-all">
+  <a href="/labs/saga-state-machine" class="lab-cta-inverse">
     Try the Interactive Saga Lab
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
   </a>

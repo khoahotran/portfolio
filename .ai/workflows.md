@@ -35,7 +35,7 @@ This document defines the standard operating procedures for an AI agent performi
 **Expected Outputs:** Updated content file and updated `.ai/` governance docs.
 
 ## Portfolio Enhancement Workflow
-**Inputs:** A broad mandate to improve the portfolio (e.g., "Make it more Staff-level").
+**Inputs:** A broad mandate to improve the portfolio (e.g., "Make the evidence harder to argue with").
 **Steps:**
 1. Start with `<planning_mode>`. Do not write code immediately.
 2. Audit the entire `.ai/` directory and `content/` folders.

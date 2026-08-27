@@ -4,8 +4,15 @@ date: "2026-04-10"
 tags: ["go", "grpc", "microservices", "redis", "kafka", "opentelemetry"]
 related: ["blog/grpc-service-mesh-in-go-aegis-architecture", "system-design/designing-a-multi-service-auth-platform", "research/distributed-tracing-with-opentelemetry-and-jaeger", "research/adr-graphql-gateway-over-rest"]
 summary: "A modular, high-performance Identity and Policy microservice platform in Go, featuring sub-5ms RBAC evaluations and distributed tracing."
-reading_time: "10 min"
 ---
+
+## Provenance & Source
+
+- **Provenance** — Self-directed engineering project. Designed and built solo to production standards;
+  it runs in Docker Compose, not in front of real users. Where the shipped code is narrower than the
+  design, this write-up says so explicitly rather than describing the intent as the outcome.
+- **Role** — Sole author: architecture, all four Go services, and the local infrastructure.
+- **Source** — [github.com/khoahotran/aegis](https://github.com/khoahotran/aegis)
 
 ## Project Foundation
 
@@ -70,7 +77,7 @@ C4Container
 - *Mitigation:* We use `grpcurl` and expose a GraphQL Gateway to the frontend, so web clients never have to speak gRPC directly. See the [ADR: Why GraphQL Gateway over REST](/research/adr-graphql-gateway-over-rest) for the full trade-off analysis behind that gateway choice.
 
 <div class="mt-8 mb-12">
-  <a href="/labs/go-vs-ts-concurrency" class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 transition-all">
+  <a href="/labs/go-vs-ts-concurrency" class="lab-cta-inverse">
     Benchmark: Go vs TypeScript Concurrency
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
   </a>

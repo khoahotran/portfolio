@@ -1,6 +1,8 @@
 # Writing Style Guide
 
-This portfolio represents a Staff-level engineer. The tone must be authoritative, pragmatic, and highly technical without being arrogant.
+The tone must be authoritative, pragmatic, and highly technical without being arrogant. Authority here comes
+from precision and honest trade-off analysis, never from claimed seniority — see `.ai/portfolio-context.md`
+"Career Stage".
 
 ## 1. Tone & Narrative Style
 - **Perspective:** Use professional, first-person singular ("I built this") or first-person plural ("We scaled the system") depending on the context of the project. Default to "I" for personal projects and "We" for team-oriented case studies.
@@ -27,7 +29,6 @@ title: "Article Title"
 date: "YYYY-MM-DD"
 tags: ["go", "architecture", "tag3"]
 summary: "A 1-2 sentence compelling summary of the technical challenge and solution."
-reading_time: "X min"
 ---
 
 A brief introductory paragraph establishing the business context and the technical challenge.

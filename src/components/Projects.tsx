@@ -1,6 +1,49 @@
 import { ExternalLink, Github, Network } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { caseStudiesData as caseStudies } from '../data/portfolioData';
+import type { ProjectProvenance } from '../data/portfolioData';
+
+/**
+ * Badge copy + styling per provenance. The label spells out what the category
+ * actually means ("Shipped at work", not "Professional") because the whole point
+ * is that a reader shouldn't have to interpret it — see
+ * `.ai/portfolio-context.md` "Provenance Is Mandatory".
+ *
+ * Text is at the -700 level on a -50 surface throughout: these badges are
+ * primary information, not decoration, so they have to clear WCAG AA rather
+ * than sit at the borderline -400 level flagged in `.ai/audit-followups.md`
+ * item 2.
+ */
+const PROVENANCE_META: Record<ProjectProvenance, { label: string; className: string }> = {
+  professional: {
+    label: 'Shipped at work',
+    className: 'bg-teal-50 text-teal-700 border-teal-200',
+  },
+  'self-directed': {
+    label: 'Self-directed build',
+    className: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+  },
+  academic: {
+    label: 'Academic research',
+    className: 'bg-sky-50 text-sky-700 border-sky-200',
+  },
+  coursework: {
+    label: 'University coursework',
+    className: 'bg-slate-100 text-slate-700 border-slate-300',
+  },
+};
+
+function ProvenanceBadge({ provenance }: { provenance: ProjectProvenance }) {
+  const meta = PROVENANCE_META[provenance];
+
+  return (
+    <span
+      className={`inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${meta.className}`}
+    >
+      {meta.label}
+    </span>
+  );
+}
 
 interface ProjectsProps {
   /**
@@ -44,7 +87,7 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
       <div className="max-w-6xl mx-auto">
         {showHeader && (
           <div className="flex items-baseline justify-between mb-12">
-            <h2 className="text-sm uppercase tracking-widest text-teal-600 font-medium italic">
+            <h2 className="text-sm uppercase tracking-widest text-teal-700 font-medium italic">
               / Projects & Case Studies
             </h2>
             <div className="text-sm text-slate-500 font-light">Technical breakdowns and impact analysis.</div>
@@ -70,13 +113,16 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
                   {sectionProjects.map((project, index) => (
                     <div
                       key={index}
-                      className="group min-w-0 rounded-xl border border-slate-100 bg-white p-8 hover:border-teal-500 hover:shadow-2xl hover:shadow-slate-100 transition-all duration-500 flex flex-col h-full"
+                      className="group min-w-0 rounded-xl border border-slate-100 bg-surface p-8 hover:border-teal-500 hover:shadow-2xl hover:shadow-slate-100 transition-all duration-500 flex flex-col h-full"
                     >
                       <div className="flex items-start justify-between gap-4 mb-4">
-                        <div>
-                          <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">{project.role}</p>
-                          <h4 className="text-2xl font-bold text-slate-900 mt-1">{project.title}</h4>
-                          <p className="text-xs text-slate-400 mt-1 font-mono">{project.scale}</p>
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <ProvenanceBadge provenance={project.provenance} />
+                            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">{project.role}</p>
+                          </div>
+                          <h4 className="text-2xl font-bold text-slate-900 mt-2">{project.title}</h4>
+                          <p className="text-xs text-slate-500 mt-1 font-mono">{project.scale}</p>
                         </div>
                         <div className="flex gap-3 text-slate-300">
                           {project.links?.deck && (
@@ -84,7 +130,7 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
                               href={project.links?.deck}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="hover:text-teal-600 transition-colors"
+                              className="hover:text-teal-700 transition-colors"
                               aria-label="View link"
                             >
                               <ExternalLink size={20} />
@@ -95,7 +141,7 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
                               href={project.links?.live}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="hover:text-teal-600 transition-colors"
+                              className="hover:text-teal-700 transition-colors"
                               aria-label="View live site"
                             >
                               <ExternalLink size={20} />
@@ -106,7 +152,7 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
                               href={project.links?.github}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="hover:text-teal-600 transition-colors"
+                              className="hover:text-teal-700 transition-colors"
                               aria-label="View code"
                             >
                               <Github size={20} />
@@ -129,7 +175,7 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
                       </div>
 
                       <div className="mb-6 flex-grow">
-                        <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-3">Architecture</p>
+                        <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-3">Architecture</p>
                         <ul className="space-y-2 text-slate-600 text-sm">
                           {project.architecture.map((item, i) => (
                             <li key={i} className="flex items-start gap-2">
@@ -142,12 +188,12 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
 
                       <div className="mt-auto pt-6 border-t border-slate-50 flex items-end justify-between">
                         <div className="min-w-0 flex-1 pr-4">
-                          <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-3">Stack</p>
+                          <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-3">Stack</p>
                           <div className="flex flex-wrap gap-2">
                             {project.stack.map((tech, i) => (
                               <span
                                 key={i}
-                                className="text-[10px] font-bold px-2 py-1 rounded-sm bg-slate-900 text-white flex items-center gap-2"
+                                className="text-[10px] font-bold px-2 py-1 rounded-sm bg-inverse text-inverse-fg flex items-center gap-2"
                               >
                                 {tech}
                               </span>
@@ -158,7 +204,7 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
                         {project.slug && (
                           <Link
                             to={`/projects/${project.slug}`}
-                            className="shrink-0 bg-teal-50 text-teal-700 hover:bg-teal-600 hover:text-white px-4 py-2 rounded-lg text-xs font-bold transition-colors border border-teal-100 hover:border-teal-600"
+                            className="shrink-0 bg-teal-50 text-teal-700 hover:bg-accent hover:text-accent-fg px-4 py-2 rounded-lg text-xs font-bold transition-colors border border-teal-100 hover:border-teal-600"
                           >
                             Read Case Study
                           </Link>
@@ -186,13 +232,17 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
                 {sectionProjects.map((project, index) => (
                   <div key={index} className="min-w-0 py-4 first:pt-0 last:pb-0">
                     <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                      <h4 className="font-semibold text-slate-800">{project.title}</h4>
+                      <div className="flex min-w-0 flex-wrap items-center gap-2">
+                        <h4 className="font-semibold text-slate-800">{project.title}</h4>
+                        <ProvenanceBadge provenance={project.provenance} />
+                        <span className="text-xs text-slate-500">{project.scale}</span>
+                      </div>
                       {project.links?.github && (
                         <a
                           href={project.links.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex shrink-0 items-center gap-1.5 text-xs text-slate-500 hover:text-teal-600 transition-colors"
+                          className="inline-flex shrink-0 items-center gap-1.5 text-xs text-slate-500 hover:text-teal-700 transition-colors"
                         >
                           <Github size={14} />
                           View code

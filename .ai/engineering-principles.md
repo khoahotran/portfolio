@@ -28,4 +28,4 @@ This principle is embodied by the `/experiments` interactive laboratories. We pr
 
 ## 6. Visual Communication
 *A diagram is worth a thousand lines of code.*
-We use C4 Models, Sequence Diagrams, and State Machines to convey architecture before diving into implementation details. Clear communication is a hallmark of Staff-level engineering.
+We use C4 Models, Sequence Diagrams, and State Machines to convey architecture before diving into implementation details. If a reader cannot follow the design from the diagrams alone, the write-up is not finished.

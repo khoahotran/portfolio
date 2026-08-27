@@ -1,6 +1,7 @@
 # Visualization Guide
 
-Staff-level engineering requires clear communication of complex architectures. This portfolio heavily relies on visualizations to replace walls of text. 
+Communicating complex architecture clearly is the whole job. This portfolio heavily relies on visualizations
+to replace walls of text.
 
 ## 1. Core Rule: Visuals First
 **Always ask:** *Can this idea be communicated more effectively with a diagram, table, timeline, or visual element instead of plain text?*
