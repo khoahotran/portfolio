@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: bench
+      POSTGRES_PASSWORD: bench
+      POSTGRES_DB: bench
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "bench"]
+      interval: 1s
+      retries: 30
+
+  firestore:
+    image: google/cloud-sdk:emulators
+    command: gcloud emulators firestore start --host-port=0.0.0.0:8080 --project=bench-project
+    healthcheck:
+      # curl, not wget — the google/cloud-sdk image doesn't ship wget.
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/"]
+      interval: 1s
+      retries: 30
+
+  go-harness:
+    build: ./go
+    environment:
+      FIRESTORE_EMULATOR_HOST: firestore:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+      firestore:
+        condition: service_healthy
+    profiles: ["run"]

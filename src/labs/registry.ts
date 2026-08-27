@@ -198,7 +198,7 @@ export const labs: LabDefinition[] = [
     description: 'Interactive benchmark visualizing memory and execution time for concurrent tasks.',
     component: GoVsTsConcurrencyPage,
     interaction: 'preset',
-    collidesWithArticleSlug: true, // content/experiments/go-vs-ts-concurrency.md
+    collidesWithArticleSlug: true, // content/experiments/2026-06-26-go-vs-ts-concurrency.md
     relatedArticle: 'go-vs-ts-concurrency',
   },
   {
@@ -206,21 +206,23 @@ export const labs: LabDefinition[] = [
     provenance: {
       kind: 'measured',
       environment:
-        'PostgreSQL and Firestore each populated with 100,000 mock events, replayed by a Go ' +
-        'application running on GCP co-located with both datastores.',
-      measuredOn: 'June 2026',
+        'PostgreSQL 16 and the official Firestore emulator, each populated with 10k/50k/100k mock ' +
+        'events for one aggregate, queried by a Go application on the same Docker Compose network ' +
+        'as both. Not a real Cloud Firestore instance — see benchmarks/db-event-replay-benchmark/ ' +
+        'README.md for why the relative shape of the result still holds against production Firestore ' +
+        'even though the emulator has no real network latency to model.',
+      measuredOn: 'August 2026',
+      harness: 'https://github.com/khoahotran/portfolio/tree/main/benchmarks/db-event-replay-benchmark',
       caveat:
-        'The harness is not published, so this run cannot currently be reproduced from the ' +
-        'repository. The comparison is also structurally lopsided by design — a sequential range ' +
-        'read against 100k individual document reads — which is the point being made, but it is not ' +
-        'a like-for-like database benchmark. Rewriting a runnable harness is tracked in ' +
-        '.ai/content-roadmap.md.',
+        'The comparison is structurally lopsided by design — one indexed range scan against N ' +
+        'individual document reads — which is the architectural point being demonstrated, not a ' +
+        'like-for-like database benchmark or a Firestore configuration problem.',
     },
     title: 'Benchmark: DB Event Replay',
     description: 'Interactive benchmark visualizing event sourcing replay times across databases.',
     component: DbEventReplayBenchmarkPage,
     interaction: 'preset',
-    collidesWithArticleSlug: true, // content/experiments/db-event-replay-benchmark.md
+    collidesWithArticleSlug: true, // content/experiments/2026-06-27-db-event-replay-benchmark.md
     relatedArticle: 'db-event-replay-benchmark',
   },
 ];

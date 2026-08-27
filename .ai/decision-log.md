@@ -203,3 +203,36 @@ Per `.ai/prompts/benchmark-study.md`'s updated workflow: commit the harness befo
   so explicitly rather than implying continuity with a number that can no longer be checked.
 - `src/labs/registry.ts`'s provenance entry gained a `harness` link and lost its `caveat` — the gap
   it named is closed. `db-event-replay-benchmark` and `go-vs-ts-concurrency` still carry theirs.
+
+## Decision 13: Second Real Benchmark Harness — db-event-replay-benchmark
+**Date:** 2026-08-27
+**Decision:** `benchmarks/db-event-replay-benchmark/` is a real, runnable Docker Compose harness
+(PostgreSQL 16 + the official Firestore emulator, driven by a Go harness and `run.sh`) that
+reproduces the `db-event-replay-benchmark` lab's dataset from a cold start. Same pattern as Decision
+12 — lab and article both now derive their numbers from committed `results.json`.
+**Rationale:** Second of the three `measured` labs flagged in Phase 4. Uses Google's official
+Firestore emulator (`google/cloud-sdk:emulators`) rather than a real Cloud Firestore project, which
+needs no GCP credentials and is fully reproducible offline.
+**Consequences:**
+- **The re-measurement found a much larger gap than the old claim, not a similar one.** The old
+  figures implied a flat ~7-8x Firestore penalty at every event count. The real, measured gap is
+  19.6x-30.1x, and it scales with document count rather than staying flat — Postgres pays one
+  per-query cost for its indexed range scan; Firestore pays a real per-document cost that grows with
+  N. Both databases fold to the identical final balance at every event count (asserted implicitly:
+  `finalBalance` and `eventsProcessed` match across databases in the committed `results.json`),
+  which is the strongest evidence available that both measured paths are actually reading the same
+  data rather than diverging on a bug.
+- **The emulator-vs-production distinction is stated explicitly**, in both
+  `benchmarks/db-event-replay-benchmark/README.md` and the article itself: the emulator has no real
+  network latency to a Google data center, so the *absolute* milliseconds are "measured against the
+  emulator," not a production SLA — but the *relative* shape (Firestore's cost scaling with document
+  count, Postgres's not) is the actual architectural property being demonstrated, and that holds
+  regardless of emulator vs. production.
+- A Docker Compose healthcheck bug surfaced immediately on first run: the Firestore emulator image
+  doesn't ship `wget`, only `curl`, so a `wget`-based healthcheck reported the service unhealthy
+  despite the emulator running correctly (confirmed via its own logs). Fixed before any measurement
+  was taken — worth naming because it's the same class of "the tool doesn't have the tool you
+  assumed" mistake as Decision 11, just caught before it produced a bad number rather than after.
+- Fixed two stale filename comments in `src/labs/registry.ts` while in this area:
+  `collidesWithArticleSlug` comments for `db-event-replay-benchmark` and `go-vs-ts-concurrency`
+  still referenced their pre-Phase-4 filenames (before the `YYYY-MM-DD-` prefix rename).

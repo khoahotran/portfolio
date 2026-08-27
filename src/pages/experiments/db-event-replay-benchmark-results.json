@@ -1,0 +1,44 @@
+[
+  {
+    "database": "postgres",
+    "events": 10000,
+    "fetchFoldMs": 26.632,
+    "finalBalance": 49990,
+    "eventsProcessed": 10000
+  },
+  {
+    "database": "firestore",
+    "events": 10000,
+    "fetchFoldMs": 800.928,
+    "finalBalance": 49990,
+    "eventsProcessed": 10000
+  },
+  {
+    "database": "postgres",
+    "events": 50000,
+    "fetchFoldMs": 103.903,
+    "finalBalance": 249995,
+    "eventsProcessed": 50000
+  },
+  {
+    "database": "firestore",
+    "events": 50000,
+    "fetchFoldMs": 2033.323,
+    "finalBalance": 249995,
+    "eventsProcessed": 50000
+  },
+  {
+    "database": "postgres",
+    "events": 100000,
+    "fetchFoldMs": 142.169,
+    "finalBalance": 499990,
+    "eventsProcessed": 100000
+  },
+  {
+    "database": "firestore",
+    "events": 100000,
+    "fetchFoldMs": 4148.506,
+    "finalBalance": 499990,
+    "eventsProcessed": 100000
+  }
+]

@@ -1,20 +1,48 @@
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import LabBackLink from '../../labs/LabBackLink';
 import ProvenanceNote from '../../labs/ProvenanceNote';
 import { useSeo } from '../../seo/useSeo';
 import { Database, Info } from 'lucide-react';
+import rawResults from './db-event-replay-benchmark-results.json';
+
+/**
+ * Raw shape written by benchmarks/db-event-replay-benchmark/run.sh — one row per (database, event
+ * count) combination, straight from the harness's own JSON stdout line. Byte-identical copy of
+ * benchmarks/db-event-replay-benchmark/results.json; see that directory's README.md to reproduce it.
+ */
+interface RawResult {
+  database: 'postgres' | 'firestore';
+  events: 10000 | 50000 | 100000;
+  fetchFoldMs: number;
+  finalBalance: number;
+  eventsProcessed: number;
+}
 
 interface BenchmarkData {
-  events: number;
+  events: 10000 | 50000 | 100000;
   pgTime: number;
   firestoreTime: number;
 }
 
-const DATASET: BenchmarkData[] = [
-  { events: 10000, pgTime: 45, firestoreTime: 320 },
-  { events: 50000, pgTime: 210, firestoreTime: 1650 },
-  { events: 100000, pgTime: 420, firestoreTime: 3500 },
-];
+/** Pairs the flat per-database rows into one row per event count, which is what the UI renders. */
+function pairResults(raw: RawResult[]): BenchmarkData[] {
+  const byEvents = new Map<number, Partial<BenchmarkData> & { events: BenchmarkData['events'] }>();
+
+  for (const row of raw) {
+    const entry = byEvents.get(row.events) ?? { events: row.events };
+    if (row.database === 'postgres') {
+      entry.pgTime = row.fetchFoldMs;
+    } else {
+      entry.firestoreTime = row.fetchFoldMs;
+    }
+    byEvents.set(row.events, entry);
+  }
+
+  return [...byEvents.values()].sort((a, b) => a.events - b.events) as BenchmarkData[];
+}
+
+const DATASET: BenchmarkData[] = pairResults(rawResults as RawResult[]);
+const MAX_TIME = Math.max(...DATASET.flatMap((d) => [d.pgTime, d.firestoreTime])) * 1.1;
 
 function DbEventReplayBenchmarkPage() {
   useSeo({ title: 'Benchmark: DB Event Replay', description: 'Interactive benchmark visualizing event sourcing replay times across databases.' });
@@ -24,8 +52,6 @@ function DbEventReplayBenchmarkPage() {
   const currentData = useMemo(() => {
     return DATASET.find(d => d.events === events)!;
   }, [events]);
-
-  const maxTime = 4000;
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 md:px-6 animate-fade-in">
@@ -80,10 +106,10 @@ function DbEventReplayBenchmarkPage() {
             <div className="relative pt-6">
               <div className="flex justify-between items-end mb-2">
                 <span className="font-bold text-slate-800">PostgreSQL</span>
-                <span className="text-teal-700 font-bold">{currentData.pgTime} ms</span>
+                <span className="text-teal-700 font-bold">{currentData.pgTime.toFixed(1)} ms</span>
               </div>
               <div className="h-8 w-full bg-slate-100 rounded-lg overflow-hidden relative">
-                <div className="absolute top-0 left-0 h-full bg-teal-500 transition-all duration-500 rounded-lg" style={{ width: `${(currentData.pgTime / maxTime) * 100}%` }} />
+                <div className="absolute top-0 left-0 h-full bg-teal-500 transition-all duration-500 rounded-lg" style={{ width: `${(currentData.pgTime / MAX_TIME) * 100}%` }} />
               </div>
             </div>
 
@@ -91,10 +117,10 @@ function DbEventReplayBenchmarkPage() {
             <div className="relative pt-6">
               <div className="flex justify-between items-end mb-2">
                 <span className="font-bold text-slate-800">Firestore</span>
-                <span className="text-rose-700 font-bold">{currentData.firestoreTime} ms</span>
+                <span className="text-rose-700 font-bold">{currentData.firestoreTime.toFixed(1)} ms</span>
               </div>
               <div className="h-8 w-full bg-slate-100 rounded-lg overflow-hidden relative">
-                <div className="absolute top-0 left-0 h-full bg-rose-400 transition-all duration-500 rounded-lg" style={{ width: `${(currentData.firestoreTime / maxTime) * 100}%` }} />
+                <div className="absolute top-0 left-0 h-full bg-rose-400 transition-all duration-500 rounded-lg" style={{ width: `${(currentData.firestoreTime / MAX_TIME) * 100}%` }} />
               </div>
             </div>
 
