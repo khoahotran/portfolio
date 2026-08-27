@@ -8,6 +8,22 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/projects/pfm",
+      "url": "https://khoahotran.github.io/portfolio/projects/pfm",
+      "title": "PFM: A Spec-Driven, Invite-Only Personal Finance Tracker",
+      "summary": "A React 19 + Go financial tracker built spec-first: every business rule traces from an SRS to an SDS to a passing integration test, with a hard server-side boundary between the browser and the API.",
+      "date_published": "2026-08-27T00:00:00.000Z",
+      "tags": [
+        "go",
+        "nextjs",
+        "postgresql",
+        "redis",
+        "server-actions",
+        "spec-driven-development"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/pfm.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system",
       "url": "https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system",
       "title": "Building Jujuja: A Production Quest System for Burst Traffic",

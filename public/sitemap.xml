@@ -96,6 +96,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://khoahotran.github.io/portfolio/projects/pfm</loc>
+    <lastmod>2026-08-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system</loc>
     <lastmod>2026-06-28</lastmod>
     <changefreq>weekly</changefreq>
