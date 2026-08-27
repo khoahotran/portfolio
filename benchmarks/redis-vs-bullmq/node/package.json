@@ -1,0 +1,9 @@
+{
+  "name": "bullmq-harness",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "bullmq": "^5.28.0",
+    "ioredis": "^5.4.1"
+  }
+}

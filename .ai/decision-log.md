@@ -180,3 +180,26 @@ the exact value that would indicate the real failure." This is now documented as
 ([A Diagram That Wouldn't Render](/field-notes/a-diagram-that-wouldnt-render) covers a sibling case —
 Mermaid's HTML-entity parsing bug), and the pattern generalizes: prefer asserting against a known
 exact value over a substring guess whenever one is available.
+
+## Decision 12: First Real Benchmark Harness — redis-vs-bullmq
+**Date:** 2026-08-27
+**Decision:** `benchmarks/redis-vs-bullmq/` is a real, runnable Docker Compose harness (Go
+producer/consumer using Redis Streams, Node.js/BullMQ worker, both driven by `run.sh`) that
+reproduces the `redis-vs-bullmq` lab's dataset from a cold start. The lab
+(`src/pages/experiments/RedisVsBullMQPage.tsx`) and the companion article now both derive their
+numbers from the committed `results.json`, not a hardcoded `DATASET` constant.
+**Rationale:** First of the three `measured` labs flagged in Phase 4 as running on a lost harness.
+Per `.ai/prompts/benchmark-study.md`'s updated workflow: commit the harness before the visualizer.
+**Consequences:**
+- **The re-measurement doesn't reproduce the old numbers, and that's the honest outcome.** The
+  original claim was a flat "4-5x" throughput advantage for Redis Streams. The real, measured result
+  is payload-dependent: ~2.2-3x at 1-10 KB, widening to ~5.1-5.5x at 100 KB — because BullMQ's
+  per-job Lua-script overhead is roughly fixed regardless of payload size, so it matters
+  proportionally less as the payload itself gets more expensive to move. This is a more interesting
+  finding than the flat multiplier it replaced, and it only exists because the harness is now real.
+- **The environment is disclosed as different from the original, not silently substituted.** This
+  run is a local x86_64 Docker Compose stack, not the AWS c6g.xlarge cited in the June 2026 version
+  of the article — that machine and harness were gone. `benchmarks/redis-vs-bullmq/README.md` says
+  so explicitly rather than implying continuity with a number that can no longer be checked.
+- `src/labs/registry.ts`'s provenance entry gained a `harness` link and lost its `caveat` — the gap
+  it named is closed. `db-event-replay-benchmark` and `go-vs-ts-concurrency` still carry theirs.

@@ -165,14 +165,14 @@ export const labs: LabDefinition[] = [
     provenance: {
       kind: 'measured',
       environment:
-        'AWS EC2 c6g.xlarge (4 vCPU), with Redis and the workers in the same VPC. Producer/consumer ' +
-        'on Go 1.22 using go-redis (XADD / XREADGROUP); BullMQ on Node.js 20 using the standard ' +
-        'Worker class.',
-      measuredOn: 'June 2026',
-      caveat:
-        'The harness that produced these numbers is not published, so this run cannot currently be ' +
-        'reproduced from the repository — read the figures as one measurement on one machine, not as ' +
-        'a general benchmark. Rewriting a runnable harness is tracked in .ai/content-roadmap.md.',
+        'A local x86_64 host (AMD Ryzen AI 5, Docker Compose network — not the AWS c6g.xlarge cited ' +
+        'in the June 2026 run this replaced, since that machine and harness were gone). ' +
+        'Producer/consumer on Go 1.22 using go-redis (XADD / XREADGROUP), one goroutine per worker, ' +
+        'sharing a consumer group. BullMQ on Node.js 20, one Worker instance per worker, concurrency 1. ' +
+        'Redis 7. Same enqueue-then-drain methodology and job counts for both engines. ' +
+        'See benchmarks/redis-vs-bullmq/README.md for the exact protocol.',
+      measuredOn: 'August 2026',
+      harness: 'https://github.com/khoahotran/portfolio/tree/main/benchmarks/redis-vs-bullmq',
     },
     title: 'Benchmark: Redis Streams vs BullMQ',
     description: 'Interactive benchmark visualizing queue throughput and latency.',

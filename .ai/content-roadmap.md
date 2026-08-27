@@ -219,6 +219,14 @@ Two small, cheap-now fixes surfaced while measuring the above:
   `.ai/audit-followups.md` item 7.
 
 ### 5.8 Real benchmark harnesses (closes the largest remaining credibility gap)
+
+**1/3 done (2026-08-27): `redis-vs-bullmq`.** Real, runnable harness at `benchmarks/redis-vs-bullmq/`
+(Go + Node + Docker Compose, `./run.sh` reproduces it end to end). The lab and article both now
+import the committed `results.json` instead of a hardcoded `DATASET`. The re-measurement (on a local
+host, not the original AWS c6g.xlarge — see that directory's README for why) found a more nuanced
+result than the old "4-5x" claim: the throughput gap is payload-dependent, ~2.2-3x at 1-10 KB and
+~5.1-5.5x at 100 KB, not a flat multiplier. `db-event-replay-benchmark` and `go-vs-ts-concurrency`
+below are next.
 The three `measured` labs — `redis-vs-bullmq`, `go-vs-ts-concurrency`, `db-event-replay-benchmark` —
 currently ship a `caveat` admitting the harness that produced their numbers isn't in the repo. This
 is honest, not resolved. Per the chosen direction: write real, runnable harnesses rather than
