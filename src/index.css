@@ -1,3 +1,250 @@
+/* ── Design tokens ────────────────────────────────────────────────────────────
+ *
+ * The Tailwind palettes in tailwind.config.js resolve to these variables, so every existing
+ * `bg-slate-50` / `text-slate-900` / `border-teal-200` class is theme-aware without being rewritten
+ * (885 colour classes across 43 files — see that file's header for why this route was taken).
+ *
+ * Values are space-separated RGB channels, not hex, because Tailwind composes them as
+ * `rgb(var(--c-x) / <alpha-value>)` so opacity modifiers keep working.
+ *
+ * LIGHT is the literal Tailwind v3 ramp. That is deliberate: light mode must be pixel-identical to
+ * before this change, which makes any visual difference in light mode a bug rather than a judgement
+ * call.
+ *
+ * DARK mirrors each hue ramp (50<->900 … 500<->500), which maps tinted `-50/-100` surfaces and
+ * `-600/-700` text onto their dark-mode equivalents automatically. The neutral ramp is hand-tuned
+ * instead: a mirror would send slate-400 — 34 uses, already flagged as borderline contrast in
+ * .ai/audit-followups.md item 2 — to #475569, which is unreadable on a #020617 page. Steps 400-600
+ * are pinned to values that clear AA on the dark surfaces.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light;
+
+    --c-slate-50: 248 250 252;
+    --c-slate-100: 241 245 249;
+    --c-slate-200: 226 232 240;
+    --c-slate-300: 203 213 225;
+    --c-slate-400: 148 163 184;
+    --c-slate-500: 100 116 139;
+    --c-slate-600: 71 85 105;
+    --c-slate-700: 51 65 85;
+    --c-slate-800: 30 41 59;
+    --c-slate-900: 15 23 42;
+
+    --c-teal-50: 240 253 250;
+    --c-teal-100: 204 251 241;
+    --c-teal-200: 153 246 228;
+    --c-teal-300: 94 234 212;
+    --c-teal-400: 45 212 191;
+    --c-teal-500: 20 184 166;
+    --c-teal-600: 13 148 136;
+    --c-teal-700: 15 118 110;
+    --c-teal-800: 17 94 89;
+    --c-teal-900: 19 78 74;
+
+    --c-emerald-50: 236 253 245;
+    --c-emerald-100: 209 250 229;
+    --c-emerald-200: 167 243 208;
+    --c-emerald-300: 110 231 183;
+    --c-emerald-400: 52 211 153;
+    --c-emerald-500: 16 185 129;
+    --c-emerald-600: 5 150 105;
+    --c-emerald-700: 4 120 87;
+    --c-emerald-800: 6 95 70;
+    --c-emerald-900: 6 78 59;
+
+    --c-sky-50: 240 249 255;
+    --c-sky-100: 224 242 254;
+    --c-sky-200: 186 230 253;
+    --c-sky-300: 125 211 252;
+    --c-sky-400: 56 189 248;
+    --c-sky-500: 14 165 233;
+    --c-sky-600: 2 132 199;
+    --c-sky-700: 3 105 161;
+    --c-sky-800: 7 89 133;
+    --c-sky-900: 12 74 110;
+
+    --c-rose-50: 255 241 242;
+    --c-rose-100: 255 228 230;
+    --c-rose-200: 254 205 211;
+    --c-rose-300: 253 164 175;
+    --c-rose-400: 251 113 133;
+    --c-rose-500: 244 63 94;
+    --c-rose-600: 225 29 72;
+    --c-rose-700: 190 18 60;
+    --c-rose-800: 159 18 57;
+    --c-rose-900: 136 19 55;
+
+    --c-amber-50: 255 251 235;
+    --c-amber-100: 254 243 199;
+    --c-amber-200: 253 230 138;
+    --c-amber-300: 252 211 77;
+    --c-amber-400: 251 191 36;
+    --c-amber-500: 245 158 11;
+    --c-amber-600: 217 119 6;
+    --c-amber-700: 180 83 9;
+    --c-amber-800: 146 64 14;
+    --c-amber-900: 120 53 15;
+
+    --c-indigo-50: 238 242 255;
+    --c-indigo-100: 224 231 255;
+    --c-indigo-200: 199 210 254;
+    --c-indigo-300: 165 180 252;
+    --c-indigo-400: 129 140 248;
+    --c-indigo-500: 99 102 241;
+    --c-indigo-600: 79 70 229;
+    --c-indigo-700: 67 56 202;
+    --c-indigo-800: 55 48 163;
+    --c-indigo-900: 49 46 129;
+
+  /* Role tokens — see the `surface`/`inverse`/`panel`/`accent` note in tailwind.config.js */
+  --c-surface: 255 255 255;
+  --c-surface-fg: 15 23 42;
+  --c-inverse: 15 23 42;
+  --c-inverse-fg: 255 255 255;
+  --c-panel: 15 23 42;
+  --c-panel-fg: 226 232 240;
+  /* teal-700, not teal-600: white on teal-600 measures 3.74:1 and fails AA — see
+   * `npm run check:contrast`. Same hue, legible label. */
+  --c-accent: 15 118 110;
+  --c-accent-fg: 255 255 255;
+  --c-danger: 225 29 72;
+  --c-danger-fg: 255 255 255;
+
+  /* Code surface — deliberately identical in both themes. The syntax palette below is One Dark,
+   * tuned for a dark background; letting `pre` follow the inverting slate ramp would put those
+   * light token colours on a near-white surface and make every code block unreadable. A code block
+   * is a fixed dark surface, the same way `panel` is. */
+  --c-code-bg: 15 23 42;
+  --c-code-fg: 226 232 240;
+  --c-code-border: 51 65 85;
+  --c-code-muted: 148 163 184;
+  --c-code-chrome: 30 41 59;
+  --c-code-chrome-fg: 203 213 225;
+  --c-code-accent: 45 212 191;
+
+  /* Diagram surface — also identical in both themes, for the mirror-image reason to the code
+   * surface above. Mermaid is initialised with `theme: 'neutral'` (src/content-engine/mermaid.ts)
+   * and 20 `classDef` rules across 12 content files hardcode light fills like `fill:#f0fdf4`.
+   * Switching Mermaid to its dark theme would pair its light label colour with those light fills
+   * and make the labels unreadable, and re-theming 20 classDefs in Markdown to follow a CSS
+   * variable is not something Mermaid supports. So diagrams keep a light card in both themes,
+   * which also means a diagram looks the same to a reader whichever theme they are in. */
+  --c-diagram-bg: 248 250 252;
+  --c-diagram-border: 226 232 240;
+  --c-diagram-skeleton-a: 241 245 249;
+  --c-diagram-skeleton-b: 226 232 240;
+}
+
+.dark {
+  color-scheme: dark;
+
+    --c-slate-50: 2 6 23;
+    --c-slate-100: 15 23 42;
+    --c-slate-200: 30 41 59;
+    --c-slate-300: 51 65 85;
+    --c-slate-400: 148 163 184;
+    --c-slate-500: 168 180 196;
+    --c-slate-600: 203 213 225;
+    --c-slate-700: 226 232 240;
+    --c-slate-800: 238 242 247;
+    --c-slate-900: 248 250 252;
+
+    --c-teal-50: 19 78 74;
+    --c-teal-100: 17 94 89;
+    --c-teal-200: 15 118 110;
+    --c-teal-300: 13 148 136;
+    --c-teal-400: 20 184 166;
+    --c-teal-500: 45 212 191;
+    --c-teal-600: 94 234 212;
+    --c-teal-700: 153 246 228;
+    --c-teal-800: 204 251 241;
+    --c-teal-900: 240 253 250;
+
+    --c-emerald-50: 6 78 59;
+    --c-emerald-100: 6 95 70;
+    --c-emerald-200: 4 120 87;
+    --c-emerald-300: 5 150 105;
+    --c-emerald-400: 16 185 129;
+    --c-emerald-500: 52 211 153;
+    --c-emerald-600: 110 231 183;
+    --c-emerald-700: 167 243 208;
+    --c-emerald-800: 209 250 229;
+    --c-emerald-900: 236 253 245;
+
+    --c-sky-50: 12 74 110;
+    --c-sky-100: 7 89 133;
+    --c-sky-200: 3 105 161;
+    --c-sky-300: 2 132 199;
+    --c-sky-400: 14 165 233;
+    --c-sky-500: 56 189 248;
+    --c-sky-600: 125 211 252;
+    --c-sky-700: 186 230 253;
+    --c-sky-800: 224 242 254;
+    --c-sky-900: 240 249 255;
+
+    --c-rose-50: 136 19 55;
+    --c-rose-100: 159 18 57;
+    --c-rose-200: 190 18 60;
+    --c-rose-300: 225 29 72;
+    --c-rose-400: 244 63 94;
+    --c-rose-500: 251 113 133;
+    --c-rose-600: 253 164 175;
+    --c-rose-700: 254 205 211;
+    --c-rose-800: 255 228 230;
+    --c-rose-900: 255 241 242;
+
+    --c-amber-50: 120 53 15;
+    --c-amber-100: 146 64 14;
+    --c-amber-200: 180 83 9;
+    --c-amber-300: 217 119 6;
+    --c-amber-400: 245 158 11;
+    --c-amber-500: 251 191 36;
+    --c-amber-600: 252 211 77;
+    --c-amber-700: 253 230 138;
+    --c-amber-800: 254 243 199;
+    --c-amber-900: 255 251 235;
+
+    --c-indigo-50: 49 46 129;
+    --c-indigo-100: 55 48 163;
+    --c-indigo-200: 67 56 202;
+    --c-indigo-300: 79 70 229;
+    --c-indigo-400: 99 102 241;
+    --c-indigo-500: 129 140 248;
+    --c-indigo-600: 165 180 252;
+    --c-indigo-700: 199 210 254;
+    --c-indigo-800: 224 231 255;
+    --c-indigo-900: 238 242 255;
+
+  --c-surface: 15 23 42;
+  --c-surface-fg: 248 250 252;
+  --c-inverse: 226 232 240;
+  --c-inverse-fg: 15 23 42;
+  --c-panel: 15 23 42;
+  --c-panel-fg: 226 232 240;
+  /* Fill brightens and the label goes dark: white on teal-500 is ~2.6:1 and fails AA. */
+  --c-accent: 20 184 166;
+  --c-accent-fg: 4 47 46;
+  --c-danger: 244 63 94;
+  --c-danger-fg: 76 5 25;
+
+  /* Identical to the light values on purpose — see the note in :root. */
+  --c-code-bg: 15 23 42;
+  --c-code-fg: 226 232 240;
+  --c-code-border: 51 65 85;
+  --c-code-muted: 148 163 184;
+  --c-code-chrome: 30 41 59;
+  --c-code-chrome-fg: 203 213 225;
+  --c-code-accent: 45 212 191;
+
+  /* Identical to the light values on purpose — see the note in :root. */
+  --c-diagram-bg: 248 250 252;
+  --c-diagram-border: 226 232 240;
+  --c-diagram-skeleton-a: 241 245 249;
+  --c-diagram-skeleton-b: 226 232 240;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -31,7 +278,7 @@ body {
 }
 
 .markdown-body {
-  color: rgb(15 23 42);
+  color: rgb(var(--c-slate-900));
   line-height: 1.8;
 }
 
@@ -58,7 +305,7 @@ body {
   margin-top: 2.2rem;
   margin-bottom: 0.7rem;
   padding-top: 0.15rem;
-  border-top: 1px solid rgb(226 232 240);
+  border-top: 1px solid rgb(var(--c-slate-200));
   font-size: clamp(1.4rem, 2.6vw, 1.75rem);
 }
 
@@ -84,7 +331,7 @@ body {
 
 .markdown-body p,
 .markdown-body li {
-  color: rgb(51 65 85);
+  color: rgb(var(--c-slate-700));
   font-size: 1rem;
 }
 
@@ -94,7 +341,7 @@ body {
 }
 
 .markdown-body a {
-  color: rgb(13 148 136);
+  color: rgb(var(--c-teal-700));
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -115,13 +362,13 @@ body {
   border-radius: 0.6rem;
   font-size: 0.8rem;
   font-weight: 600;
-  color: rgb(13 148 136);
+  color: rgb(var(--c-teal-700));
   transition: background-color 0.15s, color 0.15s;
 }
 
 .btn-back:hover {
-  background: rgb(240 253 250);
-  color: rgb(15 118 110);
+  background: rgb(var(--c-teal-50));
+  color: rgb(var(--c-teal-700));
 }
 
 .btn-back svg {
@@ -137,17 +384,17 @@ body {
   align-items: center;
   gap: 0.375rem;
   border-radius: 9999px;
-  border: 1px solid rgb(226 232 240);
+  border: 1px solid rgb(var(--c-slate-200));
   padding: 0.375rem 0.75rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: rgb(71 85 105);
+  color: rgb(var(--c-slate-600));
   transition: color 0.15s, border-color 0.15s;
 }
 
 .btn-pill:hover {
-  border-color: rgb(20 184 166);
-  color: rgb(13 148 136);
+  border-color: rgb(var(--c-teal-500));
+  color: rgb(var(--c-teal-700));
 }
 
 /* CTA buttons embedded as raw HTML (e.g. "View Interactive Benchmark" links to a
@@ -178,23 +425,23 @@ body {
   max-width: 100%;
   height: auto;
   border-radius: 0.85rem;
-  border: 1px solid rgb(226 232 240);
+  border: 1px solid rgb(var(--c-slate-200));
 }
 
 .markdown-body figcaption {
   margin-top: 0.5rem;
   font-size: 0.82rem;
-  color: rgb(100 116 139);
+  color: rgb(var(--c-slate-500));
   text-align: center;
 }
 
 .markdown-body thead {
-  background: rgb(241 245 249);
+  background: rgb(var(--c-slate-100));
 }
 
 .markdown-body th,
 .markdown-body td {
-  border: 1px solid rgb(226 232 240);
+  border: 1px solid rgb(var(--c-slate-200));
   padding: 0.55rem 0.75rem;
   text-align: left;
   font-size: 0.92rem;
@@ -202,7 +449,7 @@ body {
 
 .markdown-body code {
   border-radius: 0.35rem;
-  background: rgb(226 232 240);
+  background: rgb(var(--c-slate-200));
   padding: 0.125rem 0.35rem;
   font-size: 0.86em;
 }
@@ -211,7 +458,7 @@ body {
   position: relative;
   overflow-x: auto;
   border-radius: 0.85rem;
-  background: rgb(15 23 42);
+  background: rgb(var(--c-code-bg));
   padding: 1rem;
 }
 
@@ -233,7 +480,7 @@ body {
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid rgb(51 65 85);
+  border-bottom: 1px solid rgb(var(--c-code-border));
 }
 
 .markdown-body .code-language {
@@ -241,7 +488,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: rgb(148 163 184);
+  color: rgb(var(--c-code-muted));
 }
 
 .markdown-body .code-copy-button {
@@ -250,27 +497,27 @@ body {
   padding: 0.2rem 0.6rem;
   font-size: 0.72rem;
   font-weight: 600;
-  color: rgb(203 213 225);
-  background: rgb(30 41 59);
-  border: 1px solid rgb(51 65 85);
+  color: rgb(var(--c-code-chrome-fg));
+  background: rgb(var(--c-code-chrome));
+  border: 1px solid rgb(var(--c-code-border));
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s;
 }
 
 .markdown-body .code-copy-button:hover {
-  color: rgb(240 253 250);
-  border-color: rgb(45 212 191);
+  color: rgb(var(--c-code-fg));
+  border-color: rgb(var(--c-code-accent));
 }
 
 .markdown-body .code-copy-button--copied {
-  color: rgb(45 212 191);
-  border-color: rgb(45 212 191);
+  color: rgb(var(--c-code-accent));
+  border-color: rgb(var(--c-code-accent));
 }
 
 .markdown-body pre code {
   background: transparent;
   padding: 0;
-  color: rgb(226 232 240);
+  color: rgb(var(--c-code-fg));
 }
 
 /* ── Syntax highlighting (rehype-highlight / highlight.js token classes) ──
@@ -280,7 +527,7 @@ body {
 
 .hljs-comment,
 .hljs-quote {
-  color: rgb(148 163 184);
+  color: rgb(var(--c-code-muted));
   font-style: italic;
 }
 
@@ -332,7 +579,7 @@ body {
 .hljs-params,
 .hljs-punctuation,
 .hljs-operator {
-  color: rgb(226 232 240);
+  color: rgb(var(--c-code-fg));
 }
 
 .hljs-meta,
@@ -357,10 +604,10 @@ body {
 }
 
 .markdown-body blockquote {
-  border-left: 4px solid rgb(148 163 184);
+  border-left: 4px solid rgb(var(--c-slate-400));
   margin: 1.2rem 0;
   padding-left: 1rem;
-  color: rgb(71 85 105);
+  color: rgb(var(--c-slate-600));
   font-style: italic;
 }
 
@@ -400,11 +647,11 @@ body {
 }
 
 .markdown-body .callout-tip {
-  border-color: rgb(167 243 208);
+  border-color: rgb(var(--c-emerald-200));
   background: rgb(240 253 244);
 }
 .markdown-body .callout-tip .callout-title {
-  color: rgb(4 120 87);
+  color: rgb(var(--c-emerald-700));
 }
 
 .markdown-body .callout-important {
@@ -444,7 +691,7 @@ body {
 }
 
 .status-mark--yes {
-  color: rgb(13 148 136);
+  color: rgb(var(--c-teal-700));
 }
 
 .status-mark--no {
@@ -497,7 +744,7 @@ body {
    hierarchy is visible without reading the text. */
 
 .toc-rail {
-  border-left: 2px solid rgb(226 232 240);
+  border-left: 2px solid rgb(var(--c-slate-200));
 }
 
 .toc-link {
@@ -505,20 +752,20 @@ body {
   border-left: 2px solid transparent;
   margin-left: -2px;
   padding: 0.35rem 0 0.35rem 0.85rem;
-  color: rgb(71 85 105);
+  color: rgb(var(--c-slate-600));
   font-weight: 500;
   transition: color 0.15s, border-color 0.15s, background-color 0.15s;
 }
 
 .toc-link:hover {
-  color: rgb(15 118 110);
-  background: rgb(240 253 250);
+  color: rgb(var(--c-teal-700));
+  background: rgb(var(--c-teal-50));
 }
 
 .toc-link--active {
-  border-left-color: rgb(20 184 166);
-  background: rgb(240 253 250);
-  color: rgb(15 118 110);
+  border-left-color: rgb(var(--c-teal-500));
+  background: rgb(var(--c-teal-50));
+  color: rgb(var(--c-teal-700));
   font-weight: 700;
 }
 
@@ -526,12 +773,12 @@ body {
   padding-left: 1.6rem;
   font-size: 0.8rem;
   font-weight: 400;
-  color: rgb(100 116 139);
+  color: rgb(var(--c-slate-500));
 }
 
 .toc-sub .toc-link--active {
   font-weight: 600;
-  color: rgb(15 118 110);
+  color: rgb(var(--c-teal-700));
 }
 
 /* ── Mermaid diagram container ─────────────────────────────────────────── */
@@ -539,17 +786,17 @@ body {
 .mermaid-diagram {
   margin: 1.5rem 0;
   padding: 1.25rem;
-  border: 1px solid rgb(226 232 240);
+  border: 1px solid rgb(var(--c-diagram-border));
   border-radius: 0.85rem;
-  background: rgb(248 250 252);
+  background: rgb(var(--c-diagram-bg));
   overflow-x: auto;
   min-height: 48px;
   /* Skeleton loading animation while mermaid.js is initializing */
   background-image: linear-gradient(
     90deg,
-    rgb(241 245 249) 25%,
-    rgb(226 232 240) 50%,
-    rgb(241 245 249) 75%
+    rgb(var(--c-diagram-skeleton-a)) 25%,
+    rgb(var(--c-diagram-skeleton-b)) 50%,
+    rgb(var(--c-diagram-skeleton-a)) 75%
   );
   background-size: 200% 100%;
   animation: mermaidSkeleton 1.4s ease infinite;
@@ -557,7 +804,7 @@ body {
 
 .mermaid-diagram.mermaid-rendered {
   background-image: none;
-  background: rgb(248 250 252);
+  background: rgb(var(--c-diagram-bg));
   animation: none;
   display: flex;
   justify-content: center;
@@ -599,3 +846,115 @@ body {
   }
 }
 
+
+/* ── Dark-theme overrides for the hue-specific rules ──────────────────────────
+ *
+ * Everything expressed through the tokenised Tailwind palettes flips automatically (see the token
+ * block at the top of this file). What is left are the rules that hardcode a hue outside those
+ * seven palettes — the five GitHub callout types use blue/purple/green/yellow/red — plus two
+ * status colours. Those get explicit overrides here rather than four more variable ramps that
+ * nothing else would use.
+ *
+ * Values are the -950/-900 end of each hue for surfaces and the -300/-400 end for text, which is
+ * the same relationship the mirrored ramps produce, so callouts stay consistent with the badges
+ * and pills elsewhere on the page.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.dark .markdown-body .callout-note {
+  border-color: rgb(30 58 138);
+  background: rgb(23 37 84);
+}
+.dark .markdown-body .callout-note .callout-title {
+  color: rgb(147 197 253);
+}
+
+.dark .markdown-body .callout-tip {
+  background: rgb(5 46 22);
+}
+.dark .markdown-body .callout-important {
+  border-color: rgb(88 28 135);
+  background: rgb(59 7 100);
+}
+.dark .markdown-body .callout-important .callout-title {
+  color: rgb(216 180 254);
+}
+
+.dark .markdown-body .callout-warning {
+  border-color: rgb(113 63 18);
+  background: rgb(66 32 6);
+}
+.dark .markdown-body .callout-warning .callout-title {
+  color: rgb(253 224 71);
+}
+
+.dark .markdown-body .callout-caution {
+  border-color: rgb(127 29 29);
+  background: rgb(69 10 10);
+}
+.dark .markdown-body .callout-caution .callout-title {
+  color: rgb(252 165 165);
+}
+
+/* ✗ status marks and the mermaid parse-error box: both are red-on-light in the default theme. */
+.dark .status-mark--no {
+  color: rgb(248 113 113);
+}
+
+.dark .mermaid-diagram .mermaid-error {
+  background: rgb(69 10 10);
+  border-color: rgb(127 29 29);
+  color: rgb(254 202 202);
+}
+
+/* The heading anchor is cyan-700, dark enough to disappear against a dark page. */
+.dark .markdown-body .heading-anchor {
+  color: rgb(103 232 249);
+}
+
+/* ── Article CTA buttons ──────────────────────────────────────────────────────
+ *
+ * The "View the Interactive … Lab" buttons in content/**.md were 11 copies of a long Tailwind
+ * utility string embedded in Markdown, and they were broken twice over:
+ *
+ *  1. Tailwind never scanned `content/`, so `bg-teal-600` / `bg-slate-900` generated no CSS at all
+ *     and the buttons rendered as white text on the page background — invisible. (Fixed by adding
+ *     the glob in tailwind.config.js.)
+ *  2. Once the background did generate, `.markdown-body a` (specificity 0,1,1) still beat the
+ *     `.text-accent-fg` utility (0,1,0), so the label kept the link colour and measured 1:1 in
+ *     light and 1.2:1 in dark — see `npm run check:contrast`.
+ *
+ * A component class fixes the specificity properly instead of fighting it, and collapses eleven
+ * copies of an unmaintainable class string down to one name per variant.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.markdown-body a.lab-cta,
+.markdown-body a.lab-cta-inverse {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0 2rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  transition: filter 0.15s, box-shadow 0.15s;
+}
+
+.markdown-body a.lab-cta {
+  background: rgb(var(--c-accent));
+  color: rgb(var(--c-accent-fg));
+}
+
+.markdown-body a.lab-cta-inverse {
+  background: rgb(var(--c-inverse));
+  color: rgb(var(--c-inverse-fg));
+}
+
+.markdown-body a.lab-cta:hover,
+.markdown-body a.lab-cta-inverse:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  text-decoration: none;
+}

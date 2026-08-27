@@ -1,19 +1,22 @@
-import { Home } from 'lucide-react';
+import { Home, Moon, Sun } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import { useTheme } from '../../theme/useTheme';
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
   `shrink-0 text-xs font-semibold uppercase tracking-wide transition ${
-    isActive ? 'text-teal-600' : 'text-slate-500 hover:text-slate-900'
+    isActive ? 'text-teal-700' : 'text-slate-500 hover:text-slate-900'
   }`;
 
 function SiteHeader() {
+  const { theme, toggle } = useTheme();
+
   return (
-    <header className="sticky top-0 z-40 h-12 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur">
       <div className="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6">
         <NavLink
           to="/"
           aria-label="Go to home"
-          className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-600"
+          className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700"
         >
           <Home size={16} />
         </NavLink>
@@ -47,7 +50,7 @@ function SiteHeader() {
               avoid announcing "Explore" twice back to back. */}
           <span
             aria-hidden="true"
-            className="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-300"
+            className="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500"
           >
             Explore
           </span>
@@ -73,6 +76,18 @@ function SiteHeader() {
             </NavLink>
           </nav>
         </div>
+
+        {/* Deliberately a sibling of the scrolling nav, not a child: at 320px that row already
+            overflows, and a control placed inside it would be scrolled off-screen with no
+            affordance suggesting it exists. */}
+        <button
+          type="button"
+          onClick={toggle}
+          aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"
+        >
+          {theme === 'dark' ? <Sun size={15} aria-hidden="true" /> : <Moon size={15} aria-hidden="true" />}
+        </button>
       </div>
     </header>
   );
