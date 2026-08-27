@@ -10,6 +10,7 @@
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
+    "resolveJsonModule": true,
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
@@ -20,5 +21,10 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  // Tests are excluded here on purpose. This config has no `@types/node`, which is what stops a
+  // Node-only API from silently compiling inside a browser component. The tests legitimately read
+  // the content corpus off disk, so they get their own config (tsconfig.test.json) with Node types
+  // rather than relaxing the app's.
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
 }

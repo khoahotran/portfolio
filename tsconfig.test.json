@@ -1,0 +1,24 @@
+{
+  // Typechecks the test suite, which the app config deliberately excludes — see the note there.
+  // Node types are available here because the tests read the real content/ corpus off disk to
+  // assert slug parity against what actually ships.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "checkJs": false,
+    "resolveJsonModule": true,
+    "strict": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    // skipLibCheck matches tsconfig.app.json: mermaid's shipped types reference `type-fest`, which
+    // is not a direct dependency, and that is not this suite's problem to solve.
+    "skipLibCheck": true,
+    // `vite/client` is required because the tests import app modules that use `import.meta.env`
+    // and `import.meta.glob`. Vitest itself is imported explicitly, so its globals aren't needed.
+    "types": ["node", "vite/client"]
+  },
+  "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "scripts/**/*.test.mjs", "scripts/lib/*.mjs", "src/labs/*.ts", "src/content-engine/*.ts"]
+}
