@@ -19,10 +19,10 @@ function RelatedContent({ items }: Props) {
           <Link
             key={item.slug}
             to={`/${item.collection}/${item.slug}`}
-            className="group flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg"
+            className="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg"
           >
             <div>
-              <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-600">
+              <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">
                 {collectionLabel(item.collection)}
               </div>
               <h3 className="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">
@@ -30,7 +30,7 @@ function RelatedContent({ items }: Props) {
               </h3>
               <p className="mt-2 line-clamp-2 text-xs text-slate-500">{item.summary}</p>
             </div>
-            <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-400">
+            <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500">
               <span>{formatDate(item.date)}</span>
               <span>{item.readingText}</span>
             </div>

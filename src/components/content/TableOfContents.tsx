@@ -50,7 +50,7 @@ function TableOfContents({ toc }: Props) {
   }
 
   return (
-    <div className="toc sticky top-24 rounded-xl border border-slate-200 bg-white p-4">
+    <div className="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4">
       <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2>
       {/* The vertical rail is one continuous line (not per-item borders) so the
           active item's teal segment reads as a moving position marker rather

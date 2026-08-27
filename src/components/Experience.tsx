@@ -3,9 +3,9 @@ import { experienceData as experiences } from '../data/portfolioData';
 
 export default function Experience() {
   return (
-    <section id="experience" className="py-24 px-6 bg-white">
+    <section id="experience" className="py-24 px-6 bg-surface">
       <div className="max-w-5xl mx-auto">
-        <h2 className="text-sm uppercase tracking-widest text-teal-600 mb-12 font-medium italic">
+        <h2 className="text-sm uppercase tracking-widest text-teal-700 mb-12 font-medium italic">
           / Experience
         </h2>
         <div className="space-y-12">
@@ -27,14 +27,14 @@ export default function Experience() {
                     <span>{exp.location}</span>
                   </div>
                 </div>
-                <span className="text-sm font-mono text-slate-400">
+                <span className="text-sm font-mono text-slate-500">
                   {exp.period}
                 </span>
               </div>
               <ul className="space-y-2 text-slate-600">
                 {exp.description.map((item, i) => (
                   <li key={i} className="flex items-start">
-                    <span className="text-teal-500 mr-2 opacity-50">#</span>
+                    <span className="text-teal-700 mr-2 opacity-70">#</span>
                     <span>{item}</span>
                   </li>
                 ))}

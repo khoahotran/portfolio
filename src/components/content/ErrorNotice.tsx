@@ -16,7 +16,7 @@ function ErrorNotice({ message, onRetry }: Props) {
       <button
         type="button"
         onClick={onRetry}
-        className="mt-4 rounded-full border border-rose-300 bg-white px-4 py-1.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-100"
+        className="mt-4 rounded-full border border-rose-300 bg-surface px-4 py-1.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-100"
       >
         Try again
       </button>

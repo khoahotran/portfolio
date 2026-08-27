@@ -22,13 +22,13 @@ const ContentCard = memo(function ContentCard({
   collection: ContentCollection;
 }) {
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-teal-400">
+    <article className="rounded-2xl border border-slate-200 bg-surface p-5 transition hover:-translate-y-0.5 hover:border-teal-400">
       <div className="mb-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
         <span>{formatDate(item.date)}</span>
         <span>{item.readingText}</span>
       </div>
       <h2 className="text-xl font-semibold tracking-tight text-slate-900">
-        <Link to={`${routeForCollection(collection)}/${item.slug}`} className="hover:text-teal-600">
+        <Link to={`${routeForCollection(collection)}/${item.slug}`} className="hover:text-teal-700">
           {item.title}
         </Link>
       </h2>
@@ -133,7 +133,7 @@ function ContentListPage({ collection, title, description }: Props) {
               setSearchParams(next);
             }}
             placeholder="Search within this collection"
-            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none ring-teal-500 focus:ring"
+            className="w-full rounded-xl border border-slate-300 bg-surface px-4 py-2.5 text-sm text-slate-900 outline-none ring-teal-500 focus:ring"
           />
         </label>
       </section>
@@ -141,7 +141,7 @@ function ContentListPage({ collection, title, description }: Props) {
       <section className="mb-8 flex flex-wrap gap-2">
         <button
           type="button"
-          className={`rounded-full border px-3 py-1 text-xs font-semibold ${!selectedTag ? 'border-teal-500 bg-teal-500 text-white' : 'border-slate-300 text-slate-700'
+          className={`rounded-full border px-3 py-1 text-xs font-semibold ${!selectedTag ? 'border-accent bg-accent text-accent-fg' : 'border-slate-300 text-slate-700'
             }`}
           onClick={() => setSearchParams(keyword ? { q: keyword } : {})}
         >
@@ -151,7 +151,7 @@ function ContentListPage({ collection, title, description }: Props) {
           <button
             key={tag}
             type="button"
-            className={`rounded-full border px-3 py-1 text-xs font-semibold ${selectedTag === tag ? 'border-teal-500 bg-teal-500 text-white' : 'border-slate-300 text-slate-700'
+            className={`rounded-full border px-3 py-1 text-xs font-semibold ${selectedTag === tag ? 'border-accent bg-accent text-accent-fg' : 'border-slate-300 text-slate-700'
               }`}
             onClick={() => setSearchParams(keyword ? { tag, q: keyword } : { tag })}
           >

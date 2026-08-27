@@ -58,10 +58,10 @@ function ArticleNav({ collection, slug }: Props) {
       {previous ? (
         <Link
           to={`${base}/${previous.slug}`}
-          className="group rounded-xl border border-slate-200 bg-white p-4 transition-colors hover:border-teal-500"
+          className="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500"
         >
-          <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">Previous</div>
-          <div className="text-sm font-semibold text-slate-900 group-hover:text-teal-600">{previous.title}</div>
+          <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div>
+          <div className="text-sm font-semibold text-slate-900 group-hover:text-teal-700">{previous.title}</div>
         </Link>
       ) : (
         <div />
@@ -69,10 +69,10 @@ function ArticleNav({ collection, slug }: Props) {
       {next ? (
         <Link
           to={`${base}/${next.slug}`}
-          className="group rounded-xl border border-slate-200 bg-white p-4 text-right transition-colors hover:border-teal-500"
+          className="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500"
         >
-          <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">Next</div>
-          <div className="text-sm font-semibold text-slate-900 group-hover:text-teal-600">{next.title}</div>
+          <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div>
+          <div className="text-sm font-semibold text-slate-900 group-hover:text-teal-700">{next.title}</div>
         </Link>
       ) : (
         <div />
