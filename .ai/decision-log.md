@@ -236,3 +236,29 @@ needs no GCP credentials and is fully reproducible offline.
 - Fixed two stale filename comments in `src/labs/registry.ts` while in this area:
   `collidesWithArticleSlug` comments for `db-event-replay-benchmark` and `go-vs-ts-concurrency`
   still referenced their pre-Phase-4 filenames (before the `YYYY-MM-DD-` prefix rename).
+
+## Decision 14: Third Real Benchmark Harness — go-vs-ts-concurrency, and It Reverses the Finding
+**Date:** 2026-08-27
+**Decision:** `benchmarks/go-vs-ts-concurrency/` is a real, runnable harness (Go + Node.js, no
+external services) that reproduces the `go-vs-ts-concurrency` lab's dataset. Same pattern as
+Decisions 12-13. This closes all three `measured` labs flagged in Phase 4 — every one now imports a
+committed `results.json` from a real harness instead of a hardcoded `DATASET`.
+**Rationale:** Peak memory is read from `/proc/self/status`'s `VmHWM` — the Linux kernel's own
+peak-RSS accounting — identically for both languages, rather than a periodic sample of
+`process.memoryUsage().rss` (Node) or `runtime.MemStats` (Go) that could miss the true peak between
+samples and bias the comparison before either program does anything.
+**Consequences:**
+- **This is the one harness rewrite that reversed the finding's direction, not just its magnitude.**
+  The original article claimed Node "balloons to nearly 500MB" at 50,000 tasks against Go's "under
+  50MB" — a gap that widens with scale. The real, measured result is the opposite: 10.3x at 1,000
+  tasks, narrowing to 1.2x at 50,000. Node's memory is dominated by a roughly fixed ~45-50MB runtime
+  baseline paid once regardless of task count; Go's baseline is a few megabytes with a per-task cost
+  close to linear, so Go looks dramatically leaner at low concurrency and much less so at high
+  concurrency — the opposite of where the old claim placed the gap.
+- The structural explanation survives even though the specific numbers and their trend don't: a
+  goroutine's small stack is still genuinely cheaper per-task than a Promise-plus-timer object. What
+  doesn't survive is that this made the *absolute* gap larger at scale — it doesn't; it's smallest
+  exactly where high concurrency is the actual point of choosing Go.
+- The article's "Key Observations" section was rewritten, not patched — a direction-reversing
+  finding can't be represented by swapping numbers into the old prose, since the old prose's own
+  causal claim (Promises get proportionally worse at scale) is what the data contradicts.

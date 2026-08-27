@@ -185,14 +185,18 @@ export const labs: LabDefinition[] = [
     provenance: {
       kind: 'measured',
       environment:
-        'N concurrent workers each performing a 50 ms mock network call. Go spawns one goroutine per ' +
-        'task under a sync.WaitGroup; Node.js uses Promise.all over the equivalent async functions. ' +
-        'Peak resident set size and total wall-clock time were recorded.',
-      measuredOn: 'June 2026',
+        'N concurrent workers each performing a 50 ms mock network call, on the same local Docker ' +
+        'host, one language at a time. Go spawns one goroutine per task under a sync.WaitGroup; ' +
+        'Node.js uses Promise.all over setTimeout-based async functions. Peak resident set size read ' +
+        "from /proc/self/status's VmHWM — the OS's own peak-memory accounting, identical method for " +
+        'both languages — and total wall-clock time.',
+      measuredOn: 'August 2026',
+      harness: 'https://github.com/khoahotran/portfolio/tree/main/benchmarks/go-vs-ts-concurrency',
       caveat:
-        'Host hardware was not recorded at the time, and the harness is not published — so the ' +
-        'absolute memory and time figures are not reproducible and should not be quoted. The ' +
-        'order-of-magnitude gap in memory footprint is the durable finding here, not the exact MB.',
+        'The re-measurement reverses the direction of the original claim, not just its magnitude — ' +
+        "see this lab's article for why: the memory gap narrows with scale (10.3x at 1k tasks, 1.2x " +
+        'at 50k), because Node pays a roughly fixed ~50MB runtime baseline once while Go scales ' +
+        'closer to linearly per task.',
     },
     title: 'Benchmark: Go vs TS Concurrency',
     description: 'Interactive benchmark visualizing memory and execution time for concurrent tasks.',

@@ -1,0 +1,10 @@
+services:
+  go-harness:
+    build: ./go
+    # Both harnesses run isolated by default (no --memory flag): the point is to compare each
+    # runtime's actual footprint under the same host, not to simulate a constrained container.
+    profiles: ["run"]
+
+  node-harness:
+    build: ./node
+    profiles: ["run"]

@@ -218,7 +218,7 @@ Two small, cheap-now fixes surfaced while measuring the above:
   the file crosses ~500 KB, per the same measure-before-acting discipline as
   `.ai/audit-followups.md` item 7.
 
-### 5.8 Real benchmark harnesses (closes the largest remaining credibility gap)
+### 5.8 ✅ Real benchmark harnesses — DONE (2026-08-27, closed the largest remaining credibility gap)
 
 **1/3 done (2026-08-27): `redis-vs-bullmq`.** Real, runnable harness at `benchmarks/redis-vs-bullmq/`
 (Go + Node + Docker Compose, `./run.sh` reproduces it end to end). The lab and article both now
@@ -232,7 +232,17 @@ result than the old "4-5x" claim: the throughput gap is payload-dependent, ~2.2-
 Docker Compose, `./run.sh` reproduces it end to end. The re-measurement found a **much larger** gap
 than the old claim: ~19.6-30.1x (vs. the old flat "7-8x"), and the gap doesn't stay flat — it tracks
 document count, since Firestore pays a per-document read cost a single Postgres range scan doesn't.
-`go-vs-ts-concurrency` is the last one remaining.
+
+**3/3 done: `go-vs-ts-concurrency`.** Real harness at `benchmarks/go-vs-ts-concurrency/` (Go +
+Node, no external services, `./run.sh` runs in well under a minute). This one **reversed the
+finding's direction, not just its magnitude**: the old claim said the memory gap widens with scale
+("balloons to nearly 500MB"); the real, measured result is that it narrows (10.3x at 1k tasks -> 1.2x
+at 50k), because Node's footprint is dominated by a roughly fixed ~50MB runtime baseline while Go
+scales closer to linearly per task. The article's "Key Observations" section was rewritten, not
+just its numbers updated, since the old narrative was directionally wrong.
+
+All three harnesses closed the exact gap Phase 4 flagged: every `measured` lab now imports a
+committed `results.json` from a real, runnable harness instead of a hardcoded `DATASET`.
 The three `measured` labs — `redis-vs-bullmq`, `go-vs-ts-concurrency`, `db-event-replay-benchmark` —
 currently ship a `caveat` admitting the harness that produced their numbers isn't in the repo. This
 is honest, not resolved. Per the chosen direction: write real, runnable harnesses rather than
