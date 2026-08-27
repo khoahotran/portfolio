@@ -14,9 +14,8 @@
       "summary": "A sequence diagram in a new case study failed to parse. The cause wasn't the character I suspected first — and the fix I tried second broke the same way for a different reason.",
       "date_published": "2026-08-27T00:00:00.000Z",
       "tags": [
-        "mermaid",
-        "markdown",
-        "debugging"
+        "frontend-architecture",
+        "testing"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/a-diagram-that-wouldnt-render.png"
     },
@@ -28,8 +27,7 @@
       "date_published": "2026-08-27T00:00:00.000Z",
       "tags": [
         "accessibility",
-        "wcag",
-        "tailwind",
+        "frontend-architecture",
         "testing",
         "trade-offs"
       ],
@@ -44,9 +42,8 @@
       "tags": [
         "go",
         "typescript",
-        "backend",
-        "language-comparison",
         "architecture",
+        "benchmark",
         "trade-offs"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/go-vs-typescript-for-backend-services.png"
@@ -58,10 +55,7 @@
       "summary": "A practical evaluation of Firebase Functions vs Cloud Run, and why the simplest serverless model won out for our specific workloads.",
       "date_published": "2026-06-03T00:00:00.000Z",
       "tags": [
-        "system-architecture",
         "serverless",
-        "firebase",
-        "gcp",
         "trade-offs"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/why-i-chose-firebase-functions-over-cloud-run.png"

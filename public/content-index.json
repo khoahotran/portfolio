@@ -5,8 +5,6 @@
     "tags": [
       "seo",
       "react",
-      "vite",
-      "jamstack",
       "frontend-architecture"
     ],
     "summary": "This portfolio was a client-rendered SPA on GitHub Pages for months. Every deep link a crawler could find returned 404. Here's how I found it, and what I built instead of migrating frameworks.",
@@ -22,7 +20,7 @@
     "date": "2026-08-27",
     "tags": [
       "adr",
-      "jamstack",
+      "frontend-architecture",
       "react",
       "seo",
       "architecture"
@@ -43,9 +41,8 @@
     "title": "Field Note: A Diagram That Wouldn't Render",
     "date": "2026-08-27",
     "tags": [
-      "mermaid",
-      "markdown",
-      "debugging"
+      "frontend-architecture",
+      "testing"
     ],
     "summary": "A sequence diagram in a new case study failed to parse. The cause wasn't the character I suspected first — and the fix I tried second broke the same way for a different reason.",
     "draft": false,
@@ -63,8 +60,7 @@
     "date": "2026-08-27",
     "tags": [
       "accessibility",
-      "wcag",
-      "tailwind",
+      "frontend-architecture",
       "testing",
       "trade-offs"
     ],
@@ -84,10 +80,9 @@
     "date": "2026-08-27",
     "tags": [
       "go",
-      "nextjs",
+      "frontend-architecture",
       "postgresql",
       "redis",
-      "server-actions",
       "spec-driven-development"
     ],
     "summary": "A React 19 + Go financial tracker built spec-first: every business rule traces from an SRS to an SDS to a passing integration test, with a hard server-side boundary between the browser and the API.",
@@ -106,10 +101,10 @@
     "title": "Building Jujuja: A Production Quest System for Burst Traffic",
     "date": "2026-06-28",
     "tags": [
-      "case-study",
-      "nestjs",
+      "architecture",
+      "typescript",
       "redis",
-      "bullmq",
+      "queues",
       "firestore"
     ],
     "summary": "How we built the Jujuja backend to handle 1,500 concurrent users per minute during campaign bursts, processing daily quests and loyalty points using BullMQ and NestJS.",
@@ -132,7 +127,7 @@
       "system-design",
       "go",
       "python",
-      "redis-streams",
+      "redis",
       "hft"
     ],
     "summary": "How I architected QuantAlpha Lab, a distributed research platform that bridges the gap between Python data science and Go backend engineering.",
@@ -153,10 +148,10 @@
     "tags": [
       "go",
       "grpc",
-      "microservices",
-      "auth",
+      "distributed-systems",
+      "security",
       "opentelemetry",
-      "protobuf"
+      "api-design"
     ],
     "summary": "A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.",
     "draft": false,
@@ -198,8 +193,7 @@
     "date": "2026-06-28",
     "tags": [
       "adr",
-      "graphql",
-      "api-gateway",
+      "api-design",
       "architecture",
       "go"
     ],
@@ -220,9 +214,7 @@
     "date": "2026-06-28",
     "tags": [
       "system-design",
-      "algolia",
-      "search",
-      "geolocation"
+      "search"
     ],
     "summary": "How we leveraged Algolia to build a blazing fast, geo-aware store discovery engine for SeensioGO and Jujuja, achieving 150-300ms latency.",
     "draft": false,
@@ -241,11 +233,9 @@
     "date": "2026-06-28",
     "tags": [
       "opentelemetry",
-      "jaeger",
       "observability",
       "go",
-      "distributed-systems",
-      "tracing"
+      "distributed-systems"
     ],
     "summary": "A practical guide to instrumenting Go microservices with OpenTelemetry: from SDK setup to trace context propagation, sampling strategies, and reading Jaeger flame graphs.",
     "draft": false,
@@ -266,7 +256,7 @@
       "event-sourcing",
       "cqrs",
       "architecture",
-      "database",
+      "system-design",
       "go",
       "trade-offs"
     ],
@@ -288,10 +278,10 @@
     "date": "2026-06-28",
     "tags": [
       "machine-learning",
-      "finance",
+      "fintech",
       "python",
       "hft",
-      "research"
+      "adr"
     ],
     "summary": "Research notes on extracting Order Book Imbalance (OBI) features from Level-3 market data (VN30F2112) to train rolling-window ML classifiers for High-Frequency Trading.",
     "draft": false,
@@ -312,7 +302,7 @@
       "architecture",
       "event-sourcing",
       "cqrs",
-      "interactive-demo"
+      "benchmark"
     ],
     "summary": "An interactive visualization of how application state is derived from an immutable, append-only event log.",
     "draft": false,
@@ -329,14 +319,11 @@
     "title": "Redis Streams vs BullMQ: Choosing Your Job Queue",
     "date": "2026-06-28",
     "tags": [
-      "experiment",
       "benchmark",
       "redis",
-      "bullmq",
       "queues",
       "go",
-      "typescript",
-      "async-jobs"
+      "typescript"
     ],
     "summary": "A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns.",
     "draft": false,
@@ -355,9 +342,8 @@
     "date": "2026-06-28",
     "tags": [
       "distributed-systems",
-      "microservices",
       "saga-pattern",
-      "interactive-demo"
+      "benchmark"
     ],
     "summary": "An interactive visualization of the Saga distributed transaction pattern, demonstrating automated compensating rollbacks.",
     "draft": false,
@@ -400,8 +386,8 @@
     "tags": [
       "system-design",
       "go",
-      "finance",
-      "event-driven",
+      "fintech",
+      "distributed-systems",
       "architecture"
     ],
     "summary": "How I built a real-time fraud detection engine using Event Sourcing, CQRS, and velocity rules to automatically freeze malicious accounts in a core banking system.",
@@ -425,7 +411,7 @@
       "event-sourcing",
       "go",
       "firestore",
-      "banking"
+      "fintech"
     ],
     "summary": "How I designed a Saga orchestrator pattern for two-phase distributed transfers between account aggregates, with automatic compensation and dead-letter recovery.",
     "draft": false,
@@ -445,9 +431,8 @@
     "tags": [
       "go",
       "typescript",
-      "backend",
-      "language-comparison",
       "architecture",
+      "benchmark",
       "trade-offs"
     ],
     "summary": "A working engineer's honest comparison of Go and TypeScript for backend services, based on using both in production — and a framework for choosing between them.",
@@ -469,7 +454,7 @@
       "event-sourcing",
       "postgresql",
       "firestore",
-      "database"
+      "system-design"
     ],
     "summary": "An interactive benchmark comparing the time it takes to replay tens of thousands of immutable events into a Read Projection.",
     "draft": false,
@@ -489,8 +474,7 @@
     "tags": [
       "benchmark",
       "go",
-      "typescript",
-      "concurrency"
+      "typescript"
     ],
     "summary": "An interactive benchmark visualizing memory footprint and execution time for handling tens of thousands of concurrent network-bound tasks.",
     "draft": false,
@@ -535,10 +519,8 @@
     "date": "2026-06-03",
     "tags": [
       "firestore",
-      "nosql",
       "distributed-systems",
-      "transactions",
-      "atomic-operations"
+      "fintech"
     ],
     "summary": "Implementing virtual currency transactions on Firestore with <1% consistency errors, covering atomic operation design and edge case handling.",
     "draft": false,
@@ -556,11 +538,10 @@
     "title": "Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System",
     "date": "2026-06-03",
     "tags": [
-      "nestjs",
-      "async-jobs",
-      "scalability",
+      "typescript",
       "queues",
-      "firebase-functions"
+      "benchmark",
+      "serverless"
     ],
     "summary": "How we redesigned daily quest processing from synchronous handlers to a queue-driven worker pool that handles 1,500 concurrent users during campaign windows.",
     "draft": false,
@@ -578,10 +559,7 @@
     "title": "Field Note: Why I Chose Firebase Functions Over Cloud Run",
     "date": "2026-06-03",
     "tags": [
-      "system-architecture",
       "serverless",
-      "firebase",
-      "gcp",
       "trade-offs"
     ],
     "summary": "A practical evaluation of Firebase Functions vs Cloud Run, and why the simplest serverless model won out for our specific workloads.",
@@ -602,7 +580,7 @@
     "tags": [
       "go",
       "grpc",
-      "microservices",
+      "distributed-systems",
       "redis",
       "kafka",
       "opentelemetry"
@@ -627,9 +605,7 @@
     "tags": [
       "cqrs",
       "architecture",
-      "backend",
-      "system-design",
-      "database"
+      "system-design"
     ],
     "summary": "A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path.",
     "draft": false,
@@ -643,11 +619,7 @@
     "title": "Engineering Lessons from a Failed Rollout",
     "date": "2026-03-21",
     "tags": [
-      "incident-response",
-      "release-engineering",
-      "devops",
-      "sre",
-      "lessons"
+      "incident-response"
     ],
     "summary": "What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.",
     "draft": false,
@@ -663,8 +635,7 @@
     "tags": [
       "idempotency",
       "api-design",
-      "distributed-systems",
-      "resilience"
+      "distributed-systems"
     ],
     "summary": "Practical patterns for making API writes replay-safe under network retries and partial distributed failures.",
     "draft": false,
@@ -678,10 +649,7 @@
     "title": "Designing a Permission System: Beyond Simple Roles",
     "date": "2026-03-21",
     "tags": [
-      "authorization",
-      "rbac",
       "security",
-      "policy-engine",
       "architecture"
     ],
     "summary": "How to evolve from brittle role checks to a maintainable, high-performance policy-based authorization engine.",
@@ -697,10 +665,8 @@
     "date": "2026-03-21",
     "tags": [
       "queues",
-      "workers",
-      "scaling",
-      "backend",
-      "performance"
+      "architecture",
+      "benchmark"
     ],
     "summary": "Operational patterns and practical lessons for scaling asynchronous jobs while keeping failure rates and costs predictable.",
     "draft": false,
@@ -714,10 +680,8 @@
     "title": "Queue vs Pub/Sub Comparison Notes",
     "date": "2026-03-21",
     "tags": [
-      "experiment",
+      "benchmark",
       "queues",
-      "pubsub",
-      "messaging",
       "system-design"
     ],
     "summary": "How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems.",
@@ -732,10 +696,7 @@
     "title": "Throughput Simulation Notes",
     "date": "2026-03-21",
     "tags": [
-      "experiment",
-      "throughput",
-      "capacity-planning",
-      "simulation"
+      "benchmark"
     ],
     "summary": "Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations.",
     "draft": false,
@@ -749,9 +710,9 @@
     "title": "Building an Event-Driven Architecture",
     "date": "2026-03-21",
     "tags": [
-      "event-driven",
+      "distributed-systems",
       "architecture",
-      "messaging",
+      "queues",
       "system-design",
       "kafka"
     ],
@@ -769,7 +730,7 @@
     "tags": [
       "trade-offs",
       "architecture",
-      "engineering-management"
+      "incident-response"
     ],
     "summary": "A structured framework to communicate architecture trade-offs with product, operations, and engineering teams.",
     "draft": false,
@@ -785,7 +746,7 @@
     "tags": [
       "go",
       "python",
-      "redis-streams",
+      "redis",
       "machine-learning",
       "hft"
     ],

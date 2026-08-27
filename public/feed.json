@@ -16,8 +16,6 @@
       "tags": [
         "seo",
         "react",
-        "vite",
-        "jamstack",
         "frontend-architecture"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/the-spa-google-never-saw.png"
@@ -30,7 +28,7 @@
       "date_published": "2026-08-27T00:00:00.000Z",
       "tags": [
         "adr",
-        "jamstack",
+        "frontend-architecture",
         "react",
         "seo",
         "architecture"
@@ -44,9 +42,8 @@
       "summary": "A sequence diagram in a new case study failed to parse. The cause wasn't the character I suspected first — and the fix I tried second broke the same way for a different reason.",
       "date_published": "2026-08-27T00:00:00.000Z",
       "tags": [
-        "mermaid",
-        "markdown",
-        "debugging"
+        "frontend-architecture",
+        "testing"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/a-diagram-that-wouldnt-render.png"
     },
@@ -58,8 +55,7 @@
       "date_published": "2026-08-27T00:00:00.000Z",
       "tags": [
         "accessibility",
-        "wcag",
-        "tailwind",
+        "frontend-architecture",
         "testing",
         "trade-offs"
       ],
@@ -73,10 +69,9 @@
       "date_published": "2026-08-27T00:00:00.000Z",
       "tags": [
         "go",
-        "nextjs",
+        "frontend-architecture",
         "postgresql",
         "redis",
-        "server-actions",
         "spec-driven-development"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/pfm.png"
@@ -88,10 +83,10 @@
       "summary": "How we built the Jujuja backend to handle 1,500 concurrent users per minute during campaign bursts, processing daily quests and loyalty points using BullMQ and NestJS.",
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
-        "case-study",
-        "nestjs",
+        "architecture",
+        "typescript",
         "redis",
-        "bullmq",
+        "queues",
         "firestore"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/building-jujuja-a-production-quest-system.png"
@@ -106,7 +101,7 @@
         "system-design",
         "go",
         "python",
-        "redis-streams",
+        "redis",
         "hft"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/designing-a-multi-role-hft-research-platform.png"
@@ -120,10 +115,10 @@
       "tags": [
         "go",
         "grpc",
-        "microservices",
-        "auth",
+        "distributed-systems",
+        "security",
         "opentelemetry",
-        "protobuf"
+        "api-design"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/grpc-service-mesh-in-go-aegis-architecture.png"
     },
@@ -150,8 +145,7 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "adr",
-        "graphql",
-        "api-gateway",
+        "api-design",
         "architecture",
         "go"
       ],
@@ -165,9 +159,7 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "system-design",
-        "algolia",
-        "search",
-        "geolocation"
+        "search"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/algolia-geo-search-for-store-discovery.png"
     },
@@ -179,11 +171,9 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "opentelemetry",
-        "jaeger",
         "observability",
         "go",
-        "distributed-systems",
-        "tracing"
+        "distributed-systems"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/distributed-tracing-with-opentelemetry-and-jaeger.png"
     },
@@ -197,7 +187,7 @@
         "event-sourcing",
         "cqrs",
         "architecture",
-        "database",
+        "system-design",
         "go",
         "trade-offs"
       ],
@@ -211,10 +201,10 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "machine-learning",
-        "finance",
+        "fintech",
         "python",
         "hft",
-        "research"
+        "adr"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/order-book-imbalance-hft-signal.png"
     },
@@ -228,7 +218,7 @@
         "architecture",
         "event-sourcing",
         "cqrs",
-        "interactive-demo"
+        "benchmark"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/event-sourcing-replay.png"
     },
@@ -239,14 +229,11 @@
       "summary": "A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns.",
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
-        "experiment",
         "benchmark",
         "redis",
-        "bullmq",
         "queues",
         "go",
-        "typescript",
-        "async-jobs"
+        "typescript"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/redis-streams-vs-bullmq-job-queue-comparison.png"
     },
@@ -258,9 +245,8 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "distributed-systems",
-        "microservices",
         "saga-pattern",
-        "interactive-demo"
+        "benchmark"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/saga-state-machine-visualizer.png"
     },
@@ -288,8 +274,8 @@
       "tags": [
         "system-design",
         "go",
-        "finance",
-        "event-driven",
+        "fintech",
+        "distributed-systems",
         "architecture"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/designing-a-real-time-fraud-detection-engine.png"
@@ -306,7 +292,7 @@
         "event-sourcing",
         "go",
         "firestore",
-        "banking"
+        "fintech"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/implementing-the-saga-pattern-for-distributed-transfers.png"
     },
@@ -319,9 +305,8 @@
       "tags": [
         "go",
         "typescript",
-        "backend",
-        "language-comparison",
         "architecture",
+        "benchmark",
         "trade-offs"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/go-vs-typescript-for-backend-services.png"
@@ -337,7 +322,7 @@
         "event-sourcing",
         "postgresql",
         "firestore",
-        "database"
+        "system-design"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/db-event-replay-benchmark.png"
     },
@@ -350,8 +335,7 @@
       "tags": [
         "benchmark",
         "go",
-        "typescript",
-        "concurrency"
+        "typescript"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/go-vs-ts-concurrency.png"
     },
@@ -378,10 +362,8 @@
       "date_published": "2026-06-03T00:00:00.000Z",
       "tags": [
         "firestore",
-        "nosql",
         "distributed-systems",
-        "transactions",
-        "atomic-operations"
+        "fintech"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/atomic-financial-transactions-in-nosql.png"
     },
@@ -392,11 +374,10 @@
       "summary": "How we redesigned daily quest processing from synchronous handlers to a queue-driven worker pool that handles 1,500 concurrent users during campaign windows.",
       "date_published": "2026-06-03T00:00:00.000Z",
       "tags": [
-        "nestjs",
-        "async-jobs",
-        "scalability",
+        "typescript",
         "queues",
-        "firebase-functions"
+        "benchmark",
+        "serverless"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/designing-a-burst-traffic-async-job-pipeline.png"
     },
@@ -407,10 +388,7 @@
       "summary": "A practical evaluation of Firebase Functions vs Cloud Run, and why the simplest serverless model won out for our specific workloads.",
       "date_published": "2026-06-03T00:00:00.000Z",
       "tags": [
-        "system-architecture",
         "serverless",
-        "firebase",
-        "gcp",
         "trade-offs"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/why-i-chose-firebase-functions-over-cloud-run.png"
@@ -424,7 +402,7 @@
       "tags": [
         "go",
         "grpc",
-        "microservices",
+        "distributed-systems",
         "redis",
         "kafka",
         "opentelemetry"
@@ -440,9 +418,7 @@
       "tags": [
         "cqrs",
         "architecture",
-        "backend",
-        "system-design",
-        "database"
+        "system-design"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/architecture-breakdown-cqrs-for-mid-size-products.png"
     },
@@ -453,11 +429,7 @@
       "summary": "What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
-        "incident-response",
-        "release-engineering",
-        "devops",
-        "sre",
-        "lessons"
+        "incident-response"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/engineering-lessons-from-a-failed-rollout.png"
     },
@@ -470,8 +442,7 @@
       "tags": [
         "idempotency",
         "api-design",
-        "distributed-systems",
-        "resilience"
+        "distributed-systems"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/system-design-notes-idempotency.png"
     },
@@ -482,10 +453,7 @@
       "summary": "How to evolve from brittle role checks to a maintainable, high-performance policy-based authorization engine.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
-        "authorization",
-        "rbac",
         "security",
-        "policy-engine",
         "architecture"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/designing-a-permission-system.png"
@@ -498,10 +466,8 @@
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
         "queues",
-        "workers",
-        "scaling",
-        "backend",
-        "performance"
+        "architecture",
+        "benchmark"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/scaling-background-jobs.png"
     },
@@ -512,10 +478,8 @@
       "summary": "How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
-        "experiment",
+        "benchmark",
         "queues",
-        "pubsub",
-        "messaging",
         "system-design"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/queue-vs-pub-sub-comparison-notes.png"
@@ -527,10 +491,7 @@
       "summary": "Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
-        "experiment",
-        "throughput",
-        "capacity-planning",
-        "simulation"
+        "benchmark"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/throughput-simulation-notes.png"
     },
@@ -541,9 +502,9 @@
       "summary": "A practical blueprint for introducing domain events to untangle a monolith without losing delivery guarantees.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
-        "event-driven",
+        "distributed-systems",
         "architecture",
-        "messaging",
+        "queues",
         "system-design",
         "kafka"
       ],
@@ -558,7 +519,7 @@
       "tags": [
         "trade-offs",
         "architecture",
-        "engineering-management"
+        "incident-response"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/system-design-trade-offs-in-practice.png"
     },
@@ -571,7 +532,7 @@
       "tags": [
         "go",
         "python",
-        "redis-streams",
+        "redis",
         "machine-learning",
         "hft"
       ],

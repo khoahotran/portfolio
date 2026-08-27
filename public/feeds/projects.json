@@ -15,10 +15,9 @@
       "date_published": "2026-08-27T00:00:00.000Z",
       "tags": [
         "go",
-        "nextjs",
+        "frontend-architecture",
         "postgresql",
         "redis",
-        "server-actions",
         "spec-driven-development"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/pfm.png"
@@ -47,7 +46,7 @@
       "tags": [
         "go",
         "grpc",
-        "microservices",
+        "distributed-systems",
         "redis",
         "kafka",
         "opentelemetry"
@@ -63,7 +62,7 @@
       "tags": [
         "go",
         "python",
-        "redis-streams",
+        "redis",
         "machine-learning",
         "hft"
       ],

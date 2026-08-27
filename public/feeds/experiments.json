@@ -17,7 +17,7 @@
         "architecture",
         "event-sourcing",
         "cqrs",
-        "interactive-demo"
+        "benchmark"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/event-sourcing-replay.png"
     },
@@ -28,14 +28,11 @@
       "summary": "A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns.",
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
-        "experiment",
         "benchmark",
         "redis",
-        "bullmq",
         "queues",
         "go",
-        "typescript",
-        "async-jobs"
+        "typescript"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/redis-streams-vs-bullmq-job-queue-comparison.png"
     },
@@ -47,9 +44,8 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "distributed-systems",
-        "microservices",
         "saga-pattern",
-        "interactive-demo"
+        "benchmark"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/saga-state-machine-visualizer.png"
     },
@@ -64,7 +60,7 @@
         "event-sourcing",
         "postgresql",
         "firestore",
-        "database"
+        "system-design"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/db-event-replay-benchmark.png"
     },
@@ -77,8 +73,7 @@
       "tags": [
         "benchmark",
         "go",
-        "typescript",
-        "concurrency"
+        "typescript"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/go-vs-ts-concurrency.png"
     },
@@ -89,10 +84,8 @@
       "summary": "How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
-        "experiment",
+        "benchmark",
         "queues",
-        "pubsub",
-        "messaging",
         "system-design"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/queue-vs-pub-sub-comparison-notes.png"
@@ -104,10 +97,7 @@
       "summary": "Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
-        "experiment",
-        "throughput",
-        "capacity-planning",
-        "simulation"
+        "benchmark"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/throughput-simulation-notes.png"
     }

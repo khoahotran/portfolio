@@ -15,7 +15,7 @@
       "date_published": "2026-08-27T00:00:00.000Z",
       "tags": [
         "adr",
-        "jamstack",
+        "frontend-architecture",
         "react",
         "seo",
         "architecture"
@@ -45,8 +45,7 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "adr",
-        "graphql",
-        "api-gateway",
+        "api-design",
         "architecture",
         "go"
       ],
@@ -60,9 +59,7 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "system-design",
-        "algolia",
-        "search",
-        "geolocation"
+        "search"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/algolia-geo-search-for-store-discovery.png"
     },
@@ -74,11 +71,9 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "opentelemetry",
-        "jaeger",
         "observability",
         "go",
-        "distributed-systems",
-        "tracing"
+        "distributed-systems"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/distributed-tracing-with-opentelemetry-and-jaeger.png"
     },
@@ -92,7 +87,7 @@
         "event-sourcing",
         "cqrs",
         "architecture",
-        "database",
+        "system-design",
         "go",
         "trade-offs"
       ],
@@ -106,10 +101,10 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "machine-learning",
-        "finance",
+        "fintech",
         "python",
         "hft",
-        "research"
+        "adr"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/order-book-imbalance-hft-signal.png"
     },
@@ -120,10 +115,7 @@
       "summary": "How to evolve from brittle role checks to a maintainable, high-performance policy-based authorization engine.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
-        "authorization",
-        "rbac",
         "security",
-        "policy-engine",
         "architecture"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/designing-a-permission-system.png"
@@ -136,10 +128,8 @@
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
         "queues",
-        "workers",
-        "scaling",
-        "backend",
-        "performance"
+        "architecture",
+        "benchmark"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/scaling-background-jobs.png"
     }
