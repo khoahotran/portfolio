@@ -3,7 +3,6 @@ title: "Building an Event-Driven Architecture"
 date: "2026-03-21"
 tags: ["event-driven", "architecture", "messaging", "system-design", "kafka"]
 summary: "A practical blueprint for introducing domain events to untangle a monolith without losing delivery guarantees."
-reading_time: "9 min read"
 ---
 
 ## The Monolith Bottleneck

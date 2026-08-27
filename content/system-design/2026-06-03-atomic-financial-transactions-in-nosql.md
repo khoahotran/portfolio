@@ -4,7 +4,6 @@ date: "2026-06-03"
 tags: ["firestore", "nosql", "distributed-systems", "transactions", "atomic-operations"]
 related: ["blog/building-jujuja-a-production-quest-system", "research/event-sourcing-vs-crud-when-to-choose-each"]
 summary: "Implementing virtual currency transactions on Firestore with <1% consistency errors, covering atomic operation design and edge case handling."
-reading_time: "9 min read"
 ---
 
 ## The Challenge

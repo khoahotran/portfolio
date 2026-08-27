@@ -4,7 +4,6 @@ date: "2026-06-28"
 tags: ["experiment", "benchmark", "redis", "bullmq", "queues", "go", "typescript", "async-jobs"]
 related: ["projects/quant-alpha", "blog/building-jujuja-a-production-quest-system"]
 summary: "A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns."
-reading_time: "10 min read"
 ---
 
 ## The Same Infrastructure, Two Different Abstractions
@@ -264,6 +263,12 @@ events.on('failed', async ({ jobId, failedReason }) => {
 - **BullMQ:** Node.js v20. Used the standard `Worker` class.
 - **Redis Streams:** Go 1.22. Used the `go-redis` client with `XADD` and `XREADGROUP` commands.
 
+> [!NOTE]
+> **Reproducibility.** These are figures from one run on the machine described above; the harness
+> that produced them is not published in this repository, so you cannot currently re-run it and
+> check. Read the ~4-5x throughput gap as the durable finding and the individual numbers as one
+> data point, not a general benchmark. Rewriting a runnable harness is on the roadmap.
+
 ### Key Observations
 
 BullMQ is an incredible piece of software with built-in retries, backoff, and repeatable jobs. However, to achieve these features, it relies on complex Lua scripts that run atomically inside Redis for every single job state transition (Waiting -> Active -> Completed).
@@ -272,7 +277,7 @@ Native Redis Streams via Go, on the other hand, just appends and reads from a lo
 
 If your system requires raw, unadulterated throughput (e.g., passing millions of tiny websocket events or tick data), Redis Streams in Go completely annihilates BullMQ, offering up to **4-5x higher throughput** and significantly lower P99 latency. However, if you need complex job management (e.g., pausing queues, rate limiting, parent/child jobs), BullMQ's overhead is well worth it.
 
-<a href="/labs/redis-vs-bullmq" class="not-prose inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 hover:shadow-md transition-all mt-4 mb-8">
+<a href="/labs/redis-vs-bullmq" class="lab-cta">
   View Interactive Benchmark
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
 </a>

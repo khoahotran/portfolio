@@ -4,7 +4,6 @@ date: "2026-06-28"
 tags: ["machine-learning", "finance", "python", "hft", "research"]
 related: ["projects/quant-alpha", "blog/designing-a-multi-role-hft-research-platform"]
 summary: "Research notes on extracting Order Book Imbalance (OBI) features from Level-3 market data (VN30F2112) to train rolling-window ML classifiers for High-Frequency Trading."
-reading_time: "10 min"
 ---
 
 In High-Frequency Trading (HFT), price movements in the next 10 seconds are rarely driven by macroeconomic news. Instead, they are driven by micro-structural imbalances in the order book—specifically, the pressure difference between buyers (bids) and sellers (asks).

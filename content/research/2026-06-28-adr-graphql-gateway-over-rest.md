@@ -4,7 +4,6 @@ date: "2026-06-28"
 tags: ["adr", "graphql", "api-gateway", "architecture", "go"]
 related: ["projects/aegis", "system-design/designing-a-multi-service-auth-platform"]
 summary: "An Architecture Decision Record detailing why Aegis uses a GraphQL API Gateway to aggregate internal gRPC microservices instead of a traditional REST API."
-reading_time: "7 min"
 ---
 
 ## Context and Problem Statement

@@ -4,7 +4,6 @@ date: "2026-06-28"
 tags: ["architecture", "event-sourcing", "cqrs", "interactive-demo"]
 related: ["projects/core-banking"]
 summary: "An interactive visualization of how application state is derived from an immutable, append-only event log."
-reading_time: "5 min"
 ---
 
 In traditional CRUD applications, database records are mutable. When a user deposits $500 into their bank account, the application runs an `UPDATE` statement, overwriting the previous balance. The history of *how* the account reached that balance is lost forever, unless you meticulously maintain separate audit logs.
@@ -15,7 +14,7 @@ To figure out the current state (the "Read Projection"), the system replays the 
 
 I built this interactive lab to visualize exactly how this replay mechanism works.
 
-<a href="/labs/event-sourcing-replay" class="not-prose inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 hover:shadow-md transition-all mt-4 mb-8">
+<a href="/labs/event-sourcing-replay" class="lab-cta">
   Launch Interactive Lab
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
 </a>

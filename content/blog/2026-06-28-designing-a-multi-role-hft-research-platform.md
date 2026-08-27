@@ -4,7 +4,6 @@ date: "2026-06-28"
 tags: ["system-design", "go", "python", "redis-streams", "hft"]
 related: ["projects/quant-alpha", "research/order-book-imbalance-hft-signal"]
 summary: "How I architected QuantAlpha Lab, a distributed research platform that bridges the gap between Python data science and Go backend engineering."
-reading_time: "11 min"
 ---
 
 In a modern quantitative trading firm, research is not a solo endeavor. It is a highly specialized pipeline involving three distinct roles:

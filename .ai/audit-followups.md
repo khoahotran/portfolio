@@ -9,7 +9,7 @@
 
 ### 1. Fix reading-time calculation
 
-**Status:** Open
+**Status:** ✅ CLOSED (2026-08-26)
 
 Current reading-time calculation appears inflated on 32/33 articles.
 
@@ -34,9 +34,26 @@ Acceptance criteria:
 - existing articles display reasonable reading-time estimates;
 - no unnecessary content files need to be rewritten.
 
+---
+
+**Resolution.** The computed value already satisfied every acceptance criterion above — `estimateReading()`
+in `scripts/lib/content.mjs` counts prose at 220 wpm and charges a flat ~20s per code block and ~30s
+per Mermaid diagram, excluding inline code, raw HTML, table rows and LaTeX. That is what the UI has
+been showing.
+
+What remained was the frontmatter field itself, which was still *required* by the schema while being
+read by nothing and carrying values roughly 2.6x the real figure (305 declared minutes across the
+corpus against ~118 computed). A required field that is simultaneously unread and wrong is worse
+than no field: it costs every future author accuracy work for no benefit, and it invites a reader
+who spots the discrepancy to distrust the rest of the metadata.
+
+`reading_time` was therefore removed from all 33 articles, from `ContentFrontmatter`, from the
+generated index, and from the authoring templates in `content/README.md`,
+`.ai/writing-style-guide.md` and `.ai/quality-gates.md`. Reading time is computed, full stop.
+
 ### 2. Review borderline text contrast
 
-**Status:** Open / Low Priority
+**Status:** ✅ CLOSED (2026-08-26) — resolved by measurement, see `.ai/decision-log.md` Decision 9.
 
 Approximately 44 `text-slate-400` occurrences were identified as potentially borderline for WCAG contrast.
 
@@ -56,6 +73,26 @@ Future review should classify these occurrences by semantic importance:
 Only adjust colors where the text carries meaningful information and the contrast is genuinely insufficient.
 
 Do not perform a blind global replacement.
+
+---
+
+**Resolution.** `scripts/check-contrast.mjs` (`npm run check:contrast`) now measures every visible
+text node on every route in both themes and fails CI below WCAG AA, so this stopped being a
+judgement call. What the measurement showed:
+
+- Every flagged `text-slate-400` node carried real information — section labels, the footer
+  copyright, employment dates — not decoration. So the classification this item asked for came out
+  one-sided, and all 33 moved to `slate-500`.
+- **Except inside `bg-panel`**, where that same bump made things *worse*: `slate-500` measures
+  3.75:1 on the dark panel while `slate-400` was around 6:1. Those use the panel's own muted token
+  instead. This is exactly the trap the "no blind global replacement" instruction was guarding
+  against, and it was only visible because the check measures the effective background rather than
+  the class name.
+- The bigger finding was that `text-slate-400` was not the worst offender. `text-teal-600` failed at
+  3.58:1 across 53 routes, and white-on-`teal-600` buttons at 3.74:1. Both are fixed.
+
+Two defects surfaced that no other check would have caught — see `.ai/decision-log.md` Decision 10.
+The corpus now measures clean in both themes.
 
 ### 3. Evaluate Markdown HTML sanitization
 
@@ -85,7 +122,8 @@ Do not add sanitization blindly if it would break intentional HTML-based content
 
 ### 4. Add automated responsive regression checks
 
-**Status:** Open / Recommended
+**Status:** ✅ CLOSED — `scripts/check-responsive.mjs` covers all 54 routes x 7 viewports, plus a
+dark-theme pass at the widest viewport (added 2026-08-26).
 
 The current audit verified 0/70 route × viewport combinations with horizontal overflow, but only 10 representative routes were tested manually.
 

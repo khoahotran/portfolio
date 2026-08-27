@@ -4,7 +4,6 @@ date: "2026-06-28"
 tags: ["go", "grpc", "microservices", "auth", "opentelemetry", "protobuf"]
 related: ["projects/aegis", "system-design/designing-a-multi-service-auth-platform", "research/distributed-tracing-with-opentelemetry-and-jaeger"]
 summary: "A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation."
-reading_time: "12 min read"
 ---
 
 ## Why gRPC for an Auth Platform?
@@ -438,7 +437,7 @@ These figures describe the architecture's intended latency budget — design tar
 
 > Argon2id is deliberately slow — that is the point. Slower verification directly raises the cost of an offline brute-force attack, since an attacker's guess rate is bounded by how fast they can compute the hash — and Argon2id's memory-hardness resists GPU/ASIC acceleration in a way a simple iteration-count increase does not. The exact cost advantage over any specific bcrypt configuration depends on the work factors chosen for each, so no fixed multiplier is claimed here; the goal is a verification cost that stays imperceptible to a real login while meaningfully taxing an attacker.
 
-<a href="/labs/go-vs-ts-concurrency" class="not-prose inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 hover:shadow-md transition-all mt-4 mb-8">
+<a href="/labs/go-vs-ts-concurrency" class="lab-cta">
   View the Interactive Go vs TS Concurrency Benchmark
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
 </a>

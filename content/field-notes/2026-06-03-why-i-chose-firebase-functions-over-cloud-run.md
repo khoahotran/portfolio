@@ -4,7 +4,6 @@ date: "2026-06-03"
 tags: ["system-architecture", "serverless", "firebase", "gcp", "trade-offs"]
 related: ["system-design/designing-a-burst-traffic-async-job-pipeline", "research/algolia-geo-search-for-store-discovery"]
 summary: "A practical evaluation of Firebase Functions vs Cloud Run, and why the simplest serverless model won out for our specific workloads."
-reading_time: "8 min read"
 ---
 
 In a recent architectural review for **SeensioGO**, we debated migrating our backend services from Firebase Cloud Functions (Gen 2) to Google Cloud Run. The theoretical benefits of Cloud Run are compelling: full container support, fine-grained concurrency control, and the ability to run multiple requests on a single instance to mitigate cold starts.

@@ -3,7 +3,6 @@ title: "Throughput Simulation Notes"
 date: "2026-03-21"
 tags: ["experiment", "throughput", "capacity-planning", "simulation"]
 summary: "Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations."
-reading_time: "8 min read"
 ---
 
 ## The Problem with Averages
@@ -201,7 +200,7 @@ Simple client-side simulations are incredibly powerful tools for reasoning about
 
 Before spending weeks building autoscaling infrastructure, spend an afternoon writing a script to simulate the math. You might discover that the bottleneck isn't your worker count, but your retry strategy.
 
-<a href="/labs/throughput-simulation" class="not-prose inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 hover:shadow-md transition-all mt-4 mb-8">
+<a href="/labs/throughput-simulation" class="lab-cta">
   Run the Interactive Simulation
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
 </a>

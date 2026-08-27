@@ -5,7 +5,6 @@ export interface ContentFrontmatter {
   date: string;
   tags: string[];
   summary: string;
-  reading_time?: string;
   draft?: boolean;
   ogImage?: string;
   /**

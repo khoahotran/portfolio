@@ -4,7 +4,6 @@ date: "2026-06-28"
 tags: ["case-study", "nestjs", "redis", "bullmq", "firestore"]
 related: ["system-design/designing-a-burst-traffic-async-job-pipeline", "system-design/atomic-financial-transactions-in-nosql", "research/algolia-geo-search-for-store-discovery"]
 summary: "How we built the Jujuja backend to handle 1,500 concurrent users per minute during campaign bursts, processing daily quests and loyalty points using BullMQ and NestJS."
-reading_time: "12 min"
 ---
 
 When developing **Jujuja**, a gamified loyalty platform for retail stores, our biggest engineering challenge was predictable burst traffic. 
