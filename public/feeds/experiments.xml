@@ -7,6 +7,13 @@
     <language>en-us</language>
     <lastBuildDate>Fri, 28 Aug 2026 00:00:00 GMT</lastBuildDate>
     <item>
+      <title>Gossip Protocol Visualizer: How Cluster Membership Actually Spreads</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>A real push-based epidemic broadcast, run and scrubbed round by round, showing why gossip converges in O(log n) rounds instead of O(n).</description>
+    </item>
+    <item>
       <title>Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window</title>
       <link>https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms</guid>

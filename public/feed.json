@@ -34,6 +34,31 @@
       "image": "https://khoahotran.github.io/portfolio/og/adr-tracing-vs-metrics-in-microservices.png"
     },
     {
+      "id": "https://khoahotran.github.io/portfolio/research/database-indexing-btree-vs-brin-for-time-series",
+      "url": "https://khoahotran.github.io/portfolio/research/database-indexing-btree-vs-brin-for-time-series",
+      "title": "Database Indexing for Time-Series: B-Tree vs BRIN in PostgreSQL",
+      "summary": "Why a Block Range Index, not the default B-Tree, is the right structure for naturally time-ordered data — and why QuantAlpha's tick-ingestion pipeline hasn't needed it yet.",
+      "date_published": "2026-08-28T00:00:00.000Z",
+      "tags": [
+        "postgresql",
+        "architecture",
+        "hft"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/database-indexing-btree-vs-brin-for-time-series.png"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer",
+      "url": "https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer",
+      "title": "Gossip Protocol Visualizer: How Cluster Membership Actually Spreads",
+      "summary": "A real push-based epidemic broadcast, run and scrubbed round by round, showing why gossip converges in O(log n) rounds instead of O(n).",
+      "date_published": "2026-08-28T00:00:00.000Z",
+      "tags": [
+        "distributed-systems",
+        "benchmark"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/gossip-protocol-visualizer.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms",
       "url": "https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms",
       "title": "Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window",
@@ -45,6 +70,20 @@
         "benchmark"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/rate-limiting-algorithms.png"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/system-design/designing-a-global-api-gateway",
+      "url": "https://khoahotran.github.io/portfolio/system-design/designing-a-global-api-gateway",
+      "title": "Designing a Global API Gateway: Edge Routing Beyond a Single Aegis Instance",
+      "summary": "Aegis's GraphQL gateway solves API shape for one instance. This is the layer above it a real deployment would need once there's more than one — and why that's a different problem, not a bigger version of the same one.",
+      "date_published": "2026-08-28T00:00:00.000Z",
+      "tags": [
+        "system-design",
+        "api-design",
+        "architecture",
+        "go"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-global-api-gateway.png"
     },
     {
       "id": "https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw",

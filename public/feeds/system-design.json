@@ -8,6 +8,20 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/system-design/designing-a-global-api-gateway",
+      "url": "https://khoahotran.github.io/portfolio/system-design/designing-a-global-api-gateway",
+      "title": "Designing a Global API Gateway: Edge Routing Beyond a Single Aegis Instance",
+      "summary": "Aegis's GraphQL gateway solves API shape for one instance. This is the layer above it a real deployment would need once there's more than one — and why that's a different problem, not a bigger version of the same one.",
+      "date_published": "2026-08-28T00:00:00.000Z",
+      "tags": [
+        "system-design",
+        "api-design",
+        "architecture",
+        "go"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/designing-a-global-api-gateway.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/system-design/designing-a-multi-service-auth-platform",
       "url": "https://khoahotran.github.io/portfolio/system-design/designing-a-multi-service-auth-platform",
       "title": "Designing a Multi-Service Auth Platform: The Aegis Architecture",

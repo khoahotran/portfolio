@@ -8,6 +8,18 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer",
+      "url": "https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer",
+      "title": "Gossip Protocol Visualizer: How Cluster Membership Actually Spreads",
+      "summary": "A real push-based epidemic broadcast, run and scrubbed round by round, showing why gossip converges in O(log n) rounds instead of O(n).",
+      "date_published": "2026-08-28T00:00:00.000Z",
+      "tags": [
+        "distributed-systems",
+        "benchmark"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/gossip-protocol-visualizer.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms",
       "url": "https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms",
       "title": "Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window",

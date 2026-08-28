@@ -21,11 +21,32 @@
       <description>An Architecture Decision Record on why distributed tracing and metrics answer different questions in Aegis, and which one should gate a page for what.</description>
     </item>
     <item>
+      <title>Database Indexing for Time-Series: B-Tree vs BRIN in PostgreSQL</title>
+      <link>https://khoahotran.github.io/portfolio/research/database-indexing-btree-vs-brin-for-time-series</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/database-indexing-btree-vs-brin-for-time-series</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Why a Block Range Index, not the default B-Tree, is the right structure for naturally time-ordered data — and why QuantAlpha&apos;s tick-ingestion pipeline hasn&apos;t needed it yet.</description>
+    </item>
+    <item>
+      <title>Gossip Protocol Visualizer: How Cluster Membership Actually Spreads</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>A real push-based epidemic broadcast, run and scrubbed round by round, showing why gossip converges in O(log n) rounds instead of O(n).</description>
+    </item>
+    <item>
       <title>Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window</title>
       <link>https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms</guid>
       <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
       <description>Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it&apos;s named.</description>
+    </item>
+    <item>
+      <title>Designing a Global API Gateway: Edge Routing Beyond a Single Aegis Instance</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/designing-a-global-api-gateway</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/designing-a-global-api-gateway</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Aegis&apos;s GraphQL gateway solves API shape for one instance. This is the layer above it a real deployment would need once there&apos;s more than one — and why that&apos;s a different problem, not a bigger version of the same one.</description>
     </item>
     <item>
       <title>The SPA Google Never Saw</title>

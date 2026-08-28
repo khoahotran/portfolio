@@ -101,6 +101,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://khoahotran.github.io/portfolio/labs/gossip-protocol-visualizer</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://khoahotran.github.io/portfolio/tags</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -118,7 +123,25 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://khoahotran.github.io/portfolio/research/database-indexing-btree-vs-brin-for-time-series</loc>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer</loc>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms</loc>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://khoahotran.github.io/portfolio/system-design/designing-a-global-api-gateway</loc>
     <lastmod>2026-08-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

@@ -5,7 +5,14 @@
     <link>https://khoahotran.github.io/portfolio/system-design</link>
     <description>system-design articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Sun, 28 Jun 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 28 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Designing a Global API Gateway: Edge Routing Beyond a Single Aegis Instance</title>
+      <link>https://khoahotran.github.io/portfolio/system-design/designing-a-global-api-gateway</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/designing-a-global-api-gateway</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Aegis&apos;s GraphQL gateway solves API shape for one instance. This is the layer above it a real deployment would need once there&apos;s more than one — and why that&apos;s a different problem, not a bigger version of the same one.</description>
+    </item>
     <item>
       <title>Designing a Multi-Service Auth Platform: The Aegis Architecture</title>
       <link>https://khoahotran.github.io/portfolio/system-design/designing-a-multi-service-auth-platform</link>
