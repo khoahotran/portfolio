@@ -121,8 +121,18 @@ function articleUrl(doc) {
   return `${siteUrl}/${doc.collection}/${doc.slug}`;
 }
 
+// `docs` is always sorted newest-first (see the `docs.sort()` call in buildAssets, preserved by
+// every subsequent `.filter()`), so its first entry's date is deterministic — driven by content,
+// not wall-clock time. Previously this was `new Date().toUTCString()`, which dirtied every feed
+// file on every build regardless of whether any content had changed (measured: 7 files under
+// public/feeds/ on a zero-change rerun), defeating the point of Decision 3's chore(build)-commits-
+// separately rule — a commit with no real change should diff clean, not just look small.
+function lastBuildDateFor(docs) {
+  return docs.length > 0 ? toRssDate(docs[0].date) : toRssDate('1970-01-01');
+}
+
 function buildRss(docs, channelTitle, channelDescription, channelLink) {
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>${escapeXml(channelTitle)}</title>\n    <link>${escapeXml(channelLink)}</link>\n    <description>${escapeXml(channelDescription)}</description>\n    <language>en-us</language>\n    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>\n${docs
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>${escapeXml(channelTitle)}</title>\n    <link>${escapeXml(channelLink)}</link>\n    <description>${escapeXml(channelDescription)}</description>\n    <language>en-us</language>\n    <lastBuildDate>${lastBuildDateFor(docs)}</lastBuildDate>\n${docs
     .slice(0, 50)
     .map(
       (doc) => `    <item>\n      <title>${escapeXml(doc.title)}</title>\n      <link>${escapeXml(articleUrl(doc))}</link>\n      <guid isPermaLink="true">${escapeXml(articleUrl(doc))}</guid>\n      <pubDate>${toRssDate(doc.date)}</pubDate>\n      <description>${escapeXml(doc.summary)}</description>\n    </item>`
