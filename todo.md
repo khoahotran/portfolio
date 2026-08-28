@@ -28,6 +28,14 @@ Decided in the Phase 4 pass; see `.ai/content-roadmap.md`.
 - [x] Project Screenshots — `MarkdownContent` wraps a standalone `![alt](src)` image in a `<figure>`
       with lazy loading, a max-width constraint, and a `<figcaption>` from the alt text. The
       rendering capability is in place.
-- [ ] **Add actual screenshots** to `content/projects/*.md`. Still purely a content task — the
-      rendering path has been ready for a while and nothing uses it. Worth doing: the three case
-      studies are currently all prose and diagrams, with no evidence of a running system.
+- [ ] **Add actual screenshots** to `content/projects/*.md`. ⛔ **Blocked (checked 2026-08-28,
+      Phase 6) — not simply undone, same class of blocker as `.ai/content-roadmap.md` §5.2's PFM
+      screenshots.** Aegis, Core Banking, and QuantAlpha are separate repositories
+      (`github.com/khoahotran/aegis`, `.../event-driven-core-banking`, `.../HFT`) — none of them
+      exist as a local checkout in this environment (unlike PFM, which is a sibling directory), so
+      there is no running system here to screenshot without first cloning and standing up each one
+      from scratch, sight-unseen. PFM was the one flagship where a screenshot was even attempted,
+      and that attempt was independently blocked by the safety classifier (see §5.2). The rendering
+      path (`MarkdownContent`'s figure/figcaption handling) has been ready and unused since it was
+      built; this line documents why, rather than leaving it silently stale next time someone reads
+      this file expecting an update.
