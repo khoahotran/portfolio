@@ -35,7 +35,12 @@ function pickRandomPeers(selfId: number, nodeCount: number, fanout: number, rng:
     [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
   }
 
-  return candidates.slice(0, Math.min(fanout, candidates.length));
+  // `Math.max(0, fanout)` guards a negative fanout: `Array.slice(0, -1)` means "everything except
+  // the last element", not "nothing" — without this clamp, a negative fanout would gossip to
+  // almost every peer instead of behaving like the no-op `fanout=0` already correctly does.
+  // Unreachable via the shipped lab (its slider's min is 0), but this function is exported and
+  // tested independently of that UI constraint.
+  return candidates.slice(0, Math.max(0, Math.min(fanout, candidates.length)));
 }
 
 /**

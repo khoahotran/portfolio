@@ -12,6 +12,15 @@ describe('simulateGossip', () => {
     expect(rounds).toEqual([]);
   });
 
+  it('treats a negative fanout as zero rather than "almost everyone"', () => {
+    // Regression test: `candidates.slice(0, fanout)` with a negative fanout means "everything
+    // except the last N elements" in JS, not "nothing" — a real bug this exact case caught before
+    // the `Math.max(0, ...)` clamp was added. Unreachable via the shipped lab (slider min is 0),
+    // but pickRandomPeers/simulateGossip are exported and used directly in this test.
+    const rounds = simulateGossip(10, -1, 10);
+    expect(rounds).toEqual([]);
+  });
+
   it('infects every other node in exactly one round when fanout covers all peers', () => {
     // fanout = nodeCount - 1: every infected node contacts literally everyone else at once.
     const rounds = simulateGossip(6, 5, 10);
