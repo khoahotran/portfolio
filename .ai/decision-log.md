@@ -413,3 +413,28 @@ exact kind of omission this whole phase has worked against.
   trip an overflow or contrast failure).
 - No user-facing regression window: both pre-existing pages were already live with invisible bars,
   so this is a pure improvement with no compatibility risk to reason about.
+
+## Decision 20: A Missing Test Surfaced a Real Self-Reference Bug in `related:`
+
+**Context:** Phase 6 audited test coverage against the original Phase 4 cross-cutting-track plan,
+which had named `getRelatedArticles`'s curated-then-scored ordering as worth testing but never
+actually got one. Writing that test required a fixture and a call with `curatedRelated` including
+the article's own path — a case no existing test or manual QA pass had exercised — and it exposed
+that `getRelatedArticles` filtered curated links for validity (`bySlugPath.get(ref)` existing) and
+draft status (`shouldInclude`) but never for `item.slug !== currentSlug`. An accidentally
+self-referential `related:` entry would have rendered an article inside its own "Read Next" section.
+
+**Decision:** fix at both layers, not just one. `getRelatedArticles` now excludes `currentSlug` from
+curated results directly (defense-in-depth, matching the same exclusion already applied to the
+tag-scored and fallback-padding paths). `scripts/build-search-index.mjs` also now rejects a
+self-referential `related:` entry outright, alongside its existing bad-reference and duplicate-tag
+checks — the stronger fix, since it prevents the mistake from ever landing rather than only
+suppressing its effect at render time.
+
+**Consequences:**
+- No content in the corpus currently has this mistake — this is a defect that never manifested, not
+  one that was silently live. It was found because a test was finally written for a function
+  identified as risky three phases ago, not because a reader reported it.
+- Restates the same lesson as Decision 5 (slug/route mismatch) and Decision 15 (tag taxonomy): a
+  content-authoring field with no build-time enforcement is a mistake waiting to happen, and the fix
+  belongs at the point where the mistake is made, not only where its symptom would appear.
