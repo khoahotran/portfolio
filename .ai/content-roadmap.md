@@ -80,7 +80,7 @@ Priority order across the four tracks: **5.1 → 5.8 → 5.5 → 5.2 → 5.6/5.7
 remaining credibility gap, 5.5 should land before more articles add more tags, and 5.3/5.4 are
 lowest-urgency because they don't depend on anything else being true first.
 
-**Status (2026-08-28): 5.1, 5.5, 5.6, 5.7, 5.8 done; 5.2 blocked (see below); next up is 5.3.**
+**Status (2026-08-28): 5.1, 5.3, 5.5, 5.6, 5.7, 5.8 done; 5.2 blocked (see below); next up is 5.4.**
 
 ### 5.1 ✅ Meta-posts from the Phase 4 evidence — DONE (2026-08-27)
 *Do these first — the evidence already exists in this session's own commits and `.ai/decision-log.md`,
@@ -157,16 +157,32 @@ QuantAlpha/Aegis repo access exists in whatever environment picks this up next.
   study quietly drift ahead of the actual code, the same failure Decision 3/Cross-Document
   Consistency exists to prevent.
 
-### 5.3 Queued content (already scoped, unchanged)
+### 5.3 ✅ Queued content — DONE (2026-08-28)
 
-1. **ADR: Tracing vs Metrics in Microservices** (`research`) — when to use OpenTelemetry tracing vs
-   Prometheus metrics, referencing Aegis.
-2. **Interactive Lab: Rate Limiting Algorithms** (`experiments` + lab) — Token Bucket vs Leaky
-   Bucket vs Fixed Window. This one can legitimately be `provenance: { kind: 'implementation' }`
-   from day one (see `src/labs/provenance.ts`) — the algorithms are simple enough to run for real
-   in the browser rather than modeled, unlike three of the existing labs.
-3. **Blog: The Hidden Costs of Cloud Functions** — cold starts and connection pooling from the Core
-   Banking project on Firebase.
+1. **ADR: Tracing vs Metrics in Microservices** (`research`) — shipped as
+   `research/2026-08-28-adr-tracing-vs-metrics-in-microservices.md`. Frames it as which signal
+   answers which question (aggregate health vs per-request causality) rather than either/or,
+   grounded in Aegis's real existing OTel/Jaeger tracing and its sub-5ms Policy Service claim.
+   Honest about scope: Aegis has no Prometheus metrics wired in today — the ADR argues for adding
+   them, and says so explicitly, same convention as the tracing article's own
+   "Current Aegis implementation" callout.
+2. **Interactive Lab: Rate Limiting Algorithms** (`experiments` + lab) — shipped at
+   `/labs/rate-limiting-algorithms` with a companion article. `provenance: { kind: 'implementation'
+   }` from day one, as this section predicted: Token Bucket, Leaky Bucket, and Fixed Window Counter
+   are real, pure, unit-tested functions (`src/labs/rateLimiting.ts`, 13 tests) run against an
+   identical arrival timeline, not three formulas tuned to look different. Fixed Window's
+   boundary-reset flaw (a burst split across a window edge can double-admit) is asserted directly
+   in the test suite, not just described in prose.
+3. **Blog: The Hidden Costs of Cloud Functions** — shipped as
+   `blog/2026-08-28-hidden-costs-of-firebase-cloud-functions.md`, **corrected from this note's
+   original attribution**: `content/projects/core-banking.md` never mentions Firebase Cloud
+   Functions anywhere in the corpus — it's a Go service using Firestore as an event store, not a
+   project deployed as Cloud Functions. The only real Firebase-Functions project in this portfolio
+   is SeensioGO (`content/field-notes/2026-06-03-why-i-chose-firebase-functions-over-cloud-run.md`),
+   so the new post is written as an honest, cross-linked follow-up to that field note — two costs
+   (stacked cold-start, connection-pool arithmetic under Gen 2's concurrency model) grounded in that
+   article's own published config, not a fabricated Core Banking incident. See
+   `.ai/decision-log.md` Decision 17.
 
 ### 5.4 New technical domains (lowest priority — start only once §5.1–§5.3 are done)
 

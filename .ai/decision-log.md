@@ -318,3 +318,32 @@ already established, rather than letting a typo render an empty or wrong badge s
 - `scripts/build-search-index.mjs`'s `lastBuildDate` was also fixed in this pass (derived from the
   newest doc's date instead of `new Date()`), closing §5.7 — confirmed deterministic by diffing two
   consecutive builds with zero content changes.
+
+## Decision 17: Corrected §5.3's Blog-Post Attribution Before Writing It
+
+**Context:** `.ai/content-roadmap.md` §5.3 queued "Blog: The Hidden Costs of Cloud Functions —
+cold starts and connection pooling from the Core Banking project on Firebase," written during an
+earlier planning pass. Before drafting it, `content/projects/core-banking.md` was checked for the
+Firebase Functions details the post would need — it has none. Core Banking is a Go service using
+Firestore as an event store; nothing in that project's content ever describes it as deployed via
+Firebase Cloud Functions. Writing the post as scoped would have fabricated a project fact this
+phase has spent its entire length hardening against (the benchmark-provenance work in §5.8, the
+positioning honesty in earlier phases) — inventing a specific incident on a project it never
+happened on is a worse version of the same failure mode.
+
+**Decision:** Retarget the post at the one real Firebase-Functions project in the corpus —
+SeensioGO, via `content/field-notes/2026-06-03-why-i-chose-firebase-functions-over-cloud-run.md`
+— and write it as an explicit, cross-linked follow-up rather than a standalone claim. Both of its
+two "hidden costs" (stacked cold start, connection-pool arithmetic under Gen 2's `concurrency: 80`
+model) are derived directly from that field note's own published code sample, not from a new,
+unverifiable claim about a system that never ran this way.
+
+**Consequences:**
+- The roadmap entry itself was corrected in the same edit that marked §5.3 done, rather than
+  silently writing around the error — same transparency convention as marking §5.2 blocked instead
+  of skipped.
+- The post explicitly states it is *not* a reversal of the original Firebase-Functions-over-
+  Cloud-Run decision — deepening an existing decision's cost model is a different, and lower-risk,
+  claim than "this decision was wrong," and conflating the two would have overstated the finding.
+- General pattern for the rest of Phase 5: a queued roadmap note is a starting point, not a
+  license — the project it names still has to actually support the claim before it gets written.
