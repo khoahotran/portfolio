@@ -246,12 +246,21 @@ async function buildAssets() {
   // that would otherwise break this invisibly.
   const validSlugs = new Set(docs.map((doc) => `${doc.collection}/${doc.slug}`));
   for (const doc of docs) {
+    const selfPath = `${doc.collection}/${doc.slug}`;
     for (const ref of doc.related ?? []) {
       if (!validSlugs.has(ref)) {
         throw new Error(
           `Invalid "related:" reference "${ref}" in ${doc.collection}/${doc.slug} — no article at that path. ` +
             'Expected format: "collection/slug" (e.g. "projects/aegis").'
         );
+      }
+      // An article referencing itself is always a mistake (a typo, or a copy-pasted frontmatter
+      // block) — never a real cross-link — and would otherwise render the article in its own
+      // "Read Next" section. Caught here, at the same place the same field's other authoring
+      // mistakes already fail the build, rather than only guarded defensively at render time in
+      // getRelatedArticles.
+      if (ref === selfPath) {
+        throw new Error(`"related:" in ${selfPath} references itself — remove the self-reference.`);
       }
     }
   }
