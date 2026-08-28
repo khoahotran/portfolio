@@ -80,6 +80,8 @@ Priority order across the four tracks: **5.1 → 5.8 → 5.5 → 5.2 → 5.6/5.7
 remaining credibility gap, 5.5 should land before more articles add more tags, and 5.3/5.4 are
 lowest-urgency because they don't depend on anything else being true first.
 
+**Status (2026-08-28): 5.1, 5.5, 5.6, 5.7, 5.8 done; 5.2 blocked (see below); next up is 5.3.**
+
 ### 5.1 ✅ Meta-posts from the Phase 4 evidence — DONE (2026-08-27)
 *Do these first — the evidence already exists in this session's own commits and `.ai/decision-log.md`,
 so no new investigation is needed, only writing. Also closes the "Missing Content Gaps: Frontend
@@ -210,36 +212,44 @@ enforcement is live and verified (tested with a deliberately fake tag — build 
 message, then confirmed clean). `/tags` and `/tags/:tag` routes ship, prerendered, in the sitemap,
 and covered by the responsive/contrast checks (95 routes total now, up from 59).
 
-### 5.6 "Latest" + series support
-`getLatestContent(limit = 6)` (`src/content-engine/content-service.ts:47`) is fully implemented and
-**imported by nothing** — a returning reader currently has no way to see what's new. Separately,
-there is no `series` frontmatter field, so a multi-part deep-dive (e.g. the benchmark-harness
-rewrites in §5.8, or a 3-part Rate Limiting series) has nowhere to declare itself as one.
+### 5.6 ✅ "Latest" + series support — DONE (2026-08-28)
+`getLatestContent(limit = 6)` (`src/content-engine/content-service.ts:47`) was fully implemented and
+imported by nothing — a returning reader had no way to see what's new. Separately, there was no
+`series` frontmatter field, so a multi-part deep-dive (e.g. the benchmark-harness rewrites in §5.8,
+or a future 3-part Rate Limiting series) had nowhere to declare itself as one.
 
-**Plan:**
+**Shipped:**
 
-- Wire `getLatestContent(4)` into a "Recently Published" strip on `PortfolioHome.tsx`, below the
-  existing write-up/lab/case-study counts section.
+- `getLatestContent(4)` now backs a "Recently Published" strip on `PortfolioHome.tsx`, rendered
+  below the write-up/lab/case-study counts section (degrades silently, same convention as that
+  section, when the fetch is still loading or fails).
 
-- Add optional `series?: string` and `seriesOrder?: number` to `ContentFrontmatter`
-  (`src/content-engine/types.ts`) and the build script's frontmatter emission. Render a "Part N of
-  M in `<series>`" badge on `ArticleHeader`, with prev/next-in-series links — same pattern as
-  `ArticleNav.tsx`'s prev/next-in-collection, scoped to `series` instead of `collection`.
+- `series?: string` and `seriesOrder?: number` added to `ContentFrontmatter`
+  (`src/content-engine/types.ts`), the build script's frontmatter emission, and enforced at build
+  time (`scripts/build-search-index.mjs`): a `series` without a valid numeric `seriesOrder`, or two
+  parts sharing an order, fails the build — same fail-loud philosophy as the existing `related`/tag
+  checks. New `src/components/content/SeriesNav.tsx` renders the "Part N of M in `<series>`" badge
+  plus prev/next-in-series links on `ArticleHeader`, fetching the full cross-collection index
+  (unlike `ArticleNav`'s single-collection prev/next) since a series can span collections.
 
-### 5.7 Build hygiene + search scale
-Two small, cheap-now fixes surfaced while measuring the above:
+- No content currently sets `series:` — this is infrastructure ahead of use, not a feature with
+  existing content behind it. The next multi-part write-up (§5.3/§5.4) is the first real test.
 
-- **`lastBuildDate` churns every feed on every build**, regardless of whether content changed —
-  `scripts/build-search-index.mjs`'s RSS/JSON-feed builder uses `new Date().toUTCString()`
-  unconditionally. Confirmed: rerunning the build with zero content changes still dirties 7 files
-  under `public/feeds/`. Fix: derive it from the max `date` across docs (deterministic, already
-  have the field) instead of wall-clock time — makes `chore(build)` commits actually diff-clean when
-  nothing changed, which is the whole point of Decision 3's commit-separation rule.
+### 5.7 ✅ Build hygiene + search scale — DONE (2026-08-28, one fixed now / one deferred with a stated trigger)
 
-- **`search-index.json` is 4.6 KB/article** (measured on the current 34-doc corpus), projecting to
-  ~460 KB at 100 articles — not urgent at the "deep, not wide" pace this phase commits to, but worth
-  a stated trigger rather than an unstated one: revisit if/when the corpus crosses ~100 articles or
-  the file crosses ~500 KB, per the same measure-before-acting discipline as
+- **Fixed: `lastBuildDate` churned every feed on every build**, regardless of whether content
+  changed — `scripts/build-search-index.mjs`'s RSS builder used `new Date().toUTCString()`
+  unconditionally. Confirmed before the fix: rerunning the build with zero content changes still
+  dirtied 7 files under `public/feeds/`. Now derives it from the newest doc's `date` in that feed's
+  own scope (`docs[0].date`, since `docs` is already sorted newest-first) instead of wall-clock
+  time — confirmed deterministic by diffing two consecutive builds byte-for-byte with no content
+  changes. Makes `chore(build)` commits actually diff-clean when nothing changed, which is the whole
+  point of Decision 3's commit-separation rule.
+
+- **Deferred, with a stated trigger (not urgent): `search-index.json` scale.** Measured at 187 KB /
+  38 docs (~4.9 KB/doc) as of this pass, projecting to ~490 KB at 100 articles — not worth acting on
+  at the "deep, not wide" pace this phase commits to. Revisit if/when the corpus crosses ~100
+  articles or the file crosses ~500 KB, per the same measure-before-acting discipline as
   `.ai/audit-followups.md` item 7.
 
 ### 5.8 ✅ Real benchmark harnesses — DONE (2026-08-27, closed the largest remaining credibility gap)

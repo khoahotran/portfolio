@@ -292,3 +292,29 @@ without fixing it first would have shipped a browse page over noise.
   `readTagRoutes()` in `scripts/lib/site-routes.mjs`, mirroring `readArticleRoutes()`), not from a
   fixed list — so the sitemap, prerender, and responsive/contrast checks all stay correct as tags are
   added or removed, the same self-maintaining property `lab-ids.json` already has for labs.
+
+## Decision 16: Series Is Cross-Collection, Not Scoped Like `collection`
+
+**Context:** §5.6 added optional `series`/`seriesOrder` frontmatter so a future multi-part
+deep-dive (e.g. a 3-part Rate Limiting series, or a benchmark-harness rewrite spanning one
+`experiments` post and one `blog` retrospective) has somewhere to declare itself as one part of a
+whole. `ArticleNav.tsx`'s existing prev/next pattern is scoped to a single `collection` via
+`getContentIndex(collection)` — reusing that scope for series would have silently broken the moment
+a series' parts landed in different collections.
+
+**Decision:** `SeriesNav.tsx` fetches the full cross-collection index (`getAllContentIndex`) and
+filters by `series` client-side, rather than adding a `series`-scoped variant of
+`getContentIndex`. `seriesOrder` is build-time enforced in `scripts/build-search-index.mjs`: a
+`series` without a valid numeric `seriesOrder`, or two parts sharing an order, fails the build —
+same fail-loud philosophy Decision 5's `related:` validation and Decision 15's tag validation
+already established, rather than letting a typo render an empty or wrong badge silently.
+
+**Consequences:**
+- No content sets `series:` yet — this ships as infrastructure ahead of use, the same posture as
+  `getLatestContent` before it was wired in (see §5.6). The build-time check has no series to
+  validate today; it activates the first time a `series:` frontmatter field appears.
+- `PortfolioHome.tsx` gained a "Recently Published" strip in the same pass, finally importing
+  `getLatestContent(4)` — previously implemented, fully untested by any consumer.
+- `scripts/build-search-index.mjs`'s `lastBuildDate` was also fixed in this pass (derived from the
+  newest doc's date instead of `new Date()`), closing §5.7 — confirmed deterministic by diffing two
+  consecutive builds with zero content changes.
