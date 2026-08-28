@@ -15,6 +15,16 @@ export interface ContentFrontmatter {
    * fails the build rather than silently rendering nothing.
    */
   related?: string[];
+  /**
+   * Opt-in multi-part grouping, independent of `collection` — a series can span collections (e.g.
+   * a benchmark rewrite that's one `experiments` post and one `blog` retrospective), so it can't
+   * reuse the same "sort within one collection" logic ArticleNav uses. `series` is the shared,
+   * free-text group name; `seriesOrder` its 1-indexed position within that group. Both are
+   * build-time enforced (scripts/build-search-index.mjs): a `series` without a valid `seriesOrder`,
+   * or two parts sharing an order, fails the build. See .ai/content-roadmap.md §5.6.
+   */
+  series?: string;
+  seriesOrder?: number;
 }
 
 export interface ContentIndexItem extends ContentFrontmatter {

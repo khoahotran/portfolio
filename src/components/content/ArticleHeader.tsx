@@ -2,6 +2,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { collectionLabel, formatDate, routeForCollection } from '../../content-engine/format';
 import type { ContentDetail } from '../../content-engine/types';
+import SeriesNav from './SeriesNav';
 
 interface Props {
   detail: ContentDetail;
@@ -28,6 +29,7 @@ function ArticleHeader({ detail }: Props) {
             </span>
           ))}
         </div>
+        <SeriesNav series={detail.series} seriesOrder={detail.seriesOrder} slug={detail.slug} />
       </header>
     </>
   );

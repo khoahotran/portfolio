@@ -194,6 +194,8 @@ async function buildAssets() {
       const slug = slugify(String(data.slug ?? fileSlug));
       const tags = Array.isArray(data.tags) ? data.tags.map(String) : [];
       const related = Array.isArray(data.related) ? data.related.map(String) : undefined;
+      const series = data.series !== undefined ? String(data.series) : undefined;
+      const seriesOrder = data.seriesOrder !== undefined ? Number(data.seriesOrder) : undefined;
       const reading = estimateReading(body);
       const title = String(data.title ?? fileSlug.replace(/-/g, ' '));
       const summary = String(data.summary ?? 'Engineering write-up');
@@ -212,6 +214,8 @@ async function buildAssets() {
         collection,
         ogImage,
         related,
+        series,
+        seriesOrder,
         readingMinutes: reading.readingMinutes,
         // Always the computed value now, not the frontmatter override — see the
         // comment on estimateReading(). `reading_time` above still carries the
@@ -265,6 +269,36 @@ async function buildAssets() {
             'doc and scripts/lib/tag-taxonomy.mjs in the same change.'
         );
       }
+    }
+  }
+
+  // `series` is opt-in, unlike `collection` (every doc has one by construction), so a typo'd or
+  // missing `seriesOrder` would otherwise fail silently — a "Part N of M" badge that just never
+  // renders — rather than loudly. Same fail-the-build philosophy as the related/tag checks above.
+  // See .ai/content-roadmap.md §5.6.
+  const seriesGroups = new Map();
+  for (const doc of docs) {
+    if (doc.series === undefined) {
+      continue;
+    }
+    if (doc.seriesOrder === undefined || Number.isNaN(doc.seriesOrder)) {
+      throw new Error(
+        `"${doc.collection}/${doc.slug}" declares series "${doc.series}" but has no valid ` +
+          '"seriesOrder:" — every part of a series must declare its 1-indexed position.'
+      );
+    }
+    if (!seriesGroups.has(doc.series)) {
+      seriesGroups.set(doc.series, []);
+    }
+    seriesGroups.get(doc.series).push(doc);
+  }
+  for (const [seriesName, group] of seriesGroups) {
+    const orders = group.map((doc) => doc.seriesOrder);
+    if (new Set(orders).size !== orders.length) {
+      throw new Error(
+        `Series "${seriesName}" has two parts sharing the same seriesOrder — each part needs a ` +
+          `distinct position. Parts: ${group.map((doc) => `${doc.collection}/${doc.slug}`).join(', ')}.`
+      );
     }
   }
 
