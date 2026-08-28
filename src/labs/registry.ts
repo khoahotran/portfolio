@@ -58,6 +58,7 @@ const GoVsTsConcurrencyPage = lazy(() => import('../pages/experiments/GoVsTsConc
 const DbEventReplayBenchmarkPage = lazy(() => import('../pages/experiments/DbEventReplayBenchmarkPage'));
 const RateLimitingAlgorithmsPage = lazy(() => import('../pages/experiments/RateLimitingAlgorithmsPage'));
 const GossipProtocolVisualizerPage = lazy(() => import('../pages/experiments/GossipProtocolVisualizerPage'));
+const WebSocketsVsSsePage = lazy(() => import('../pages/experiments/WebSocketsVsSsePage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -266,6 +267,31 @@ export const labs: LabDefinition[] = [
     interaction: 'run',
     collidesWithArticleSlug: true, // content/experiments/2026-08-28-gossip-protocol-visualizer.md
     relatedArticle: 'gossip-protocol-visualizer',
+  },
+  {
+    id: 'websockets-vs-sse',
+    provenance: {
+      kind: 'measured',
+      environment:
+        'One Go binary, two roles (server/client), both transports implemented in the same language and ' +
+        'process model to isolate the transport from any language/runtime confound. Server holds N ' +
+        'connections open on a local Docker host, broadcasting a tick every 200ms; peak RSS read from ' +
+        "the server's own /proc/self/status VmHWM after a 3s hold, same technique as the go-vs-ts-concurrency " +
+        'harness. Restarted fresh before every data point since VmHWM is a monotonic high-water mark.',
+      measuredOn: 'August 2026',
+      harness: 'https://github.com/khoahotran/portfolio/tree/main/benchmarks/websockets-vs-sse',
+      caveat:
+        'Peak-memory figures reproduced closely on a manual re-run (see the harness README); connect-time ' +
+        'did not — it reversed direction between two consecutive runs at 5,000 connections, most plausibly ' +
+        'host scheduling/FD-pressure noise from opening that many connections from one client process in a ' +
+        'short window. Connect-time is committed for transparency but is not treated as a reliable finding.',
+    },
+    title: 'Benchmark: WebSockets vs SSE',
+    description: 'Interactive benchmark visualizing server memory cost for holding open thousands of concurrent connections.',
+    component: WebSocketsVsSsePage,
+    interaction: 'preset',
+    collidesWithArticleSlug: true, // content/experiments/2026-08-28-websockets-vs-sse.md
+    relatedArticle: 'websockets-vs-sse',
   },
 ];
 
