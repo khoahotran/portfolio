@@ -1,5 +1,63 @@
 [
   {
+    "title": "The Hidden Costs of Firebase Cloud Functions",
+    "date": "2026-08-28",
+    "tags": [
+      "serverless",
+      "trade-offs"
+    ],
+    "summary": "A follow-up to the field note on choosing Firebase Functions over Cloud Run: two costs the concurrency model doesn't advertise on its own.",
+    "draft": false,
+    "slug": "hidden-costs-of-firebase-cloud-functions",
+    "collection": "blog",
+    "ogImage": "/og/hidden-costs-of-firebase-cloud-functions.png",
+    "related": [
+      "field-notes/why-i-chose-firebase-functions-over-cloud-run"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "ADR: Tracing vs Metrics for Observability in Aegis",
+    "date": "2026-08-28",
+    "tags": [
+      "adr",
+      "observability",
+      "opentelemetry",
+      "trade-offs"
+    ],
+    "summary": "An Architecture Decision Record on why distributed tracing and metrics answer different questions in Aegis, and which one should gate a page for what.",
+    "draft": false,
+    "slug": "adr-tracing-vs-metrics-in-microservices",
+    "collection": "research",
+    "ogImage": "/og/adr-tracing-vs-metrics-in-microservices.png",
+    "related": [
+      "projects/aegis",
+      "research/distributed-tracing-with-opentelemetry-and-jaeger"
+    ],
+    "readingMinutes": 5,
+    "readingText": "5 min read"
+  },
+  {
+    "title": "Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window",
+    "date": "2026-08-28",
+    "tags": [
+      "api-design",
+      "distributed-systems",
+      "benchmark"
+    ],
+    "summary": "Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it's named.",
+    "draft": false,
+    "slug": "rate-limiting-algorithms",
+    "collection": "experiments",
+    "ogImage": "/og/rate-limiting-algorithms.png",
+    "related": [
+      "projects/aegis"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
     "title": "The SPA Google Never Saw",
     "date": "2026-08-27",
     "tags": [
@@ -244,7 +302,8 @@
     "ogImage": "/og/distributed-tracing-with-opentelemetry-and-jaeger.png",
     "related": [
       "projects/aegis",
-      "blog/grpc-service-mesh-in-go-aegis-architecture"
+      "blog/grpc-service-mesh-in-go-aegis-architecture",
+      "research/adr-tracing-vs-metrics-in-microservices"
     ],
     "readingMinutes": 6,
     "readingText": "6 min read"
@@ -569,7 +628,8 @@
     "ogImage": "/og/why-i-chose-firebase-functions-over-cloud-run.png",
     "related": [
       "system-design/designing-a-burst-traffic-async-job-pipeline",
-      "research/algolia-geo-search-for-store-discovery"
+      "research/algolia-geo-search-for-store-discovery",
+      "blog/hidden-costs-of-firebase-cloud-functions"
     ],
     "readingMinutes": 3,
     "readingText": "3 min read"
@@ -594,7 +654,8 @@
       "blog/grpc-service-mesh-in-go-aegis-architecture",
       "system-design/designing-a-multi-service-auth-platform",
       "research/distributed-tracing-with-opentelemetry-and-jaeger",
-      "research/adr-graphql-gateway-over-rest"
+      "research/adr-graphql-gateway-over-rest",
+      "experiments/rate-limiting-algorithms"
     ],
     "readingMinutes": 3,
     "readingText": "3 min read"

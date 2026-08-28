@@ -5,7 +5,14 @@
     <link>https://khoahotran.github.io/portfolio/experiments</link>
     <description>experiments articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Sun, 28 Jun 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 28 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it&apos;s named.</description>
+    </item>
     <item>
       <title>Interactive Event Sourcing Replay</title>
       <link>https://khoahotran.github.io/portfolio/experiments/event-sourcing-replay</link>

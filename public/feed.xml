@@ -5,7 +5,28 @@
     <link>https://khoahotran.github.io/portfolio</link>
     <description>Case studies, system design notes, and interactive engineering experiments.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 28 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>The Hidden Costs of Firebase Cloud Functions</title>
+      <link>https://khoahotran.github.io/portfolio/blog/hidden-costs-of-firebase-cloud-functions</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/hidden-costs-of-firebase-cloud-functions</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>A follow-up to the field note on choosing Firebase Functions over Cloud Run: two costs the concurrency model doesn&apos;t advertise on its own.</description>
+    </item>
+    <item>
+      <title>ADR: Tracing vs Metrics for Observability in Aegis</title>
+      <link>https://khoahotran.github.io/portfolio/research/adr-tracing-vs-metrics-in-microservices</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/adr-tracing-vs-metrics-in-microservices</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>An Architecture Decision Record on why distributed tracing and metrics answer different questions in Aegis, and which one should gate a page for what.</description>
+    </item>
+    <item>
+      <title>Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it&apos;s named.</description>
+    </item>
     <item>
       <title>The SPA Google Never Saw</title>
       <link>https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw</link>

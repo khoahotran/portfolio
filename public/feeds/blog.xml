@@ -5,7 +5,14 @@
     <link>https://khoahotran.github.io/portfolio/blog</link>
     <description>blog articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 28 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>The Hidden Costs of Firebase Cloud Functions</title>
+      <link>https://khoahotran.github.io/portfolio/blog/hidden-costs-of-firebase-cloud-functions</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/hidden-costs-of-firebase-cloud-functions</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>A follow-up to the field note on choosing Firebase Functions over Cloud Run: two costs the concurrency model doesn&apos;t advertise on its own.</description>
+    </item>
     <item>
       <title>The SPA Google Never Saw</title>
       <link>https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw</link>

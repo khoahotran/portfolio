@@ -8,6 +8,18 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/blog/hidden-costs-of-firebase-cloud-functions",
+      "url": "https://khoahotran.github.io/portfolio/blog/hidden-costs-of-firebase-cloud-functions",
+      "title": "The Hidden Costs of Firebase Cloud Functions",
+      "summary": "A follow-up to the field note on choosing Firebase Functions over Cloud Run: two costs the concurrency model doesn't advertise on its own.",
+      "date_published": "2026-08-28T00:00:00.000Z",
+      "tags": [
+        "serverless",
+        "trade-offs"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/hidden-costs-of-firebase-cloud-functions.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw",
       "url": "https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw",
       "title": "The SPA Google Never Saw",

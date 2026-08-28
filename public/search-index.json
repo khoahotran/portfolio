@@ -1,5 +1,66 @@
 [
   {
+    "title": "The Hidden Costs of Firebase Cloud Functions",
+    "date": "2026-08-28",
+    "tags": [
+      "serverless",
+      "trade-offs"
+    ],
+    "summary": "A follow-up to the field note on choosing Firebase Functions over Cloud Run: two costs the concurrency model doesn't advertise on its own.",
+    "draft": false,
+    "slug": "hidden-costs-of-firebase-cloud-functions",
+    "collection": "blog",
+    "ogImage": "/og/hidden-costs-of-firebase-cloud-functions.png",
+    "related": [
+      "field-notes/why-i-chose-firebase-functions-over-cloud-run"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read",
+    "searchableText": "The Hidden Costs of Firebase Cloud Functions A follow-up to the field note on choosing Firebase Functions over Cloud Run: two costs the concurrency model doesn't advertise on its own. serverless trade-offs The [field note on choosing Firebase Functions over Cloud Run](/field-notes/why-i-chose-firebase-functions-over-cloud-run) covered *why* SeensioGO stayed on Firebase Functions Gen 2, and touched cold starts and pricing at the level a decision review needs. It didn't dig into two costs that only show up once you look at the exact configuration that decision shipped with — both visible in that article's own code, not hypothetical. > [!NOTE] > This is a deeper look at the same real configuration, not a reversal of that decision. Nothing > here argues Cloud Run would have been better — it argues the Firebase Functions Gen 2 concurrency > model has a cost shape worth understanding before you tune it, which the original review didn't > need to go into. ## Cost 1: Cold Start Is Two Costs Stacked, Not One \"Cold start\" usually gets discussed as a single number — the time before an instance can serve its first request. For a NestJS app on Firebase Functions, that number is actually two costs paid in sequence, and only one of them is about the platform: 1. **Platform cold start** — provisioning the underlying Cloud Run container, which Firebase Functions abstracts away entirely. This is the cost (already used in the original config) buys you out of. 2. **Application bootstrap** — resolving the entire Nest dependency-injection graph: every module, provider, and controller in the app, instantiated in dependency order. This runs *after* the platform is ready, on every cold instance, and its cost scales with how large the module graph has grown — not with anything Firebase controls. The pattern above is already the right fix for the *first* request on a cold instance (later requests reuse the resolved promise). But it doesn't make the DI graph resolution itself faster — it just avoids paying it twice. As a NestJS app's module count grows, keeps the *platform* cost invisible while the *application* cost quietly grows underneath it, unmeasured by the same traffic-pattern analysis that justified the config in the first place (which looked at request latency, not instance boot time in isolation). ## Cost 2: Concurrency Changes the Connection-Pool Math, It Doesn't Remove It The classic serverless-and-databases problem is well known: a traditional FaaS model spins up one instance per concurrent request, so N concurrent requests means N separate connection pools hitting your database — a number that scales with traffic, not with anything you configured. Firebase Functions Gen 2's setting (from the same config in the field note) genuinely changes this shape for the better — it's a real advantage over the Gen 1 / classic-Lambda model, not just a knob: Because up to 80 concurrent requests share a single Node.js process, they share a single connection pool too — the classic per-invocation pool explosion doesn't happen within one instance. The cost that remains is one dimension smaller, not zero: total connections still scale with ** × pool size**, not with concurrent *requests*. That's a real, meaningful improvement — but is still 10 independent pools the moment traffic scales past what one instance's 80-request concurrency can absorb, and nothing in the platform stops from being raised later (to handle a traffic spike) without anyone re-checking it against the database's actual . The pricing section of the original field note compared invocation-billing formulas in the abstract; it didn't include this arithmetic, because at the traffic level that review was evaluating, never came close to being the bottleneck. It's the kind of assumption that's correct until traffic changes and nobody revisits it. ## What This Changes Nothing in the original decision. Firebase Functions Gen 2's concurrency model is still the right call for the reasons the field note gave — it's cheaper, operationally simpler, and its per-instance connection sharing is a genuine improvement over the Gen 1 model it's usually compared against. What changes is what \"done\" means for that configuration: / aren't a one-time tuning exercise, they're two numbers whose correctness depends on the DI graph size and the database's connection limit staying roughly where they were when the numbers were chosen — and neither of those is something the platform will warn you about drifting."
+  },
+  {
+    "title": "ADR: Tracing vs Metrics for Observability in Aegis",
+    "date": "2026-08-28",
+    "tags": [
+      "adr",
+      "observability",
+      "opentelemetry",
+      "trade-offs"
+    ],
+    "summary": "An Architecture Decision Record on why distributed tracing and metrics answer different questions in Aegis, and which one should gate a page for what.",
+    "draft": false,
+    "slug": "adr-tracing-vs-metrics-in-microservices",
+    "collection": "research",
+    "ogImage": "/og/adr-tracing-vs-metrics-in-microservices.png",
+    "related": [
+      "projects/aegis",
+      "research/distributed-tracing-with-opentelemetry-and-jaeger"
+    ],
+    "readingMinutes": 5,
+    "readingText": "5 min read",
+    "searchableText": "ADR: Tracing vs Metrics for Observability in Aegis An Architecture Decision Record on why distributed tracing and metrics answer different questions in Aegis, and which one should gate a page for what. adr observability opentelemetry trade-offs ## Context and Problem Statement [Aegis](/projects/aegis) already has [distributed tracing](/research/distributed-tracing-with-opentelemetry-and-jaeger) via OpenTelemetry and Jaeger, instrumented across all four services (API Gateway, Identity, Policy, Audit Worker). That answers \"why was *this specific request* slow?\" It does not answer \"is the system, in aggregate, healthy right now?\" — and those are genuinely different questions that a single signal type cannot cheaply answer both of. The concrete trigger for writing this down: the Policy Service is designed for **sub-5ms RBAC evaluations**. A trace can show that one particular evaluation took 40ms. It cannot cheaply answer \"what fraction of evaluations this hour exceeded 5ms?\" — answering that from traces means querying and aggregating over however many traces were sampled, which is both expensive to compute on demand and, at any realistic production sampling rate below 100%, statistically incomplete. ## Considered Options ### Option 1: Tracing Only Keep relying on the existing OTel/Jaeger instrumentation for all observability questions, including aggregate ones (a Jaeger UI query grouped by service and time range can approximate a dashboard). **Pros:** - No new infrastructure — the OTel SDK and Jaeger backend already exist. - One instrumentation surface to maintain. **Cons:** - Production tracing is sampled (see the linked article's sampling-strategy section) — a 5% sample cannot answer \"what fraction of *all* requests exceeded 5ms\" without a large statistical error band, and the error gets worse for anything that isn't a common-case request. - Aggregating traces into a rate/error/duration view means a query-time join over a trace store on every dashboard refresh — that's viable for ad-hoc investigation, not for a always-on alert. - Traces are expensive to store at high cardinality; keeping enough of them to make aggregate queries statistically meaningful pushes storage cost in the wrong direction for a signal whose actual job is causal drill-down, not counting. ### Option 2: Metrics Only Drop tracing, instrument Prometheus counters and histograms for the same four services. **Pros:** - Cheap to collect at 100% coverage — a counter increment costs next to nothing compared to a full span. - Native fit for alerting (Prometheus + Alertmanager) and dashboards (Grafana), the standard RED-method view (Rate, Errors, Duration) per service. **Cons:** - A histogram can tell you *that* P99 latency degraded at 14:32 — it cannot tell you *which* downstream call caused it. Debugging a specific incident degrades back to log correlation, the exact problem tracing was adopted to solve in the first place. - Losing the causal chain across the GraphQL Gateway → gRPC → Kafka → Audit Worker hop sequence (see the tracing article's example flamegraph) would be a real regression for exactly the multi-hop debugging Aegis's architecture makes routine. ### Option 3: Both, Each for a Different Job Keep tracing for causal, per-request debugging. Add Prometheus metrics for aggregate, always-on questions — counts, rates, and latency histograms — with tracing as the drill-down tool once a metric flags something worth investigating. **Pros:** - Each signal answers the question it is cheap at: metrics for \"is something wrong, in aggregate, right now\" (100% sampled, cheap to store, alertable); tracing for \"why is this one request slow\" (expensive but doesn't need 100% sampling to be useful for a specific investigation). - The Policy Service's sub-5ms claim becomes something an always-on histogram can actually validate continuously, rather than something inferred from spot-checking sampled traces. **Cons:** - A second instrumentation surface to maintain and keep consistent with the first (naming conventions, label/attribute cardinality discipline so metrics don't blow up on high-cardinality labels the way traces can tolerate). - Requires standing up a Prometheus + Grafana stack (or equivalent) alongside the existing Jaeger deployment — genuine new infrastructure, not a reconfiguration of what's already running. ## Decision Outcome **Decision:** Option 3 — metrics and tracing are complementary signals, not competing ones, and Aegis should carry both once metrics are wired in. ### Rationale The deciding factor is that \"is the system healthy\" and \"why is this request slow\" are different questions with different cost profiles at different sampling rates. Metrics are cheap at 100% coverage and answer the aggregate question; tracing is expensive but answers the causal question a metric fundamentally cannot, because a histogram bucket has no memory of which downstream call it came from. Neither signal can substitute for the other without giving up the property that makes it useful. The concrete allocation this ADR settles on: - **Metrics** (RED method, per service): request rate, error rate, and a latency histogram — specifically, a histogram on the Policy Service's RBAC evaluation duration, since that's the claim (\"sub-5ms\") that currently has no way to be continuously validated rather than spot-checked. - **Tracing** stays exactly as instrumented today: the tool reached for once a metric flags an anomaly (an error-rate spike, a P99 regression), to find *which* hop in the request chain caused it. ## Consequences - **This ADR is a decision about direction, not a description of what's deployed.** Aegis has real OpenTelemetry tracing today (see the linked article for exactly what's instrumented and what isn't yet). It has no Prometheus metrics wired in — the histogram above is illustrative of the shape this ADR argues for, not code sitting in the repository. Same honesty convention as the linked tracing article's own \"Current Aegis implementation\" callout: stating the target design plainly is more useful than silence, as long as it isn't described as already shipped. - Adding metrics means a second instrumentation surface (naming, label cardinality discipline) to keep consistent with the tracing one — not free, and worth planning for rather than bolting on ad hoc per service. - The [Rate Limiting Algorithms lab](/experiments/rate-limiting-algorithms) is the other piece of Aegis's API Gateway that doesn't exist in the repository yet either — a limiter and this ADR's metrics layer would naturally share the same RED-method instrumentation once both land, since a rate limiter's admit/reject counts are themselves exactly the kind of aggregate signal this ADR argues metrics — not tracing — should carry."
+  },
+  {
+    "title": "Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window",
+    "date": "2026-08-28",
+    "tags": [
+      "api-design",
+      "distributed-systems",
+      "benchmark"
+    ],
+    "summary": "Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it's named.",
+    "draft": false,
+    "slug": "rate-limiting-algorithms",
+    "collection": "experiments",
+    "ogImage": "/og/rate-limiting-algorithms.png",
+    "related": [
+      "projects/aegis"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read",
+    "searchableText": "Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it's named. api-design distributed-systems benchmark Every API gateway eventually needs to answer the same question: *how many requests is one client allowed to make, and what happens when they go over?* Three algorithms answer it differently enough that picking the wrong one is a real operational mistake, not a stylistic preference. The [interactive lab](/labs/rate-limiting-algorithms) runs the actual algorithms — not modelled approximations — against an identical arrival timeline, so the differences below come from the algorithms, not from cherry-picked inputs. Try the Interactive Rate Limiting Lab ## The Shared Scenario Every request in this write-up (and in the lab) arrives on the same timeline: a sustained rate well under the limit, plus one burst injected at a single instant. A pure sustained rate below the limit doesn't distinguish anything — all three algorithms admit it identically. The burst is where they disagree. ## Token Bucket A bucket holds up to tokens and refills continuously at tokens/second. Each request consumes one token; an empty bucket rejects the request outright. **What this means for the burst:** Token Bucket *absorbs* a burst up to , admitting it immediately, then rejects the overflow. If the bucket had been idle long enough to refill fully before the burst, the entire burst up to capacity gets through in one instant — this is a deliberate design property (bursty traffic that's still within budget shouldn't be smoothed out artificially), not a leak. ## Leaky Bucket (as a Queue) A bucket holds up to requests and drains at requests/second. An arriving request is queued if there's room after the elapsed drain; otherwise it overflows. **What this means for the burst:** Leaky Bucket queues the burst up to capacity and then rejects the rest — structurally similar to Token Bucket's admission boundary, but the *output* rate it implies is steady (bounded by ), which is the property that matters when the thing on the other side of the limiter is a fixed-capacity downstream worker rather than a client that can simply retry. ## Fixed Window Counter Time is divided into consecutive windows of ; each window allows up to requests, and the counter resets hard at every window boundary. **What this means for the burst — the algorithm's actual flaw, not a hypothetical one:** a burst split across a window edge can be admitted *twice*. Two requests at each, one just before a boundary and one just after, both get through in full — up to ~2x in a span far shorter than . The [lab's test suite](https://github.com/khoahotran/portfolio/blob/main/src/labs/rateLimiting.test.ts) asserts this directly ( ) rather than describing it only in prose — it's the one behavior in this article that's genuinely worth distrusting until you've seen it reproduce. ## Choosing One Fixed Window is the cheapest to implement (a counter and a timestamp) and the easiest to reason about — which is exactly why it's still common in practice despite the flaw, for limits generous enough that occasionally admitting 2x for a few hundred milliseconds isn't worth the extra state a sliding window or token bucket requires. For anything where the limit is protecting a resource that actually breaks under 2x load — a downstream connection pool, a per-key quota with real cost behind it — Token Bucket or Leaky Bucket is the correct default, not Fixed Window with a \"we'll tune the limit down\" patch. **Where this fits Aegis:** the [Aegis](/projects/aegis) API Gateway is the natural place a rate limiter belongs in this portfolio's own architecture, ahead of the Identity and Policy services it fronts — sitting between an untrusted client and a sub-5ms RBAC evaluation is exactly the position where absorbing a legitimate burst without amplifying a hostile one matters. That guard is not yet implemented in the Aegis repository; this write-up is the algorithm groundwork for it, not a description of code that ships there today."
+  },
+  {
     "title": "The SPA Google Never Saw",
     "date": "2026-08-27",
     "tags": [
@@ -255,7 +316,8 @@
     "ogImage": "/og/distributed-tracing-with-opentelemetry-and-jaeger.png",
     "related": [
       "projects/aegis",
-      "blog/grpc-service-mesh-in-go-aegis-architecture"
+      "blog/grpc-service-mesh-in-go-aegis-architecture",
+      "research/adr-tracing-vs-metrics-in-microservices"
     ],
     "readingMinutes": 6,
     "readingText": "6 min read",
@@ -595,7 +657,8 @@
     "ogImage": "/og/why-i-chose-firebase-functions-over-cloud-run.png",
     "related": [
       "system-design/designing-a-burst-traffic-async-job-pipeline",
-      "research/algolia-geo-search-for-store-discovery"
+      "research/algolia-geo-search-for-store-discovery",
+      "blog/hidden-costs-of-firebase-cloud-functions"
     ],
     "readingMinutes": 3,
     "readingText": "3 min read",
@@ -621,7 +684,8 @@
       "blog/grpc-service-mesh-in-go-aegis-architecture",
       "system-design/designing-a-multi-service-auth-platform",
       "research/distributed-tracing-with-opentelemetry-and-jaeger",
-      "research/adr-graphql-gateway-over-rest"
+      "research/adr-graphql-gateway-over-rest",
+      "experiments/rate-limiting-algorithms"
     ],
     "readingMinutes": 3,
     "readingText": "3 min read",

@@ -5,7 +5,14 @@
     <link>https://khoahotran.github.io/portfolio/research</link>
     <description>research articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 28 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>ADR: Tracing vs Metrics for Observability in Aegis</title>
+      <link>https://khoahotran.github.io/portfolio/research/adr-tracing-vs-metrics-in-microservices</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/adr-tracing-vs-metrics-in-microservices</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>An Architecture Decision Record on why distributed tracing and metrics answer different questions in Aegis, and which one should gate a page for what.</description>
+    </item>
     <item>
       <title>ADR: Why Prerender Instead of Migrating to Next.js</title>
       <link>https://khoahotran.github.io/portfolio/research/why-prerender-instead-of-migrating-to-next-js</link>
