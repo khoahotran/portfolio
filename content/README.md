@@ -43,6 +43,10 @@ worse than no field — it invites the next author to keep it accurate for no be
   don't happen to share enough tags to surface automatically (e.g. a project and the ADR that
   justifies one of its architecture decisions). Validated at build time — a reference to a
   nonexistent article fails the build rather than silently rendering nothing.
+- `series: "Series Name"` + `seriesOrder: 1` — opt-in multi-part grouping, independent of
+  collection (a series can span collections). Renders a "Part N of M" badge and prev/next-in-series
+  links on the article header. Both build-time enforced: a `series` without a valid numeric
+  `seriesOrder`, or two parts sharing the same order, fails the build.
 
 ## Callouts
 
