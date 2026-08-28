@@ -29,6 +29,13 @@ from the UI. The filename stays `knowledge-graph.md`; other `.ai/` docs referenc
 - **Event Sourcing** -> explained in -> `event-sourcing-vs-crud-when-to-choose-each.md`, `db-event-replay-benchmark.md`
 - **Saga Pattern** -> visualized in -> `implementing-the-saga-pattern-for-distributed-transfers.md`, `saga-state-machine-visualizer.md`
 - **Queueing (Redis/BullMQ)** -> benchmarked in -> `redis-streams-vs-bullmq-job-queue-comparison.md` (includes the raw-throughput numbers previously in the now-merged `redis-vs-bullmq.md`)
+- **API Gateway / Rate Limiting** -> designed in -> `designing-a-global-api-gateway.md`, implemented in ->
+  `rate-limiting-algorithms.md` (lab), transport trade-off in -> `websockets-vs-sse.md` (Phase 5, §5.4 —
+  added 2026-08-28)
+- **Observability (Tracing vs Metrics)** -> practiced in -> `distributed-tracing-with-opentelemetry-and-jaeger.md`,
+  decided in -> `adr-tracing-vs-metrics-in-microservices.md` (Phase 5, §5.3 — added 2026-08-28)
+- **Database Indexing (B-Tree vs BRIN)** -> explained in -> `database-indexing-btree-vs-brin-for-time-series.md`,
+  grounded in QuantAlpha's target-design tick-ingestion pipeline (Phase 5, §5.4 — added 2026-08-28)
 
 ## Recommended Reading Paths
 
@@ -41,6 +48,15 @@ from the UI. The filename stays `knowledge-graph.md`; other `.ai/` docs referenc
 **Path 2: High-Performance Go Backend**
 1. Read `/projects/aegis` (Flagship)
 2. Read `/blog/grpc-service-mesh-in-go-aegis-architecture` (Architecture Note)
-3. Interact with `/labs/go-vs-ts-concurrency` (Benchmark) — write-up at `/experiments/go-vs-ts-concurrency`
+3. Read `/research/adr-tracing-vs-metrics-in-microservices` (ADR) — added Phase 5 §5.3
+4. Read `/system-design/designing-a-global-api-gateway` (System Design) — added Phase 5 §5.4
+5. Interact with `/labs/rate-limiting-algorithms` (Lab) — write-up at `/experiments/rate-limiting-algorithms`
+6. Interact with `/labs/go-vs-ts-concurrency` (Benchmark) — write-up at `/experiments/go-vs-ts-concurrency`
+
+**Path 3: HFT Research Platform**
+1. Read `/projects/quant-alpha` (Flagship)
+2. Read `/blog/designing-a-multi-role-hft-research-platform` (Architecture Note)
+3. Read `/research/database-indexing-btree-vs-brin-for-time-series` (Research) — added Phase 5 §5.4
+4. Interact with `/labs/redis-vs-bullmq` (Benchmark) — write-up at `/experiments/redis-streams-vs-bullmq-job-queue-comparison`
 
 *Note: You can view the visual representation of this graph in the actual app at the `/graph` route.*

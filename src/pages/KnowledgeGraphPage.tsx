@@ -23,7 +23,22 @@ const READING_PATHS = [
     steps: [
       { label: 'Aegis', kind: 'Flagship', to: '/projects/aegis' },
       { label: 'gRPC Service Mesh in Go', kind: 'Architecture Note', to: '/blog/grpc-service-mesh-in-go-aegis-architecture' },
+      { label: 'ADR: Tracing vs Metrics', kind: 'ADR', to: '/research/adr-tracing-vs-metrics-in-microservices' },
+      { label: 'Designing a Global API Gateway', kind: 'System Design', to: '/system-design/designing-a-global-api-gateway' },
+      { label: 'Rate Limiting Algorithms', kind: 'Lab', to: '/labs/rate-limiting-algorithms' },
       { label: 'Go vs TS Concurrency', kind: 'Benchmark', to: '/labs/go-vs-ts-concurrency' },
+    ],
+  },
+  // QuantAlpha and PFM had graph nodes but no reading path at all — this closes that gap for
+  // QuantAlpha specifically (added alongside the Phase 5 §5.4 database-indexing article, which
+  // gave it its first research-depth piece beyond the flagship page and the HFT signal article).
+  {
+    title: 'HFT Research Platform',
+    steps: [
+      { label: 'QuantAlpha', kind: 'Flagship', to: '/projects/quant-alpha' },
+      { label: 'Designing a Multi-Role HFT Research Platform', kind: 'Architecture Note', to: '/blog/designing-a-multi-role-hft-research-platform' },
+      { label: 'Database Indexing: B-Tree vs BRIN', kind: 'Research', to: '/research/database-indexing-btree-vs-brin-for-time-series' },
+      { label: 'Redis Streams vs BullMQ', kind: 'Benchmark', to: '/labs/redis-vs-bullmq' },
     ],
   },
 ];
@@ -118,6 +133,8 @@ graph TD
     C_RBAC((RBAC)):::concept
     C_Microservices((Microservices)):::concept
     C_PBAC((PBAC)):::concept
+    C_APIGateway((API Gateway / Rate Limiting)):::concept
+    C_Observability((Observability)):::concept
 
     %% Relationships - Tech to Projects
     T_Go --> P_Aegis
@@ -145,6 +162,8 @@ graph TD
     C_Microservices -.-> P_Aegis
     C_CQRS -.-> P_Aegis
     C_PBAC -.-> P_PFM
+    C_APIGateway -.-> P_Aegis
+    C_Observability -.-> P_Aegis
 
     %% Click-through to the flagship project pages
     click P_Aegis href "/projects/aegis" "_self"
