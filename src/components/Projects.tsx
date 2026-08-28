@@ -1,5 +1,6 @@
 import { ExternalLink, Github, Network } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import TagPill from './TagPill';
 import { caseStudiesData as caseStudies } from '../data/portfolioData';
 import type { ProjectProvenance } from '../data/portfolioData';
 
@@ -253,9 +254,7 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
                     {project.stack.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-1.5">
                         {project.stack.map((tech, i) => (
-                          <span key={i} className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">
-                            {tech}
-                          </span>
+                          <TagPill key={i}>{tech}</TagPill>
                         ))}
                       </div>
                     )}

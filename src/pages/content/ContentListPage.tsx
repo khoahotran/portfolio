@@ -2,6 +2,7 @@ import { ArrowLeft } from 'lucide-react';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import LoadingState from '../../components/LoadingState';
+import TagPill from '../../components/TagPill';
 import ErrorNotice from '../../components/content/ErrorNotice';
 import { getContentIndex, getContentTags } from '../../content-engine/content-service';
 import { formatDate, routeForCollection } from '../../content-engine/format';
@@ -36,9 +37,7 @@ const ContentCard = memo(function ContentCard({
       {item.tags.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
           {item.tags.map((tag) => (
-            <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">
-              #{tag}
-            </span>
+            <TagPill key={tag}>#{tag}</TagPill>
           ))}
         </div>
       )}
