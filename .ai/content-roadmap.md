@@ -202,7 +202,7 @@ QuantAlpha/Aegis repo access exists in whatever environment picks this up next.
   with `benchmarks/websockets-vs-sse/`, harness written *first* as this section required. One Go
   binary, two roles, both transports in the same language/process model to isolate the transport
   from a language confound. **The finding itself is the interesting part**: memory is close and SSE
-  is *not* the cheaper transport at scale (137.1MB vs. WebSocket's 124.8MB at 5,000 connections) —
+  is *not* the cheaper transport at scale (137.5MB vs. WebSocket's 122.2MB at 5,000 connections, re-measured 2026-08-28 after a Phase 6 harness robustness fix — see Decision 21) —
   the opposite of the common "SSE is lighter" intuition, most plausibly an artifact of this
   harness's own SSE handler carrying more per-connection state than `gorilla/websocket`'s path, not
   a law about the wire protocols. **Connect-time was measured and then explicitly not trusted**: a

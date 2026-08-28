@@ -357,9 +357,9 @@ share a language and process model — isolating the transport itself from the k
 language/runtime confound `go-vs-ts-concurrency` measures separately.
 
 **What the harness found:** peak server memory for holding N connections open is close between the
-two transports at every point tested, and SSE is consistently the *slightly heavier* one (137.1MB
-vs. WebSocket's 124.8MB at 5,000 connections) — the opposite of the common "SSE is the lighter,
-simpler transport" assumption. The likely cause is stated plainly rather than oversold: this
+two transports at every point tested, and SSE is consistently the *slightly heavier* one (137.5MB
+vs. WebSocket's 122.2MB at 5,000 connections, as re-measured 2026-08-28 after the harness fixes Decision 21 describes) — the opposite of the common "SSE is the lighter, simpler transport"
+assumption. The likely cause is stated plainly rather than oversold: this
 harness's SSE handler carries a `bufio.Reader` and manual header-parsing state per connection that
 the `gorilla/websocket` path doesn't, which is a property of this implementation, not a proven
 property of the wire protocols.
@@ -438,3 +438,78 @@ suppressing its effect at render time.
 - Restates the same lesson as Decision 5 (slug/route mismatch) and Decision 15 (tag taxonomy): a
   content-authoring field with no build-time enforcement is a mistake waiting to happen, and the fix
   belongs at the point where the mistake is made, not only where its symptom would appear.
+
+## Decision 21: A Full Re-Audit Found Four Real Bugs, None Previously Reported
+
+**Context:** Asked to comprehensively re-check the whole project after Phase 6, two independent
+review passes (one on content/docs/security, one re-deriving the correctness of every algorithm
+added this session against its real-world definition) turned up four genuine defects — none of them
+things a user had reported, all found by re-deriving expected behavior and checking it against the
+code rather than reading the code and assuming it was right.
+
+**1. `buildArrivalTimeline` (`src/labs/rateLimiting.ts`) silently dropped the last arrival at several
+UI-reachable rates** (4.5, 5, 9, 10 req/s over a 4s duration, all selectable via the Rate Limiting
+lab's own slider). `for (let t = step; t <= duration; t += step)` accumulates binary floating-point
+error; at these exact rates, the final sum lands fractionally past `duration` and the loop's `<=`
+check fails one tick early. Fixed by computing each tick as `i * step` from an integer tick count
+(`Math.floor(duration * rate + 1e-9)`) instead of accumulating — confirmed by direct execution that
+all four previously-broken rates now produce the exact expected count, and added a regression test
+naming them explicitly.
+
+**2. `pickRandomPeers` (`src/labs/gossipProtocol.ts`) treated a negative `fanout` as "gossip to
+almost everyone" instead of "gossip to no one.**" `Array.prototype.slice(0, negativeNumber)` means
+"everything except the last N elements" in JS, not "zero elements" — the opposite of what a negative
+fanout should mean given `fanout=0` is correctly a no-op. Unreachable via the shipped lab (slider
+minimum is 0) but a real defect in an exported, tested pure function. Fixed with
+`Math.max(0, Math.min(fanout, candidates.length))`.
+
+**3. `simulateFixedWindow` (`src/labs/rateLimiting.ts`) produced `NaN` window indices at
+`windowSeconds <= 0`**, which — because `NaN !== currentWindow` is always true — reset the counter
+on every single arrival and bypassed `limit` entirely. Unreachable via the shipped lab (slider
+minimum is 0.5) but the same "exported pure function, real defect" shape as #2. Fixed by degrading to
+one window for the whole run when `windowSeconds` isn't positive, rather than dividing by it.
+
+**4. The `websockets-vs-sse` benchmark harness's hand-rolled SSE client
+(`benchmarks/websockets-vs-sse/go/main.go`) had two real reliability gaps and one silent-miscount
+gap** — all in the harness that *produces* the site's data, not in anything a site visitor can
+reach: (a) no read deadline while parsing response headers, so an unresponsive server could hang the
+connecting goroutine — and transitively `runClient`'s `wg.Wait()` — forever; (b) the `bufio.Reader`
+used to parse headers was discarded in favor of the raw `net.Conn` for subsequent reads, silently
+losing any body bytes it had already buffered past the header boundary; (c) an unrecognized `-mode`
+value fell through the client's connection `switch` without connecting anything, yet still counted
+toward `established`, so the tool would have misreported 100% success with zero real connections.
+Fixed all three: a 5s read deadline around the header parse (cleared before the unbounded streaming
+reads that follow), a small `sseConn` wrapper that routes subsequent reads through the same
+`bufio.Reader`, and an explicit `default` case that logs and returns without incrementing
+`established`.
+
+**Systemic fix alongside these:** reviewing #4 also surfaced that `getRelatedArticles`'s
+self-reference guard (Decision 20) — and several other consumers (`ArticleNav`, `prefetchNextArticle`,
+`getIndexItem`) — compare articles by bare `slug` across the *entire* cross-collection corpus, an
+assumption nothing enforced. Added `findCrossCollectionSlugCollisions` (`scripts/lib/content.mjs`,
+unit-tested) and wired it into `build-search-index.mjs` to fail the build on any cross-collection
+slug collision — cheaper and more robust than fixing every downstream bare-slug comparison
+individually, and it would also have caught a silent OG-image clobber (two colliding docs writing the
+same `og/<slug>.png`) that nothing previously guarded against either.
+
+**The `websockets-vs-sse` benchmark was re-run in full after these fixes** (harness code changed;
+committed data should reflect the code that's actually committed) — the memory finding held (SSE
+still consistently ~10-13% heavier: 137.5MB vs. WebSocket's 122.2MB at 5,000 connections, close to
+the original 137.1MB/124.8MB and a second manual check's 136.1MB/126.1MB), and connect-time varied
+yet again (a *third* different WS-vs-SSE ordering at 5,000 connections across three total runs),
+further reinforcing rather than undermining that specific metric's instability. All citing docs
+(the article, the harness README, this log, `.ai/content-roadmap.md`) were updated to the
+now-current committed numbers rather than left pointing at superseded ones.
+
+**Consequences:**
+- None of the four bugs were live/user-facing on the deployed site: #1-#3 are exported pure
+  functions with real defects at inputs the shipped UI's own slider ranges don't reach, and #4 is
+  entirely inside benchmark tooling, not the site itself. This is precisely why they survived
+  initial review — "the UI never hits this" is not the same claim as "the function is correct," and
+  only the latter is what a unit test actually asserts.
+- All four fixes shipped with a regression test naming the specific input that used to be wrong,
+  not just a description of the fix — matching every prior decision in this log that touched
+  testable logic.
+- This is the strongest evidence yet for the value of the "verify, don't assume" discipline this
+  entire project has been built on: a second, adversarial reading of already-shipped, already-tested
+  code — not new content, not a new feature — found four real defects zero prior pass had.
