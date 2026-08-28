@@ -347,3 +347,69 @@ unverifiable claim about a system that never ran this way.
   claim than "this decision was wrong," and conflating the two would have overstated the finding.
 - General pattern for the rest of Phase 5: a queued roadmap note is a starting point, not a
   license — the project it names still has to actually support the claim before it gets written.
+
+## Decision 18: WebSockets-vs-SSE — Memory Is Close, Connect-Time Is Not Trusted
+
+**Context:** `.ai/content-roadmap.md` §5.4 queued a WebSockets vs SSE benchmark with an explicit
+instruction to write the harness *before* the article, per §5.8's lesson. The harness
+(`benchmarks/websockets-vs-sse/`) is one Go binary in two roles (server/client) so both transports
+share a language and process model — isolating the transport itself from the kind of
+language/runtime confound `go-vs-ts-concurrency` measures separately.
+
+**What the harness found:** peak server memory for holding N connections open is close between the
+two transports at every point tested, and SSE is consistently the *slightly heavier* one (137.1MB
+vs. WebSocket's 124.8MB at 5,000 connections) — the opposite of the common "SSE is the lighter,
+simpler transport" assumption. The likely cause is stated plainly rather than oversold: this
+harness's SSE handler carries a `bufio.Reader` and manual header-parsing state per connection that
+the `gorilla/websocket` path doesn't, which is a property of this implementation, not a proven
+property of the wire protocols.
+
+**A second, more consequential finding, about the harness's own connect-time metric:** a manual
+re-run at the 5,000-connection point reversed which transport was faster, twice, on the same host.
+Opening 5,000 concurrent connections from one client process is sensitive to scheduling and
+file-descriptor pressure this harness doesn't isolate from what it reports.
+
+**Decision:** commit `connectMs` in `results.json` for transparency, but do not draw any conclusion
+from it in the article, the lab's copy, or this log. The lab UI itself carries an explicit
+"unreliable at scale" caveat next to the number rather than omitting it silently or presenting it at
+face value.
+
+**Consequences:**
+- This is a stronger form of the honesty discipline Decisions 12-14 established: those said "here is
+  what we measured, and here is the environment's limits." This one says "we measured two things,
+  and are actively withholding a conclusion from one of them because we checked it twice and it
+  didn't hold up" — a higher bar than stating an environment caveat once and moving on.
+- The harness README states the exact reproduction steps that produced the reversal, so a reader can
+  verify the instability themselves rather than taking the claim on faith.
+
+## Decision 19: A Confirmed 0px-Bar Bug, Found by Screenshotting the New Page in the Old Style
+
+**Context:** While visually verifying the new WebSockets-vs-SSE lab page (built by copying the
+existing bar-chart pattern from `GoVsTsConcurrencyPage.tsx`), a screenshot showed the numeric labels
+rendering correctly but the colored bars themselves invisible — 0px tall regardless of the
+underlying value. Screenshotting the *existing, already-shipped* `go-vs-ts-concurrency` lab to check
+whether this was a bug in the new code or an inherited one confirmed: the bars have never rendered
+in that lab either, nor in `RedisVsBullMQPage.tsx`'s two charts (same pattern, same bug) — three
+existing charts across two already-published pages, invisible until this pass.
+
+**Root cause:** each bar's `style={{ height: 'N%' }}` needs a definite-height ancestor to resolve a
+percentage against. The immediate parent (a `flex-col` column wrapping the label, bar, and caption)
+sits inside a row container styled `items-end`, not `stretch` — so that column is auto-height
+(shrink-to-fit), not the row's fixed `h-64`. A percentage height inside an auto-height ancestor
+resolves to 0 per the CSS spec; the row's own `h-64` never reaches the bar because of the
+intermediate auto-height column.
+
+**Decision:** wrap each bar in its own fixed-height track (`h-48`) with `items-end`, so the
+percentage has a definite ancestor to resolve against and the bar still visually "grows from the
+bottom." Fixed in the same pass, in all three affected charts across `GoVsTsConcurrencyPage.tsx`,
+`RedisVsBullMQPage.tsx`, and the new `WebSocketsVsSsePage.tsx` — not just the new one — since leaving
+a confirmed, reproduced defect in already-shipped pages after discovering it would have been the
+exact kind of omission this whole phase has worked against.
+
+**Consequences:**
+- Verified visually (screenshot before/after) rather than assumed fixed from reading the CSS — the
+  same discipline `check-contrast.mjs`/`check-responsive.mjs` already enforce mechanically, applied
+  here to something neither script checks (a bar rendering at a wrong but layout-valid size doesn't
+  trip an overflow or contrast failure).
+- No user-facing regression window: both pre-existing pages were already live with invisible bars,
+  so this is a pure improvement with no compatibility risk to reason about.

@@ -80,7 +80,8 @@ Priority order across the four tracks: **5.1 → 5.8 → 5.5 → 5.2 → 5.6/5.7
 remaining credibility gap, 5.5 should land before more articles add more tags, and 5.3/5.4 are
 lowest-urgency because they don't depend on anything else being true first.
 
-**Status (2026-08-28): 5.1, 5.3, 5.5, 5.6, 5.7, 5.8 done; 5.2 blocked (see below); next up is 5.4.**
+**Status (2026-08-28): 5.1, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8 done — Phase 5 complete except 5.2, which
+remains blocked (see below) on causes outside this session's control.**
 
 ### 5.1 ✅ Meta-posts from the Phase 4 evidence — DONE (2026-08-27)
 *Do these first — the evidence already exists in this session's own commits and `.ai/decision-log.md`,
@@ -184,18 +185,42 @@ QuantAlpha/Aegis repo access exists in whatever environment picks this up next.
    article's own published config, not a fabricated Core Banking incident. See
    `.ai/decision-log.md` Decision 17.
 
-### 5.4 New technical domains (lowest priority — start only once §5.1–§5.3 are done)
+### 5.4 ✅ New technical domains — DONE (2026-08-28)
 
-- **System Design:** Designing a Global API Gateway (Kong/Envoy).
-- **Interactive Lab:** Gossip Protocol Visualizer (node discovery simulation) —
-  `provenance: 'implementation'` candidate, same reasoning as the rate-limiting lab above.
+- **System Design:** Designing a Global API Gateway (Kong/Envoy) — shipped as
+  `system-design/2026-08-28-designing-a-global-api-gateway.md`. Explicit about scope: this is the
+  network-layer edge routing job (TLS termination, health-aware routing, global rate limiting,
+  canary), distinct from and layered in front of the application-layer choice Aegis's existing
+  GraphQL-over-REST ADR already settled — not a replacement for it, and not built or deployed.
+- **Interactive Lab:** Gossip Protocol Visualizer — shipped at `/labs/gossip-protocol-visualizer`,
+  `provenance: 'implementation'` as this section predicted: a real push-based epidemic broadcast
+  (`src/labs/gossipProtocol.ts`, 8 tests) — Fisher-Yates peer selection, real round-by-round spread,
+  O(log n) convergence asserted directly in the test suite (50 nodes at fanout 3 converge in under
+  15 rounds), not just described.
 
-- **Experiment:** WebSockets vs Server-Sent Events (SSE) benchmark — if built as `measured`, write
-  the harness *first*, per §5.8's lesson, not after the fact.
+- **Experiment: WebSockets vs Server-Sent Events benchmark** — shipped at `/labs/websockets-vs-sse`
+  with `benchmarks/websockets-vs-sse/`, harness written *first* as this section required. One Go
+  binary, two roles, both transports in the same language/process model to isolate the transport
+  from a language confound. **The finding itself is the interesting part**: memory is close and SSE
+  is *not* the cheaper transport at scale (137.1MB vs. WebSocket's 124.8MB at 5,000 connections) —
+  the opposite of the common "SSE is lighter" intuition, most plausibly an artifact of this
+  harness's own SSE handler carrying more per-connection state than `gorilla/websocket`'s path, not
+  a law about the wire protocols. **Connect-time was measured and then explicitly not trusted**: a
+  manual re-run at 5,000 connections reversed which transport was faster, twice — documented in the
+  harness README and the lab's own UI rather than picking whichever run looked cleaner. See
+  `.ai/decision-log.md` Decision 18.
+- **Research:** Database Indexing (B-Tree vs BRIN in PostgreSQL) — shipped as
+  `research/2026-08-28-database-indexing-btree-vs-brin-for-time-series.md`, grounded in QuantAlpha's
+  own documented target design (tick-ingestion pipeline not yet built) rather than presenting BRIN
+  as installed.
 
-- **Research:** Database Indexing optimization (B-Tree vs BRIN in PostgreSQL) — ties naturally to
-  QuantAlpha's existing BRIN-indexed time-series design, already mentioned in
-  `.ai/flagship-projects.md` but never explained on its own.
+**Also found and fixed in this pass, unrelated to any single deliverable above:** all three
+percentage-height bar charts across `GoVsTsConcurrencyPage.tsx` and `RedisVsBullMQPage.tsx` were
+silently rendering 0px tall — a CSS bug (percentage height needs a definite-height ancestor; the
+row container was `items-end`, not `stretch`, so the column wrapping each bar had no definite height
+to resolve against) discovered by screenshotting the new WebSockets-vs-SSE page in the same style and
+noticing its bars didn't render either. Fixed in all three pages in the same pass. See
+`.ai/decision-log.md` Decision 19.
 
 ### 5.5 ✅ Tag taxonomy + cross-collection browse — DONE (2026-08-27)
 **Measured problem:** 80 distinct tags across 34 articles; **47 (59%) are used exactly once.** Tags
