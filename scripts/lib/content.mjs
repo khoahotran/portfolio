@@ -16,6 +16,31 @@ export function slugify(value) {
     .replace(/-+/g, '-');
 }
 
+/**
+ * Finds any slug used in more than one collection. Slugs only need to be unique *within* a
+ * collection for routing (`/collection/:slug`), but several places in src/ (getRelatedArticles's
+ * and ArticleNav's self-exclusion, prefetchNextArticle, getIndexItem) compare by bare `item.slug`
+ * across the whole cross-collection index rather than `collection/slug` — cheaper than threading a
+ * `currentCollection` through every call site, but only safe if slugs are unique across the entire
+ * corpus. `build-search-index.mjs` fails the build on any collision this returns; extracted here
+ * (rather than left inline in that script) so the check itself is unit-testable.
+ *
+ * Returns an array of `{ slug, collections }` for each colliding slug, empty if none collide.
+ */
+export function findCrossCollectionSlugCollisions(docs) {
+  const collectionsBySlug = new Map();
+  for (const doc of docs) {
+    if (!collectionsBySlug.has(doc.slug)) {
+      collectionsBySlug.set(doc.slug, []);
+    }
+    collectionsBySlug.get(doc.slug).push(doc.collection);
+  }
+
+  return [...collectionsBySlug.entries()]
+    .filter(([, collections]) => collections.length > 1)
+    .map(([slug, collections]) => ({ slug, collections }));
+}
+
 export function escapeXml(value) {
   return value
     .replace(/&/g, '&amp;')

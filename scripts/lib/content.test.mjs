@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   estimateReading,
+  findCrossCollectionSlugCollisions,
   parseFrontmatterBlock,
   parseScalar,
   splitFrontmatter,
@@ -116,5 +117,38 @@ describe('reading-time estimation', () => {
       '$$ \\sum_{i=0}^{n} x_i $$',
     ].join('\n');
     expect(minutes(noisy)).toBe(1);
+  });
+});
+
+/**
+ * Slugs only need to be unique *within* a collection for routing, but several places in src/
+ * (getRelatedArticles's self-exclusion in particular — see .ai/decision-log.md Decision 20) compare
+ * articles by bare slug across the whole corpus, not `collection/slug`. This is what makes that
+ * shortcut safe: build-search-index.mjs fails the build on any cross-collection collision this
+ * finds, rather than letting the two colliding articles silently misidentify each other.
+ */
+describe('findCrossCollectionSlugCollisions', () => {
+  it('finds nothing when every slug is unique across collections', () => {
+    const docs = [
+      { slug: 'aegis', collection: 'projects' },
+      { slug: 'aegis-deep-dive', collection: 'blog' },
+    ];
+    expect(findCrossCollectionSlugCollisions(docs)).toEqual([]);
+  });
+
+  it('finds a slug reused in two different collections', () => {
+    const docs = [
+      { slug: 'rate-limiting', collection: 'blog' },
+      { slug: 'rate-limiting', collection: 'experiments' },
+    ];
+    expect(findCrossCollectionSlugCollisions(docs)).toEqual([
+      { slug: 'rate-limiting', collections: ['blog', 'experiments'] },
+    ]);
+  });
+
+  it('does not flag the same slug appearing once per collection as a collision with itself', () => {
+    // Guards against a naive implementation counting occurrences instead of distinct collections.
+    const docs = [{ slug: 'aegis', collection: 'projects' }];
+    expect(findCrossCollectionSlugCollisions(docs)).toEqual([]);
   });
 });

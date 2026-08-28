@@ -7,6 +7,7 @@ import { CANONICAL_TAGS } from './lib/tag-taxonomy.mjs';
 import {
   escapeXml,
   estimateReading,
+  findCrossCollectionSlugCollisions,
   parseFrontmatterBlock,
   parseScalar,
   slugify,
@@ -239,6 +240,20 @@ async function buildAssets() {
   }
 
   docs.sort((a, b) => b.date.localeCompare(a.date));
+
+  // See findCrossCollectionSlugCollisions's own doc comment (scripts/lib/content.mjs) for why this
+  // has to be enforced at all: several places in src/ compare articles by bare `item.slug` across
+  // collections, an assumption nothing previously guaranteed. Found while reviewing
+  // getRelatedArticles's self-reference guard (Decision 20). This also would have caused a silent
+  // OG-image clobber above (two colliding docs writing to the same `og/<slug>.png`) before this
+  // check ever ran.
+  for (const { slug, collections } of findCrossCollectionSlugCollisions(docs)) {
+    throw new Error(
+      `Slug "${slug}" is used in more than one collection (${collections.join(', ')}) — slugs must ` +
+        'be unique across the entire corpus, not just within a collection, because several parts ' +
+        'of the app (related-articles lookup, OG image generation) key by slug alone. Rename one.'
+    );
+  }
 
   // Fail the build on a typo'd `related:` reference rather than letting it
   // silently render nothing — a curated cross-link is only worth adding if
