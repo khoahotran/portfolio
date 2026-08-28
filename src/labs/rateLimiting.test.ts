@@ -73,6 +73,13 @@ describe('simulateFixedWindow', () => {
     const steps = simulateFixedWindow([0.9, 0.95, 1.0, 1.05], 1, 2);
     expect(steps.every((s) => s.allowed)).toBe(true);
   });
+
+  it('degrades to one window for the whole run instead of NaN chaos when windowSeconds is 0', () => {
+    // Regression test: `t / 0` is NaN/Infinity, and NaN !== currentWindow is always true, which
+    // would otherwise reset the counter on every arrival and bypass `limit` entirely.
+    const steps = simulateFixedWindow([0, 1, 2, 3, 4], 0, 3);
+    expect(steps.map((s) => s.allowed)).toEqual([true, true, true, false, false]);
+  });
 });
 
 describe('buildArrivalTimeline', () => {
@@ -93,5 +100,18 @@ describe('buildArrivalTimeline', () => {
 
   it('produces no arrivals when both rate and burst are zero', () => {
     expect(buildArrivalTimeline(0, 5, 0, 1)).toEqual([]);
+  });
+
+  it('produces the exact expected tick count at rates where accumulating `t += step` loses the last tick', () => {
+    // Regression test: 4.5, 5, 9, and 10 req/s over a 4s duration all previously dropped their
+    // final arrival, because summing `step` repeatedly (1/4.5, 1/5, ...) accumulates binary
+    // floating-point error that pushes the final sum fractionally past 4, failing the loop's
+    // `<= durationSeconds` check one tick early. All four are reachable via the lab's own
+    // "Sustained rate" slider (0-10, step 0.5).
+    for (const rate of [4.5, 5, 9, 10]) {
+      const timeline = buildArrivalTimeline(rate, 4, 0, 0);
+      expect(timeline, `rate=${rate}`).toHaveLength(Math.round(rate * 4));
+      expect(timeline[timeline.length - 1], `rate=${rate} last arrival`).toBeCloseTo(4, 9);
+    }
   });
 });

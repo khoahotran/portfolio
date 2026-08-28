@@ -92,7 +92,12 @@ export function simulateFixedWindow(arrivals: number[], windowSeconds: number, l
   let countInWindow = 0;
 
   return arrivals.map((t) => {
-    const window = Math.floor(t / windowSeconds);
+    // `windowSeconds <= 0` has no valid window index (`t / 0` is `NaN`/`Infinity`, and `NaN` is
+    // never `=== currentWindow`, which would otherwise reset the count on every single arrival and
+    // bypass `limit` entirely). Unreachable via the shipped lab (its "Window size" slider has a
+    // 0.5 minimum), but this function is exported and callable directly, so it degrades to "one
+    // window for the whole run" rather than silently admitting everything.
+    const window = windowSeconds > 0 ? Math.floor(t / windowSeconds) : 0;
     if (window !== currentWindow) {
       currentWindow = window;
       countInWindow = 0;
@@ -125,8 +130,14 @@ export function buildArrivalTimeline(
   const arrivals: number[] = [];
   if (sustainedPerSec > 0) {
     const step = 1 / sustainedPerSec;
-    for (let t = step; t <= durationSeconds; t += step) {
-      arrivals.push(t);
+    // Computed as `i * step` from an integer tick count, not accumulated via `t += step` — the
+    // accumulated form loses the last tick at several UI-reachable rates (e.g. 4.5, 5, 9, 10 req/s
+    // over a 4s duration) because binary floating-point error pushes the final sum fractionally
+    // past `durationSeconds` before the loop condition is checked. `1e-9` absorbs the same class of
+    // error in the other direction, in the tick-count calculation itself.
+    const tickCount = Math.floor(durationSeconds * sustainedPerSec + 1e-9);
+    for (let i = 1; i <= tickCount; i += 1) {
+      arrivals.push(i * step);
     }
   }
 
