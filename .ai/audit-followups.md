@@ -263,11 +263,21 @@ Potential costs:
 
 Do not implement unless article count, performance measurements, or deployment requirements justify it.
 
+**Re-measured 2026-08-28 (Phase 6), corpus now 45 articles (was 33 at the original measurement):**
+521 KB raw / 159.4 KB gzip — a 2.4% increase in raw size against a 36% increase in article count.
+This confirms this chunk is dominated by the markdown/unified/remark/rehype *library* cost, which is
+paid once regardless of corpus size, not a per-article cost that scales with content volume — the
+trigger this item names ("article count... justify it") was based on an assumption that doesn't
+hold. The real trigger, if this is ever revisited, is a *library* change (e.g. adding a new rehype
+plugin), not corpus growth. Still not urgent; noted so a future pass doesn't re-measure expecting
+growth to have moved this and act on a false read.
+
 ## Future — Design System
 
 ### 8. Evaluate repeated Card / Badge components
 
-**Status:** Observation
+**Status:** Partially closed (2026-08-28, Phase 6) — one real match found and extracted; the rest
+correctly left alone.
 
 Repeated patterns exist across:
 
@@ -286,6 +296,21 @@ Only extract when:
 - abstraction reduces rather than increases complexity.
 
 Avoid premature design-system abstraction.
+
+---
+
+**Resolution.** Grepped for the exact tag/badge `className` string rather than eyeballing "looks
+similar" — found `rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600` byte-identical
+(not just visually close) in three places: `ContentListPage.tsx`'s and `ArticleHeader.tsx`'s tag
+pills, and `Projects.tsx`'s tech-stack badge. That crosses this item's own 3+/genuinely-shared bar
+cleanly — extracted as `src/components/TagPill.tsx`.
+
+Three *other* rounded-pill badges (the `/tags` count badge, `TagDetailPage`'s collection label,
+`SeriesNav`'s "Part N of M") were deliberately left as their own one-off spans: each carries a
+different padding/weight/casing treatment, so folding them into `TagPill` would need a handful of
+variant props to reproduce three barely-related shapes — the "increases complexity" case this item
+explicitly says not to force. This is the item working as designed: it found one real extraction and
+correctly rejected three fake ones that only *looked* similar.
 
 ---
 
