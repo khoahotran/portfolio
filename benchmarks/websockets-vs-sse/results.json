@@ -1,0 +1,38 @@
+[
+  {
+    "transport": "ws",
+    "connections": 100,
+    "connectMs": 85.439,
+    "peakMemoryMB": 8.98046875
+  },
+  {
+    "transport": "ws",
+    "connections": 1000,
+    "connectMs": 568.579,
+    "peakMemoryMB": 30.4765625
+  },
+  {
+    "transport": "ws",
+    "connections": 5000,
+    "connectMs": 1311.467,
+    "peakMemoryMB": 124.8046875
+  },
+  {
+    "transport": "sse",
+    "connections": 100,
+    "connectMs": 42.666,
+    "peakMemoryMB": 8.9375
+  },
+  {
+    "transport": "sse",
+    "connections": 1000,
+    "connectMs": 462.722,
+    "peakMemoryMB": 33.56640625
+  },
+  {
+    "transport": "sse",
+    "connections": 5000,
+    "connectMs": 4135.674,
+    "peakMemoryMB": 137.12890625
+  }
+]

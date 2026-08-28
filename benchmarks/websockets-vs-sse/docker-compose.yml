@@ -1,0 +1,26 @@
+services:
+  server:
+    build: ./go
+    command: ["-role=server", "-addr=:8090"]
+    # Both raised well above the default (often 1024) so a 5,000-connection run doesn't fail on
+    # file-descriptor exhaustion before the transport itself becomes the bottleneck being measured.
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8090/healthz"]
+      interval: 1s
+      retries: 30
+    profiles: ["run"]
+
+  client:
+    build: ./go
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    depends_on:
+      server:
+        condition: service_healthy
+    profiles: ["run"]
