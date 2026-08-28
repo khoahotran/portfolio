@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getContentCounts } from '../content-engine/content-service';
+import { getContentCounts, getLatestContent } from '../content-engine/content-service';
+import { collectionLabel, formatDate, routeForCollection } from '../content-engine/format';
+import type { ContentIndexItem } from '../content-engine/types';
 import { labs } from '../labs/registry';
 import { contactData, educationData, heroData } from '../data/portfolioData';
 import { useSeo } from '../seo/useSeo';
@@ -94,6 +96,29 @@ function PortfolioHome() {
     };
   }, []);
 
+  // `getLatestContent` (src/content-engine/content-service.ts) was fully implemented but imported
+  // by nothing — a returning reader had no way to see what's new since their last visit short of
+  // re-browsing every collection. Degrades silently (null = still loading or failed), same
+  // convention as `counts` above: a missing "what's new" strip is a lost enhancement, not an error
+  // worth surfacing. See .ai/content-roadmap.md §5.6.
+  const [latest, setLatest] = useState<ContentIndexItem[] | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    getLatestContent(4)
+      .then((result) => {
+        if (active) setLatest(result);
+      })
+      .catch(() => {
+        // Non-critical enhancement — degrade silently.
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <main>
       <Hero />
@@ -177,6 +202,35 @@ function PortfolioHome() {
           </div>
         </div>
       </section>
+
+      {/* Recently Published — see the useEffect above. Only renders once content actually loads
+          (no skeleton), matching how the counts strip above degrades: a homepage that briefly
+          shows nothing here is less noticeable than one that flashes a loading placeholder. */}
+      {latest !== null && latest.length > 0 && (
+        <section className="border-t border-slate-100 bg-surface px-6 py-16">
+          <div className="mx-auto max-w-5xl">
+            <p className="mb-8 text-sm font-medium uppercase tracking-widest text-teal-700">
+              / Recently Published
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {latest.map((item) => (
+                <Link
+                  key={`${item.collection}/${item.slug}`}
+                  to={`${routeForCollection(item.collection)}/${item.slug}`}
+                  className="group flex flex-col rounded-xl border border-slate-200 bg-surface p-4 transition hover:-translate-y-0.5 hover:border-teal-400"
+                >
+                  <span className="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    {collectionLabel(item.collection)} &middot; {formatDate(item.date)}
+                  </span>
+                  <span className="text-sm font-semibold text-slate-900 group-hover:text-teal-700">
+                    {item.title}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <About />
       <Experience />
