@@ -234,6 +234,21 @@ func connectWS(host string) (*websocket.Conn, error) {
 	return conn, err
 }
 
+// sseConn wraps a raw net.Conn so subsequent reads go through the same bufio.Reader that was used
+// to parse the response headers, not the raw socket directly. Without this, any body bytes the
+// reader already pulled from the socket in the same read syscall past the header boundary (quite
+// plausible once the server starts streaming ticks within the connect window) would be silently
+// lost — trapped in the discarded bufio.Reader's internal buffer, never reaching the caller's drain
+// loop. Every other net.Conn method is unaffected and delegates to the embedded connection.
+type sseConn struct {
+	net.Conn
+	reader *bufio.Reader
+}
+
+func (c *sseConn) Read(p []byte) (int, error) {
+	return c.reader.Read(p)
+}
+
 func connectSSE(host string) (net.Conn, error) {
 	// A minimal, dependency-free SSE client: dial the TCP connection directly and issue the HTTP
 	// request by hand, then leave the connection open and let the caller drain it. Using
@@ -250,6 +265,16 @@ func connectSSE(host string) (net.Conn, error) {
 		conn.Close()
 		return nil, err
 	}
+
+	// Bound the header read specifically: a slow or unresponsive server here (overload, a dropped
+	// response) would otherwise block this goroutine — and transitively runClient's wg.Wait() —
+	// forever, with no way for the harness to time out. Cleared once headers are read, since the
+	// streaming body reads that follow are meant to block indefinitely.
+	if err := conn.SetReadDeadline(time.Now().Add(5 * time.Second)); err != nil {
+		conn.Close()
+		return nil, err
+	}
+
 	// Drain the status line + headers so the connection is past the handshake and purely
 	// streaming body from here on.
 	reader := bufio.NewReader(conn)
@@ -263,7 +288,13 @@ func connectSSE(host string) (net.Conn, error) {
 			break
 		}
 	}
-	return conn, nil
+
+	if err := conn.SetReadDeadline(time.Time{}); err != nil {
+		conn.Close()
+		return nil, err
+	}
+
+	return &sseConn{Conn: conn, reader: reader}, nil
 }
 
 func runClient(mode, host string, conns int, holdSeconds int) {
@@ -319,6 +350,12 @@ func runClient(mode, host string, conns int, holdSeconds int) {
 				connsMu.Lock()
 				sseConns = append(sseConns, conn)
 				connsMu.Unlock()
+			default:
+				// Guards against `established` overcounting to 100% with zero real connections if
+				// `-mode` is ever anything but "ws"/"sse" — run.sh only ever passes one of those
+				// two, but this function is reachable with an arbitrary flag value.
+				fmt.Fprintf(os.Stderr, "[client] unknown mode %q — expected \"ws\" or \"sse\"\n", mode)
+				return
 			}
 			mu.Lock()
 			established++
