@@ -50,7 +50,7 @@ docker compose run --rm client -role=client -mode=sse -conns=5000 -host=server:8
 
 ## The finding: memory is close and consistent, not the gap conventional wisdom assumes
 
-At 5,000 held-open connections, WebSocket used **124.8MB** peak RSS against SSE's **137.1MB** — SSE
+At 5,000 held-open connections, WebSocket used **122.2MB** peak RSS against SSE's **137.5MB** — SSE
 is *not* the leaner transport here, contrary to the intuition that a "simpler" one-directional
 protocol should cost less to hold open. Across the full matrix (100 / 1,000 / 5,000 connections),
 the two transports track within single-digit percent of each other at every point, with SSE
@@ -60,21 +60,23 @@ entirely inside `gorilla/websocket`) doesn't carry. That is a property of *this 
 a law about the wire protocols themselves — a production SSE library optimized for this exact
 case could plausibly close or reverse the small gap.
 
-**This was re-run once at the 5,000-connection point specifically to check this** (not part of the
-committed matrix, since the run.sh matrix runs each combination once, same precedent as the other
-two harnesses in this repository) — the memory figures reproduced closely (126.1MB / 136.1MB vs. the
-committed 124.8MB / 137.1MB), while connect time did not (see below). Memory is the metric this
-README treats as reliable.
+**This has been run at the 5,000-connection point three separate times across this harness's
+lifetime** — the original committed matrix, one manual spot-check re-run, and a full re-run after a
+later robustness fix to the SSE client (a read-deadline guard and a buffered-reader fix, neither of
+which touches what's actually measured — see Decision 21 in `.ai/decision-log.md`) — and the memory
+figures reproduced closely across all three (124.8MB/137.1MB, 126.1MB/136.1MB, then this file's
+current 122.2MB/137.5MB). Memory is the metric this README treats as reliable.
 
 ## Honesty about connect time
 
 This is the part worth stating plainly rather than smoothing over: **connect-time showed high
-run-to-run variance at the 5,000-connection point on the sandboxed host this ran on**, to the point
-of reversing which transport was faster between two consecutive runs (committed run: WS 1,311ms vs.
-SSE 4,136ms; an immediate re-run: WS 2,281ms vs. SSE 2,068ms). Opening 5,000 concurrent TCP
-connections from one client process is exactly the kind of workload sensitive to host scheduling
-jitter, container CPU contention, and ephemeral-port/file-descriptor pressure — this harness does
-not isolate those from the number it reports. The `connectMs` field is committed in `results.json`
+run-to-run variance at the 5,000-connection point on the sandboxed host this ran on, across all
+three runs**, including reversing which transport was faster (run 1: WS 1,311ms vs. SSE 4,136ms;
+run 2: WS 2,281ms vs. SSE 2,068ms; run 3 — this file's current committed numbers — WS 1,908ms vs.
+SSE 2,702ms). Opening 5,000 concurrent TCP connections from one client process is exactly the kind
+of workload sensitive to host scheduling jitter, container CPU contention, and ephemeral-port/
+file-descriptor pressure — this harness does not isolate those from the number it reports. The
+`connectMs` field is committed in `results.json`
 for transparency, and the lab surfaces it, but neither the lab nor the companion article draws a
 conclusion from it. If you re-run this harness and get a different connect-time gap than what's
 committed, that is expected, not a bug — it is genuinely the less trustworthy of this benchmark's

@@ -35,9 +35,9 @@ for the life of a process.
 
 | Connections | WebSocket | SSE |
 |---|---|---|
-| 100 | 9.0 MB | 8.9 MB |
-| 1,000 | 30.5 MB | 33.6 MB |
-| 5,000 | 124.8 MB | 137.1 MB |
+| 100 | 8.7 MB | 9.1 MB |
+| 1,000 | 31.6 MB | 34.1 MB |
+| 5,000 | 122.2 MB | 137.5 MB |
 
 At every connection count measured, the two transports track within single-digit percent of each
 other — and SSE is consistently the *slightly heavier* one, not the lighter one the "simpler
