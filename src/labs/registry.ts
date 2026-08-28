@@ -56,6 +56,7 @@ const EventSourcingReplayPage = lazy(() => import('../pages/experiments/EventSou
 const RedisVsBullMQPage = lazy(() => import('../pages/experiments/RedisVsBullMQPage'));
 const GoVsTsConcurrencyPage = lazy(() => import('../pages/experiments/GoVsTsConcurrencyPage'));
 const DbEventReplayBenchmarkPage = lazy(() => import('../pages/experiments/DbEventReplayBenchmarkPage'));
+const RateLimitingAlgorithmsPage = lazy(() => import('../pages/experiments/RateLimitingAlgorithmsPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -228,6 +229,24 @@ export const labs: LabDefinition[] = [
     interaction: 'preset',
     collidesWithArticleSlug: true, // content/experiments/2026-06-27-db-event-replay-benchmark.md
     relatedArticle: 'db-event-replay-benchmark',
+  },
+  {
+    id: 'rate-limiting-algorithms',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'The real Token Bucket, Leaky Bucket, and Fixed Window Counter algorithms (src/labs/rateLimiting.ts, ' +
+        'unit-tested), run against an identical arrival timeline built from your rate/burst sliders — not three ' +
+        'formulas tuned to look different. Refill/leak amounts are computed from real elapsed time between ' +
+        "arrivals, and Fixed Window's boundary-reset flaw (a burst split across a window edge can double- " +
+        'admit) is the actual algorithm, not a dramatized bug.',
+    },
+    title: 'Rate Limiting Algorithms',
+    description: 'Token Bucket vs Leaky Bucket vs Fixed Window Counter, run on a shared burst scenario.',
+    component: RateLimitingAlgorithmsPage,
+    interaction: 'live',
+    collidesWithArticleSlug: true, // content/experiments/2026-08-28-rate-limiting-algorithms.md
+    relatedArticle: 'rate-limiting-algorithms',
   },
 ];
 
