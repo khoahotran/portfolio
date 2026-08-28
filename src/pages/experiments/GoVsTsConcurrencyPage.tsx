@@ -108,13 +108,21 @@ function GoVsTsConcurrencyPage() {
               <div className="flex items-end justify-center gap-6 h-64 border-b border-slate-200 pb-2 relative">
                 <div className="w-16 flex flex-col items-center gap-2 group">
                   <div className="text-xs font-bold text-teal-700">{currentData.goMemory.toFixed(1)} MB</div>
-                  <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.goMemory / MAX_MEMORY) * 100}%` }} />
+                  {/* Fixed-height track: the bar's `height: N%` only resolves against a
+                      definite-height ancestor, and this column (a child of an `items-end`, not
+                      `stretch`, row) is otherwise auto-height — without this wrapper the bar
+                      silently computes to 0px regardless of the percentage. */}
+                  <div className="flex h-48 w-full items-end">
+                    <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.goMemory / MAX_MEMORY) * 100}%` }} />
+                  </div>
                   <div className="text-xs font-semibold text-slate-500 mt-2">Go</div>
                 </div>
-                
+
                 <div className="w-16 flex flex-col items-center gap-2 group">
                   <div className="text-xs font-bold text-rose-700">{currentData.tsMemory.toFixed(1)} MB</div>
-                  <div className="w-full bg-rose-400 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.tsMemory / MAX_MEMORY) * 100}%` }} />
+                  <div className="flex h-48 w-full items-end">
+                    <div className="w-full bg-rose-400 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.tsMemory / MAX_MEMORY) * 100}%` }} />
+                  </div>
                   <div className="text-xs font-semibold text-slate-500 mt-2">Node.js</div>
                 </div>
               </div>
@@ -127,13 +135,17 @@ function GoVsTsConcurrencyPage() {
               <div className="flex items-end justify-center gap-6 h-64 border-b border-slate-200 pb-2 relative">
                 <div className="w-16 flex flex-col items-center gap-2 group">
                   <div className="text-xs font-bold text-teal-700">{currentData.goTime.toFixed(0)} ms</div>
-                  <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.goTime / MAX_TIME) * 100}%` }} />
+                  <div className="flex h-48 w-full items-end">
+                    <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.goTime / MAX_TIME) * 100}%` }} />
+                  </div>
                   <div className="text-xs font-semibold text-slate-500 mt-2">Go</div>
                 </div>
-                
+
                 <div className="w-16 flex flex-col items-center gap-2 group">
                   <div className="text-xs font-bold text-rose-700">{currentData.tsTime.toFixed(0)} ms</div>
-                  <div className="w-full bg-rose-400 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.tsTime / MAX_TIME) * 100}%` }} />
+                  <div className="flex h-48 w-full items-end">
+                    <div className="w-full bg-rose-400 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.tsTime / MAX_TIME) * 100}%` }} />
+                  </div>
                   <div className="text-xs font-semibold text-slate-500 mt-2">Node.js</div>
                 </div>
               </div>

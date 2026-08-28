@@ -137,14 +137,21 @@ function RedisVsBullMQPage() {
                 {/* Redis Bar */}
                 <div className="w-16 flex flex-col items-center gap-2 group">
                   <div className="text-xs font-bold text-teal-700">{Math.round(currentData.redisThroughput).toLocaleString()}</div>
-                  <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.redisThroughput / MAX_THROUGHPUT) * 100}%` }} />
+                  {/* Fixed-height track: `height: N%` only resolves against a definite-height
+                      ancestor, and this column (child of an `items-end`, not `stretch`, row) is
+                      otherwise auto-height — without this wrapper the bar silently renders 0px. */}
+                  <div className="flex h-48 w-full items-end">
+                    <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.redisThroughput / MAX_THROUGHPUT) * 100}%` }} />
+                  </div>
                   <div className="text-xs font-semibold text-slate-500 mt-2">Redis+Go</div>
                 </div>
-                
+
                 {/* BullMQ Bar */}
                 <div className="w-16 flex flex-col items-center gap-2 group">
                   <div className="text-xs font-bold text-rose-700">{Math.round(currentData.bullmqThroughput).toLocaleString()}</div>
-                  <div className="w-full bg-rose-400 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.bullmqThroughput / MAX_THROUGHPUT) * 100}%` }} />
+                  <div className="flex h-48 w-full items-end">
+                    <div className="w-full bg-rose-400 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.bullmqThroughput / MAX_THROUGHPUT) * 100}%` }} />
+                  </div>
                   <div className="text-xs font-semibold text-slate-500 mt-2">BullMQ+TS</div>
                 </div>
               </div>
@@ -158,14 +165,18 @@ function RedisVsBullMQPage() {
                 {/* Redis Bar */}
                 <div className="w-16 flex flex-col items-center gap-2 group">
                   <div className="text-xs font-bold text-teal-700">{currentData.redisLatency.toFixed(1)}ms</div>
-                  <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.redisLatency / MAX_LATENCY) * 100}%` }} />
+                  <div className="flex h-48 w-full items-end">
+                    <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.redisLatency / MAX_LATENCY) * 100}%` }} />
+                  </div>
                   <div className="text-xs font-semibold text-slate-500 mt-2">Redis+Go</div>
                 </div>
-                
+
                 {/* BullMQ Bar */}
                 <div className="w-16 flex flex-col items-center gap-2 group">
                   <div className="text-xs font-bold text-rose-700">{currentData.bullmqLatency.toFixed(1)}ms</div>
-                  <div className="w-full bg-rose-400 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.bullmqLatency / MAX_LATENCY) * 100}%` }} />
+                  <div className="flex h-48 w-full items-end">
+                    <div className="w-full bg-rose-400 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.bullmqLatency / MAX_LATENCY) * 100}%` }} />
+                  </div>
                   <div className="text-xs font-semibold text-slate-500 mt-2">BullMQ+TS</div>
                 </div>
               </div>
