@@ -2,7 +2,7 @@
 title: "Designing a Global API Gateway: Edge Routing Beyond a Single Aegis Instance"
 date: "2026-08-28"
 tags: ["system-design", "api-design", "architecture", "go"]
-related: ["projects/aegis", "research/adr-graphql-gateway-over-rest", "experiments/rate-limiting-algorithms"]
+related: ["projects/aegis", "research/adr-graphql-gateway-over-rest", "experiments/rate-limiting-algorithms", "experiments/websockets-vs-sse"]
 summary: "Aegis's GraphQL gateway solves API shape for one instance. This is the layer above it a real deployment would need once there's more than one — and why that's a different problem, not a bigger version of the same one."
 ---
 
