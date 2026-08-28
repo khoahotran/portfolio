@@ -21,6 +21,13 @@
       <description>Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it&apos;s named.</description>
     </item>
     <item>
+      <title>WebSockets vs Server-Sent Events: What Holding 5,000 Connections Open Actually Costs</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/websockets-vs-sse</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/websockets-vs-sse</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>A real harness measuring server memory for thousands of concurrent WebSocket vs SSE connections — written before the article, per the lesson from three prior benchmark rewrites.</description>
+    </item>
+    <item>
       <title>Interactive Event Sourcing Replay</title>
       <link>https://khoahotran.github.io/portfolio/experiments/event-sourcing-replay</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/event-sourcing-replay</guid>

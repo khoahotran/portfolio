@@ -93,6 +93,25 @@
     "readingText": "4 min read"
   },
   {
+    "title": "WebSockets vs Server-Sent Events: What Holding 5,000 Connections Open Actually Costs",
+    "date": "2026-08-28",
+    "tags": [
+      "go",
+      "benchmark",
+      "architecture"
+    ],
+    "summary": "A real harness measuring server memory for thousands of concurrent WebSocket vs SSE connections — written before the article, per the lesson from three prior benchmark rewrites.",
+    "draft": false,
+    "slug": "websockets-vs-sse",
+    "collection": "experiments",
+    "ogImage": "/og/websockets-vs-sse.png",
+    "related": [
+      "system-design/designing-a-global-api-gateway"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
     "title": "Designing a Global API Gateway: Edge Routing Beyond a Single Aegis Instance",
     "date": "2026-08-28",
     "tags": [
@@ -109,7 +128,8 @@
     "related": [
       "projects/aegis",
       "research/adr-graphql-gateway-over-rest",
-      "experiments/rate-limiting-algorithms"
+      "experiments/rate-limiting-algorithms",
+      "experiments/websockets-vs-sse"
     ],
     "readingMinutes": 5,
     "readingText": "5 min read"

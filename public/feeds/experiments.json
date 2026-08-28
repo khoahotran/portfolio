@@ -33,6 +33,19 @@
       "image": "https://khoahotran.github.io/portfolio/og/rate-limiting-algorithms.png"
     },
     {
+      "id": "https://khoahotran.github.io/portfolio/experiments/websockets-vs-sse",
+      "url": "https://khoahotran.github.io/portfolio/experiments/websockets-vs-sse",
+      "title": "WebSockets vs Server-Sent Events: What Holding 5,000 Connections Open Actually Costs",
+      "summary": "A real harness measuring server memory for thousands of concurrent WebSocket vs SSE connections — written before the article, per the lesson from three prior benchmark rewrites.",
+      "date_published": "2026-08-28T00:00:00.000Z",
+      "tags": [
+        "go",
+        "benchmark",
+        "architecture"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/websockets-vs-sse.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/experiments/event-sourcing-replay",
       "url": "https://khoahotran.github.io/portfolio/experiments/event-sourcing-replay",
       "title": "Interactive Event Sourcing Replay",
