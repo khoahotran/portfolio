@@ -8,5 +8,6 @@
   "redis-vs-bullmq",
   "go-vs-ts-concurrency",
   "db-event-replay-benchmark",
-  "rate-limiting-algorithms"
+  "rate-limiting-algorithms",
+  "gossip-protocol-visualizer"
 ]

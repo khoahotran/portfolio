@@ -57,6 +57,7 @@ const RedisVsBullMQPage = lazy(() => import('../pages/experiments/RedisVsBullMQP
 const GoVsTsConcurrencyPage = lazy(() => import('../pages/experiments/GoVsTsConcurrencyPage'));
 const DbEventReplayBenchmarkPage = lazy(() => import('../pages/experiments/DbEventReplayBenchmarkPage'));
 const RateLimitingAlgorithmsPage = lazy(() => import('../pages/experiments/RateLimitingAlgorithmsPage'));
+const GossipProtocolVisualizerPage = lazy(() => import('../pages/experiments/GossipProtocolVisualizerPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -247,6 +248,24 @@ export const labs: LabDefinition[] = [
     interaction: 'live',
     collidesWithArticleSlug: true, // content/experiments/2026-08-28-rate-limiting-algorithms.md
     relatedArticle: 'rate-limiting-algorithms',
+  },
+  {
+    id: 'gossip-protocol-visualizer',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'A real push-based epidemic broadcast (src/labs/gossipProtocol.ts, unit-tested): every infected ' +
+        'node picks real random peers each round via Fisher-Yates shuffling and pushes to them, exactly the ' +
+        'rumor-mongering protocol underlying real cluster membership systems (Cassandra, Consul, SWIM). The ' +
+        "round-by-round spread you scrub through is the actual simulation's output, not a smoothed curve — " +
+        'the O(log n) convergence claim is asserted directly in the test suite, not just described in prose.',
+    },
+    title: 'Gossip Protocol Visualizer',
+    description: 'A push-based epidemic broadcast simulation — watch a message spread node by node.',
+    component: GossipProtocolVisualizerPage,
+    interaction: 'run',
+    collidesWithArticleSlug: true, // content/experiments/2026-08-28-gossip-protocol-visualizer.md
+    relatedArticle: 'gossip-protocol-visualizer',
   },
 ];
 
