@@ -62,6 +62,7 @@ const WebSocketsVsSsePage = lazy(() => import('../pages/experiments/WebSocketsVs
 const LeaderElectionPage = lazy(() => import('../pages/experiments/LeaderElectionPage'));
 const PgbouncerVsDirectPage = lazy(() => import('../pages/experiments/PgbouncerVsDirectPage'));
 const RedlockPage = lazy(() => import('../pages/experiments/RedlockPage'));
+const BackpressurePage = lazy(() => import('../pages/experiments/BackpressurePage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -355,6 +356,24 @@ export const labs: LabDefinition[] = [
     component: RedlockPage,
     interaction: 'live',
     relatedArticle: 'distributed-locks-redlock-and-the-pause-that-breaks-it',
+  },
+  {
+    id: 'backpressure',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'The real per-item admission logic for all four policies (src/labs/backpressure.ts, unit-tested): ' +
+        'each queued item carries the tick it arrived on, so drop-new and drop-old are proven to drop the ' +
+        "same count but different items (drop-new only ever discards its own tick's newest arrivals, " +
+        "drop-old only ever evicts already-resident older ones), block's producer backlog is a real " +
+        "unbounded array that's never discarded, and the circuit breaker's open/half-open/closed " +
+        'transitions are decided from the state each tick actually entered with, not asserted in prose.',
+    },
+    title: 'Backpressure Strategies',
+    description: 'Run four real backpressure policies against the same overload — block, drop-new, drop-old, circuit breaker.',
+    component: BackpressurePage,
+    interaction: 'live',
+    relatedArticle: 'backpressure-four-policies-one-overload',
   },
 ];
 
