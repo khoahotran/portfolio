@@ -18,6 +18,25 @@
     "readingText": "3 min read"
   },
   {
+    "title": "Connection Pooling: When PgBouncer Actually Helps",
+    "date": "2026-09-07",
+    "tags": [
+      "postgresql",
+      "benchmark",
+      "trade-offs"
+    ],
+    "summary": "A real harness measuring PgBouncer against direct Postgres across two connection lifecycles — the advantage widens under one and reverses under the other, so 'add a pooler' isn't a universal answer.",
+    "draft": false,
+    "slug": "pgbouncer-vs-direct-connection-pooling",
+    "collection": "experiments",
+    "ogImage": "/og/pgbouncer-vs-direct-connection-pooling.png",
+    "related": [
+      "research/database-indexing-btree-vs-brin-for-time-series"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
     "title": "Field Note: What My Own Git Log Proves About Spec-Driven Development",
     "date": "2026-09-07",
     "tags": [

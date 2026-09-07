@@ -20,6 +20,19 @@
       "image": "https://khoahotran.github.io/portfolio/og/leader-election-bully-algorithm.png"
     },
     {
+      "id": "https://khoahotran.github.io/portfolio/experiments/pgbouncer-vs-direct-connection-pooling",
+      "url": "https://khoahotran.github.io/portfolio/experiments/pgbouncer-vs-direct-connection-pooling",
+      "title": "Connection Pooling: When PgBouncer Actually Helps",
+      "summary": "A real harness measuring PgBouncer against direct Postgres across two connection lifecycles — the advantage widens under one and reverses under the other, so 'add a pooler' isn't a universal answer.",
+      "date_published": "2026-09-07T00:00:00.000Z",
+      "tags": [
+        "postgresql",
+        "benchmark",
+        "trade-offs"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/pgbouncer-vs-direct-connection-pooling.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer",
       "url": "https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer",
       "title": "Gossip Protocol Visualizer: How Cluster Membership Actually Spreads",
