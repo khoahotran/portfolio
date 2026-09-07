@@ -83,10 +83,11 @@ short field-note and a full harness+lab+article triple cost very different amoun
 - `.ai/content-roadmap.md` is now 29 KB and covers 6 phases in one linear file. Worth splitting into
   per-phase files (`.ai/phases/phase-5.md` etc.) once it becomes hard to navigate — not yet; noting
   it before it becomes a real problem, per this project's own "measure before acting" convention.
-- No test currently pins `slugify()` parity between `content-source.ts` and
-  `build-search-index.mjs` directly (both are exercised indirectly by the build + the content
-  service tests, but a dedicated parity test was named as valuable back in the original Phase 4 plan
-  and never explicitly added). Cheap to add whenever touching either file next.
+- ~~`slugify()` parity test~~ — checked while writing this file and found already done:
+  `src/content-engine/slugify.test.ts` asserts `content-source.ts` and `scripts/lib/content.mjs`
+  agree, including over every real content filename and title, not just synthetic cases. The
+  original Phase 4 plan named this as worth adding; it was, just never crossed off here. Correcting
+  the record rather than leaving a stale "still needed" item next to work that already shipped.
 
 ---
 
