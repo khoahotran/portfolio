@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: benchmark
+      POSTGRES_DB: benchmark
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 2s
+      # The postgres image restarts once internally after initdb (temp start -> shutdown -> real
+      # start) before it's actually reachable — 90s of headroom here rather than the 30s other
+      # harnesses in this repo use, found necessary on a host under heavy concurrent CPU load
+      # where that restart cycle took noticeably longer than usual.
+      retries: 45
+
+  pgbouncer:
+    build: ./pgbouncer
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "localhost", "-p", "6432", "-U", "postgres"]
+      interval: 2s
+      retries: 30
+
+  go-harness:
+    build: ./go
+    depends_on:
+      postgres:
+        condition: service_healthy
+      pgbouncer:
+        condition: service_healthy
+    profiles: ["run"]
