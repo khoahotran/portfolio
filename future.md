@@ -53,12 +53,11 @@ None of these are committed. Listed so a future session doesn't have to re-deriv
 interesting gap" from scratch, and so picking one doesn't require re-reading the whole `.ai/` corpus
 first.
 
-- **First real use of `series:`.** The infrastructure (`SeriesNav`, build-time validation) has
-  shipped since 2026-08-28 with zero content using it. The three benchmark-harness rewrites
-  (`redis-vs-bullmq`, `db-event-replay-benchmark`, `go-vs-ts-concurrency` — all "we re-measured and
-  the old number was wrong, here's why") are the most natural retroactive fit if a `series:` field
-  were added to their existing articles rather than requiring new writing. Cheapest way to prove the
-  feature works under real content, not just its own build-time validation tests.
+- ~~First real use of `series:`~~ — done 2026-09-07: the three benchmark-harness rewrites
+  (`redis-vs-bullmq`, `db-event-replay-benchmark`, `go-vs-ts-concurrency`) now share
+  `series: "The Benchmark Rewrites"`, ordered to match the actual re-measurement sequence from §5.8,
+  not publish date. Verified in the real prerendered HTML, not just the build-time validator. See
+  `.ai/content-roadmap.md` §7.1.
 - **Distributed systems gaps not yet covered:** leader election (Raft/Bully), distributed locks
   (Redlock and its criticisms), backpressure strategies, CDN/edge caching trade-offs, canary/blue-green
   deployment mechanics. The gossip protocol lab (§5.4) already covers epidemic broadcast; leader

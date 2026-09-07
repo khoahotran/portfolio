@@ -275,6 +275,7 @@ or a future 3-part Rate Limiting series) had nowhere to declare itself as one.
 
 - No content currently sets `series:` — this is infrastructure ahead of use, not a feature with
   existing content behind it. The next multi-part write-up (§5.3/§5.4) is the first real test.
+  **Update (2026-09-07, §7.1): no longer true** — see below.
 
 ### 5.7 ✅ Build hygiene + search scale — DONE (2026-08-28, one fixed now / one deferred with a stated trigger)
 
@@ -402,3 +403,31 @@ still requires root-level system deps unavailable non-interactively in this envi
 content plan — the next content-shaped decision (whether to shift from "deep, not wide" toward more
 cadence now that the §5.5–§5.7 infrastructure exists to support it) is a strategic call for Khoa to
 make, not one this session should decide unilaterally.
+
+## 🟢 Phase 7 — Deep-Not-Wide, Picked Up Item by Item (2026-09-07)
+
+Khoa answered Phase 6's open pace question directly: **stay deep-before-wide**, not shift to cadence.
+Work in this phase comes one at a time from `future.md`'s Track B, cheapest/lowest-risk first, each
+verified in full before the next is picked up — no batch commitment, per that file's own rules.
+
+### 7.1 ✅ First real use of `series:` — DONE (2026-09-07)
+§5.6 shipped `series:`/`seriesOrder:` and `SeriesNav` on 2026-08-28 with zero content exercising it.
+Retrofitted the three benchmark-harness rewrites (§5.8) as a series — `redis-vs-bullmq` (part 1),
+`db-event-replay-benchmark` (part 2), `go-vs-ts-concurrency` (part 3) — named "The Benchmark
+Rewrites", matching the actual re-measurement order documented in §5.8, not publish-date order.
+Metadata-only change; no article prose touched.
+
+Verified rather than assumed: build-time `series`/`seriesOrder` validation passed; the prerendered
+HTML for all three articles was grepped directly and shows the correct "Part N of 3 in The Benchmark
+Rewrites" badge; full gate (typecheck, lint, 77 tests, build+prerender 106 pages, `check:contrast`
+105×2 themes, `check:responsive` 106×7 viewports+dark) all green. `check:responsive` needed a
+concurrency drop to 1 to complete under unusually heavy host CPU contention this session (multiple
+concurrent Claude Code sessions on the same sandbox) — not a code issue, and the same mitigation this
+project has used before for WSL2 network flakiness.
+
+Also fixed in service of this item's own verification, not part of the feature itself: see
+`.ai/decision-log.md` Decision 22 — `check-contrast.mjs` was found to print a false "PASS" when the
+preview server was unreachable.
+
+`future.md`'s Track B entry for this is removed; the "PFM as a content source" entry was already
+removed in Decision 22.
