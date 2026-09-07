@@ -59,6 +59,7 @@ const DbEventReplayBenchmarkPage = lazy(() => import('../pages/experiments/DbEve
 const RateLimitingAlgorithmsPage = lazy(() => import('../pages/experiments/RateLimitingAlgorithmsPage'));
 const GossipProtocolVisualizerPage = lazy(() => import('../pages/experiments/GossipProtocolVisualizerPage'));
 const WebSocketsVsSsePage = lazy(() => import('../pages/experiments/WebSocketsVsSsePage'));
+const LeaderElectionPage = lazy(() => import('../pages/experiments/LeaderElectionPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -292,6 +293,24 @@ export const labs: LabDefinition[] = [
     interaction: 'preset',
     collidesWithArticleSlug: true, // content/experiments/2026-08-28-websockets-vs-sse.md
     relatedArticle: 'websockets-vs-sse',
+  },
+  {
+    id: 'leader-election',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'The real Bully algorithm (src/labs/leaderElection.ts, unit-tested): crashing the leader sends ' +
+        'an actual ELECTION message from the lowest surviving node to every higher id, each alive one ' +
+        'replies ALIVE and starts its own election above itself, and the eventual winner broadcasts a ' +
+        'real COORDINATOR message to everyone below it. The step-by-step message count is the real O(n^2) ' +
+        "worst-case cost this algorithm is criticized for, not a number asserted in the article's prose.",
+    },
+    title: 'Leader Election (Bully Algorithm)',
+    description: 'Crash the leader and watch the real Bully election protocol pick a new one, message by message.',
+    component: LeaderElectionPage,
+    interaction: 'run',
+    collidesWithArticleSlug: true, // content/experiments/2026-09-07-leader-election-bully-algorithm.md
+    relatedArticle: 'leader-election-bully-algorithm',
   },
 ];
 
