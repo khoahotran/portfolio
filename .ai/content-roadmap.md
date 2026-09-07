@@ -560,3 +560,42 @@ pattern rather than a new one.
 `future.md`'s "distributed systems gaps" residual note is narrowed to drop distributed locks —
 backpressure, CDN/edge caching, and canary/blue-green deploys remain open, not-yet-scoped
 candidates, alongside gRPC-vs-REST as a possible 5th harness.
+
+### 7.5 ✅ New lab: Backpressure Strategies — DONE (2026-09-07)
+
+Picked up "backpressure" from §7.4's remaining candidates — chosen over CDN/edge-caching and
+canary/blue-green because it's algorithm-shaped rather than process-shaped, same reason redlock was
+chosen over those two the round before.
+
+`src/labs/backpressure.ts` (14 tests) runs four real policies for a bounded queue between a
+producer and a slower consumer: `block`, `drop-new`, `drop-old`, `circuit-breaker`. The key design
+choice: every queued item carries the tick it arrived on, instead of the simulation just tracking
+counts. That turns out to be necessary, not decorative — under sustained overload, `drop-new` and
+`drop-old` discard the exact same *number* of items every time, so counts alone can't distinguish
+them. Tracking identity proves the real difference directly: every item `drop-new` discards has
+`arrivedTick === tick` (it can only ever reject its own newest arrivals), every item `drop-old`
+discards has `arrivedTick < tick` (it can only ever evict something already resident) —
+`backpressure.test.ts` asserts both as exact per-tick properties, not just a final count.
+
+**Two real bugs found while building this, neither guessable from reading the code once:**
+1. A curly apostrophe (`’`) pasted into the new registry provenance string broke out of a
+   single-quoted JS string literal — caught immediately by `typecheck`, fixed by matching this
+   codebase's existing convention (switch the specific segment to double quotes rather than escape).
+2. The circuit-breaker's state machine mutated `circuitState` *before* recording which state
+   governed the current tick's admission decision, so the tick that actually tripped the breaker
+   (admitting a full batch right up until threshold) was mislabeled as already "open" in its own
+   output — a one-tick-out-of-sync bug between the transition and its own recorded label. Found
+   while writing `backpressure.test.ts`'s "rejects everything while open" assertion, which failed
+   against real output rather than being written to match whatever the code happened to do. Fixed
+   by deciding each tick's admission strictly from the state it *entered* with (`stateAtStart`), and
+   only mutating `circuitState` for the *next* tick afterward.
+
+Registered as the 16th lab (`backpressure`, provenance `implementation`). Verified: build-time
+validation clean (50 docs); typecheck/lint/113 tests green; full build+prerender (114 pages)
+confirmed correct title/og:image/canonical for both new routes, including the redirect stub;
+`check:contrast` (113×2 themes) and `check:responsive` (114×7 viewports+dark) both real PASS at
+`--concurrency=1`.
+
+`future.md`'s "distributed systems gaps" residual note is narrowed again — CDN/edge caching and
+canary/blue-green deploys remain open, not-yet-scoped candidates, alongside gRPC-vs-REST as a
+possible 5th harness.

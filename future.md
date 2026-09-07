@@ -66,9 +66,13 @@ first.
   the real quorum-plus-TTL arithmetic (`src/labs/redlock.ts`, 13 tests) and simulates the specific
   pause vulnerability Kleppmann's 2016 critique is about, as an exact testable equality rather than
   prose. Companion article covers both Redlock's real quorum math and Antirez's fencing-token
-  rebuttal. See `.ai/content-roadmap.md` §7.4. Backpressure strategies, CDN/edge caching trade-offs,
-  and canary/blue-green deployment remain open candidates, not yet promoted to their own bullet
-  since none has been scoped as concretely as leader-election or Redlock were.
+  rebuttal. See `.ai/content-roadmap.md` §7.4.
+- ~~Distributed systems gap: backpressure strategies~~ — done 2026-09-07: `/labs/backpressure` runs
+  four real queue policies (`src/labs/backpressure.ts`, 14 tests) that track individual item
+  identity, not just counts — the only way to prove `drop-new` and `drop-old` discard the same
+  *number* of items but never the same *ones*. See `.ai/content-roadmap.md` §7.5. CDN/edge caching
+  trade-offs and canary/blue-green deployment remain open candidates, not yet promoted to their own
+  bullet since neither has been scoped as concretely as the three implementation labs above were.
 - ~~A 4th real benchmark harness~~ — done 2026-09-07: `benchmarks/pgbouncer-vs-direct/` measures
   PgBouncer against direct Postgres across two connection lifecycles — a genuinely two-sided
   finding (PgBouncer's advantage widens under connection churn, reverses under persistent
