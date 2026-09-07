@@ -1,5 +1,24 @@
 [
   {
+    "title": "Distributed Locks: Redlock and the Pause That Breaks It",
+    "date": "2026-09-07",
+    "tags": [
+      "distributed-systems",
+      "redis",
+      "trade-offs"
+    ],
+    "summary": "Run the real Redlock quorum algorithm against nodes you crash yourself, then simulate the exact pause Martin Kleppmann's 2016 critique is about — and see why Antirez's own rebuttal doesn't actually disagree with it.",
+    "draft": false,
+    "slug": "distributed-locks-redlock-and-the-pause-that-breaks-it",
+    "collection": "experiments",
+    "ogImage": "/og/distributed-locks-redlock-and-the-pause-that-breaks-it.png",
+    "related": [
+      "experiments/leader-election-bully-algorithm"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
     "title": "Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It",
     "date": "2026-09-07",
     "tags": [
@@ -12,7 +31,8 @@
     "collection": "experiments",
     "ogImage": "/og/leader-election-bully-algorithm.png",
     "related": [
-      "experiments/gossip-protocol-visualizer"
+      "experiments/gossip-protocol-visualizer",
+      "experiments/distributed-locks-redlock-and-the-pause-that-breaks-it"
     ],
     "readingMinutes": 3,
     "readingText": "3 min read"

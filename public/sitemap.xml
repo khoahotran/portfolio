@@ -121,7 +121,18 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://khoahotran.github.io/portfolio/labs/redlock</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://khoahotran.github.io/portfolio/tags</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it</loc>
+    <lastmod>2026-09-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

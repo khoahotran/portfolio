@@ -7,6 +7,13 @@
     <language>en-us</language>
     <lastBuildDate>Mon, 07 Sep 2026 00:00:00 GMT</lastBuildDate>
     <item>
+      <title>Distributed Locks: Redlock and the Pause That Breaks It</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it</guid>
+      <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run the real Redlock quorum algorithm against nodes you crash yourself, then simulate the exact pause Martin Kleppmann&apos;s 2016 critique is about — and see why Antirez&apos;s own rebuttal doesn&apos;t actually disagree with it.</description>
+    </item>
+    <item>
       <title>Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It</title>
       <link>https://khoahotran.github.io/portfolio/experiments/leader-election-bully-algorithm</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/leader-election-bully-algorithm</guid>
