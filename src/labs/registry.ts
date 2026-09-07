@@ -310,7 +310,6 @@ export const labs: LabDefinition[] = [
     description: 'Crash the leader and watch the real Bully election protocol pick a new one, message by message.',
     component: LeaderElectionPage,
     interaction: 'run',
-    collidesWithArticleSlug: true, // content/experiments/2026-09-07-leader-election-bully-algorithm.md
     relatedArticle: 'leader-election-bully-algorithm',
   },
   {
@@ -336,7 +335,6 @@ export const labs: LabDefinition[] = [
     description: 'Interactive benchmark visualizing connection-pooling overhead across two connection lifecycles.',
     component: PgbouncerVsDirectPage,
     interaction: 'preset',
-    collidesWithArticleSlug: true, // content/experiments/2026-09-07-pgbouncer-vs-direct-connection-pooling.md
     relatedArticle: 'pgbouncer-vs-direct-connection-pooling',
   },
 ];
