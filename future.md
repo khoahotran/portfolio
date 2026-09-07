@@ -58,11 +58,13 @@ first.
   `series: "The Benchmark Rewrites"`, ordered to match the actual re-measurement sequence from §5.8,
   not publish date. Verified in the real prerendered HTML, not just the build-time validator. See
   `.ai/content-roadmap.md` §7.1.
-- **Distributed systems gaps not yet covered:** leader election (Raft/Bully), distributed locks
-  (Redlock and its criticisms), backpressure strategies, CDN/edge caching trade-offs, canary/blue-green
-  deployment mechanics. The gossip protocol lab (§5.4) already covers epidemic broadcast; leader
-  election would be a natural, evidence-consistent next lab (same "pure algorithm + interactive
-  visualization" shape as gossip/rate-limiting).
+- ~~Distributed systems gap: leader election~~ — done 2026-09-07: `/labs/leader-election` implements
+  the real Bully algorithm (`src/labs/leaderElection.ts`, 9 tests including an assertion on its
+  O(n²) worst-case message cost), with a companion article contrasting it against Raft/ZAB. See
+  `.ai/content-roadmap.md` §7.2. The other distributed-systems gaps this bullet used to name —
+  distributed locks (Redlock and its criticisms), backpressure strategies, CDN/edge caching
+  trade-offs, canary/blue-green deployment — remain open candidates, not yet promoted to their own
+  bullet since none has been scoped as concretely as leader election was.
 - **A 4th real benchmark harness**, if one is wanted: candidates raised but not committed during
   §5.4 scoping — connection-pooling overhead (pgbouncer vs. direct), or gRPC vs REST for
   service-to-service calls (ties into the existing Aegis gRPC content).

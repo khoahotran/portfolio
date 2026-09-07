@@ -431,3 +431,31 @@ preview server was unreachable.
 
 `future.md`'s Track B entry for this is removed; the "PFM as a content source" entry was already
 removed in Decision 22.
+
+### 7.2 ✅ New lab: Leader Election (Bully algorithm) — DONE (2026-09-07)
+Track B's other cheap candidate after §7.1 — a self-contained lab needing no Docker harness, same
+"pure algorithm + interactive visualization" shape as the rate-limiting and gossip labs.
+
+**Shipped:** `src/labs/leaderElection.ts` implements the real Bully algorithm (Garcia-Molina,
+1982) — crashing the leader in `/labs/leader-election` sends real ELECTION/ALIVE/COORDINATOR
+messages, computed as a breadth-first wave so concurrent sub-elections (multiple alive nodes each
+independently challenging ids above them) are modelled correctly, not simplified into one linear
+chain. 9 unit tests, including one asserting the algorithm's well-known O(n²) worst-case message
+cost more than doubles when node count doubles — a real property of the simulation's own output,
+not a number asserted only in the companion article's prose. Companion article
+(`content/experiments/2026-09-07-leader-election-bully-algorithm.md`) contrasts Bully's
+unconditional-highest-id-wins rule and lack of split-brain protection against Raft/ZAB, per
+`.ai/writing-style-guide.md`'s comparison-table convention.
+
+Registered as the 13th lab (`src/labs/registry.ts` + `lab-ids.json`, parity enforced by
+`registry.test.ts`), provenance `implementation`.
+
+Verified: build-time tag/related validation clean; typecheck/lint/86 tests green; full
+build+prerender (108 pages) confirmed correct title/og:image/canonical for both the new lab and
+article routes and the article's CTA link resolves; `check:contrast` (107×2 themes) and
+`check:responsive` (108×7 viewports+dark) both real PASS against a live preview server — both
+needed `--concurrency=1` this session due to unusually severe, fluctuating host CPU contention
+(load average observed as high as ~25, later dropping to ~2 on the same host with no code change),
+confirmed by direct `uptime`/`ps` inspection to be other concurrent processes, not a regression.
+
+`future.md`'s Track B entry for this is removed.
