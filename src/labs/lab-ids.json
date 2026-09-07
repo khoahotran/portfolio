@@ -12,5 +12,6 @@
   "gossip-protocol-visualizer",
   "websockets-vs-sse",
   "leader-election",
-  "pgbouncer-vs-direct"
+  "pgbouncer-vs-direct",
+  "redlock"
 ]

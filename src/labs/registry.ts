@@ -61,6 +61,7 @@ const GossipProtocolVisualizerPage = lazy(() => import('../pages/experiments/Gos
 const WebSocketsVsSsePage = lazy(() => import('../pages/experiments/WebSocketsVsSsePage'));
 const LeaderElectionPage = lazy(() => import('../pages/experiments/LeaderElectionPage'));
 const PgbouncerVsDirectPage = lazy(() => import('../pages/experiments/PgbouncerVsDirectPage'));
+const RedlockPage = lazy(() => import('../pages/experiments/RedlockPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -336,6 +337,24 @@ export const labs: LabDefinition[] = [
     component: PgbouncerVsDirectPage,
     interaction: 'preset',
     relatedArticle: 'pgbouncer-vs-direct-connection-pooling',
+  },
+  {
+    id: 'redlock',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'The real Redlock quorum arithmetic (src/labs/redlock.ts, unit-tested): majority quorum is ' +
+        'floor(n/2)+1, elapsed acquisition time is the real sum of every node attempt (down nodes cost ' +
+        'a fixed acquire timeout, alive nodes their own latency), and acquisition only succeeds if that ' +
+        "quorum is met with TTL validity left over. Stage 2 runs Kleppmann's pause critique as an actual " +
+        'equality (a second client can acquire iff the simulated pause outlasts the remaining validity), ' +
+        "not prose asserting one side of the Antirez/Kleppmann debate.",
+    },
+    title: 'Distributed Locks: Redlock',
+    description: "Run the real Redlock quorum algorithm, then simulate the pause that Kleppmann's critique is about.",
+    component: RedlockPage,
+    interaction: 'live',
+    relatedArticle: 'distributed-locks-redlock-and-the-pause-that-breaks-it',
   },
 ];
 
