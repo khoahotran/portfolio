@@ -3,6 +3,8 @@ title: "Redis Streams vs BullMQ: Choosing Your Job Queue"
 date: "2026-06-28"
 tags: ["benchmark", "redis", "queues", "go", "typescript"]
 related: ["projects/quant-alpha", "blog/building-jujuja-a-production-quest-system"]
+series: "The Benchmark Rewrites"
+seriesOrder: 1
 summary: "A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns."
 ---
 
