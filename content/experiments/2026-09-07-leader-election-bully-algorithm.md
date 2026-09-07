@@ -2,7 +2,7 @@
 title: "Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It"
 date: "2026-09-07"
 tags: ["distributed-systems", "benchmark"]
-related: ["experiments/gossip-protocol-visualizer"]
+related: ["experiments/gossip-protocol-visualizer", "experiments/distributed-locks-redlock-and-the-pause-that-breaks-it"]
 summary: "Crash the leader and watch the real Bully algorithm elect a new one, message by message — including the O(n^2) worst case the protocol is criticized for."
 ---
 
