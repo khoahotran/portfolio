@@ -60,6 +60,7 @@ const RateLimitingAlgorithmsPage = lazy(() => import('../pages/experiments/RateL
 const GossipProtocolVisualizerPage = lazy(() => import('../pages/experiments/GossipProtocolVisualizerPage'));
 const WebSocketsVsSsePage = lazy(() => import('../pages/experiments/WebSocketsVsSsePage'));
 const LeaderElectionPage = lazy(() => import('../pages/experiments/LeaderElectionPage'));
+const PgbouncerVsDirectPage = lazy(() => import('../pages/experiments/PgbouncerVsDirectPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -311,6 +312,32 @@ export const labs: LabDefinition[] = [
     interaction: 'run',
     collidesWithArticleSlug: true, // content/experiments/2026-09-07-leader-election-bully-algorithm.md
     relatedArticle: 'leader-election-bully-algorithm',
+  },
+  {
+    id: 'pgbouncer-vs-direct',
+    provenance: {
+      kind: 'measured',
+      environment:
+        'One Go binary (-target=direct / -target=pgbouncer) against Postgres 16 and PgBouncer 1.16 ' +
+        '(transaction pooling, default_pool_size=20), both on the same local Docker Compose network. ' +
+        'Two connection lifecycles measured: "churn" opens a fresh connection per query; "persistent" ' +
+        'opens one connection per client goroutine and reuses it. Client concurrency 10/25/50, 30 ' +
+        'SELECT-1 queries per client. See benchmarks/pgbouncer-vs-direct/README.md for the exact protocol.',
+      measuredOn: 'September 2026',
+      harness: 'https://github.com/khoahotran/portfolio/tree/main/benchmarks/pgbouncer-vs-direct',
+      caveat:
+        'Host was under confirmed heavy, fluctuating CPU contention from unrelated processes while ' +
+        'this matrix ran, which most plausibly inflates the p95 tail-latency figures in results.json ' +
+        "beyond what an idle host would show — the throughput/avg-latency trend this lab's finding " +
+        'rests on reproduced consistently across manual smoke-test runs and the full committed matrix; ' +
+        'the exact multiples should not be expected to reproduce on a different host.',
+    },
+    title: 'Benchmark: PgBouncer vs Direct Postgres',
+    description: 'Interactive benchmark visualizing connection-pooling overhead across two connection lifecycles.',
+    component: PgbouncerVsDirectPage,
+    interaction: 'preset',
+    collidesWithArticleSlug: true, // content/experiments/2026-09-07-pgbouncer-vs-direct-connection-pooling.md
+    relatedArticle: 'pgbouncer-vs-direct-connection-pooling',
   },
 ];
 

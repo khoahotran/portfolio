@@ -11,5 +11,6 @@
   "rate-limiting-algorithms",
   "gossip-protocol-visualizer",
   "websockets-vs-sse",
-  "leader-election"
+  "leader-election",
+  "pgbouncer-vs-direct"
 ]
