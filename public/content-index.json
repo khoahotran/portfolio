@@ -491,6 +491,8 @@
       "projects/quant-alpha",
       "blog/building-jujuja-a-production-quest-system"
     ],
+    "series": "The Benchmark Rewrites",
+    "seriesOrder": 1,
     "readingMinutes": 6,
     "readingText": "6 min read"
   },
@@ -622,6 +624,8 @@
       "research/adr-firestore-vs-postgresql-event-sourcing",
       "projects/core-banking"
     ],
+    "series": "The Benchmark Rewrites",
+    "seriesOrder": 2,
     "readingMinutes": 2,
     "readingText": "2 min read"
   },
@@ -642,6 +646,8 @@
       "blog/grpc-service-mesh-in-go-aegis-architecture",
       "field-notes/go-vs-typescript-for-backend-services"
     ],
+    "series": "The Benchmark Rewrites",
+    "seriesOrder": 3,
     "readingMinutes": 2,
     "readingText": "2 min read"
   },
