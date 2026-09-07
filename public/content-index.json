@@ -1,5 +1,23 @@
 [
   {
+    "title": "Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It",
+    "date": "2026-09-07",
+    "tags": [
+      "distributed-systems",
+      "benchmark"
+    ],
+    "summary": "Crash the leader and watch the real Bully algorithm elect a new one, message by message — including the O(n^2) worst case the protocol is criticized for.",
+    "draft": false,
+    "slug": "leader-election-bully-algorithm",
+    "collection": "experiments",
+    "ogImage": "/og/leader-election-bully-algorithm.png",
+    "related": [
+      "experiments/gossip-protocol-visualizer"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
     "title": "Field Note: What My Own Git Log Proves About Spec-Driven Development",
     "date": "2026-09-07",
     "tags": [

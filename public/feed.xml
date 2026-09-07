@@ -7,6 +7,13 @@
     <language>en-us</language>
     <lastBuildDate>Mon, 07 Sep 2026 00:00:00 GMT</lastBuildDate>
     <item>
+      <title>Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/leader-election-bully-algorithm</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/leader-election-bully-algorithm</guid>
+      <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Crash the leader and watch the real Bully algorithm elect a new one, message by message — including the O(n^2) worst case the protocol is criticized for.</description>
+    </item>
+    <item>
       <title>Field Note: What My Own Git Log Proves About Spec-Driven Development</title>
       <link>https://khoahotran.github.io/portfolio/field-notes/what-git-log-proves-about-spec-driven-development</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/field-notes/what-git-log-proves-about-spec-driven-development</guid>

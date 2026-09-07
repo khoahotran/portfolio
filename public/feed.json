@@ -8,6 +8,18 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/experiments/leader-election-bully-algorithm",
+      "url": "https://khoahotran.github.io/portfolio/experiments/leader-election-bully-algorithm",
+      "title": "Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It",
+      "summary": "Crash the leader and watch the real Bully algorithm elect a new one, message by message — including the O(n^2) worst case the protocol is criticized for.",
+      "date_published": "2026-09-07T00:00:00.000Z",
+      "tags": [
+        "distributed-systems",
+        "benchmark"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/leader-election-bully-algorithm.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/field-notes/what-git-log-proves-about-spec-driven-development",
       "url": "https://khoahotran.github.io/portfolio/field-notes/what-git-log-proves-about-spec-driven-development",
       "title": "Field Note: What My Own Git Log Proves About Spec-Driven Development",
