@@ -17,6 +17,7 @@
 
 import { chromium } from 'playwright';
 import { readArticleRoutes, readTagRoutes, staticRoutes } from './lib/site-routes.mjs';
+import { isTransientErrorMessage } from './lib/transient-errors.mjs';
 
 const VIEWPORTS = [
   { name: '320', width: 320, height: 700 },
@@ -116,15 +117,11 @@ async function checkMermaid(page) {
  * dagre chunk, the diagram renders an error box, and that surfaces as a `mermaid` failure with a
  * network error sitting right next to it. Requiring every failure to be network-shaped left those
  * routes failing for a reason that had nothing to do with their diagrams.
+ *
+ * The pattern list itself lives in `./lib/transient-errors.mjs`, shared with check-contrast.mjs —
+ * see that module's own comment for why (2026-09-07: check-contrast had no retry/failure handling
+ * of this kind at all, which let a fully unreachable preview server print a false "PASS").
  */
-const TRANSIENT_ERROR_PATTERNS = [
-  'net::ERR_NETWORK_CHANGED',
-  'net::ERR_NETWORK_IO_SUSPENDED',
-  'net::ERR_CONNECTION_RESET',
-  'net::ERR_CONNECTION_CLOSED',
-  'net::ERR_ABORTED',
-  'Failed to fetch dynamically imported module',
-];
 
 /**
  * Three, empirically. A flapping interface has been observed hitting the same route on three
@@ -135,7 +132,7 @@ const TRANSIENT_ERROR_PATTERNS = [
 const MAX_RETRIES = 3;
 
 function isTransientFailure(failure) {
-  return TRANSIENT_ERROR_PATTERNS.some((pattern) => failure.detail.includes(pattern));
+  return isTransientErrorMessage(failure.detail);
 }
 
 async function checkRouteWithRetry(browser, base, path) {

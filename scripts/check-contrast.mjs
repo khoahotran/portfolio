@@ -16,8 +16,10 @@
 
 import { chromium } from 'playwright';
 import { readArticleRoutes, readTagRoutes, staticRoutes } from './lib/site-routes.mjs';
+import { isTransientErrorMessage } from './lib/transient-errors.mjs';
 
 const CONCURRENCY = 4;
+const MAX_RETRIES = 3; // see ./lib/transient-errors.mjs and check-responsive.mjs's own comment
 
 function parseArgs() {
   const baseArg = process.argv.find((a) => a.startsWith('--base='));
@@ -134,6 +136,7 @@ async function main() {
   const routes = [...staticRoutes, '/search', ...readArticleRoutes('check-contrast'), ...readTagRoutes('check-contrast')];
   const browser = await chromium.launch();
   const results = [];
+  const navigationFailures = [];
 
   // Sequential per scheme, CONCURRENCY pages wide within it — this is a diagnostic, not a hot path.
   const contexts = [];
@@ -148,12 +151,32 @@ async function main() {
           const index = i++;
           if (index >= routes.length) break;
           const route = routes[index];
-          try {
-            await page.goto(`${base}${route}`, { waitUntil: 'networkidle', timeout: 25_000 });
-            await page.waitForTimeout(200);
-            for (const f of await page.evaluate(auditPage)) results.push({ route, colorScheme, ...f });
-          } catch (error) {
-            console.warn(`[check-contrast] ${colorScheme} ${route}: ${error.message}`);
+          let lastError = null;
+          let visited = false;
+
+          for (let attempt = 0; attempt <= MAX_RETRIES; attempt += 1) {
+            try {
+              await page.goto(`${base}${route}`, { waitUntil: 'networkidle', timeout: 25_000 });
+              await page.waitForTimeout(200);
+              for (const f of await page.evaluate(auditPage)) results.push({ route, colorScheme, ...f });
+              visited = true;
+              break;
+            } catch (error) {
+              lastError = error;
+              if (!isTransientErrorMessage(error.message)) break;
+              console.warn(
+                `[check-contrast] ${colorScheme} ${route}: transient error — retry ${attempt + 1}/${MAX_RETRIES}`
+              );
+            }
+          }
+
+          // A route that was never actually visited must never be silently absent from the
+          // report — see this file's own history: an unreachable preview server used to print
+          // "PASS — no text below WCAG AA" with zero routes actually checked, because an empty
+          // `results` array is indistinguishable from a clean one unless failed navigations are
+          // tracked separately and made to fail the run.
+          if (!visited) {
+            navigationFailures.push({ route, colorScheme, detail: lastError?.message ?? 'unknown error' });
           }
         }
       })
@@ -188,19 +211,31 @@ async function main() {
     byStyle.set(key, entry);
   }
 
+  if (navigationFailures.length > 0) {
+    console.error(
+      `\n[check-contrast] ${navigationFailures.length} route/theme visit(s) never completed — ` +
+        `NOT counted as clean, cannot be reported as passing:\n`
+    );
+    for (const f of navigationFailures) {
+      console.error(`  [${f.colorScheme}] ${f.route}: ${f.detail}`);
+    }
+  }
+
   const sorted = [...byStyle.values()].sort((a, b) => a.worst - b.worst);
-  if (sorted.length === 0) {
+  if (sorted.length === 0 && navigationFailures.length === 0) {
     console.log(`[check-contrast] PASS — no text below WCAG AA across ${routes.length} routes x 2 themes.`);
     return;
   }
 
-  console.log(`[check-contrast] ${sorted.length} distinct failing style(s) across ${routes.length} routes x 2 themes:\n`);
-  for (const f of sorted) {
-    console.log(
-      `  [${f.colorScheme}] ${f.worst}:1 (needs ${f.threshold}) ${f.color} @ ${f.fontSize} — ${f.count} node(s), ${f.routes.size} route(s)`
-    );
-    console.log(`      class: ${f.className}`);
-    console.log(`      text:  ${JSON.stringify(f.sample)}`);
+  if (sorted.length > 0) {
+    console.log(`\n[check-contrast] ${sorted.length} distinct failing style(s) across ${routes.length} routes x 2 themes:\n`);
+    for (const f of sorted) {
+      console.log(
+        `  [${f.colorScheme}] ${f.worst}:1 (needs ${f.threshold}) ${f.color} @ ${f.fontSize} — ${f.count} node(s), ${f.routes.size} route(s)`
+      );
+      console.log(`      class: ${f.className}`);
+      console.log(`      text:  ${JSON.stringify(f.sample)}`);
+    }
   }
   process.exitCode = 1;
 }
