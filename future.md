@@ -61,10 +61,14 @@ first.
 - ~~Distributed systems gap: leader election~~ — done 2026-09-07: `/labs/leader-election` implements
   the real Bully algorithm (`src/labs/leaderElection.ts`, 9 tests including an assertion on its
   O(n²) worst-case message cost), with a companion article contrasting it against Raft/ZAB. See
-  `.ai/content-roadmap.md` §7.2. The other distributed-systems gaps this bullet used to name —
-  distributed locks (Redlock and its criticisms), backpressure strategies, CDN/edge caching
-  trade-offs, canary/blue-green deployment — remain open candidates, not yet promoted to their own
-  bullet since none has been scoped as concretely as leader election was.
+  `.ai/content-roadmap.md` §7.2.
+- ~~Distributed systems gap: distributed locks (Redlock)~~ — done 2026-09-07: `/labs/redlock` runs
+  the real quorum-plus-TTL arithmetic (`src/labs/redlock.ts`, 13 tests) and simulates the specific
+  pause vulnerability Kleppmann's 2016 critique is about, as an exact testable equality rather than
+  prose. Companion article covers both Redlock's real quorum math and Antirez's fencing-token
+  rebuttal. See `.ai/content-roadmap.md` §7.4. Backpressure strategies, CDN/edge caching trade-offs,
+  and canary/blue-green deployment remain open candidates, not yet promoted to their own bullet
+  since none has been scoped as concretely as leader-election or Redlock were.
 - ~~A 4th real benchmark harness~~ — done 2026-09-07: `benchmarks/pgbouncer-vs-direct/` measures
   PgBouncer against direct Postgres across two connection lifecycles — a genuinely two-sided
   finding (PgBouncer's advantage widens under connection churn, reverses under persistent

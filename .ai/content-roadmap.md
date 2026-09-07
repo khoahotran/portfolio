@@ -506,3 +506,57 @@ server.
 concretely-scoped items; only the not-yet-scoped distributed-systems gaps (distributed locks,
 backpressure, CDN/edge caching, canary deploys) remain, and picking any of those up should start
 with scoping, not assuming leader-election's or this harness's shape fits automatically.
+
+### 7.4 ✅ New lab: Distributed Locks (Redlock) — DONE (2026-09-07)
+
+Picked up "distributed locks (Redlock)" from the residual, not-yet-scoped candidates §7.3 left
+open — the first of that list to actually get scoped and built, chosen over backpressure/CDN/canary
+because it's the closest sibling to §7.2's leader-election shape (simulate a real, debated
+distributed-systems algorithm) and needs no new tooling, unlike gRPC-vs-REST.
+
+`src/labs/redlock.ts` (13 tests) runs the actual Redlock arithmetic, not a description of it, in
+two stages:
+
+1. `attemptRedlockAcquisition` — real majority-quorum math (`floor(n/2)+1`), real elapsed-time
+   accounting across every node attempt (a down node costs a fixed acquire timeout, an alive one
+   its own latency), and a lock only counts as acquired if quorum is met *and* there's TTL validity
+   left over once acquiring it is paid for.
+2. `simulatePauseAfterAcquire` — the specific flaw Martin Kleppmann's 2016 critique centers on: a
+   client pause (GC, slow disk, descheduled VM) between acquiring the lock and finishing the work it
+   guards can run past the TTL, and the lock expires on the storage side while the client still
+   believes it holds it. The lab ties `secondClientCanAcquire` to `lockExpiredDuringPause` as an
+   exact equality, not a probabilistic hedge — nothing about "client A is still running" keeps a key
+   held once the storage nodes' own clock lapses.
+
+**The finding is genuinely two-sided, same as §7.1-7.3's pattern of not settling for a flat
+answer:** Stage 1 confirms Redlock's quorum-plus-TTL math is real and works as specified — a
+minority of down nodes doesn't block acquisition, and a majority reached too slowly correctly fails
+even with every node alive. Stage 2 confirms Kleppmann's critique is also real, as an exact,
+testable equality rather than an assertion. The article's own resolution: Antirez's rebuttal to
+Kleppmann doesn't actually dispute the pause scenario — it disputes what Redlock ever claimed to
+guarantee (efficiency locking, not correctness locking), and his own fix is the same one Kleppmann
+proposes independently: a fencing token checked by the *protected resource*, not the lock layer,
+since the lock layer's own clock is exactly what a long pause defeats.
+
+One incidental bug fixed along the way, found by reading the registry rather than by a failing
+check: `leader-election` and `pgbouncer-vs-direct` both had `collidesWithArticleSlug: true` despite
+their lab id *not* matching their article's slug (only `id === relatedArticle` should ever set this
+flag — see the field's own doc comment). The likely cause was copy-paste from `websockets-vs-sse`,
+where the flag is correctly true. Effect was silent, not broken: the field only suppresses the
+`/experiments/<id>` -> `/labs/<id>` redirect stub, and neither lab had ever had that route exist
+before, so nothing was actually unreachable. Fixed in `e6adf0d`, and confirmed fixed in the
+prerendered output — `/experiments/redlock` (this session's third lab to get the correct flag from
+the start) now genuinely produces the redirect stub the field's doc comment describes.
+
+Registered as the 15th lab (`redlock`, provenance `implementation`). Verified: build-time
+validation clean (49 docs); typecheck/lint/99 tests green; full build+prerender (112 pages)
+confirmed correct title/og:image/canonical for both new routes, including the redirect stub;
+`check:contrast` (111×2 themes) and `check:responsive` (112×7 viewports+dark) both real PASS. Build
+was killed once by a real, severe spike in this session's already-documented host CPU contention
+(load average 39 on 8 cores, from concurrent unrelated Go compiles) — re-ran once load dropped
+rather than retrying into the same contention, consistent with this project's existing mitigation
+pattern rather than a new one.
+
+`future.md`'s "distributed systems gaps" residual note is narrowed to drop distributed locks —
+backpressure, CDN/edge caching, and canary/blue-green deploys remain open, not-yet-scoped
+candidates, alongside gRPC-vs-REST as a possible 5th harness.
