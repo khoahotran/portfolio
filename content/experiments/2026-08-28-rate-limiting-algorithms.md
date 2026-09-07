@@ -2,7 +2,7 @@
 title: "Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window"
 date: "2026-08-28"
 tags: ["api-design", "distributed-systems", "benchmark"]
-related: ["projects/aegis", "system-design/designing-a-global-api-gateway"]
+related: ["projects/aegis", "system-design/designing-a-global-api-gateway", "experiments/backpressure-four-policies-one-overload"]
 summary: "Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it's named."
 ---
 
