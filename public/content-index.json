@@ -1,5 +1,24 @@
 [
   {
+    "title": "Backpressure: Four Policies, One Overload",
+    "date": "2026-09-07",
+    "tags": [
+      "distributed-systems",
+      "queues",
+      "trade-offs"
+    ],
+    "summary": "Block, drop-new, drop-old, and circuit breaker, run against the same producer that outruns its consumer — including proof that drop-new and drop-old discard the same number of items, but never the same ones.",
+    "draft": false,
+    "slug": "backpressure-four-policies-one-overload",
+    "collection": "experiments",
+    "ogImage": "/og/backpressure-four-policies-one-overload.png",
+    "related": [
+      "experiments/rate-limiting-algorithms"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
     "title": "Distributed Locks: Redlock and the Pause That Breaks It",
     "date": "2026-09-07",
     "tags": [
@@ -164,7 +183,8 @@
     "ogImage": "/og/rate-limiting-algorithms.png",
     "related": [
       "projects/aegis",
-      "system-design/designing-a-global-api-gateway"
+      "system-design/designing-a-global-api-gateway",
+      "experiments/backpressure-four-policies-one-overload"
     ],
     "readingMinutes": 4,
     "readingText": "4 min read"

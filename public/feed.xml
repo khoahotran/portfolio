@@ -7,6 +7,13 @@
     <language>en-us</language>
     <lastBuildDate>Mon, 07 Sep 2026 00:00:00 GMT</lastBuildDate>
     <item>
+      <title>Backpressure: Four Policies, One Overload</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/backpressure-four-policies-one-overload</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/backpressure-four-policies-one-overload</guid>
+      <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Block, drop-new, drop-old, and circuit breaker, run against the same producer that outruns its consumer — including proof that drop-new and drop-old discard the same number of items, but never the same ones.</description>
+    </item>
+    <item>
       <title>Distributed Locks: Redlock and the Pause That Breaks It</title>
       <link>https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it</guid>

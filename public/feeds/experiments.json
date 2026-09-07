@@ -8,6 +8,19 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/experiments/backpressure-four-policies-one-overload",
+      "url": "https://khoahotran.github.io/portfolio/experiments/backpressure-four-policies-one-overload",
+      "title": "Backpressure: Four Policies, One Overload",
+      "summary": "Block, drop-new, drop-old, and circuit breaker, run against the same producer that outruns its consumer — including proof that drop-new and drop-old discard the same number of items, but never the same ones.",
+      "date_published": "2026-09-07T00:00:00.000Z",
+      "tags": [
+        "distributed-systems",
+        "queues",
+        "trade-offs"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/backpressure-four-policies-one-overload.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it",
       "url": "https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it",
       "title": "Distributed Locks: Redlock and the Pause That Breaks It",
