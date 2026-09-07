@@ -459,3 +459,50 @@ needed `--concurrency=1` this session due to unusually severe, fluctuating host 
 confirmed by direct `uptime`/`ps` inspection to be other concurrent processes, not a regression.
 
 `future.md`'s Track B entry for this is removed.
+
+### 7.3 ✅ 4th real benchmark harness: PgBouncer vs Direct Postgres — DONE (2026-09-07)
+The last concretely-scoped Track B candidate. Chosen over the gRPC-vs-REST alternative because it
+needed no protobuf toolchain — just standard Postgres/PgBouncer Docker images plus a Go client,
+lower setup risk in this sandbox.
+
+**Shipped:** `benchmarks/pgbouncer-vs-direct/` — Postgres 16 + PgBouncer 1.16 (built from source via
+apt, not a third-party Docker Hub image, to avoid depending on one), one Go client measuring two
+connection lifecycles (`churn`: a fresh connection per query; `persistent`: one connection reused
+per client) at client concurrency 10/25/50. `./run.sh` reproduces the full 12-run matrix.
+
+**The finding is genuinely two-sided, not a flat "add a pooler" answer:** in `churn` mode
+PgBouncer's throughput advantage *widens* with concurrency (3.9x -> 5.1x -> 7.2x), because every
+direct connection forces Postgres to fork a new backend process and PgBouncer's fixed pool absorbs
+that cost; in `persistent` mode the result *reverses* between low and high concurrency (PgBouncer
+edges out direct on throughput at 10/25 clients despite worse latency, then direct wins both
+cleanly at 50 clients), because PgBouncer's own single event loop becomes the bottleneck once there
+is no setup cost left to amortize. Both directions were verified by direct execution, not assumed.
+
+**Two real bugs found and fixed while building the harness, before any number was trusted:**
+1. PgBouncer refused to run as the container's root user (`FATAL PgBouncer should not run as root`)
+   — fixed by running as the `postgres` system user the `postgresql-client` package provides, with
+   config files explicitly `chown`'d to it.
+2. Every PgBouncer-target run crashed with `pq: unsupported startup parameter: extra_float_digits`
+   — `lib/pq` always sends that startup parameter and PgBouncer only forwards a fixed whitelist by
+   default; fixed with `ignore_startup_parameters = extra_float_digits` in `pgbouncer.ini`. Neither
+   bug was guessable from documentation; both were found by actually running the harness.
+
+Also bumped this harness's Postgres healthcheck budget (30s -> 90s) after a real, reproducible
+failure: the official Postgres image's two-phase startup (temp start for initdb, shutdown, real
+restart) exceeded the 30s budget other harnesses in this repo use, under this session's confirmed
+heavy host CPU contention.
+
+Registered as the 14th lab (`pgbouncer-vs-direct`, provenance `measured`, `caveat` naming the same
+host-contention caveat as the README). Companion article contrasts churn vs persistent guidance and
+names PgBouncer's real, distinct connection-limit-protection benefit that this harness doesn't
+measure (a reliability property, not a throughput one).
+
+Verified: build-time validation clean; typecheck/lint/86 tests green; full build+prerender (110
+pages) confirmed correct metadata for both new routes; `check:contrast` (109×2 themes) and
+`check:responsive` (110×7 viewports+dark) both real PASS at `--concurrency=1` against a live preview
+server.
+
+`future.md`'s Track B "4th real benchmark harness" entry is removed — Track B is now empty of
+concretely-scoped items; only the not-yet-scoped distributed-systems gaps (distributed locks,
+backpressure, CDN/edge caching, canary deploys) remain, and picking any of those up should start
+with scoping, not assuming leader-election's or this harness's shape fits automatically.

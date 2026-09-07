@@ -65,9 +65,13 @@ first.
   distributed locks (Redlock and its criticisms), backpressure strategies, CDN/edge caching
   trade-offs, canary/blue-green deployment — remain open candidates, not yet promoted to their own
   bullet since none has been scoped as concretely as leader election was.
-- **A 4th real benchmark harness**, if one is wanted: candidates raised but not committed during
-  §5.4 scoping — connection-pooling overhead (pgbouncer vs. direct), or gRPC vs REST for
-  service-to-service calls (ties into the existing Aegis gRPC content).
+- ~~A 4th real benchmark harness~~ — done 2026-09-07: `benchmarks/pgbouncer-vs-direct/` measures
+  PgBouncer against direct Postgres across two connection lifecycles — a genuinely two-sided
+  finding (PgBouncer's advantage widens under connection churn, reverses under persistent
+  connections at high concurrency), not the flat "add a pooler" answer conventional wisdom
+  suggests. See `.ai/content-roadmap.md` §7.3. The gRPC-vs-REST alternative this bullet also named
+  remains a candidate if a 5th harness is ever wanted, not chosen this time because it needs a
+  protobuf toolchain this sandbox hasn't been confirmed to have.
 - ~~PFM itself as a content source~~ — done 2026-09-07:
   [What My Own Git Log Proves About Spec-Driven Development](/field-notes/what-git-log-proves-about-spec-driven-development),
   using PFM's real git history and `documents/roadmap.md` as evidence rather than restating the
