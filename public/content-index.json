@@ -1,5 +1,25 @@
 [
   {
+    "title": "Field Note: What My Own Git Log Proves About Spec-Driven Development",
+    "date": "2026-09-07",
+    "tags": [
+      "spec-driven-development",
+      "testing",
+      "trade-offs"
+    ],
+    "summary": "PFM's governance docs claim every business rule traces from spec to test to code. A plain git log, not the docs, is what actually proves it — and it also shows two honest cases of deliberately not fixing something.",
+    "draft": false,
+    "slug": "what-git-log-proves-about-spec-driven-development",
+    "collection": "field-notes",
+    "ogImage": "/og/what-git-log-proves-about-spec-driven-development.png",
+    "related": [
+      "projects/pfm",
+      "field-notes/measuring-contrast-instead-of-guessing"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
     "title": "The Hidden Costs of Firebase Cloud Functions",
     "date": "2026-08-28",
     "tags": [

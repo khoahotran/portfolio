@@ -5,7 +5,14 @@
     <link>https://khoahotran.github.io/portfolio/field-notes</link>
     <description>field-notes articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 07 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Field Note: What My Own Git Log Proves About Spec-Driven Development</title>
+      <link>https://khoahotran.github.io/portfolio/field-notes/what-git-log-proves-about-spec-driven-development</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/field-notes/what-git-log-proves-about-spec-driven-development</guid>
+      <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+      <description>PFM&apos;s governance docs claim every business rule traces from spec to test to code. A plain git log, not the docs, is what actually proves it — and it also shows two honest cases of deliberately not fixing something.</description>
+    </item>
     <item>
       <title>Field Note: A Diagram That Wouldn&apos;t Render</title>
       <link>https://khoahotran.github.io/portfolio/field-notes/a-diagram-that-wouldnt-render</link>

@@ -8,6 +8,19 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/field-notes/what-git-log-proves-about-spec-driven-development",
+      "url": "https://khoahotran.github.io/portfolio/field-notes/what-git-log-proves-about-spec-driven-development",
+      "title": "Field Note: What My Own Git Log Proves About Spec-Driven Development",
+      "summary": "PFM's governance docs claim every business rule traces from spec to test to code. A plain git log, not the docs, is what actually proves it — and it also shows two honest cases of deliberately not fixing something.",
+      "date_published": "2026-09-07T00:00:00.000Z",
+      "tags": [
+        "spec-driven-development",
+        "testing",
+        "trade-offs"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/what-git-log-proves-about-spec-driven-development.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/blog/hidden-costs-of-firebase-cloud-functions",
       "url": "https://khoahotran.github.io/portfolio/blog/hidden-costs-of-firebase-cloud-functions",
       "title": "The Hidden Costs of Firebase Cloud Functions",
