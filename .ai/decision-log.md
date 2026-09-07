@@ -513,3 +513,47 @@ now-current committed numbers rather than left pointing at superseded ones.
 - This is the strongest evidence yet for the value of the "verify, don't assume" discipline this
   entire project has been built on: a second, adversarial reading of already-shipped, already-tested
   code — not new content, not a new feature — found four real defects zero prior pass had.
+
+## Decision 22: A Verification Run Found the Verifier Itself Was Lying
+
+**Context:** Picked "PFM as a content source" from `future.md`'s Track B candidates and wrote
+[a field note](/field-notes/what-git-log-proves-about-spec-driven-development) using PFM's own git
+history and `documents/roadmap.md` as evidence. Running the full gate (typecheck, lint, test, build,
+prerender, contrast, responsive) to verify the new article surfaced an unrelated, pre-existing bug in
+one of the gate scripts itself, not in any content.
+
+**The bug:** `scripts/check-contrast.mjs` needs `npm run preview` already running and, when it isn't
+(or dies mid-run), every `page.goto` throws. The script caught that error, `console.warn`'d it, and
+otherwise ignored it — pushing nothing into its results array. Because "PASS" was printed whenever the
+results-derived failure list was empty, **a completely unreachable preview server produced the exact
+same output as a fully clean run**: `[check-contrast] PASS — no text below WCAG AA across 105 routes
+x 2 themes`, with zero routes actually visited. Confirmed by running it twice with no preview server
+listening at all — both times, every one of 105×2 `page.goto` calls threw `ERR_CONNECTION_REFUSED`,
+and both times the script still printed a clean PASS.
+
+Its sibling, `check-responsive.mjs`, does not have this defect — a `page.goto` failure there is
+pushed into a real `failures` array with `kind: 'navigation'`, which does fail the run. The two
+scripts had quietly diverged: one correctly treats "couldn't check it" as a failure, the other treats
+it as nothing at all.
+
+**Fix:** `check-contrast.mjs` now tracks unreachable routes in a dedicated `navigationFailures` list,
+separate from actual contrast failures, and refuses to print "PASS" if it is non-empty — mirroring
+`check-responsive.mjs`'s existing philosophy that an unchecked route is a failure, not a silent
+non-event. Added the same bounded retry-on-transient-network-error behavior `check-responsive.mjs`
+already had (so a route that merely started slow doesn't fail the whole run), extracting the shared
+pattern list into `scripts/lib/transient-errors.mjs` rather than hand-copying it a second time — the
+same "don't duplicate the thing that's supposed to catch a real class of bug" reasoning as `slugify()`
+(Decision 5) and `findCrossCollectionSlugCollisions` (Decision 21).
+
+**Consequences:**
+- Re-verified both directions after the fix: with no preview server running, the script now correctly
+  exits 1 and lists every unreached route; with `npm run preview` actually serving `dist/`, it
+  reports a genuine `PASS — no text below WCAG AA across 105 routes x 2 themes` with 0 navigation
+  failures. `check-responsive.mjs` re-ran clean too after the shared-module refactor (106/106 routes,
+  0 failures, a few transient retries along the way consistent with this project's already-documented
+  WSL2 flakiness).
+- This was found by verifying a gate script's own output against ground truth (was the server even
+  running?), not by reading its code and assuming a "PASS" print statement meant what it said — the
+  same discipline Decision 21 named as the strongest argument for this project's whole audit culture,
+  now caught turned on the auditing tooling itself rather than application code.
+- `future.md`'s Track B "PFM as a content source" candidate is done; removed from that file.

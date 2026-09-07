@@ -67,10 +67,11 @@ first.
 - **A 4th real benchmark harness**, if one is wanted: candidates raised but not committed during
   §5.4 scoping — connection-pooling overhead (pgbouncer vs. direct), or gRPC vs REST for
   service-to-service calls (ties into the existing Aegis gRPC content).
-- **PFM itself as a content source.** This session's own PFM hardening work (rate limiting, JWT
-  denylist, Playwright suites, the constitution/SRS/SDS governance layer) is real, decision-log-able
-  material — a "spec-driven development with an AI pair" field-note is a case study neither Aegis
-  nor Core Banking can make (§5.2's blocker doesn't apply here; PFM has a local checkout).
+- ~~PFM itself as a content source~~ — done 2026-09-07:
+  [What My Own Git Log Proves About Spec-Driven Development](/field-notes/what-git-log-proves-about-spec-driven-development),
+  using PFM's real git history and `documents/roadmap.md` as evidence rather than restating the
+  existing architecture case study. See `.ai/decision-log.md` Decision 22 — verifying this article's
+  own build also found and fixed an unrelated, pre-existing false-PASS bug in `check-contrast.mjs`.
 
 None of these should be started without first re-confirming the deep-vs-wide question above — a
 short field-note and a full harness+lab+article triple cost very different amounts of the same
