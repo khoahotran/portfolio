@@ -72,6 +72,7 @@ const ConsistentHashingPage = lazy(() => import('../pages/experiments/Consistent
 const IdempotencyStorePage = lazy(() => import('../pages/experiments/IdempotencyStorePage'));
 const VectorClocksPage = lazy(() => import('../pages/experiments/VectorClocksPage'));
 const CrdtPage = lazy(() => import('../pages/experiments/CrdtPage'));
+const BloomFilterPage = lazy(() => import('../pages/experiments/BloomFilterPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -528,6 +529,27 @@ export const labs: LabDefinition[] = [
     component: CrdtPage,
     interaction: 'live',
     relatedArticle: 'crdts-what-to-do-once-you-know-two-writes-are-concurrent',
+  },
+  {
+    id: 'bloom-filter',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'A real bit-array Bloom filter (src/labs/bloomFilter.ts, unit-tested): the standard ' +
+        'Kirsch-Mitzenmacher construction derives k hash-function outputs from two real hash ' +
+        'computations (h1(x) + i*h2(x) mod m), and every bit set/tested is a real array write/read, ' +
+        'not a formula. False negatives are asserted at 0 across every configuration tested — the ' +
+        'hard guarantee. The false-positive rate is measured directly against 5,000 ' +
+        'genuinely-not-inserted test items and compared to the closed-form estimate ' +
+        '(1 - e^(-kn/m))^k for the identical m/k/n, both at designed capacity (where they track ' +
+        'closely, single-digit percent) and at 5x overload (where both climb to roughly 80%, ' +
+        'measured, not asserted).',
+    },
+    title: 'Bloom Filters',
+    description: 'Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real.',
+    component: BloomFilterPage,
+    interaction: 'live',
+    relatedArticle: 'bloom-filters-and-the-capacity-you-cant-see-coming',
   },
 ];
 
