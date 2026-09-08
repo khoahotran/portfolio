@@ -968,8 +968,8 @@
     "slug": "system-design-notes-idempotency",
     "collection": "blog",
     "ogImage": "/og/system-design-notes-idempotency.png",
-    "readingMinutes": 3,
-    "readingText": "3 min read"
+    "readingMinutes": 5,
+    "readingText": "5 min read"
   },
   {
     "title": "Designing a Permission System: Beyond Simple Roles",
