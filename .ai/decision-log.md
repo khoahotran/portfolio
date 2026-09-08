@@ -321,7 +321,7 @@ already established, rather than letting a typo render an empty or wrong badge s
 
 ## Decision 17: Corrected §5.3's Blog-Post Attribution Before Writing It
 
-**Context:** `.ai/content-roadmap.md` §5.3 queued "Blog: The Hidden Costs of Cloud Functions —
+**Context:** `.ai/phases/phase-5.md` §5.3 queued "Blog: The Hidden Costs of Cloud Functions —
 cold starts and connection pooling from the Core Banking project on Firebase," written during an
 earlier planning pass. Before drafting it, `content/projects/core-banking.md` was checked for the
 Firebase Functions details the post would need — it has none. Core Banking is a Go service using
@@ -350,7 +350,7 @@ unverifiable claim about a system that never ran this way.
 
 ## Decision 18: WebSockets-vs-SSE — Memory Is Close, Connect-Time Is Not Trusted
 
-**Context:** `.ai/content-roadmap.md` §5.4 queued a WebSockets vs SSE benchmark with an explicit
+**Context:** `.ai/phases/phase-5.md` §5.4 queued a WebSockets vs SSE benchmark with an explicit
 instruction to write the harness *before* the article, per §5.8's lesson. The harness
 (`benchmarks/websockets-vs-sse/`) is one Go binary in two roles (server/client) so both transports
 share a language and process model — isolating the transport itself from the kind of

@@ -51,7 +51,7 @@ export async function getLatestContent(limit = 6): Promise<ContentIndexItem[]> {
 
 /**
  * Every non-draft article across all six collections, unsliced. Backs `/tags` and `/tags/:tag`
- * (`TagsIndexPage`, `TagDetailPage`) — tags mean nothing scoped to one collection (`.ai/content-roadmap.md`
+ * (`TagsIndexPage`, `TagDetailPage`) — tags mean nothing scoped to one collection (`.ai/phases/phase-5.md`
  * §5.5 measured tags only ever being filterable within a single collection as the actual problem),
  * so both pages need the full corpus, unlike `getContentIndex`'s single-collection scope.
  */

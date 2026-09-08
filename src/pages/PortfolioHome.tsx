@@ -100,7 +100,7 @@ function PortfolioHome() {
   // by nothing — a returning reader had no way to see what's new since their last visit short of
   // re-browsing every collection. Degrades silently (null = still loading or failed), same
   // convention as `counts` above: a missing "what's new" strip is a lost enhancement, not an error
-  // worth surfacing. See .ai/content-roadmap.md §5.6.
+  // worth surfacing. See .ai/phases/phase-5.md §5.6.
   const [latest, setLatest] = useState<ContentIndexItem[] | null>(null);
 
   useEffect(() => {

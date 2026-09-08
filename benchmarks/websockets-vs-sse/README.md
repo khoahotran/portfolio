@@ -2,7 +2,7 @@
 
 Backs [`/labs/websockets-vs-sse`](https://khoahotran.github.io/portfolio/labs/websockets-vs-sse) and
 the [WebSockets vs Server-Sent Events](https://khoahotran.github.io/portfolio/experiments/websockets-vs-sse)
-article. Written *before* the article's numbers, per `.ai/content-roadmap.md` §5.8's lesson: every
+article. Written *before* the article's numbers, per `.ai/phases/phase-5.md` §5.8's lesson: every
 prior benchmark that skipped this step ended up with a hardcoded, unreproducible dataset.
 
 ## What it measures

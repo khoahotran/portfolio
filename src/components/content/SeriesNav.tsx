@@ -13,7 +13,7 @@ interface Props {
 /**
  * "Part N of M in <series>" badge plus prev/next-in-series links, for the (currently unused, but
  * now build-time-enforced — see scripts/build-search-index.mjs) `series:`/`seriesOrder:`
- * frontmatter pair. See .ai/content-roadmap.md §5.6.
+ * frontmatter pair. See .ai/phases/phase-5.md §5.6.
  *
  * Deliberately fetches the full cross-collection index (`getAllContentIndex`), not one collection's
  * — unlike `collection`, which ArticleNav's prev/next is scoped to, a `series` can span multiple

@@ -299,7 +299,7 @@ async function buildAssets() {
   // `series` is opt-in, unlike `collection` (every doc has one by construction), so a typo'd or
   // missing `seriesOrder` would otherwise fail silently — a "Part N of M" badge that just never
   // renders — rather than loudly. Same fail-the-build philosophy as the related/tag checks above.
-  // See .ai/content-roadmap.md §5.6.
+  // See .ai/phases/phase-5.md §5.6.
   const seriesGroups = new Map();
   for (const doc of docs) {
     if (doc.series === undefined) {

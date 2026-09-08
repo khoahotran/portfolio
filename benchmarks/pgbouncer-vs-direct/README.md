@@ -2,7 +2,7 @@
 
 Backs [`/labs/pgbouncer-vs-direct`](https://khoahotran.github.io/portfolio/labs/pgbouncer-vs-direct)
 and the [Connection Pooling: When PgBouncer Actually Helps](https://khoahotran.github.io/portfolio/experiments/pgbouncer-vs-direct-connection-pooling)
-article. Written before the article's numbers, same discipline `.ai/content-roadmap.md` §5.8
+article. Written before the article's numbers, same discipline `.ai/phases/phase-5.md` §5.8
 established for this repo's other benchmarks: every claim on the site should trace to a runnable
 harness, not a number typed in from memory.
 

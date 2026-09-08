@@ -29,7 +29,7 @@ Decided in the Phase 4 pass; see `.ai/content-roadmap.md`.
       with lazy loading, a max-width constraint, and a `<figcaption>` from the alt text. The
       rendering capability is in place.
 - [ ] **Add actual screenshots** to `content/projects/*.md`. ⛔ **Blocked (checked 2026-08-28,
-      Phase 6) — not simply undone, same class of blocker as `.ai/content-roadmap.md` §5.2's PFM
+      Phase 6) — not simply undone, same class of blocker as `.ai/phases/phase-5.md` §5.2's PFM
       screenshots.** Aegis, Core Banking, and QuantAlpha are separate repositories
       (`github.com/khoahotran/aegis`, `.../event-driven-core-banking`, `.../HFT`) — none of them
       exist as a local checkout in this environment (unlike PFM, which is a sibling directory), so

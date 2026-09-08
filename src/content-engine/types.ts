@@ -21,7 +21,7 @@ export interface ContentFrontmatter {
    * reuse the same "sort within one collection" logic ArticleNav uses. `series` is the shared,
    * free-text group name; `seriesOrder` its 1-indexed position within that group. Both are
    * build-time enforced (scripts/build-search-index.mjs): a `series` without a valid `seriesOrder`,
-   * or two parts sharing an order, fails the build. See .ai/content-roadmap.md §5.6.
+   * or two parts sharing an order, fails the build. See .ai/phases/phase-5.md §5.6.
    */
   series?: string;
   seriesOrder?: number;

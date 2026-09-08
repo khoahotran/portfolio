@@ -8,7 +8,7 @@ same way it already fails on a bad `related:` reference. See `.ai/decision-log.m
 
 Before this document, the corpus had accumulated **92 distinct tags across 38 articles, with 56
 (61%) used exactly once** — measured, not estimated. A tag used once cannot group anything; it's
-noise wearing the shape of a category. `/tags/:tag` (see `.ai/content-roadmap.md` §5.5) is only
+noise wearing the shape of a category. `/tags/:tag` (see `.ai/phases/phase-5.md` §5.5) is only
 useful if a tag reliably means something across multiple articles.
 
 ## Rules for adding a tag here

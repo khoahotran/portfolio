@@ -97,4 +97,4 @@ into an actual cross-instance limit. Neither replaces the other.
 This is explicitly a target design, not a roadmap with a date: it presumes multiple Aegis instances
 across regions exist, which they don't. The honest trigger for building this is "Aegis has a second
 real deployment target," not "Kong looks interesting" — the same measure-before-acting discipline
-`.ai/content-roadmap.md` §5.7 already applies to search-index scale.
+`.ai/phases/phase-5.md` §5.7 already applies to search-index scale.

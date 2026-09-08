@@ -11,7 +11,7 @@ import { useSeo } from '../seo/useSeo';
  * `/tags` — every canonical tag actually in use, with a per-tag article count, linking to
  * `/tags/:tag`. Exists because tags previously only filtered *within* one collection
  * (`ContentListPage`'s `selectedTag` state) — there was no way to see everything tagged `go` across
- * `blog` + `research` + `system-design` at once. See `.ai/content-roadmap.md` §5.5 and
+ * `blog` + `research` + `system-design` at once. See `.ai/phases/phase-5.md` §5.5 and
  * `.ai/tag-taxonomy.md` for why the vocabulary itself needed cleaning up before this page was worth
  * building — a browse page over 92 tags, 56 used once, would have been noise dressed as navigation.
  *
