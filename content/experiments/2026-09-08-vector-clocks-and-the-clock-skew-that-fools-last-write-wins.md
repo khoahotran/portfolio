@@ -2,7 +2,7 @@
 title: "Vector Clocks and the Clock Skew That Fools Last-Write-Wins"
 date: "2026-09-08"
 tags: ["distributed-systems", "trade-offs", "benchmark"]
-related: ["experiments/gossip-protocol-visualizer"]
+related: ["experiments/gossip-protocol-visualizer", "experiments/crdts-what-to-do-once-you-know-two-writes-are-concurrent"]
 summary: "Run the real happens-before/happens-after/concurrent test on a scripted causal history, then watch a naive last-write-wins resolver flip its answer under clock skew alone — while the causal verdict never moves."
 ---
 
