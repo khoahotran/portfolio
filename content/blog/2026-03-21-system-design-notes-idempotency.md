@@ -13,6 +13,15 @@ To cope with this, clients *must* retry failed requests. Retries are healthy and
 
 This is where **idempotency** comes in: the property that a given operation can be applied multiple times without changing the result beyond the initial application.
 
+*Updated 2026-09-08: added "[The Race the Interceptor Below Doesn't Close](#the-race-the-interceptor-below-doesnt-close)" — the interceptor code in this post has a real concurrency bug, demonstrated (not just described) in an [interactive lab](/labs/idempotency-store).*
+
+<div class="mt-8 mb-12">
+  <a href="/labs/idempotency-store" class="lab-cta-inverse">
+    Try the Interactive Idempotency-Key Store Lab
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+  </a>
+</div>
+
 ---
 
 ## The Core Pattern: The Idempotency Key
@@ -150,6 +159,54 @@ export class IdempotencyInterceptor implements NestInterceptor {
   }
 }
 ```
+
+---
+
+## The Race the Interceptor Below Doesn't Close
+
+Look closely at the interceptor above, specifically these two lines:
+
+```typescript
+const cachedData = await this.redis.get(cacheKey);
+// ...
+await this.redis.set(cacheKey, JSON.stringify({ state: 'IN_PROGRESS', ... }), 'EX', 300);
+```
+
+The check (`GET`) and the claim (`SET ... IN_PROGRESS`) are **two separate Redis round-trips, not
+one atomic operation.** If two requests carrying the same idempotency key arrive close enough
+together — a genuine concurrent duplicate, like a client double-clicking "Pay," not a retry after
+the first one already finished — both can run their `GET` before either has run its `SET`. Both see
+`cachedData` as empty. Both proceed to charge the card.
+
+The `IN_PROGRESS` state this code writes is real and does help — but only for a request that
+arrives *after* the winning request's `SET` has already landed. It does nothing for the window
+between the two Redis calls, which is exactly where a concurrent duplicate lives.
+
+The [interactive lab](/labs/idempotency-store) makes this a measured count instead of a paragraph
+you have to take on faith: `check-then-set` mode runs the identical GET-then-SET shape above, and a
+burst of concurrent duplicates for the same key genuinely reprocesses — every one of them gets its
+own distinct result, meaning its own distinct charge. `atomic-claim` mode replaces the two Redis
+calls with one — the equivalent of `SET key value NX EX 300` (set only if the key does not already
+exist, atomically) — and the identical burst of duplicates instead **coalesces**: every duplicate
+that arrives while the winning request is still in flight waits for that request's result and
+shares it, rather than starting a race to claim the key at all.
+
+<div class="mt-8 mb-12">
+  <a href="/labs/idempotency-store" class="lab-cta-inverse">
+    Try the Interactive Idempotency-Key Store Lab
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+  </a>
+</div>
+
+> [!NOTE]
+> Coalescing (wait for the in-flight result) is one valid fix once the check-and-claim is atomic —
+> it's what the lab demonstrates because it's the strongest guarantee: every duplicate gets the
+> real result, none of them are told to go away. The interceptor's own `409 Conflict` response for
+> an in-progress key is a legitimate simpler alternative *given* an atomic claim — reject the
+> duplicate and let the client retry after a short backoff. What actually matters, and what the
+> interceptor above is missing, is the atomicity of the claim itself. Which resolution you pick for
+> a duplicate that loses the race is a secondary decision; if the claim isn't atomic, both options
+> are moot, because you can't reliably tell a duplicate lost the race in the first place.
 
 ---
 
