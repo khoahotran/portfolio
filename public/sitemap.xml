@@ -141,12 +141,23 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://khoahotran.github.io/portfolio/labs/cache-freshness</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://khoahotran.github.io/portfolio/tags</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://khoahotran.github.io/portfolio/experiments/backpressure-four-policies-one-overload</loc>
+    <lastmod>2026-09-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://khoahotran.github.io/portfolio/experiments/cache-freshness-what-stale-while-revalidate-actually-buys-you</loc>
     <lastmod>2026-09-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

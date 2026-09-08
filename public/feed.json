@@ -21,6 +21,19 @@
       "image": "https://khoahotran.github.io/portfolio/og/backpressure-four-policies-one-overload.png"
     },
     {
+      "id": "https://khoahotran.github.io/portfolio/experiments/cache-freshness-what-stale-while-revalidate-actually-buys-you",
+      "url": "https://khoahotran.github.io/portfolio/experiments/cache-freshness-what-stale-while-revalidate-actually-buys-you",
+      "title": "Cache Freshness: What Stale-While-Revalidate Actually Buys You",
+      "summary": "Three real cache-freshness policies run against the same origin outage — TTL-blocking errors, stale-while-revalidate never blocks at all, and stale-if-error sits in between, paying for a synchronous origin attempt even when it ends up serving the same stale content SWR would have served for free.",
+      "date_published": "2026-09-07T00:00:00.000Z",
+      "tags": [
+        "system-design",
+        "trade-offs",
+        "benchmark"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/cache-freshness-what-stale-while-revalidate-actually-buys-you.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks",
       "url": "https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks",
       "title": "Canary Deploys and the Sample Size Nobody Checks",
@@ -675,21 +688,6 @@
         "benchmark"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/throughput-simulation-notes.png"
-    },
-    {
-      "id": "https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture",
-      "url": "https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture",
-      "title": "Building an Event-Driven Architecture",
-      "summary": "A practical blueprint for introducing domain events to untangle a monolith without losing delivery guarantees.",
-      "date_published": "2026-03-21T00:00:00.000Z",
-      "tags": [
-        "distributed-systems",
-        "architecture",
-        "queues",
-        "system-design",
-        "kafka"
-      ],
-      "image": "https://khoahotran.github.io/portfolio/og/building-an-event-driven-architecture.png"
     }
   ]
 }

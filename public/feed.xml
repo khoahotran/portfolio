@@ -14,6 +14,13 @@
       <description>Block, drop-new, drop-old, and circuit breaker, run against the same producer that outruns its consumer — including proof that drop-new and drop-old discard the same number of items, but never the same ones.</description>
     </item>
     <item>
+      <title>Cache Freshness: What Stale-While-Revalidate Actually Buys You</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/cache-freshness-what-stale-while-revalidate-actually-buys-you</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/cache-freshness-what-stale-while-revalidate-actually-buys-you</guid>
+      <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Three real cache-freshness policies run against the same origin outage — TTL-blocking errors, stale-while-revalidate never blocks at all, and stale-if-error sits in between, paying for a synchronous origin attempt even when it ends up serving the same stale content SWR would have served for free.</description>
+    </item>
+    <item>
       <title>Canary Deploys and the Sample Size Nobody Checks</title>
       <link>https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks</guid>
@@ -348,13 +355,6 @@
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes</guid>
       <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
       <description>Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations.</description>
-    </item>
-    <item>
-      <title>Building an Event-Driven Architecture</title>
-      <link>https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture</link>
-      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture</guid>
-      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
-      <description>A practical blueprint for introducing domain events to untangle a monolith without losing delivery guarantees.</description>
     </item>
   </channel>
 </rss>
