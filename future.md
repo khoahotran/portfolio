@@ -7,9 +7,11 @@ none of them started, none of them owed to anyone. When a candidate here actuall
 graduates into a real `Phase N` section in `content-roadmap.md` with its own verification section,
 and gets deleted from this file. Nothing in this file should be read as "planned" — only "considered."
 
-Snapshot at time of writing: 45 articles across 6 collections, 12 interactive labs, 3 real Docker
-benchmark harnesses, Phase 5 (evidence depth) and Phase 6 (post-growth hygiene) both complete, one
-item (§5.2, flagship deepening) genuinely blocked rather than deferred by choice.
+Snapshot at time of writing (2026-09-08, updated after Phase 7 closed out Track B entirely):
+53 articles across 6 collections, 19 interactive labs, 5 real Docker benchmark harnesses,
+Phases 5-7 complete. One item (§5.2, flagship deepening) genuinely blocked rather than deferred by
+choice — see Track A. Track B below is a fresh set, not a continuation of the old one; every item
+that was in it before this update has shipped (see `.ai/content-roadmap.md` §7.1-7.8).
 
 ---
 
@@ -18,15 +20,24 @@ item (§5.2, flagship deepening) genuinely blocked rather than deferred by choic
 `.ai/content-roadmap.md`'s Phase 5 opened with "deep before wide" as the deliberate growth model —
 fewer, stronger pieces over cadence, until the series/tag/build infrastructure existed to support
 volume without sprawl. That infrastructure (§5.5 tag taxonomy, §5.6 series support, §5.7 build
-hygiene) now exists and has shipped, but nothing has tested it under actual volume yet — no article
-has ever set `series:`, and the tag taxonomy has only been exercised at 45 articles, not the ~100
+hygiene) now exists and has shipped; `series:` has since been used once (§7.1, three benchmark
+articles), and the tag taxonomy has only been exercised at 53 articles, still not the ~100
 where `search-index.json` size was flagged as worth revisiting.
 
 So the real open question is: **stay deep-before-wide, or start treating cadence as a first-class
-goal now that the infra is there?** This genuinely changes what Phase 7 should be (one or two more
+goal now that the infra is there?** This genuinely changes what Phase 8 should be (one or two more
 heavily-evidenced pieces vs. a faster-cadence backlog of shorter posts), and it's a product/career
 positioning call, not an engineering one — flagging it here rather than picking a direction
 unilaterally, same as Phase 6 left it.
+
+**Update after Phase 7:** the pattern that actually emerged — one item at a time, each fully
+verified (real gate, real commits, real docs) before the next is picked — answered "how fast" by
+practice without ever explicitly re-answering "deep or wide." Phase 7 shipped 5 labs, 1 harness, and
+1 field-note in rapid succession (2026-09-07/08), which is closer to "wide" in raw count than any
+prior phase, but every single item was still a full-depth "real algorithm/harness, not a diagram or
+dataset" piece — so the *cadence* increased without the *depth-per-item* dropping. Whether that's
+sustainable or was an unusually productive stretch worth treating as an outlier is exactly the kind
+of thing worth surfacing rather than assuming either way.
 
 ---
 
@@ -43,75 +54,56 @@ nothing; re-attempting them without the blocker having changed just re-produces 
 | Custom domain (Phase 4 Batch 6) | Depends on Khoa buying a domain | Khoa says a domain exists — `site.config.mjs` already centralizes the URL, so this is mechanical once triggered |
 | `rehype-sanitize` (`.ai/audit-followups.md` item 3) | Content is still 100% author-controlled, no XSS surface today | Any move toward CMS input, comments, or user-generated content |
 | Build-time Markdown rendering (`.ai/audit-followups.md` item 7) | Re-measured 2026-08-28: chunk cost is dominated by the library, not corpus size (2.4% growth vs. 36% article growth) | A *library* change (new rehype/remark plugin), not further corpus growth |
-| `search-index.json` scale (§5.7) | Measured 187 KB / 38 docs; not worth acting on at 45 | Corpus crosses ~100 articles or the file crosses ~500 KB |
+| `search-index.json` scale (§5.7) | Re-measured 2026-09-08: 273 KB / 53 docs (up from 187 KB / 38 docs) — growing, but still well under the trigger | Corpus crosses ~100 articles or the file crosses ~500 KB |
 
 ---
 
 ## Track B — Content candidates (unstarted, unordered — not a queue)
 
-None of these are committed. Listed so a future session doesn't have to re-derive "what's an
-interesting gap" from scratch, and so picking one doesn't require re-reading the whole `.ai/` corpus
-first.
+**Everything that was in this track before 2026-09-08 has shipped** — see
+`.ai/content-roadmap.md` §7.1-7.8 for the full record (series retrofit, leader election, PgBouncer
+vs direct, Redlock, backpressure, gRPC vs REST, canary rollout, cache freshness, plus the PFM
+git-log field note). This is a fresh set, grounded by actually checking the current lab registry
+(`src/labs/lab-ids.json`, 19 entries) and content corpus rather than assumed:
 
-- ~~First real use of `series:`~~ — done 2026-09-07: the three benchmark-harness rewrites
-  (`redis-vs-bullmq`, `db-event-replay-benchmark`, `go-vs-ts-concurrency`) now share
-  `series: "The Benchmark Rewrites"`, ordered to match the actual re-measurement sequence from §5.8,
-  not publish date. Verified in the real prerendered HTML, not just the build-time validator. See
-  `.ai/content-roadmap.md` §7.1.
-- ~~Distributed systems gap: leader election~~ — done 2026-09-07: `/labs/leader-election` implements
-  the real Bully algorithm (`src/labs/leaderElection.ts`, 9 tests including an assertion on its
-  O(n²) worst-case message cost), with a companion article contrasting it against Raft/ZAB. See
-  `.ai/content-roadmap.md` §7.2.
-- ~~Distributed systems gap: distributed locks (Redlock)~~ — done 2026-09-07: `/labs/redlock` runs
-  the real quorum-plus-TTL arithmetic (`src/labs/redlock.ts`, 13 tests) and simulates the specific
-  pause vulnerability Kleppmann's 2016 critique is about, as an exact testable equality rather than
-  prose. Companion article covers both Redlock's real quorum math and Antirez's fencing-token
-  rebuttal. See `.ai/content-roadmap.md` §7.4.
-- ~~Distributed systems gap: backpressure strategies~~ — done 2026-09-07: `/labs/backpressure` runs
-  four real queue policies (`src/labs/backpressure.ts`, 14 tests) that track individual item
-  identity, not just counts — the only way to prove `drop-new` and `drop-old` discard the same
-  *number* of items but never the same *ones*. See `.ai/content-roadmap.md` §7.5. CDN/edge caching
-  trade-offs remains an open candidate, not yet promoted to its own bullet.
-- ~~Canary / blue-green deploys~~ — done 2026-09-07: initially framed as article-only (no obvious
-  "run a real algorithm" angle), reconsidered before starting since a real canary-analysis decision
-  procedure — a two-proportion z-test deciding promote-vs-rollback per traffic stage — is exactly
-  as implementation-shaped as the labs above, just not previously noticed. `/labs/canary-rollout`
-  (`src/labs/canaryRollout.ts`, 12 tests) proves the identical regression goes undetected at a small
-  sample size and gets caught at a realistic one — the same "sample size cuts both ways" finding
-  that a raw error-rate threshold would miss entirely. See `.ai/content-roadmap.md` §7.7. Worth
-  re-checking CDN/edge caching for a similar hidden-algorithm angle before assuming it stays
-  article-only.
-- ~~A 4th real benchmark harness~~ — done 2026-09-07: `benchmarks/pgbouncer-vs-direct/` measures
-  PgBouncer against direct Postgres across two connection lifecycles — a genuinely two-sided
-  finding (PgBouncer's advantage widens under connection churn, reverses under persistent
-  connections at high concurrency), not the flat "add a pooler" answer conventional wisdom
-  suggests. See `.ai/content-roadmap.md` §7.3.
-- ~~A 5th real benchmark harness: gRPC vs REST~~ — done 2026-09-07: confirmed the protobuf
-  toolchain works inside a Docker build first (a throwaway feasibility build, not a guess), then
-  `benchmarks/grpc-vs-rest/` measured gRPC against REST for the same data on the same server — a
-  finding that directly contradicts "gRPC is faster" received wisdom: REST wins throughput at every
-  concurrency level for a small payload, and gRPC only wins outright at one of three concurrency
-  levels even for a 100x larger payload where protobuf's real ~20% smaller wire size should matter
-  more. Traced to grpc-go serializing concurrent calls through one shared connection's write loop,
-  verified (not assumed) by isolating `clients=1` and finding gRPC's tail latency already exceeds
-  REST's at zero concurrency. See `.ai/content-roadmap.md` §7.6.
-- ~~PFM itself as a content source~~ — done 2026-09-07:
-  [What My Own Git Log Proves About Spec-Driven Development](/field-notes/what-git-log-proves-about-spec-driven-development),
-  using PFM's real git history and `documents/roadmap.md` as evidence rather than restating the
-  existing architecture case study. See `.ai/decision-log.md` Decision 22 — verifying this article's
-  own build also found and fixed an unrelated, pre-existing false-PASS bug in `check-contrast.mjs`.
+- **Consistent hashing / hash ring rebalancing** — not covered by any existing lab or article
+  (confirmed: no mention of "consistent hashing" anywhere in `content/`). A real, classic algorithm
+  with a genuinely two-sided finding built in: naive modulo hashing redistributes nearly *all* keys
+  when the node count changes; consistent hashing redistributes only ~1/N of them — but only with
+  enough virtual nodes per physical node to actually balance load, which is itself a real trade-off
+  (too few virtual nodes and the load distribution is visibly uneven, easy to demonstrate). Same
+  "implementation" shape as leader-election/redlock — a real ring, real key placement, real
+  redistribution counting, not a diagram.
+- **Idempotency-key store** — `content/blog/2026-03-21-system-design-notes-idempotency.md` covers
+  the concept in prose only; no lab exists. A real, implementable decision procedure: a request
+  arrives with a client-supplied idempotency key; if a prior result for that key exists within its
+  TTL, return it without reprocessing; if a request for the *same key* is still in flight
+  (concurrent duplicate, not a replay), the second one should wait for the first's result rather
+  than double-process — that race condition is the actual interesting part, not the TTL lookup.
+  Would extend an existing article rather than starting a topic from zero.
+- **Vector clocks / causal ordering** — not covered anywhere in `content/` (confirmed by grep). Real
+  algorithm: increment-on-event, merge-on-receive, and a real comparison function that returns
+  "happens-before," "happens-after," or "concurrent" for two clocks — concurrent is the
+  interesting case, since it's the one naive last-write-wins timestamps get wrong. Pairs naturally
+  with the existing `gossip-protocol-visualizer` lab (both are about information propagating through
+  an unreliable network) without duplicating it.
 
-None of these should be started without first re-confirming the deep-vs-wide question above — a
-short field-note and a full harness+lab+article triple cost very different amounts of the same
-"deep, not wide" budget.
+Do not start any of these without first re-confirming the deep-vs-wide question above (now updated
+for Phase 7's pace) — a short field-note and a full lab+article pair still cost very different
+amounts of the same budget, regardless of how fast Phase 7 went.
 
 ---
 
 ## Track C — Small infra items noticed but not worth a phase on their own
 
-- `.ai/content-roadmap.md` is now 29 KB and covers 6 phases in one linear file. Worth splitting into
-  per-phase files (`.ai/phases/phase-5.md` etc.) once it becomes hard to navigate — not yet; noting
-  it before it becomes a real problem, per this project's own "measure before acting" convention.
+- `.ai/content-roadmap.md` is now 54 KB / 743 lines across 7 phases (was 29 KB / 6 phases when this
+  was first noted) — nearly doubled in this one session. Still linearly navigable by section
+  headers, so not yet "hard to navigate" in the sense the original note meant, but the growth rate
+  itself is new information: at this rate another 1-2 phases would clearly cross whatever threshold
+  "hard to navigate" means in practice. Worth actually deciding on the split
+  (`.ai/phases/phase-N.md` per phase, or per-year) before it's picked reactively mid-phase — this is
+  a structural/organizational call about a governance document, not an engineering one, so it's
+  listed here rather than actioned unilaterally, same treatment the deep-vs-wide question gets.
 - ~~`slugify()` parity test~~ — checked while writing this file and found already done:
   `src/content-engine/slugify.test.ts` asserts `content-source.ts` and `scripts/lib/content.mjs`
   agree, including over every real content filename and title, not just synthetic cases. The
