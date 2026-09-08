@@ -165,6 +165,32 @@ title/canonical/og:image); `check:responsive` (127×7 viewports+dark, concurrenc
 clean **PASS — 0 failures** (one transient network blip on an unrelated, pre-existing route
 auto-retried successfully).
 
+### 8.5 ✅ New lab: Bloom Filters — DONE (2026-09-08)
+
+Second pick from the current Track B set, continued straight through per Khoa's "step by step"
+instruction (no re-ask between items for this set — see the pace note in `future.md`).
+
+`src/labs/bloomFilter.ts` (19 tests) implements a real bit-array Bloom filter using the standard
+Kirsch-Mitzenmacher construction (`k` hash-function outputs derived from exactly two real hash
+computations, `h1(x) + i·h2(x) mod m`) rather than genuinely running `k` separate hash algorithms —
+the actual technique real implementations use. **The finding, both halves measured:** the
+false-negative guarantee is absolute (asserted at 0 across every configuration tested — inserting
+an item can only ever make future lookups for it *more* likely to hit, never less); the
+false-positive rate is a real, measured number that tracks the closed-form estimate
+`(1 - e^(-kn/m))^k` closely at designed capacity (both around 1%) and climbs together with it,
+sharply, once the filter is loaded past that capacity — both landing around 80% at 5x overload,
+measured against 5,000 genuinely-not-inserted test items, not asserted from the formula alone.
+
+Registered as the 24th lab (`bloom-filter`, provenance `implementation`). Companion article:
+`content/experiments/2026-09-08-bloom-filters-and-the-capacity-you-cant-see-coming.md`, with a
+reciprocal `related:` link added to `consistent-hashing-and-the-rebalancing-nobody-notices` (both
+are probabilistic space/accuracy trade-offs over hashing, without covering the same ground).
+Verified: typecheck/lint/243 tests green; `npm run build` + prerender clean on the first attempt
+(129 pages, including the `/experiments/bloom-filter` → `/labs/bloom-filter` redirect stub
+confirmed with correct title/canonical/og:image); `check:responsive` (129×7 viewports+dark,
+concurrency=1) came back a clean **PASS — 0 failures** (five transient network blips across
+unrelated, pre-existing routes, all auto-retried successfully).
+
 ---
 
 Next: none yet — see `future.md` for what's still in Track B.

@@ -8,12 +8,12 @@ graduates into a real `Phase N` section (in `.ai/phases/phase-N.md` — see `con
 index) with its own verification section, and gets deleted from this file. Nothing in this file
 should be read as "planned" — only "considered."
 
-Snapshot at time of writing (2026-09-08, updated after Phase 8's fourth item):
-56 articles across 6 collections, 23 interactive labs, 5 real Docker benchmark harnesses,
-Phases 5-8 in progress (Phase 8 has shipped four items — consistent hashing, the idempotency-key
-store, vector clocks, and CRDTs — see `.ai/phases/phase-8.md` §8.1-8.4). One item (§5.2, flagship
-deepening) genuinely blocked rather than deferred by choice — see Track A. Track B has two
-candidates left: Bloom filters and Merkle trees.
+Snapshot at time of writing (2026-09-08, updated after Phase 8's fifth item):
+57 articles across 6 collections, 24 interactive labs, 5 real Docker benchmark harnesses,
+Phases 5-8 in progress (Phase 8 has shipped five items — consistent hashing, the idempotency-key
+store, vector clocks, CRDTs, and Bloom filters — see `.ai/phases/phase-8.md` §8.1-8.5). One item
+(§5.2, flagship deepening) genuinely blocked rather than deferred by choice — see Track A. Track B
+has one candidate left: Merkle trees.
 
 **Pace note, 2026-09-08:** after Track B's post-Phase-7 set closed out and was immediately
 repopulated, Khoa explicitly asked to go through the fresh set "step by step" — i.e. continue
@@ -62,7 +62,7 @@ nothing; re-attempting them without the blocker having changed just re-produces 
 | Custom domain (Phase 4 Batch 6) | Depends on Khoa buying a domain | Khoa says a domain exists — `site.config.mjs` already centralizes the URL, so this is mechanical once triggered |
 | `rehype-sanitize` (`.ai/audit-followups.md` item 3) | Content is still 100% author-controlled, no XSS surface today | Any move toward CMS input, comments, or user-generated content |
 | Build-time Markdown rendering (`.ai/audit-followups.md` item 7) | Re-measured 2026-08-28: chunk cost is dominated by the library, not corpus size (2.4% growth vs. 36% article growth) | A *library* change (new rehype/remark plugin), not further corpus growth |
-| `search-index.json` scale (§5.7) | Re-measured 2026-09-08: 287 KB / 56 docs (up from 187 KB / 38 docs) — growing, but still well under the trigger | Corpus crosses ~100 articles or the file crosses ~500 KB |
+| `search-index.json` scale (§5.7) | Re-measured 2026-09-08: 293 KB / 57 docs (up from 187 KB / 38 docs) — growing, but still well under the trigger | Corpus crosses ~100 articles or the file crosses ~500 KB |
 
 ---
 
@@ -73,15 +73,8 @@ hashing, the idempotency-key store, vector clocks) — see `.ai/phases/phase-7.m
 `.ai/phases/phase-8.md` for the full record of everything shipped so far. This fresh set was
 grounded the same way every prior one was: checked against the actual lab registry
 (`src/labs/lab-ids.json`, 22 entries at the time) and a `grep` across `content/`, not assumed. The
-first item — CRDTs — has since shipped (§8.4). Two remain:
+first two items — CRDTs and Bloom filters — have since shipped (§8.4-8.5). One remains:
 
-- **Bloom filters** — not covered anywhere in `content/` (confirmed by grep). A real bit-array
-  filter with k real hash functions, not a formula described in prose. Two-sided finding: the
-  empirically measured false-positive rate should track the closed-form estimate
-  `(1 - e^(-kn/m))^k` closely while the filter is within its designed capacity, and visibly exceed
-  it once it's overloaded past that capacity — a genuine, measurable space-vs-accuracy trade-off,
-  not just a formula to take on faith. Pairs with consistent-hashing thematically (both are
-  probabilistic space/accuracy trade-offs over hashing) without covering the same ground.
 - **Merkle trees (anti-entropy reconciliation)** — not covered anywhere in `content/` (confirmed by
   grep). The mechanism Dynamo, Cassandra, and git all use to compare two replicas efficiently: build
   a real Merkle tree over each dataset, compare root hashes to detect *any* difference in O(1), then
