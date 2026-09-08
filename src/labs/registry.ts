@@ -70,6 +70,7 @@ const CanaryRolloutPage = lazy(() => import('../pages/experiments/CanaryRolloutP
 const CacheFreshnessPage = lazy(() => import('../pages/experiments/CacheFreshnessPage'));
 const ConsistentHashingPage = lazy(() => import('../pages/experiments/ConsistentHashingPage'));
 const IdempotencyStorePage = lazy(() => import('../pages/experiments/IdempotencyStorePage'));
+const VectorClocksPage = lazy(() => import('../pages/experiments/VectorClocksPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -485,6 +486,26 @@ export const labs: LabDefinition[] = [
     component: IdempotencyStorePage,
     interaction: 'live',
     relatedArticle: 'blog/system-design-notes-idempotency',
+  },
+  {
+    id: 'vector-clocks',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'The real Fidge/Mattern vector-clock algorithm (src/labs/vectorClocks.ts, unit-tested): a ' +
+        'nine-event scripted history across three nodes is run through actual increment/merge ' +
+        'operations, so every clock shown is computed, not hand-typed. compareClocks is the real ' +
+        'happens-before/happens-after/concurrent test (asserted directly: a send always ' +
+        "happens-before its matching receive). pickLastWriteWinner's naive alternative runs " +
+        "against the same events' simulated physical timestamps, and the tests prove the two-sided " +
+        "finding as behavior: for a genuinely concurrent pair, adjusting clock skew alone flips " +
+        "the naive winner while compareClocks's verdict never moves.",
+    },
+    title: 'Vector Clocks',
+    description: 'Run the real happens-before/happens-after/concurrent test, then watch naive last-write-wins flip its answer under clock skew while the causal verdict never moves.',
+    component: VectorClocksPage,
+    interaction: 'live',
+    relatedArticle: 'vector-clocks-and-the-clock-skew-that-fools-last-write-wins',
   },
 ];
 

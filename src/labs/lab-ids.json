@@ -19,5 +19,6 @@
   "canary-rollout",
   "cache-freshness",
   "consistent-hashing",
-  "idempotency-store"
+  "idempotency-store",
+  "vector-clocks"
 ]
