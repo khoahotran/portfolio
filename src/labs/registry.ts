@@ -66,6 +66,7 @@ const BackpressurePage = lazy(() => import('../pages/experiments/BackpressurePag
 const GrpcVsRestPage = lazy(() => import('../pages/experiments/GrpcVsRestPage'));
 const CanaryRolloutPage = lazy(() => import('../pages/experiments/CanaryRolloutPage'));
 const CacheFreshnessPage = lazy(() => import('../pages/experiments/CacheFreshnessPage'));
+const ConsistentHashingPage = lazy(() => import('../pages/experiments/ConsistentHashingPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -442,6 +443,25 @@ export const labs: LabDefinition[] = [
     component: CacheFreshnessPage,
     interaction: 'live',
     relatedArticle: 'cache-freshness-what-stale-while-revalidate-actually-buys-you',
+  },
+  {
+    id: 'consistent-hashing',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'The real hash-ring placement algorithm (src/labs/consistentHashing.ts, unit-tested): ' +
+        'FNV-1a plus a MurmurHash3 finalizer places every virtual node and every key on the same ' +
+        'ring, and a node-count change is run through both this scheme and naive hash(key) % ' +
+        'nodeCount against the identical key set, so the remapped-fraction comparison is measured, ' +
+        'not asserted. The load-imbalance figure at low virtual-node counts is the real output of ' +
+        "that same ring, not a separate illustration — it's also what caught a genuine under-mixing " +
+        'bug in the first hash implementation, fixed before this lab shipped.',
+    },
+    title: 'Consistent Hashing',
+    description: 'Compare naive modulo hashing against a real hash ring — see how little of the keyspace moves on a node-count change, and what happens without enough virtual nodes.',
+    component: ConsistentHashingPage,
+    interaction: 'live',
+    relatedArticle: 'consistent-hashing-and-the-rebalancing-nobody-notices',
   },
 ];
 

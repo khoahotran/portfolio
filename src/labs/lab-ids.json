@@ -17,5 +17,6 @@
   "backpressure",
   "grpc-vs-rest",
   "canary-rollout",
-  "cache-freshness"
+  "cache-freshness",
+  "consistent-hashing"
 ]
