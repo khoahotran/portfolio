@@ -340,3 +340,7 @@ the jujuja route's already-investigated, confirmed-transient failure and otherwi
 `future.md`'s Track B is now fully empty of both scoped and unscoped candidates — see `future.md`
 itself for the forward-looking update covering what comes after it (§8, once something from its
 fresh Track B is picked up).
+
+---
+
+Next: [Phase 8](phase-8.md).
