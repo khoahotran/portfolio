@@ -15,5 +15,6 @@
   "pgbouncer-vs-direct",
   "redlock",
   "backpressure",
-  "grpc-vs-rest"
+  "grpc-vs-rest",
+  "canary-rollout"
 ]

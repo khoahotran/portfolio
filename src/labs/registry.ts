@@ -64,6 +64,7 @@ const PgbouncerVsDirectPage = lazy(() => import('../pages/experiments/PgbouncerV
 const RedlockPage = lazy(() => import('../pages/experiments/RedlockPage'));
 const BackpressurePage = lazy(() => import('../pages/experiments/BackpressurePage'));
 const GrpcVsRestPage = lazy(() => import('../pages/experiments/GrpcVsRestPage'));
+const CanaryRolloutPage = lazy(() => import('../pages/experiments/CanaryRolloutPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -401,6 +402,25 @@ export const labs: LabDefinition[] = [
     component: GrpcVsRestPage,
     interaction: 'preset',
     relatedArticle: 'grpc-vs-rest-when-the-smaller-payload-loses',
+  },
+  {
+    id: 'canary-rollout',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'A real two-proportion z-test (src/labs/canaryRollout.ts, unit-tested), the same class of ' +
+        'statistical test real canary-analysis systems (Kayenta, Flagger) run instead of a raw ' +
+        'threshold comparison. Error counts per stage are computed deterministically from each ' +
+        'input rate, not drawn from a random-number generator — the thing being tested is the ' +
+        'statistical decision procedure itself. Tests prove the actual two-sided finding as ' +
+        'behaviour: a real regression can go undetected at a small sample size, and the identical ' +
+        'regression is caught once the sample size is realistic.',
+    },
+    title: 'Canary Rollout Analysis',
+    description: 'Run a real two-proportion z-test canary analysis through traffic stages — see how sample size decides whether a regression is even detectable.',
+    component: CanaryRolloutPage,
+    interaction: 'live',
+    relatedArticle: 'canary-deploys-and-the-sample-size-nobody-checks',
   },
 ];
 
