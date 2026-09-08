@@ -34,6 +34,19 @@
       "image": "https://khoahotran.github.io/portfolio/og/distributed-locks-redlock-and-the-pause-that-breaks-it.png"
     },
     {
+      "id": "https://khoahotran.github.io/portfolio/experiments/grpc-vs-rest-when-the-smaller-payload-loses",
+      "url": "https://khoahotran.github.io/portfolio/experiments/grpc-vs-rest-when-the-smaller-payload-loses",
+      "title": "gRPC vs REST: When the Smaller Payload Loses",
+      "summary": "A real harness measuring gRPC against REST for the same data, same server, same Go process — and REST wins throughput at every concurrency level tested for a small payload, and at half the concurrency levels tested for a 100x larger one.",
+      "date_published": "2026-09-07T00:00:00.000Z",
+      "tags": [
+        "grpc",
+        "api-design",
+        "benchmark"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/grpc-vs-rest-when-the-smaller-payload-loses.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/experiments/leader-election-bully-algorithm",
       "url": "https://khoahotran.github.io/portfolio/experiments/leader-election-bully-algorithm",
       "title": "Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It",
@@ -677,21 +690,6 @@
         "incident-response"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/system-design-trade-offs-in-practice.png"
-    },
-    {
-      "id": "https://khoahotran.github.io/portfolio/projects/quant-alpha",
-      "url": "https://khoahotran.github.io/portfolio/projects/quant-alpha",
-      "title": "QuantAlpha: High-Frequency Trading Research Platform",
-      "summary": "A distributed research platform for High-Frequency Trading (HFT) utilizing Redis Streams for asynchronous model training and order book imbalance (OBI) analysis.",
-      "date_published": "2026-02-20T00:00:00.000Z",
-      "tags": [
-        "go",
-        "python",
-        "redis",
-        "machine-learning",
-        "hft"
-      ],
-      "image": "https://khoahotran.github.io/portfolio/og/quant-alpha.png"
     }
   ]
 }

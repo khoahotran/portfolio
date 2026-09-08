@@ -21,6 +21,13 @@
       <description>Run the real Redlock quorum algorithm against nodes you crash yourself, then simulate the exact pause Martin Kleppmann&apos;s 2016 critique is about — and see why Antirez&apos;s own rebuttal doesn&apos;t actually disagree with it.</description>
     </item>
     <item>
+      <title>gRPC vs REST: When the Smaller Payload Loses</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/grpc-vs-rest-when-the-smaller-payload-loses</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/grpc-vs-rest-when-the-smaller-payload-loses</guid>
+      <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+      <description>A real harness measuring gRPC against REST for the same data, same server, same Go process — and REST wins throughput at every concurrency level tested for a small payload, and at half the concurrency levels tested for a 100x larger one.</description>
+    </item>
+    <item>
       <title>Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It</title>
       <link>https://khoahotran.github.io/portfolio/experiments/leader-election-bully-algorithm</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/leader-election-bully-algorithm</guid>

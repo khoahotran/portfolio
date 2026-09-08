@@ -38,6 +38,25 @@
     "readingText": "4 min read"
   },
   {
+    "title": "gRPC vs REST: When the Smaller Payload Loses",
+    "date": "2026-09-07",
+    "tags": [
+      "grpc",
+      "api-design",
+      "benchmark"
+    ],
+    "summary": "A real harness measuring gRPC against REST for the same data, same server, same Go process — and REST wins throughput at every concurrency level tested for a small payload, and at half the concurrency levels tested for a 100x larger one.",
+    "draft": false,
+    "slug": "grpc-vs-rest-when-the-smaller-payload-loses",
+    "collection": "experiments",
+    "ogImage": "/og/grpc-vs-rest-when-the-smaller-payload-loses.png",
+    "related": [
+      "blog/grpc-service-mesh-in-go-aegis-architecture"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
     "title": "Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It",
     "date": "2026-09-07",
     "tags": [
@@ -393,7 +412,8 @@
     "related": [
       "projects/aegis",
       "system-design/designing-a-multi-service-auth-platform",
-      "research/distributed-tracing-with-opentelemetry-and-jaeger"
+      "research/distributed-tracing-with-opentelemetry-and-jaeger",
+      "experiments/grpc-vs-rest-when-the-smaller-payload-loses"
     ],
     "readingMinutes": 7,
     "readingText": "7 min read"
