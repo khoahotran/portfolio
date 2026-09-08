@@ -52,6 +52,44 @@ get a clean run (the default concurrency of 4 produced 6-8 transient failures pe
 run's unusually loaded host, load average 8-10 vs the more typical 4-5) — the lower-concurrency
 run was diagnostic only and not committed, since CI and a calmer host don't need it.
 
+### 8.2 ✅ New lab: Idempotency-Key Store — DONE (2026-09-08)
+
+Second pick from Track B. Unlike 8.1, this one explicitly extends an existing article
+(`content/blog/2026-03-21-system-design-notes-idempotency.md`) rather than starting a new one —
+`future.md`'s own framing for this candidate — because the article already had a real bug worth
+surfacing, not just a gap worth filling.
+
+`src/labs/idempotencyStore.ts` (14 tests) implements two idempotency-key store designs and runs
+both against the identical burst of concurrent duplicate requests for one key. **The finding:**
+`check-then-set` — the exact GET-then-SET shape of the article's own NestJS interceptor sample —
+genuinely double-processes a concurrent duplicate that arrives while the first request is still in
+flight, because the completed-results cache it checks has nothing written yet; the interceptor's
+own `IN_PROGRESS` marker doesn't close this, since the check and the claim are two separate Redis
+round-trips, not one atomic operation. `atomic-claim` (the equivalent of a single `SET key val NX
+EX ttl`) closes it: every concurrent duplicate coalesces onto the in-flight run and shares its
+result — measured directly as matching `resultId`s, not asserted.
+
+The article itself was edited, not just linked from: a new "The Race the Interceptor Below Doesn't
+Close" section walks through exactly where the sample code's GET and SET are non-atomic, links the
+lab, and is explicit that the interceptor's `409 Conflict` response is a legitimate alternative to
+coalescing *given* an atomic claim — the atomicity is what the sample is actually missing, not its
+choice of rejection over waiting.
+
+**An infra fix this lab needed, not itself the finding:** every lab's companion article before
+this one lived in `content/experiments/`, so `LabDefinition.relatedArticle` and `LabBackLink` both
+hardcoded that collection into the URL. This lab's companion is a `content/blog/` post, so
+`relatedArticle` now accepts a `"collection/slug"` string (falling back to `experiments/` for a
+bare slug, so all 19 existing entries are unaffected) — the same shape `related:` frontmatter
+already uses, not a new convention invented for this one case.
+
+Registered as the 21st lab (`idempotency-store`, provenance `implementation`). Verified:
+typecheck/lint/171 tests green; `npm run build` + prerender clean on the first attempt (123 pages,
+including the `/experiments/idempotency-store` → `/labs/idempotency-store` redirect stub and the
+`LabBackLink` collection-aware fix confirmed resolving to `/blog/system-design-notes-idempotency`,
+not a broken `/experiments/blog/...` path); `check:responsive` (123×7 viewports+dark, concurrency=1
+given this session's already-documented host network flakiness) came back a clean **PASS — 0
+failures**, not even a transient one this time.
+
 ---
 
 Next: none yet — see `future.md` for what's still in Track B.

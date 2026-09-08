@@ -8,12 +8,12 @@ graduates into a real `Phase N` section (in `.ai/phases/phase-N.md` — see `con
 index) with its own verification section, and gets deleted from this file. Nothing in this file
 should be read as "planned" — only "considered."
 
-Snapshot at time of writing (2026-09-08, updated after Phase 8's first item):
-54 articles across 6 collections, 20 interactive labs, 5 real Docker benchmark harnesses,
-Phases 5-8 in progress (Phase 8 has shipped its first item, consistent hashing — see
-`.ai/phases/phase-8.md` §8.1). One item (§5.2, flagship deepening) genuinely blocked rather than
-deferred by choice — see Track A. Track B below now has two items left; consistent hashing is the
-one that shipped.
+Snapshot at time of writing (2026-09-08, updated after Phase 8's second item):
+54 articles across 6 collections, 21 interactive labs, 5 real Docker benchmark harnesses,
+Phases 5-8 in progress (Phase 8 has shipped two items, consistent hashing and the idempotency-key
+store — see `.ai/phases/phase-8.md` §8.1-8.2). One item (§5.2, flagship deepening) genuinely
+blocked rather than deferred by choice — see Track A. Track B below now has one item left: vector
+clocks.
 
 ---
 
@@ -65,17 +65,10 @@ nothing; re-attempting them without the blocker having changed just re-produces 
 `.ai/phases/phase-7.md` §7.1-7.8 for the full record (series retrofit, leader election, PgBouncer
 vs direct, Redlock, backpressure, gRPC vs REST, canary rollout, cache freshness, plus the PFM
 git-log field note). This was a fresh set, grounded by actually checking the current lab registry
-(`src/labs/lab-ids.json`, 19 entries at the time) and content corpus rather than assumed. The first
-item picked from it — consistent hashing / hash ring — has since shipped too; see
-`.ai/phases/phase-8.md` §8.1. Two remain:
+(`src/labs/lab-ids.json`, 19 entries at the time) and content corpus rather than assumed. Two items
+picked from it have since shipped — consistent hashing / hash ring and the idempotency-key store;
+see `.ai/phases/phase-8.md` §8.1-8.2. One remains:
 
-- **Idempotency-key store** — `content/blog/2026-03-21-system-design-notes-idempotency.md` covers
-  the concept in prose only; no lab exists. A real, implementable decision procedure: a request
-  arrives with a client-supplied idempotency key; if a prior result for that key exists within its
-  TTL, return it without reprocessing; if a request for the *same key* is still in flight
-  (concurrent duplicate, not a replay), the second one should wait for the first's result rather
-  than double-process — that race condition is the actual interesting part, not the TTL lookup.
-  Would extend an existing article rather than starting a topic from zero.
 - **Vector clocks / causal ordering** — not covered anywhere in `content/` (confirmed by grep). Real
   algorithm: increment-on-event, merge-on-receive, and a real comparison function that returns
   "happens-before," "happens-after," or "concurrent" for two clocks — concurrent is the
