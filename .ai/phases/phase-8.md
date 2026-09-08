@@ -90,6 +90,41 @@ not a broken `/experiments/blog/...` path); `check:responsive` (123×7 viewports
 given this session's already-documented host network flakiness) came back a clean **PASS — 0
 failures**, not even a transient one this time.
 
+### 8.3 ✅ New lab: Vector Clocks / Causal Ordering — DONE (2026-09-08)
+
+Third pick from Track B, closing it out entirely. A genuinely unexplored topic — confirmed by grep,
+no prior mention of "vector clock" anywhere in `content/` — deliberately paired with (not
+duplicating) the existing `gossip-protocol-visualizer` lab: gossip is about *reach* (how many
+rounds until everyone has the message), vector clocks are about *order* (what can be proven about
+when things happened relative to each other once information arrives out of sequence).
+
+`src/labs/vectorClocks.ts` (23 tests) implements the real Fidge/Mattern algorithm — increment on
+every local/send event, component-wise-max merge plus increment on receive — and runs it over a
+real nine-event scripted history across three nodes, so every clock in the lab's event log is
+computed, not hand-typed. `compareClocks` is the actual happens-before/happens-after/concurrent
+test; the tests assert its one foundational guarantee directly (a send's clock always
+happens-before its matching receive's).
+
+**The finding, measured as test behavior, not asserted in prose:** every event also carries a
+simulated physical timestamp with adjustable per-node clock skew, and `pickLastWriteWinner` picks
+a "winner" by that timestamp alone — a naive last-write-wins resolver's whole decision procedure.
+For a pair of events `compareClocks` calls **concurrent** (genuinely, provably no causal link),
+dragging clock skew in opposite directions **flips which one `pickLastWriteWinner` picks** — while
+`compareClocks`'s "concurrent" verdict for the identical pair never moves, in either direction,
+because it depends only on the logical clocks, which physical clock skew cannot touch at all.
+
+Registered as the 22nd lab (`vector-clocks`, provenance `implementation`). Companion article:
+`content/experiments/2026-09-08-vector-clocks-and-the-clock-skew-that-fools-last-write-wins.md`,
+with a reciprocal `related:` link added to `gossip-protocol-visualizer` (now linking both
+consistent-hashing and vector-clocks, its two natural pairings). Verified: typecheck/lint/194 tests
+green; `npm run build` + prerender clean on the first attempt (125 pages, including the
+`/experiments/vector-clocks` → `/labs/vector-clocks` redirect stub confirmed with correct
+title/canonical/og:image); `check:responsive` (125×7 viewports+dark, concurrency=1) came back a
+clean **PASS — 0 failures**, same as 8.2.
+
+This closes Track B entirely — every candidate from the post-Phase-7 set (§8.1-8.3) has shipped.
+See `future.md` for what comes after it.
+
 ---
 
 Next: none yet — see `future.md` for what's still in Track B.

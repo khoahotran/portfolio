@@ -8,12 +8,12 @@ graduates into a real `Phase N` section (in `.ai/phases/phase-N.md` — see `con
 index) with its own verification section, and gets deleted from this file. Nothing in this file
 should be read as "planned" — only "considered."
 
-Snapshot at time of writing (2026-09-08, updated after Phase 8's second item):
-54 articles across 6 collections, 21 interactive labs, 5 real Docker benchmark harnesses,
-Phases 5-8 in progress (Phase 8 has shipped two items, consistent hashing and the idempotency-key
-store — see `.ai/phases/phase-8.md` §8.1-8.2). One item (§5.2, flagship deepening) genuinely
-blocked rather than deferred by choice — see Track A. Track B below now has one item left: vector
-clocks.
+Snapshot at time of writing (2026-09-08, updated after Phase 8 closed out Track B entirely):
+55 articles across 6 collections, 22 interactive labs, 5 real Docker benchmark harnesses,
+Phases 5-8 in progress (Phase 8 has shipped all three items it picked up — consistent hashing,
+the idempotency-key store, and vector clocks — see `.ai/phases/phase-8.md` §8.1-8.3). One item
+(§5.2, flagship deepening) genuinely blocked rather than deferred by choice — see Track A. Track B
+is now empty; see the note below it for what comes next.
 
 ---
 
@@ -55,30 +55,25 @@ nothing; re-attempting them without the blocker having changed just re-produces 
 | Custom domain (Phase 4 Batch 6) | Depends on Khoa buying a domain | Khoa says a domain exists — `site.config.mjs` already centralizes the URL, so this is mechanical once triggered |
 | `rehype-sanitize` (`.ai/audit-followups.md` item 3) | Content is still 100% author-controlled, no XSS surface today | Any move toward CMS input, comments, or user-generated content |
 | Build-time Markdown rendering (`.ai/audit-followups.md` item 7) | Re-measured 2026-08-28: chunk cost is dominated by the library, not corpus size (2.4% growth vs. 36% article growth) | A *library* change (new rehype/remark plugin), not further corpus growth |
-| `search-index.json` scale (§5.7) | Re-measured 2026-09-08: 273 KB / 54 docs (up from 187 KB / 38 docs) — growing, but still well under the trigger | Corpus crosses ~100 articles or the file crosses ~500 KB |
+| `search-index.json` scale (§5.7) | Re-measured 2026-09-08: 281 KB / 55 docs (up from 187 KB / 38 docs) — growing, but still well under the trigger | Corpus crosses ~100 articles or the file crosses ~500 KB |
 
 ---
 
 ## Track B — Content candidates (unstarted, unordered — not a queue)
 
-**Everything that was in this track before 2026-09-08 has shipped** — see
-`.ai/phases/phase-7.md` §7.1-7.8 for the full record (series retrofit, leader election, PgBouncer
-vs direct, Redlock, backpressure, gRPC vs REST, canary rollout, cache freshness, plus the PFM
-git-log field note). This was a fresh set, grounded by actually checking the current lab registry
-(`src/labs/lab-ids.json`, 19 entries at the time) and content corpus rather than assumed. Two items
-picked from it have since shipped — consistent hashing / hash ring and the idempotency-key store;
-see `.ai/phases/phase-8.md` §8.1-8.2. One remains:
+**Empty as of 2026-09-08 — every item from the post-Phase-7 set has shipped.** See
+`.ai/phases/phase-7.md` §7.1-7.8 for the record before that (series retrofit, leader election,
+PgBouncer vs direct, Redlock, backpressure, gRPC vs REST, canary rollout, cache freshness, plus the
+PFM git-log field note), and `.ai/phases/phase-8.md` §8.1-8.3 for consistent hashing, the
+idempotency-key store, and vector clocks. This is the second time this file's Track B has emptied
+out completely (the first was the 2026-09-08 update above, right before this set was written) —
+the next entries have to come from a fresh check of the lab registry (`src/labs/lab-ids.json`, 22
+entries as of this update) and content corpus, the same way both prior sets were, not assumed from
+memory.
 
-- **Vector clocks / causal ordering** — not covered anywhere in `content/` (confirmed by grep). Real
-  algorithm: increment-on-event, merge-on-receive, and a real comparison function that returns
-  "happens-before," "happens-after," or "concurrent" for two clocks — concurrent is the
-  interesting case, since it's the one naive last-write-wins timestamps get wrong. Pairs naturally
-  with the existing `gossip-protocol-visualizer` lab (both are about information propagating through
-  an unreliable network) without duplicating it.
-
-Do not start any of these without first re-confirming the deep-vs-wide question above (now updated
-for Phase 7's pace) — a short field-note and a full lab+article pair still cost very different
-amounts of the same budget, regardless of how fast Phase 7 went.
+When Track B is next populated, re-confirm the deep-vs-wide question above first (now updated for
+Phase 7's pace) — a short field-note and a full lab+article pair still cost very different amounts
+of the same budget.
 
 ---
 

@@ -24,5 +24,6 @@ in the repo root — that file is pre-commitment scratch space, this one is the 
   backpressure, canary rollout, cache freshness), 2 new benchmark harnesses (PgBouncer vs direct,
   gRPC vs REST). Closed Track B out entirely — see `future.md` for what's next.
 - [Phase 8 — Deliberately Slower, Picked Up One at a Time](phases/phase-8.md) — Track B items
-  picked up one at a time, spaced out rather than back-to-back. So far: consistent hashing / hash
-  ring lab, idempotency-key store lab (extended an existing article rather than starting new).
+  picked up one at a time, spaced out rather than back-to-back: consistent hashing / hash ring,
+  the idempotency-key store (extended an existing article rather than starting new), and vector
+  clocks. Closed Track B out entirely — see `future.md` for what's next.
