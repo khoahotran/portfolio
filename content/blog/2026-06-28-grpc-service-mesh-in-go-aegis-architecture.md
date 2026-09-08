@@ -2,7 +2,7 @@
 title: "gRPC Service Mesh in Go: Designing the Aegis Auth Platform"
 date: "2026-06-28"
 tags: ["go", "grpc", "distributed-systems", "security", "opentelemetry", "api-design"]
-related: ["projects/aegis", "system-design/designing-a-multi-service-auth-platform", "research/distributed-tracing-with-opentelemetry-and-jaeger"]
+related: ["projects/aegis", "system-design/designing-a-multi-service-auth-platform", "research/distributed-tracing-with-opentelemetry-and-jaeger", "experiments/grpc-vs-rest-when-the-smaller-payload-loses"]
 summary: "A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation."
 ---
 
