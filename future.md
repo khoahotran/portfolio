@@ -8,12 +8,19 @@ graduates into a real `Phase N` section (in `.ai/phases/phase-N.md` — see `con
 index) with its own verification section, and gets deleted from this file. Nothing in this file
 should be read as "planned" — only "considered."
 
-Snapshot at time of writing (2026-09-08, updated after repopulating Track B post-Phase-8):
-55 articles across 6 collections, 22 interactive labs, 5 real Docker benchmark harnesses,
-Phases 5-8 in progress (Phase 8 has shipped all three items it picked up — consistent hashing,
-the idempotency-key store, and vector clocks — see `.ai/phases/phase-8.md` §8.1-8.3). One item
-(§5.2, flagship deepening) genuinely blocked rather than deferred by choice — see Track A. Track B
-has a fresh set of three candidates (CRDTs, Bloom filters, Merkle trees) — nothing started yet.
+Snapshot at time of writing (2026-09-08, updated after Phase 8's fourth item):
+56 articles across 6 collections, 23 interactive labs, 5 real Docker benchmark harnesses,
+Phases 5-8 in progress (Phase 8 has shipped four items — consistent hashing, the idempotency-key
+store, vector clocks, and CRDTs — see `.ai/phases/phase-8.md` §8.1-8.4). One item (§5.2, flagship
+deepening) genuinely blocked rather than deferred by choice — see Track A. Track B has two
+candidates left: Bloom filters and Merkle trees.
+
+**Pace note, 2026-09-08:** after Track B's post-Phase-7 set closed out and was immediately
+repopulated, Khoa explicitly asked to go through the fresh set "step by step" — i.e. continue
+through it item by item without pausing to re-ask each time, the same one-at-a-time-but-continuous
+cadence as the original Phase 7 run, superseding the "space them out" framing above for this
+specific set. This is Khoa's call each time it comes up, not a standing default this file should
+assume going forward.
 
 ---
 
@@ -55,7 +62,7 @@ nothing; re-attempting them without the blocker having changed just re-produces 
 | Custom domain (Phase 4 Batch 6) | Depends on Khoa buying a domain | Khoa says a domain exists — `site.config.mjs` already centralizes the URL, so this is mechanical once triggered |
 | `rehype-sanitize` (`.ai/audit-followups.md` item 3) | Content is still 100% author-controlled, no XSS surface today | Any move toward CMS input, comments, or user-generated content |
 | Build-time Markdown rendering (`.ai/audit-followups.md` item 7) | Re-measured 2026-08-28: chunk cost is dominated by the library, not corpus size (2.4% growth vs. 36% article growth) | A *library* change (new rehype/remark plugin), not further corpus growth |
-| `search-index.json` scale (§5.7) | Re-measured 2026-09-08: 281 KB / 55 docs (up from 187 KB / 38 docs) — growing, but still well under the trigger | Corpus crosses ~100 articles or the file crosses ~500 KB |
+| `search-index.json` scale (§5.7) | Re-measured 2026-09-08: 287 KB / 56 docs (up from 187 KB / 38 docs) — growing, but still well under the trigger | Corpus crosses ~100 articles or the file crosses ~500 KB |
 
 ---
 
@@ -63,20 +70,11 @@ nothing; re-attempting them without the blocker having changed just re-produces 
 
 Repopulated 2026-09-08 immediately after the post-Phase-7 set closed out (§8.1-8.3: consistent
 hashing, the idempotency-key store, vector clocks) — see `.ai/phases/phase-7.md` §7.1-7.8 and
-`.ai/phases/phase-8.md` for the full record of everything shipped so far. This fresh set is
+`.ai/phases/phase-8.md` for the full record of everything shipped so far. This fresh set was
 grounded the same way every prior one was: checked against the actual lab registry
-(`src/labs/lab-ids.json`, 22 entries at the time) and a `grep` across `content/`, not assumed:
+(`src/labs/lab-ids.json`, 22 entries at the time) and a `grep` across `content/`, not assumed. The
+first item — CRDTs — has since shipped (§8.4). Two remain:
 
-- **CRDTs (Conflict-Free Replicated Data Types)** — not covered anywhere in `content/` (confirmed
-  by grep). The natural sequel to vector clocks, not a duplicate of it: vector clocks let you
-  *detect* that two writes are concurrent, but the vector-clocks article explicitly stops there —
-  it doesn't say what to do once you know. A G-Counter (and ideally a PN-Counter or OR-Set)
-  implemented with a real merge function has a genuine, testable two-sided finding: a naive
-  LWW-style merge silently loses one side's concurrent increments, while a real CRDT merge is
-  provably commutative, associative, and idempotent — the actual correctness properties, testable
-  directly (merge(a,b) == merge(b,a); merging the same message twice is a no-op) — so it converges
-  to the same value regardless of message order or duplication, which is the whole reason
-  Dynamo-style stores and offline-first apps (Automerge, Yjs) use them.
 - **Bloom filters** — not covered anywhere in `content/` (confirmed by grep). A real bit-array
   filter with k real hash functions, not a formula described in prose. Two-sided finding: the
   empirically measured false-positive rate should track the closed-form estimate

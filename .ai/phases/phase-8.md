@@ -122,8 +122,48 @@ green; `npm run build` + prerender clean on the first attempt (125 pages, includ
 title/canonical/og:image); `check:responsive` (125×7 viewports+dark, concurrency=1) came back a
 clean **PASS — 0 failures**, same as 8.2.
 
-This closes Track B entirely — every candidate from the post-Phase-7 set (§8.1-8.3) has shipped.
-See `future.md` for what comes after it.
+This closed the post-Phase-7 Track B set entirely (§8.1-8.3). `future.md` was repopulated
+immediately after with a fresh set (CRDTs, Bloom filters, Merkle trees) — Khoa asked to continue
+step by step through it right away rather than pausing after the repopulation.
+
+### 8.4 ✅ New lab: CRDTs (Conflict-Free Replicated Data Types) — DONE (2026-09-08)
+
+First pick from the newest Track B set. The deliberate sequel to 8.3, not a duplicate: vector
+clocks *detect* that two writes are concurrent; this lab is about what a system actually does once
+it knows that.
+
+`src/labs/crdt.ts` (30 tests) implements two real CRDTs, each run against the naive design it
+replaces on the identical scenario. **G-Counter vs. a naive LWW register:** two nodes independently
+apply real local increments with no knowledge of each other; the G-Counter's merged total (sum of
+every node's slot) always equals the true total, while the naive register — keep whichever node's
+write has the later timestamp, discard the rest — measurably loses the losing node's increments
+every time (`lwwLostUpdates`, counted directly). **OR-Set vs. a naive 2P-Set:** a real
+add-remove-add sequence for one value is run through both; OR-Set's per-tag tombstoning lets the
+re-add survive (`orSetHasElement: true`), while the 2P-Set's value-level (not tag-level) removal
+makes the value unrecoverable *permanently*, even after a genuine later re-add
+(`twoPhaseSetHasElement: false`) — the textbook 2P-Set limitation, proven as a test assertion, not
+described in prose. Both structures' merge functions are also asserted directly against the actual
+CRDT laws — commutative, associative, idempotent, and idempotent under duplicate delivery — not
+just shown to converge on one demo scenario.
+
+**A sharper finding than the one the test was written to check, found while writing it:** a test
+asserting "only one node contributed, so nothing should be lost" initially failed — with a
+timestamp *tie*, the register's deterministic nodeId tiebreak can pick the zero-contribution node
+as the winner, discarding the sole real contributor's entire work. Fixed by splitting it into two
+tests: one confirming the intended case (the real contributor's write also has the later
+timestamp, nothing lost) and a new one asserting the sharper fact directly (a tie can lose 100% of
+one node's real work to a tiebreak rule that has nothing to do with who did the work) — the same
+"the test itself surfaces a truer version of the finding" pattern as consistent-hashing's
+hash-mixing bug and backpressure's off-by-one in earlier phases.
+
+Registered as the 23rd lab (`crdt`, provenance `implementation`). Companion article:
+`content/experiments/2026-09-08-crdts-what-to-do-once-you-know-two-writes-are-concurrent.md`, with
+a reciprocal `related:` link added to `vector-clocks-and-the-clock-skew-that-fools-last-write-wins`.
+Verified: typecheck/lint/224 tests green; `npm run build` + prerender clean on the first attempt
+(127 pages, including the `/experiments/crdt` → `/labs/crdt` redirect stub confirmed with correct
+title/canonical/og:image); `check:responsive` (127×7 viewports+dark, concurrency=1) came back a
+clean **PASS — 0 failures** (one transient network blip on an unrelated, pre-existing route
+auto-retried successfully).
 
 ---
 

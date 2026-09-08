@@ -23,7 +23,7 @@ in the repo root — that file is pre-commitment scratch space, this one is the 
   from `future.md`'s Track B: series retrofit, 5 new implementation labs (leader election, Redlock,
   backpressure, canary rollout, cache freshness), 2 new benchmark harnesses (PgBouncer vs direct,
   gRPC vs REST). Closed Track B out entirely — see `future.md` for what's next.
-- [Phase 8 — Deliberately Slower, Picked Up One at a Time](phases/phase-8.md) — Track B items
-  picked up one at a time, spaced out rather than back-to-back: consistent hashing / hash ring,
-  the idempotency-key store (extended an existing article rather than starting new), and vector
-  clocks. Closed Track B out entirely — see `future.md` for what's next.
+- [Phase 8 — Deliberately Slower, Picked Up One at a Time](phases/phase-8.md) — consistent hashing
+  / hash ring, the idempotency-key store (extended an existing article), vector clocks, and CRDTs
+  (§8.1-8.4). The first three closed out one Track B set entirely; CRDTs is the first item of a
+  freshly repopulated set, picked up continuously at Khoa's explicit request rather than spaced out.
