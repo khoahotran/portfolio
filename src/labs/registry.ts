@@ -65,6 +65,7 @@ const RedlockPage = lazy(() => import('../pages/experiments/RedlockPage'));
 const BackpressurePage = lazy(() => import('../pages/experiments/BackpressurePage'));
 const GrpcVsRestPage = lazy(() => import('../pages/experiments/GrpcVsRestPage'));
 const CanaryRolloutPage = lazy(() => import('../pages/experiments/CanaryRolloutPage'));
+const CacheFreshnessPage = lazy(() => import('../pages/experiments/CacheFreshnessPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -421,6 +422,26 @@ export const labs: LabDefinition[] = [
     component: CanaryRolloutPage,
     interaction: 'live',
     relatedArticle: 'canary-deploys-and-the-sample-size-nobody-checks',
+  },
+  {
+    id: 'cache-freshness',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'Three real cache-freshness decision procedures (src/labs/cacheFreshness.ts, unit-tested), ' +
+        'run against the same deterministic origin-update schedule and the same origin outage window ' +
+        'so the policy is the only variable. TTL-blocking errors on an outage past TTL with no ' +
+        'fallback; stale-while-revalidate never blocks the request at all, serving stale content and ' +
+        'best-effort refreshing in the background; stale-if-error always attempts the origin first ' +
+        'and only falls back to stale if that attempt fails within its own grace window. Each ' +
+        "policy's served content is compared against the origin's real true version at that tick to " +
+        'determine staleness, not assumed from which branch ran.',
+    },
+    title: 'Cache Freshness Policies',
+    description: 'Run three real cache-freshness policies against the same origin outage — TTL-blocking, stale-while-revalidate, and stale-if-error.',
+    component: CacheFreshnessPage,
+    interaction: 'live',
+    relatedArticle: 'cache-freshness-what-stale-while-revalidate-actually-buys-you',
   },
 ];
 

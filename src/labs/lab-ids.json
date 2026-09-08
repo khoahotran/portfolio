@@ -16,5 +16,6 @@
   "redlock",
   "backpressure",
   "grpc-vs-rest",
-  "canary-rollout"
+  "canary-rollout",
+  "cache-freshness"
 ]
