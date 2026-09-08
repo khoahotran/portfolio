@@ -20,5 +20,6 @@
   "cache-freshness",
   "consistent-hashing",
   "idempotency-store",
-  "vector-clocks"
+  "vector-clocks",
+  "crdt"
 ]

@@ -71,6 +71,7 @@ const CacheFreshnessPage = lazy(() => import('../pages/experiments/CacheFreshnes
 const ConsistentHashingPage = lazy(() => import('../pages/experiments/ConsistentHashingPage'));
 const IdempotencyStorePage = lazy(() => import('../pages/experiments/IdempotencyStorePage'));
 const VectorClocksPage = lazy(() => import('../pages/experiments/VectorClocksPage'));
+const CrdtPage = lazy(() => import('../pages/experiments/CrdtPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -506,6 +507,27 @@ export const labs: LabDefinition[] = [
     component: VectorClocksPage,
     interaction: 'live',
     relatedArticle: 'vector-clocks-and-the-clock-skew-that-fools-last-write-wins',
+  },
+  {
+    id: 'crdt',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'Two real CRDTs (src/labs/crdt.ts, unit-tested) run against the naive design each replaces, ' +
+        'on the identical scenario. G-Counter: two nodes independently apply real local increments, ' +
+        "merge by component-wise max, and the merged total always equals the true total — compared " +
+        "against a naive LWW register that discards the non-winning node's increments entirely, " +
+        "counted directly as lwwLostUpdates. OR-Set: a real add-remove-add sequence is run through " +
+        "both structures — OR-Set's per-tag tombstoning lets the re-add survive, while a naive " +
+        '2P-Set permanently loses the value once it has ever been removed. The tests assert the ' +
+        "actual CRDT merge laws directly (commutative, associative, idempotent, and idempotent " +
+        "under duplicate delivery), not just that the demo scenario happens to work.",
+    },
+    title: 'CRDTs',
+    description: 'Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set — see exactly which concurrent updates the naive designs silently lose.',
+    component: CrdtPage,
+    interaction: 'live',
+    relatedArticle: 'crdts-what-to-do-once-you-know-two-writes-are-concurrent',
   },
 ];
 
