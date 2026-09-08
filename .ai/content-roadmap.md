@@ -599,3 +599,50 @@ confirmed correct title/og:image/canonical for both new routes, including the re
 `future.md`'s "distributed systems gaps" residual note is narrowed again — CDN/edge caching and
 canary/blue-green deploys remain open, not-yet-scoped candidates, alongside gRPC-vs-REST as a
 possible 5th harness.
+
+### 7.6 ✅ 5th real benchmark harness: gRPC vs REST — DONE (2026-09-07)
+
+Picked up gRPC-vs-REST as the 5th harness, gated on a real feasibility check first rather than
+assumed: the host itself has no `protoc`, but that's the wrong test — the other harnesses install
+their toolchain inside the Docker build, not on the host. A throwaway Docker build confirmed `apk
+add protobuf` plus `go install` for `protoc-gen-go`/`protoc-gen-go-grpc` work fine given a Go base
+image new enough for the module's minimum version (1.22 failed, 1.25 succeeded) — the actual
+harness's Dockerfile generates the protobuf/gRPC Go code from `proto/users.proto` at build time,
+nothing generated is committed, same "real, runnable, reproducible from source" standard
+`pgbouncer-vs-direct` set for itself.
+
+One Go server (`benchmarks/grpc-vs-rest`) runs a gRPC listener (protobuf, HTTP/2) and a REST/JSON
+listener (`net/http`, HTTP/1.1) side by side, both reading one shared, deterministic data generator
+— isolating the protocol as the only variable, same philosophy as `go-vs-ts-concurrency` isolating
+the language runtime. Two payload shapes (`single`: one record; `list`: 100 records) x client
+concurrency 10/25/50, 30 requests per client, one shared reused connection per run for either
+protocol (a single `*grpc.ClientConn` / `*http.Client`) — the realistic deployment pattern, not a
+strawman that reconnects per request on only one side.
+
+**The finding directly contradicts the "gRPC is faster" received wisdom, measured rather than
+assumed:** protobuf's wire-size advantage is real and consistent (~20% smaller for the 100-record
+payload, at every concurrency level) — but REST wins throughput at every concurrency level tested
+for the small payload (1.9x-2.5x), and even for the larger payload where the smaller wire size
+should matter more, gRPC only wins outright at one of the three concurrency levels tested (25
+clients) — REST wins at 10, the two are roughly tied at 50. The likely mechanism, verified rather
+than left as a guess: isolating `clients=1` shows gRPC's tail latency already exceeds REST's with
+*zero* concurrency (grpc avg 6.18ms/p95 11.53ms vs rest avg 1.66ms/p95 3.75ms, both measured), and
+the gap widens as concurrency rises — consistent with grpc-go serializing every concurrent call's
+frames through one shared connection's single write loop (the standard, recommended way to use a
+gRPC connection, and exactly what HTTP/2 multiplexing is *for*), while REST's `*http.Client` pools
+independent TCP connections that get real OS-level write parallelism a single multiplexed
+connection doesn't offer the same way.
+
+A spot-check rerun of the single-mode, 10-client case (this session's host was again under
+confirmed CPU contention while the matrix ran) reproduced the same *direction* — REST still ahead
+on both throughput and latency — but a different *magnitude* (throughput ratio 1.9x on the
+committed run, 2.5x on the rerun), same "direction reproduces, magnitude doesn't" pattern already
+documented for `pgbouncer-vs-direct`.
+
+Registered as the 17th lab (`grpc-vs-rest`, provenance `measured`). Verified: build-time validation
+clean (51 docs); typecheck/lint/113 tests green; full build+prerender (116 pages) confirmed correct
+title/og:image/canonical for both new routes, including the redirect stub; `check:contrast` (115×2
+themes) and `check:responsive` (116×7 viewports+dark) both real PASS.
+
+`future.md`'s Track B is now empty of concretely-scoped items again — CDN/edge caching and
+canary/blue-green deploys remain open, not-yet-scoped candidates.

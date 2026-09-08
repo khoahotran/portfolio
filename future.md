@@ -72,14 +72,21 @@ first.
   identity, not just counts — the only way to prove `drop-new` and `drop-old` discard the same
   *number* of items but never the same *ones*. See `.ai/content-roadmap.md` §7.5. CDN/edge caching
   trade-offs and canary/blue-green deployment remain open candidates, not yet promoted to their own
-  bullet since neither has been scoped as concretely as the three implementation labs above were.
+  bullet since neither has been scoped as concretely as the implementation labs above were.
 - ~~A 4th real benchmark harness~~ — done 2026-09-07: `benchmarks/pgbouncer-vs-direct/` measures
   PgBouncer against direct Postgres across two connection lifecycles — a genuinely two-sided
   finding (PgBouncer's advantage widens under connection churn, reverses under persistent
   connections at high concurrency), not the flat "add a pooler" answer conventional wisdom
-  suggests. See `.ai/content-roadmap.md` §7.3. The gRPC-vs-REST alternative this bullet also named
-  remains a candidate if a 5th harness is ever wanted, not chosen this time because it needs a
-  protobuf toolchain this sandbox hasn't been confirmed to have.
+  suggests. See `.ai/content-roadmap.md` §7.3.
+- ~~A 5th real benchmark harness: gRPC vs REST~~ — done 2026-09-07: confirmed the protobuf
+  toolchain works inside a Docker build first (a throwaway feasibility build, not a guess), then
+  `benchmarks/grpc-vs-rest/` measured gRPC against REST for the same data on the same server — a
+  finding that directly contradicts "gRPC is faster" received wisdom: REST wins throughput at every
+  concurrency level for a small payload, and gRPC only wins outright at one of three concurrency
+  levels even for a 100x larger payload where protobuf's real ~20% smaller wire size should matter
+  more. Traced to grpc-go serializing concurrent calls through one shared connection's write loop,
+  verified (not assumed) by isolating `clients=1` and finding gRPC's tail latency already exceeds
+  REST's at zero concurrency. See `.ai/content-roadmap.md` §7.6.
 - ~~PFM itself as a content source~~ — done 2026-09-07:
   [What My Own Git Log Proves About Spec-Driven Development](/field-notes/what-git-log-proves-about-spec-driven-development),
   using PFM's real git history and `documents/roadmap.md` as evidence rather than restating the
