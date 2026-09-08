@@ -19,6 +19,25 @@
     "readingText": "4 min read"
   },
   {
+    "title": "CRDTs: What to Do Once You Know Two Writes Are Concurrent",
+    "date": "2026-09-08",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "benchmark"
+    ],
+    "summary": "Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set — see exactly which concurrent updates the naive designs silently lose, and why detecting concurrency is only half the problem.",
+    "draft": false,
+    "slug": "crdts-what-to-do-once-you-know-two-writes-are-concurrent",
+    "collection": "experiments",
+    "ogImage": "/og/crdts-what-to-do-once-you-know-two-writes-are-concurrent.png",
+    "related": [
+      "experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
     "title": "Vector Clocks and the Clock Skew That Fools Last-Write-Wins",
     "date": "2026-09-08",
     "tags": [
@@ -32,7 +51,8 @@
     "collection": "experiments",
     "ogImage": "/og/vector-clocks-and-the-clock-skew-that-fools-last-write-wins.png",
     "related": [
-      "experiments/gossip-protocol-visualizer"
+      "experiments/gossip-protocol-visualizer",
+      "experiments/crdts-what-to-do-once-you-know-two-writes-are-concurrent"
     ],
     "readingMinutes": 4,
     "readingText": "4 min read"

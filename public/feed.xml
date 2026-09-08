@@ -14,6 +14,13 @@
       <description>Run the real hash-ring placement algorithm against naive modulo hashing on the same key set — see how little of the keyspace a ring actually moves when a node joins or leaves, and what happens without enough virtual nodes to spread the luck around.</description>
     </item>
     <item>
+      <title>CRDTs: What to Do Once You Know Two Writes Are Concurrent</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/crdts-what-to-do-once-you-know-two-writes-are-concurrent</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/crdts-what-to-do-once-you-know-two-writes-are-concurrent</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set — see exactly which concurrent updates the naive designs silently lose, and why detecting concurrency is only half the problem.</description>
+    </item>
+    <item>
       <title>Vector Clocks and the Clock Skew That Fools Last-Write-Wins</title>
       <link>https://khoahotran.github.io/portfolio/experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins</guid>
@@ -348,13 +355,6 @@
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/designing-a-permission-system</guid>
       <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
       <description>How to evolve from brittle role checks to a maintainable, high-performance policy-based authorization engine.</description>
-    </item>
-    <item>
-      <title>Scaling Background Jobs: Adaptive Concurrency</title>
-      <link>https://khoahotran.github.io/portfolio/research/scaling-background-jobs</link>
-      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/scaling-background-jobs</guid>
-      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
-      <description>Operational patterns and practical lessons for scaling asynchronous jobs while keeping failure rates and costs predictable.</description>
     </item>
   </channel>
 </rss>
