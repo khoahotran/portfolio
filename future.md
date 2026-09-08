@@ -71,8 +71,16 @@ first.
   four real queue policies (`src/labs/backpressure.ts`, 14 tests) that track individual item
   identity, not just counts — the only way to prove `drop-new` and `drop-old` discard the same
   *number* of items but never the same *ones*. See `.ai/content-roadmap.md` §7.5. CDN/edge caching
-  trade-offs and canary/blue-green deployment remain open candidates, not yet promoted to their own
-  bullet since neither has been scoped as concretely as the implementation labs above were.
+  trade-offs remains an open candidate, not yet promoted to its own bullet.
+- ~~Canary / blue-green deploys~~ — done 2026-09-07: initially framed as article-only (no obvious
+  "run a real algorithm" angle), reconsidered before starting since a real canary-analysis decision
+  procedure — a two-proportion z-test deciding promote-vs-rollback per traffic stage — is exactly
+  as implementation-shaped as the labs above, just not previously noticed. `/labs/canary-rollout`
+  (`src/labs/canaryRollout.ts`, 12 tests) proves the identical regression goes undetected at a small
+  sample size and gets caught at a realistic one — the same "sample size cuts both ways" finding
+  that a raw error-rate threshold would miss entirely. See `.ai/content-roadmap.md` §7.7. Worth
+  re-checking CDN/edge caching for a similar hidden-algorithm angle before assuming it stays
+  article-only.
 - ~~A 4th real benchmark harness~~ — done 2026-09-07: `benchmarks/pgbouncer-vs-direct/` measures
   PgBouncer against direct Postgres across two connection lifecycles — a genuinely two-sided
   finding (PgBouncer's advantage widens under connection churn, reverses under persistent

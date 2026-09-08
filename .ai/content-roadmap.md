@@ -646,3 +646,39 @@ themes) and `check:responsive` (116×7 viewports+dark) both real PASS.
 
 `future.md`'s Track B is now empty of concretely-scoped items again — CDN/edge caching and
 canary/blue-green deploys remain open, not-yet-scoped candidates.
+
+### 7.7 ✅ New lab: Canary Rollout Analysis — DONE (2026-09-07)
+
+Picked up canary/blue-green deploys, initially framed as an article-only candidate (no obvious
+"run a real algorithm" angle, unlike leader-election/redlock/backpressure) — reconsidered before
+starting, since a real canary-analysis decision procedure (a statistical significance test deciding
+promote-vs-rollback per traffic stage) is exactly as implementation-shaped as those three, just not
+previously noticed. Scoped as article + lab rather than article-only on that basis.
+
+`src/labs/canaryRollout.ts` (12 tests) runs a real **two-proportion z-test**, one-tailed — the same
+class of statistical test real canary-analysis systems (Kayenta, Flagger) use instead of a raw
+error-rate threshold. Error counts per stage are computed deterministically from each input rate
+(no random-number generator), consistent with this lab series' existing preference for fully
+deterministic behaviour over simulated randomness — the thing being tested is the statistical
+decision procedure, not a random walk.
+
+**The finding is a genuine two-sided one, not a single "significance testing is good" endorsement:**
+`canaryRollout.test.ts` proves, as behaviour rather than assertion, that the *identical* underlying
+regression (canary at 2x baseline's true error rate) goes completely undetected at a small sample
+size (15 requests/stage) and is caught immediately at a realistic one (2,000 requests/stage) — same
+rates, only sample size differs, opposite outcomes. The other side was verified too, empirically
+rather than guessed: a trivial 0.05-percentage-point difference (1.05% vs 1.00%) needs 500,000
+requests/stage before the z-test calls it significant (found by computing the actual crossover
+point with a quick script rather than picking a number and hoping), demonstrating that statistical
+significance answers "is this larger than noise?", not "does this matter?" — a canary gate tuned
+only for the first question will eventually roll back a release for a difference too small to care
+about.
+
+Registered as the 18th lab (`canary-rollout`, provenance `implementation`). Verified: build-time
+validation clean (52 docs); typecheck/lint/125 tests green; full build+prerender (118 pages)
+confirmed correct title/og:image/canonical for both new routes, including the redirect stub;
+`check:contrast` (117×2 themes) and `check:responsive` (118×7 viewports+dark) both real PASS.
+
+`future.md`'s Track B is now empty again — only CDN/edge caching remains as an open, not-yet-scoped
+candidate, and worth re-checking for a similar "is there a real algorithm hiding in here" angle
+before assuming it stays article-only.
