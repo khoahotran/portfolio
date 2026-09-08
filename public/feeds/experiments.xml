@@ -5,7 +5,14 @@
     <link>https://khoahotran.github.io/portfolio/experiments</link>
     <description>experiments articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 08 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Consistent Hashing and the Rebalancing Nobody Notices</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run the real hash-ring placement algorithm against naive modulo hashing on the same key set — see how little of the keyspace a ring actually moves when a node joins or leaves, and what happens without enough virtual nodes to spread the luck around.</description>
+    </item>
     <item>
       <title>Backpressure: Four Policies, One Overload</title>
       <link>https://khoahotran.github.io/portfolio/experiments/backpressure-four-policies-one-overload</link>

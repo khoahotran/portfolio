@@ -5,7 +5,14 @@
     <link>https://khoahotran.github.io/portfolio</link>
     <description>Case studies, system design notes, and interactive engineering experiments.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 08 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Consistent Hashing and the Rebalancing Nobody Notices</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run the real hash-ring placement algorithm against naive modulo hashing on the same key set — see how little of the keyspace a ring actually moves when a node joins or leaves, and what happens without enough virtual nodes to spread the luck around.</description>
+    </item>
     <item>
       <title>Backpressure: Four Policies, One Overload</title>
       <link>https://khoahotran.github.io/portfolio/experiments/backpressure-four-policies-one-overload</link>
@@ -348,13 +355,6 @@
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes</guid>
       <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
       <description>How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems.</description>
-    </item>
-    <item>
-      <title>Throughput Simulation Notes</title>
-      <link>https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes</link>
-      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes</guid>
-      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
-      <description>Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations.</description>
     </item>
   </channel>
 </rss>

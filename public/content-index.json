@@ -1,5 +1,24 @@
 [
   {
+    "title": "Consistent Hashing and the Rebalancing Nobody Notices",
+    "date": "2026-09-08",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "system-design"
+    ],
+    "summary": "Run the real hash-ring placement algorithm against naive modulo hashing on the same key set — see how little of the keyspace a ring actually moves when a node joins or leaves, and what happens without enough virtual nodes to spread the luck around.",
+    "draft": false,
+    "slug": "consistent-hashing-and-the-rebalancing-nobody-notices",
+    "collection": "experiments",
+    "ogImage": "/og/consistent-hashing-and-the-rebalancing-nobody-notices.png",
+    "related": [
+      "experiments/gossip-protocol-visualizer"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
     "title": "Backpressure: Four Policies, One Overload",
     "date": "2026-09-07",
     "tags": [
@@ -222,6 +241,9 @@
     "slug": "gossip-protocol-visualizer",
     "collection": "experiments",
     "ogImage": "/og/gossip-protocol-visualizer.png",
+    "related": [
+      "experiments/consistent-hashing-and-the-rebalancing-nobody-notices"
+    ],
     "readingMinutes": 3,
     "readingText": "3 min read"
   },
