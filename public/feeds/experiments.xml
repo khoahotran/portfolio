@@ -7,6 +7,13 @@
     <language>en-us</language>
     <lastBuildDate>Tue, 08 Sep 2026 00:00:00 GMT</lastBuildDate>
     <item>
+      <title>Bloom Filters and the Capacity You Can&apos;t See Coming</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real, not just in a formula.</description>
+    </item>
+    <item>
       <title>Consistent Hashing and the Rebalancing Nobody Notices</title>
       <link>https://khoahotran.github.io/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices</guid>

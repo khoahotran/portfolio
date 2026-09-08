@@ -1,5 +1,24 @@
 [
   {
+    "title": "Bloom Filters and the Capacity You Can't See Coming",
+    "date": "2026-09-08",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "benchmark"
+    ],
+    "summary": "Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real, not just in a formula.",
+    "draft": false,
+    "slug": "bloom-filters-and-the-capacity-you-cant-see-coming",
+    "collection": "experiments",
+    "ogImage": "/og/bloom-filters-and-the-capacity-you-cant-see-coming.png",
+    "related": [
+      "experiments/consistent-hashing-and-the-rebalancing-nobody-notices"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
     "title": "Consistent Hashing and the Rebalancing Nobody Notices",
     "date": "2026-09-08",
     "tags": [
@@ -13,7 +32,8 @@
     "collection": "experiments",
     "ogImage": "/og/consistent-hashing-and-the-rebalancing-nobody-notices.png",
     "related": [
-      "experiments/gossip-protocol-visualizer"
+      "experiments/gossip-protocol-visualizer",
+      "experiments/bloom-filters-and-the-capacity-you-cant-see-coming"
     ],
     "readingMinutes": 4,
     "readingText": "4 min read"
