@@ -14,6 +14,13 @@
       <description>Block, drop-new, drop-old, and circuit breaker, run against the same producer that outruns its consumer — including proof that drop-new and drop-old discard the same number of items, but never the same ones.</description>
     </item>
     <item>
+      <title>Canary Deploys and the Sample Size Nobody Checks</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks</guid>
+      <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+      <description>A real two-proportion z-test canary analysis, run stage by stage — proving that the same real regression can go completely undetected at a small sample size and get caught at a larger one, using the exact statistic, not a story about it.</description>
+    </item>
+    <item>
       <title>Distributed Locks: Redlock and the Pause That Breaks It</title>
       <link>https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it</guid>

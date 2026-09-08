@@ -19,6 +19,25 @@
     "readingText": "4 min read"
   },
   {
+    "title": "Canary Deploys and the Sample Size Nobody Checks",
+    "date": "2026-09-07",
+    "tags": [
+      "incident-response",
+      "trade-offs",
+      "benchmark"
+    ],
+    "summary": "A real two-proportion z-test canary analysis, run stage by stage — proving that the same real regression can go completely undetected at a small sample size and get caught at a larger one, using the exact statistic, not a story about it.",
+    "draft": false,
+    "slug": "canary-deploys-and-the-sample-size-nobody-checks",
+    "collection": "experiments",
+    "ogImage": "/og/canary-deploys-and-the-sample-size-nobody-checks.png",
+    "related": [
+      "blog/engineering-lessons-from-a-failed-rollout"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
     "title": "Distributed Locks: Redlock and the Pause That Breaks It",
     "date": "2026-09-07",
     "tags": [
@@ -889,6 +908,9 @@
     "slug": "engineering-lessons-from-a-failed-rollout",
     "collection": "blog",
     "ogImage": "/og/engineering-lessons-from-a-failed-rollout.png",
+    "related": [
+      "experiments/canary-deploys-and-the-sample-size-nobody-checks"
+    ],
     "readingMinutes": 4,
     "readingText": "4 min read"
   },

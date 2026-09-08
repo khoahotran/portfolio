@@ -21,6 +21,19 @@
       "image": "https://khoahotran.github.io/portfolio/og/backpressure-four-policies-one-overload.png"
     },
     {
+      "id": "https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks",
+      "url": "https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks",
+      "title": "Canary Deploys and the Sample Size Nobody Checks",
+      "summary": "A real two-proportion z-test canary analysis, run stage by stage — proving that the same real regression can go completely undetected at a small sample size and get caught at a larger one, using the exact statistic, not a story about it.",
+      "date_published": "2026-09-07T00:00:00.000Z",
+      "tags": [
+        "incident-response",
+        "trade-offs",
+        "benchmark"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/canary-deploys-and-the-sample-size-nobody-checks.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it",
       "url": "https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it",
       "title": "Distributed Locks: Redlock and the Pause That Breaks It",
