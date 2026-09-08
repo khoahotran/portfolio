@@ -2,7 +2,7 @@
 title: "Consistent Hashing and the Rebalancing Nobody Notices"
 date: "2026-09-08"
 tags: ["distributed-systems", "trade-offs", "system-design"]
-related: ["experiments/gossip-protocol-visualizer"]
+related: ["experiments/gossip-protocol-visualizer", "experiments/bloom-filters-and-the-capacity-you-cant-see-coming"]
 summary: "Run the real hash-ring placement algorithm against naive modulo hashing on the same key set — see how little of the keyspace a ring actually moves when a node joins or leaves, and what happens without enough virtual nodes to spread the luck around."
 ---
 
