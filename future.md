@@ -4,14 +4,15 @@ This file is deliberately separate from [`.ai/content-roadmap.md`](.ai/content-r
 [`todo.md`](todo.md). Those two are **logs** — completed phases, resolved decisions, the record of
 what happened. This one is **pre-commitment scratch space** — candidates for what could happen next,
 none of them started, none of them owed to anyone. When a candidate here actually gets picked up, it
-graduates into a real `Phase N` section in `content-roadmap.md` with its own verification section,
-and gets deleted from this file. Nothing in this file should be read as "planned" — only "considered."
+graduates into a real `Phase N` section (in `.ai/phases/phase-N.md` — see `content-roadmap.md`'s
+index) with its own verification section, and gets deleted from this file. Nothing in this file
+should be read as "planned" — only "considered."
 
 Snapshot at time of writing (2026-09-08, updated after Phase 7 closed out Track B entirely):
 53 articles across 6 collections, 19 interactive labs, 5 real Docker benchmark harnesses,
 Phases 5-7 complete. One item (§5.2, flagship deepening) genuinely blocked rather than deferred by
 choice — see Track A. Track B below is a fresh set, not a continuation of the old one; every item
-that was in it before this update has shipped (see `.ai/content-roadmap.md` §7.1-7.8).
+that was in it before this update has shipped (see `.ai/phases/phase-7.md` §7.1-7.8).
 
 ---
 
@@ -30,14 +31,13 @@ heavily-evidenced pieces vs. a faster-cadence backlog of shorter posts), and it'
 positioning call, not an engineering one — flagging it here rather than picking a direction
 unilaterally, same as Phase 6 left it.
 
-**Update after Phase 7:** the pattern that actually emerged — one item at a time, each fully
-verified (real gate, real commits, real docs) before the next is picked — answered "how fast" by
-practice without ever explicitly re-answering "deep or wide." Phase 7 shipped 5 labs, 1 harness, and
-1 field-note in rapid succession (2026-09-07/08), which is closer to "wide" in raw count than any
-prior phase, but every single item was still a full-depth "real algorithm/harness, not a diagram or
-dataset" piece — so the *cadence* increased without the *depth-per-item* dropping. Whether that's
-sustainable or was an unusually productive stretch worth treating as an outlier is exactly the kind
-of thing worth surfacing rather than assuming either way.
+**Update after Phase 7, decided 2026-09-08:** Phase 7 shipped 5 labs, 1 harness, and 1 field-note in
+rapid succession (2026-09-07/08) — closer to "wide" in raw count than any prior phase, though every
+item still shipped at full depth (real algorithm/harness, not a diagram or dataset), so *cadence*
+increased without *depth-per-item* dropping. Asked directly whether to keep that pace or treat it as
+an outlier: **Khoa chose to slow down deliberately** — Phase 7 was an unusually productive stretch,
+not a new baseline to assume going forward. Phase 8 should not default to picking Track B items
+back-to-back the way Phase 7 did; space them out.
 
 ---
 
@@ -61,7 +61,7 @@ nothing; re-attempting them without the blocker having changed just re-produces 
 ## Track B — Content candidates (unstarted, unordered — not a queue)
 
 **Everything that was in this track before 2026-09-08 has shipped** — see
-`.ai/content-roadmap.md` §7.1-7.8 for the full record (series retrofit, leader election, PgBouncer
+`.ai/phases/phase-7.md` §7.1-7.8 for the full record (series retrofit, leader election, PgBouncer
 vs direct, Redlock, backpressure, gRPC vs REST, canary rollout, cache freshness, plus the PFM
 git-log field note). This is a fresh set, grounded by actually checking the current lab registry
 (`src/labs/lab-ids.json`, 19 entries) and content corpus rather than assumed:
@@ -96,14 +96,13 @@ amounts of the same budget, regardless of how fast Phase 7 went.
 
 ## Track C — Small infra items noticed but not worth a phase on their own
 
-- `.ai/content-roadmap.md` is now 54 KB / 743 lines across 7 phases (was 29 KB / 6 phases when this
-  was first noted) — nearly doubled in this one session. Still linearly navigable by section
-  headers, so not yet "hard to navigate" in the sense the original note meant, but the growth rate
-  itself is new information: at this rate another 1-2 phases would clearly cross whatever threshold
-  "hard to navigate" means in practice. Worth actually deciding on the split
-  (`.ai/phases/phase-N.md` per phase, or per-year) before it's picked reactively mid-phase — this is
-  a structural/organizational call about a governance document, not an engineering one, so it's
-  listed here rather than actioned unilaterally, same treatment the deep-vs-wide question gets.
+- ~~`.ai/content-roadmap.md` split into per-phase files~~ — done 2026-09-08: it had grown from 29 KB
+  / 6 phases to 54 KB / 7 phases in one session, nearly doubling, which was itself the signal to
+  split before Phase 8 added more rather than after it became unreadable. `.ai/content-roadmap.md`
+  is now a short index; full history lives under `.ai/phases/` (`early-history.md`, `phase-5.md`,
+  `phase-6.md`, `phase-7.md`), each linking to the next. Every cross-reference elsewhere in the repo
+  that cited a specific section (`§5.x`, `§7.x`) was updated to point at the right phase file
+  directly, not just the index — checked with a repo-wide grep, not assumed.
 - ~~`slugify()` parity test~~ — checked while writing this file and found already done:
   `src/content-engine/slugify.test.ts` asserts `content-source.ts` and `scripts/lib/content.mjs`
   agree, including over every real content filename and title, not just synthetic cases. The
@@ -117,5 +116,6 @@ amounts of the same budget, regardless of how fast Phase 7 went.
 Before starting any Track B item: re-ask the deep-vs-wide question above rather than assuming the
 answer from this file's existence. Before starting any Track A item: confirm the stated trigger
 actually fired — don't re-attempt a blocked item speculatively. When something here does get picked
-up, move it into `.ai/content-roadmap.md` as a real phase and delete it from here, so this file never
-accumulates completed work alongside genuinely open candidates.
+up, move it into a `.ai/phases/phase-N.md` as a real phase (adding it to `content-roadmap.md`'s
+index) and delete it from here, so this file never accumulates completed work alongside genuinely
+open candidates.
