@@ -8,12 +8,12 @@ graduates into a real `Phase N` section (in `.ai/phases/phase-N.md` — see `con
 index) with its own verification section, and gets deleted from this file. Nothing in this file
 should be read as "planned" — only "considered."
 
-Snapshot at time of writing (2026-09-08, updated after Phase 8 closed out Track B entirely):
+Snapshot at time of writing (2026-09-08, updated after repopulating Track B post-Phase-8):
 55 articles across 6 collections, 22 interactive labs, 5 real Docker benchmark harnesses,
 Phases 5-8 in progress (Phase 8 has shipped all three items it picked up — consistent hashing,
 the idempotency-key store, and vector clocks — see `.ai/phases/phase-8.md` §8.1-8.3). One item
 (§5.2, flagship deepening) genuinely blocked rather than deferred by choice — see Track A. Track B
-is now empty; see the note below it for what comes next.
+has a fresh set of three candidates (CRDTs, Bloom filters, Merkle trees) — nothing started yet.
 
 ---
 
@@ -61,19 +61,41 @@ nothing; re-attempting them without the blocker having changed just re-produces 
 
 ## Track B — Content candidates (unstarted, unordered — not a queue)
 
-**Empty as of 2026-09-08 — every item from the post-Phase-7 set has shipped.** See
-`.ai/phases/phase-7.md` §7.1-7.8 for the record before that (series retrofit, leader election,
-PgBouncer vs direct, Redlock, backpressure, gRPC vs REST, canary rollout, cache freshness, plus the
-PFM git-log field note), and `.ai/phases/phase-8.md` §8.1-8.3 for consistent hashing, the
-idempotency-key store, and vector clocks. This is the second time this file's Track B has emptied
-out completely (the first was the 2026-09-08 update above, right before this set was written) —
-the next entries have to come from a fresh check of the lab registry (`src/labs/lab-ids.json`, 22
-entries as of this update) and content corpus, the same way both prior sets were, not assumed from
-memory.
+Repopulated 2026-09-08 immediately after the post-Phase-7 set closed out (§8.1-8.3: consistent
+hashing, the idempotency-key store, vector clocks) — see `.ai/phases/phase-7.md` §7.1-7.8 and
+`.ai/phases/phase-8.md` for the full record of everything shipped so far. This fresh set is
+grounded the same way every prior one was: checked against the actual lab registry
+(`src/labs/lab-ids.json`, 22 entries at the time) and a `grep` across `content/`, not assumed:
 
-When Track B is next populated, re-confirm the deep-vs-wide question above first (now updated for
-Phase 7's pace) — a short field-note and a full lab+article pair still cost very different amounts
-of the same budget.
+- **CRDTs (Conflict-Free Replicated Data Types)** — not covered anywhere in `content/` (confirmed
+  by grep). The natural sequel to vector clocks, not a duplicate of it: vector clocks let you
+  *detect* that two writes are concurrent, but the vector-clocks article explicitly stops there —
+  it doesn't say what to do once you know. A G-Counter (and ideally a PN-Counter or OR-Set)
+  implemented with a real merge function has a genuine, testable two-sided finding: a naive
+  LWW-style merge silently loses one side's concurrent increments, while a real CRDT merge is
+  provably commutative, associative, and idempotent — the actual correctness properties, testable
+  directly (merge(a,b) == merge(b,a); merging the same message twice is a no-op) — so it converges
+  to the same value regardless of message order or duplication, which is the whole reason
+  Dynamo-style stores and offline-first apps (Automerge, Yjs) use them.
+- **Bloom filters** — not covered anywhere in `content/` (confirmed by grep). A real bit-array
+  filter with k real hash functions, not a formula described in prose. Two-sided finding: the
+  empirically measured false-positive rate should track the closed-form estimate
+  `(1 - e^(-kn/m))^k` closely while the filter is within its designed capacity, and visibly exceed
+  it once it's overloaded past that capacity — a genuine, measurable space-vs-accuracy trade-off,
+  not just a formula to take on faith. Pairs with consistent-hashing thematically (both are
+  probabilistic space/accuracy trade-offs over hashing) without covering the same ground.
+- **Merkle trees (anti-entropy reconciliation)** — not covered anywhere in `content/` (confirmed by
+  grep). The mechanism Dynamo, Cassandra, and git all use to compare two replicas efficiently: build
+  a real Merkle tree over each dataset, compare root hashes to detect *any* difference in O(1), then
+  walk down only the subtrees whose hashes actually disagree to find exactly which keys differ —
+  real, measurable O(log n) targeted diffing against a naive O(n) full-dataset compare for the
+  identical two datasets, the same "both sides run for real, against the same input" comparison
+  shape as consistent-hashing's naive-modulo-vs-ring contrast.
+
+Do not start any of these without first re-confirming the deep-vs-wide question above (now updated
+for Phase 7's pace) — a short field-note and a full lab+article pair still cost very different
+amounts of the same budget, and per the "slow down deliberately" decision, repopulating this list
+is not itself a decision to start picking through it.
 
 ---
 
