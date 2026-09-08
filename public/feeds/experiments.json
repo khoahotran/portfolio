@@ -21,6 +21,19 @@
       "image": "https://khoahotran.github.io/portfolio/og/consistent-hashing-and-the-rebalancing-nobody-notices.png"
     },
     {
+      "id": "https://khoahotran.github.io/portfolio/experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins",
+      "url": "https://khoahotran.github.io/portfolio/experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins",
+      "title": "Vector Clocks and the Clock Skew That Fools Last-Write-Wins",
+      "summary": "Run the real happens-before/happens-after/concurrent test on a scripted causal history, then watch a naive last-write-wins resolver flip its answer under clock skew alone — while the causal verdict never moves.",
+      "date_published": "2026-09-08T00:00:00.000Z",
+      "tags": [
+        "distributed-systems",
+        "trade-offs",
+        "benchmark"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/vector-clocks-and-the-clock-skew-that-fools-last-write-wins.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/experiments/backpressure-four-policies-one-overload",
       "url": "https://khoahotran.github.io/portfolio/experiments/backpressure-four-policies-one-overload",
       "title": "Backpressure: Four Policies, One Overload",
