@@ -14,5 +14,6 @@
   "leader-election",
   "pgbouncer-vs-direct",
   "redlock",
-  "backpressure"
+  "backpressure",
+  "grpc-vs-rest"
 ]

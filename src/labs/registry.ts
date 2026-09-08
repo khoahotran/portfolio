@@ -63,6 +63,7 @@ const LeaderElectionPage = lazy(() => import('../pages/experiments/LeaderElectio
 const PgbouncerVsDirectPage = lazy(() => import('../pages/experiments/PgbouncerVsDirectPage'));
 const RedlockPage = lazy(() => import('../pages/experiments/RedlockPage'));
 const BackpressurePage = lazy(() => import('../pages/experiments/BackpressurePage'));
+const GrpcVsRestPage = lazy(() => import('../pages/experiments/GrpcVsRestPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -374,6 +375,32 @@ export const labs: LabDefinition[] = [
     component: BackpressurePage,
     interaction: 'live',
     relatedArticle: 'backpressure-four-policies-one-overload',
+  },
+  {
+    id: 'grpc-vs-rest',
+    provenance: {
+      kind: 'measured',
+      environment:
+        'One Go server (benchmarks/grpc-vs-rest) running a gRPC listener (protobuf, HTTP/2, ' +
+        ':50051) and a REST/JSON listener (net/http, HTTP/1.1, :8080) side by side, both reading the ' +
+        'same deterministic data generator so a given id returns byte-identical content on either ' +
+        "protocol. Two payload shapes measured: 'single' (one User record) and 'list' (100 records). " +
+        'Client concurrency 10/25/50, 30 requests per client, one shared reused connection per run ' +
+        '(a single *grpc.ClientConn / *http.Client) — the realistic deployment pattern for either ' +
+        'protocol, not a strawman that reconnects per request on only one side.',
+      measuredOn: 'September 2026',
+      harness: 'https://github.com/khoahotran/portfolio/tree/main/benchmarks/grpc-vs-rest',
+      caveat:
+        'Host was under this session\'s already-documented fluctuating CPU contention while this ' +
+        'matrix ran; a spot-check rerun of the single-mode, 10-client case reproduced the same ' +
+        'direction (REST ahead on both throughput and latency) but not the same magnitude — read the ' +
+        "direction of each result as reliable, the exact multiples as this run's, not a universal constant.",
+    },
+    title: 'Benchmark: gRPC vs REST',
+    description: 'Interactive benchmark visualizing gRPC vs REST throughput, latency, and payload size across two payload shapes.',
+    component: GrpcVsRestPage,
+    interaction: 'preset',
+    relatedArticle: 'grpc-vs-rest-when-the-smaller-payload-loses',
   },
 ];
 
