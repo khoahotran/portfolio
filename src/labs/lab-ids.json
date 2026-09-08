@@ -18,5 +18,6 @@
   "grpc-vs-rest",
   "canary-rollout",
   "cache-freshness",
-  "consistent-hashing"
+  "consistent-hashing",
+  "idempotency-store"
 ]

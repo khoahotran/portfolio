@@ -18,12 +18,14 @@ export interface LabDefinition {
    */
   collidesWithArticleSlug?: boolean;
   /**
-   * Slug of the companion write-up in content/experiments/, if one exists.
-   * Lets the lab page link back to its article — previously every lab's
-   * only way out was a generic link to the /experiments list, a dead end
-   * for a reader who arrived from the article and wants to return to it.
-   * `retry-strategy` and `failure-injection` have no companion article and
-   * are left without this field rather than inventing one.
+   * Slug of the companion write-up, if one exists — either a bare slug (assumed to live in
+   * content/experiments/, true for every lab so far) or a `"collection/slug"` string for a
+   * companion elsewhere (e.g. `idempotency-store`'s companion is a content/blog/ post it extends
+   * rather than a new content/experiments/ article), the same "collection/slug" shape `related:`
+   * frontmatter already uses. Lets the lab page link back to its article — previously every lab's
+   * only way out was a generic link to the /experiments list, a dead end for a reader who arrived
+   * from the article and wants to return to it. `retry-strategy` and `failure-injection` have no
+   * companion article and are left without this field rather than inventing one.
    */
   relatedArticle?: string;
   /**
@@ -67,6 +69,7 @@ const GrpcVsRestPage = lazy(() => import('../pages/experiments/GrpcVsRestPage'))
 const CanaryRolloutPage = lazy(() => import('../pages/experiments/CanaryRolloutPage'));
 const CacheFreshnessPage = lazy(() => import('../pages/experiments/CacheFreshnessPage'));
 const ConsistentHashingPage = lazy(() => import('../pages/experiments/ConsistentHashingPage'));
+const IdempotencyStorePage = lazy(() => import('../pages/experiments/IdempotencyStorePage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -462,6 +465,26 @@ export const labs: LabDefinition[] = [
     component: ConsistentHashingPage,
     interaction: 'live',
     relatedArticle: 'consistent-hashing-and-the-rebalancing-nobody-notices',
+  },
+  {
+    id: 'idempotency-store',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'Two real idempotency-key store designs (src/labs/idempotencyStore.ts, unit-tested), run ' +
+        'against the identical concurrent-duplicate arrival pattern. check-then-set mirrors the ' +
+        "companion article's own NestJS sample (a GET of the completed-results cache, followed " +
+        "later by a SET once processing finishes) — two non-atomic steps, so a duplicate that " +
+        "arrives while the first is still in flight finds nothing cached and genuinely reprocesses, " +
+        'not a hypothetical. atomic-claim replaces that with one atomic check-and-claim, so a ' +
+        'concurrent duplicate coalesces onto the in-flight run and shares its result instead — both ' +
+        'counted directly, not asserted.',
+    },
+    title: 'Idempotency-Key Store',
+    description: 'Run the real race between a concurrent duplicate and an in-flight request — see it double-process under check-then-set, then get coalesced under atomic-claim.',
+    component: IdempotencyStorePage,
+    interaction: 'live',
+    relatedArticle: 'blog/system-design-notes-idempotency',
   },
 ];
 

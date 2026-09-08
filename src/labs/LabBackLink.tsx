@@ -17,6 +17,9 @@ interface Props {
  */
 function LabBackLink({ labId }: Props) {
   const lab = getLabById(labId);
+  // A bare slug (every lab before idempotency-store) means content/experiments/; a
+  // "collection/slug" string (see LabDefinition.relatedArticle) names its own collection.
+  const articlePath = lab?.relatedArticle?.includes('/') ? lab.relatedArticle : `experiments/${lab?.relatedArticle}`;
 
   return (
     <div className="mb-4 flex flex-wrap items-center gap-2">
@@ -26,7 +29,7 @@ function LabBackLink({ labId }: Props) {
       </Link>
       {lab?.relatedArticle && (
         <Link
-          to={`/experiments/${lab.relatedArticle}`}
+          to={`/${articlePath}`}
           className="btn-back !text-slate-500 hover:!text-slate-700"
         >
           Read the write-up
