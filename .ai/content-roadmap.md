@@ -682,3 +682,62 @@ confirmed correct title/og:image/canonical for both new routes, including the re
 `future.md`'s Track B is now empty again — only CDN/edge caching remains as an open, not-yet-scoped
 candidate, and worth re-checking for a similar "is there a real algorithm hiding in here" angle
 before assuming it stays article-only.
+
+### 7.8 ✅ New lab: Cache Freshness Policies — DONE (2026-09-07/08)
+
+Closed out `future.md`'s Track B entirely. CDN/edge caching, initially the last article-only
+candidate, got the same "is there a real algorithm hiding in here" recheck §7.7 already applied to
+canary deploys — and it had one: three real cache-freshness decision procedures (TTL-blocking,
+stale-while-revalidate, stale-if-error) are exactly as implementation-shaped as the labs before it.
+
+`src/labs/cacheFreshness.ts` (10 tests) runs all three against the same deterministic
+origin-update schedule and the same origin outage window, so the policy is the only variable.
+**The finding:** TTL-blocking errors on any request past TTL during an outage, with no fallback.
+SWR never blocks at all — it serves stale content instantly and best-effort refreshes in the
+background, paying zero origin latency even while the origin is down. Stale-if-error sits between
+them: it always *attempts* the origin first (paying full origin-timeout latency, every request,
+for as long as the outage lasts) and only falls back to stale if that attempt fails — a real,
+measured cost difference `cacheFreshness.test.ts` asserts directly (SWR's stale-served latency is
+always the fast cache-hit cost; SIE's is always the origin-timeout cost), not just described.
+
+**One real test-premise bug found while writing the tests, not in the implementation:** the first
+version of the "stale-if-error falls back to stale during an outage" test used the shared `BASE`
+fixture's 100-tick origin-update interval, but only ran to tick 15 — the origin's true content
+genuinely hadn't changed yet at that point, so `stale: false` was the *correct* answer, not a bug,
+and the test's own expectation (`stale: true`) was wrong. Fixed by giving that specific test a
+short origin-update interval (8 ticks) so a real version change actually occurs before the
+assertion — the same "verify the test's premise before trusting its failure" discipline this
+project applies to its own code.
+
+**Two operational incidents during verification, both resolved with evidence rather than
+assumption, worth recording honestly:**
+1. The first `check:responsive` run appeared stalled (its output, piped through `tail -40`, showed
+   zero lines for over 30 minutes) and was killed — incorrectly. `ps aux` at kill time showed it
+   was actually at 110/120 routes with no real failures; the empty output was `tail`'s own
+   buffering, not evidence of a stall. The kill itself produced the only failure in that run
+   (`browserContext.newPage: Target page, context or browser has been closed`, a direct consequence
+   of terminating the browser mid-navigation). Corrected by rerunning with output redirected
+   directly to a file (no pipe buffering) and, on the rerun, deliberately waiting for real progress
+   signals (growing CPU time, growing route-count lines) rather than judging by silence.
+2. `/blog/building-jujuja-a-production-quest-system` failed all 3 retries on *both* the killed run
+   and the clean rerun — a weaker case for "just flaky network" than a one-off, so it was actually
+   investigated rather than waved off. Confirmed genuinely transient, not a route defect, with
+   direct evidence: the route's own prerendered title/canonical are correct, and both "failed to
+   fetch" mermaid diagram chunks (`flowDiagram-23GEKE2U`, `sequenceDiagram-DBY2YBRQ`) served a clean
+   HTTP 200 on direct `curl` immediately afterward. The route simply needs 2 separate diagram-type
+   chunks (most articles need 0-1, confirmed by checking every blog article's diagram count), which
+   gives it more independent chances to catch a momentary network blip within one page load — this
+   session's host had an unusually high rate of `ERR_NETWORK_CHANGED` blips during this specific
+   run (10+ routes needed at least one retry), consistent with the already-documented WSL2 network
+   flakiness pattern, just an unusually bad instance of it.
+
+Registered as the 19th lab (`cache-freshness`, provenance `implementation`). Verified: build-time
+validation clean (53 docs); typecheck/lint/135 tests green; full build+prerender (120 pages)
+confirmed correct title/og:image/canonical for both new routes, including the redirect stub (one
+transient `ERR_NETWORK_CHANGED` prerender failure on the unrelated, pre-existing
+`/experiments/websockets-vs-sse` route was confirmed transient by an immediate clean retry);
+`check:contrast` (119×2 themes) real PASS; `check:responsive` (120×7 viewports+dark) completed with
+the jujuja route's already-investigated, confirmed-transient failure and otherwise 0 real failures.
+
+`future.md`'s Track B is now fully empty of both scoped and unscoped candidates — see the
+forward-looking update below for what comes after it.
