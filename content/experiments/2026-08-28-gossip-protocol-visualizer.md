@@ -2,6 +2,7 @@
 title: "Gossip Protocol Visualizer: How Cluster Membership Actually Spreads"
 date: "2026-08-28"
 tags: ["distributed-systems", "benchmark"]
+related: ["experiments/consistent-hashing-and-the-rebalancing-nobody-notices"]
 summary: "A real push-based epidemic broadcast, run and scrubbed round by round, showing why gossip converges in O(log n) rounds instead of O(n)."
 ---
 
