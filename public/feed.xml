@@ -14,6 +14,13 @@
       <description>Run Raft&apos;s real election restriction and commit-index safety rule — see why a stale node can&apos;t win an election no matter how many peers are alive, and why a majority of replicas alone still can&apos;t prove a log entry is safely committed.</description>
     </item>
     <item>
+      <title>Two-Phase Commit vs. Saga: What Atomicity Actually Costs</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs</guid>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run the real 2PC blocking failure and the real Saga compensation-failure gap on the same kind of transaction — see exactly what atomicity costs, and exactly what giving it up costs instead.</description>
+    </item>
+    <item>
       <title>Bloom Filters and the Capacity You Can&apos;t See Coming</title>
       <link>https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming</guid>
@@ -348,13 +355,6 @@
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/projects/aegis</guid>
       <pubDate>Fri, 10 Apr 2026 00:00:00 GMT</pubDate>
       <description>A modular, high-performance Identity and Policy microservice platform in Go, featuring sub-5ms RBAC evaluations and distributed tracing.</description>
-    </item>
-    <item>
-      <title>Architecture Breakdown: CQRS for Mid-size Products</title>
-      <link>https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products</link>
-      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products</guid>
-      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
-      <description>A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path.</description>
     </item>
   </channel>
 </rss>

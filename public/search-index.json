@@ -21,6 +21,29 @@
     "searchableText": "Raft and the Commit Rule Replica Count Alone Can't Prove Run Raft's real election restriction and commit-index safety rule — see why a stale node can't win an election no matter how many peers are alive, and why a majority of replicas alone still can't prove a log entry is safely committed. distributed-systems trade-offs benchmark The [Bully algorithm lab](/labs/leader-election) elects a leader by one rule only: highest surviving id wins. It says nothing about which node actually holds the most data — a node that's badly behind can still become leader, purely by having the right number. That article's own comparison table names the actual fix production systems reach for: **Raft** (Ongaro & Ousterhout, 2014). This lab delivers on that setup — two real Raft mechanisms, run for real, each demonstrating a property Bully simply doesn't have. Try the Interactive Raft Lab ## The Election Restriction A Raft candidate doesn't just ask for votes — every peer checks the candidate's log against its own before granting one ( ): Stage 1 of the lab makes this a real, adjustable comparison: drag the candidate's log length down and every peer holding more data simply refuses, no matter how many of them are alive. This is the direct fix for exactly what Bully can't rule out — a node missing committed entries winning an election purely on id. Raft's restriction isn't a courtesy check; it's what makes the *\"a raft leader always has every committed entry\"* guarantee true by construction, not by convention. ## The Subtler Rule: Commit-Index Safety Getting elected isn't the interesting part. The Raft paper's own Figure 8 exists specifically to justify a rule most explanations skip past: **a leader must not conclude a log entry is committed just because a majority of nodes have replicated it.** It must also have replicated at least one entry from its own *current* term to that same majority first. Stage 2 runs the exact shape of that scenario. The leader's log has two entries: an old-term entry at index 1, a current-term entry at index 2. Set every follower's replication progress to \"only index 1\" — a majority of the cluster (4 of 5, leader included) now holds that entry. **Nothing commits.** flags this directly ( ): a naive resolver counting replicas alone would have called index 1 committed, and it would have been wrong to. The entry's term doesn't match the leader's current term, so Raft withholds it. Move any two followers up to \"index 2,\" and the current-term entry itself reaches a majority — at which point **both** indexes commit together, safely. > [!NOTE] > Why does an old-term entry on a majority need this extra check at all? Because \"majority\" is a > snapshot, not a guarantee about the future. A leader can crash after replicating an entry to a > majority but before it (or any later leader) confirms that majority is *stable* under its own > current term — a different node, elected in a later term with a different history, could still > overwrite that entry, precisely because nothing about \"on a majority\" alone proves it survived > into the term that's actually running the cluster now. Requiring a current-term entry to also > reach that majority is what closes the gap: it proves the current leader's own history — not > just some past leader's — has taken hold. ## Two Real Mechanisms, One Comparison Table Delivered On Neither of these properties is unique to the lab's specific scenario — they're the actual reason Raft, not Bully, is what gets deployed. The election restriction is testable directly (a stale candidate loses every time, regardless of alive-peer count); the commit rule is testable directly ( is exactly when a naive count-only resolver would have been wrong, and only then). Both together are what let a Raft cluster promise that anything a client was ever told is committed stays committed, through however many leader changes follow — a guarantee Bully, by design, never made in the first place."
   },
   {
+    "title": "Two-Phase Commit vs. Saga: What Atomicity Actually Costs",
+    "date": "2026-09-09",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "saga-pattern",
+      "benchmark"
+    ],
+    "summary": "Run the real 2PC blocking failure and the real Saga compensation-failure gap on the same kind of transaction — see exactly what atomicity costs, and exactly what giving it up costs instead.",
+    "draft": false,
+    "slug": "two-phase-commit-vs-saga-what-atomicity-actually-costs",
+    "collection": "experiments",
+    "ogImage": "/og/two-phase-commit-vs-saga-what-atomicity-actually-costs.png",
+    "related": [
+      "experiments/leader-election-bully-algorithm",
+      "system-design/implementing-the-saga-pattern-for-distributed-transfers",
+      "experiments/saga-state-machine-visualizer"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read",
+    "searchableText": "Two-Phase Commit vs. Saga: What Atomicity Actually Costs Run the real 2PC blocking failure and the real Saga compensation-failure gap on the same kind of transaction — see exactly what atomicity costs, and exactly what giving it up costs instead. distributed-systems trade-offs saga-pattern benchmark The [Core Banking Saga write-up](/system-design/implementing-the-saga-pattern-for-distributed-transfers) already covers, in real Go, why cross-aggregate money transfers give up atomicity for liveness. What it doesn't cover is the protocol Sagas exist specifically to avoid: **Two-Phase Commit**, the textbook way to get atomicity across participants that a single database transaction can't reach. Nobody on this site had actually run 2PC's failure mode before — every prior mention of it was a name in a comparison table. This lab runs it for real, on the same kind of scenario the Saga lab already uses, so the trade-off is a measured contrast rather than two separate write-ups that never meet. Try the Interactive 2PC vs. Saga Lab ## What 2PC Actually Guarantees, and What It Costs to Guarantee It Two-Phase Commit has one coordinator and any number of participants. Phase one: the coordinator asks everyone to *prepare* — lock whatever resources the transaction touches, then vote yes or no. Phase two: if everyone voted yes, the coordinator broadcasts ; if anyone voted no, it broadcasts . Every participant that voted yes obeys whichever it's told. That's the whole protocol, and it's genuinely atomic — every yes-voter really does end up either all committed or all aborted, never a mix. The cost is where Stage 1 of the lab points directly: **a participant that votes yes enters the *prepared* state and cannot leave it on its own.** It has locked its resources and is waiting for the coordinator's decision message. If the coordinator crashes after collecting all-yes votes but before broadcasting the decision, every one of those participants is stuck — not for a little while, but indefinitely, because 2PC gives a prepared participant no rule for deciding alone. Toggle the \"coordinator crashes\" switch in the lab with four yes-votes and watch all four participants land on \"blocked, holding locks,\" regardless of how many there are — there's no majority to fall back on here the way [Raft's commit rule](/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove) falls back on a quorum. 2PC has exactly one coordinator, and its decision is the only thing that can unblock anyone. This is the same single-point-of-failure shape as [Bully's leader](/experiments/leader-election-bully-algorithm) — one node's outage stalls everyone downstream of it — except Bully's failure mode is *no leader at all* until a new election finishes, while 2PC's failure mode is *every prepared participant frozen* until the old coordinator, specifically, comes back or a human intervenes. A participant that voted no, by contrast, is never at risk here — it aborts locally the instant it casts that vote, because it never entered the prepared state waiting on anyone. The lab shows this directly: mix in a no-vote alongside three yes-votes and crash the coordinator, and only the yes-voters end up blocked. ## What Saga Actually Guarantees, and What It Costs to Guarantee It The Saga side runs the mirror image: a sequence of local transactions, each one really committed the moment it succeeds — no prepared state, no lock held pending anyone's decision. If a step fails, the saga walks backward through every step that already committed and runs its **compensating transaction**, undoing the effect. Nothing here ever blocks; that's the entire appeal. The Core Banking write-up already names the cost in its failure table: a compensation that itself fails leaves a state requiring manual intervention. Stage 2 of this lab makes that failure a first-class, adjustable case instead of a table row: pick a step to fail, then separately pick whether *unwinding* an earlier step also fails. When it does, the lab shows exactly what a saga has instead of 2PC's held locks — nothing. The step's committed side effect is just still out there, uncompensated, and the unwind stops at that point rather than compensating earlier steps out of their real dependency order. There is no equivalent of in 's result type at all, and that absence is the point: a saga can't get stuck waiting, but it can get stuck *wrong* — a real, standing side effect with no built-in path back to consistency, something 2PC's design specifically rules out by holding the locks until a decision is certain. ## The Actual Trade-off, Not a Verdict Neither protocol actually escapes needing a human on the worst day; they just fail differently while waiting for one. 2PC trades liveness for a guarantee that nothing is ever half-done — the price is every prepared participant frozen the moment the one coordinator that could unblock them disappears. Saga trades that guarantee for liveness — nothing ever blocks, but the system's only real safety net is compensations succeeding, and this lab asserts directly (not just states) what happens the one time that assumption doesn't hold."
+  },
+  {
     "title": "Bloom Filters and the Capacity You Can't See Coming",
     "date": "2026-09-08",
     "tags": [
@@ -238,7 +261,8 @@
     "related": [
       "experiments/gossip-protocol-visualizer",
       "experiments/distributed-locks-redlock-and-the-pause-that-breaks-it",
-      "experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove"
+      "experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove",
+      "experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs"
     ],
     "readingMinutes": 3,
     "readingText": "3 min read",
@@ -805,7 +829,8 @@
     "collection": "experiments",
     "ogImage": "/og/saga-state-machine-visualizer.png",
     "related": [
-      "projects/core-banking"
+      "projects/core-banking",
+      "experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs"
     ],
     "readingMinutes": 1,
     "readingText": "1 min read",
@@ -877,7 +902,8 @@
     "ogImage": "/og/implementing-the-saga-pattern-for-distributed-transfers.png",
     "related": [
       "projects/core-banking",
-      "system-design/designing-a-real-time-fraud-detection-engine"
+      "system-design/designing-a-real-time-fraud-detection-engine",
+      "experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs"
     ],
     "readingMinutes": 5,
     "readingText": "5 min read",

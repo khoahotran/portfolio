@@ -21,6 +21,20 @@
       "image": "https://khoahotran.github.io/portfolio/og/raft-and-the-commit-rule-replica-count-alone-cant-prove.png"
     },
     {
+      "id": "https://khoahotran.github.io/portfolio/experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs",
+      "url": "https://khoahotran.github.io/portfolio/experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs",
+      "title": "Two-Phase Commit vs. Saga: What Atomicity Actually Costs",
+      "summary": "Run the real 2PC blocking failure and the real Saga compensation-failure gap on the same kind of transaction — see exactly what atomicity costs, and exactly what giving it up costs instead.",
+      "date_published": "2026-09-09T00:00:00.000Z",
+      "tags": [
+        "distributed-systems",
+        "trade-offs",
+        "saga-pattern",
+        "benchmark"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/two-phase-commit-vs-saga-what-atomicity-actually-costs.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming",
       "url": "https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming",
       "title": "Bloom Filters and the Capacity You Can't See Coming",
@@ -680,19 +694,6 @@
         "opentelemetry"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/aegis.png"
-    },
-    {
-      "id": "https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products",
-      "url": "https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products",
-      "title": "Architecture Breakdown: CQRS for Mid-size Products",
-      "summary": "A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path.",
-      "date_published": "2026-03-21T00:00:00.000Z",
-      "tags": [
-        "cqrs",
-        "architecture",
-        "system-design"
-      ],
-      "image": "https://khoahotran.github.io/portfolio/og/architecture-breakdown-cqrs-for-mid-size-products.png"
     }
   ]
 }

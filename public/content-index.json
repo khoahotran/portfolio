@@ -20,6 +20,28 @@
     "readingText": "3 min read"
   },
   {
+    "title": "Two-Phase Commit vs. Saga: What Atomicity Actually Costs",
+    "date": "2026-09-09",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "saga-pattern",
+      "benchmark"
+    ],
+    "summary": "Run the real 2PC blocking failure and the real Saga compensation-failure gap on the same kind of transaction — see exactly what atomicity costs, and exactly what giving it up costs instead.",
+    "draft": false,
+    "slug": "two-phase-commit-vs-saga-what-atomicity-actually-costs",
+    "collection": "experiments",
+    "ogImage": "/og/two-phase-commit-vs-saga-what-atomicity-actually-costs.png",
+    "related": [
+      "experiments/leader-election-bully-algorithm",
+      "system-design/implementing-the-saga-pattern-for-distributed-transfers",
+      "experiments/saga-state-machine-visualizer"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
     "title": "Bloom Filters and the Capacity You Can't See Coming",
     "date": "2026-09-08",
     "tags": [
@@ -227,7 +249,8 @@
     "related": [
       "experiments/gossip-protocol-visualizer",
       "experiments/distributed-locks-redlock-and-the-pause-that-breaks-it",
-      "experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove"
+      "experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove",
+      "experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs"
     ],
     "readingMinutes": 3,
     "readingText": "3 min read"
@@ -768,7 +791,8 @@
     "collection": "experiments",
     "ogImage": "/og/saga-state-machine-visualizer.png",
     "related": [
-      "projects/core-banking"
+      "projects/core-banking",
+      "experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs"
     ],
     "readingMinutes": 1,
     "readingText": "1 min read"
@@ -837,7 +861,8 @@
     "ogImage": "/og/implementing-the-saga-pattern-for-distributed-transfers.png",
     "related": [
       "projects/core-banking",
-      "system-design/designing-a-real-time-fraud-detection-engine"
+      "system-design/designing-a-real-time-fraud-detection-engine",
+      "experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs"
     ],
     "readingMinutes": 5,
     "readingText": "5 min read"
