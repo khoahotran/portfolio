@@ -26,5 +26,6 @@
   "merkle-tree",
   "raft",
   "two-phase-commit-vs-saga",
-  "hyperloglog"
+  "hyperloglog",
+  "lsm-tree"
 ]

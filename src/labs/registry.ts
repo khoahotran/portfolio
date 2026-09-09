@@ -77,6 +77,7 @@ const MerkleTreePage = lazy(() => import('../pages/experiments/MerkleTreePage'))
 const RaftPage = lazy(() => import('../pages/experiments/RaftPage'));
 const TwoPhaseCommitVsSagaPage = lazy(() => import('../pages/experiments/TwoPhaseCommitVsSagaPage'));
 const HyperLogLogPage = lazy(() => import('../pages/experiments/HyperLogLogPage'));
+const LsmTreePage = lazy(() => import('../pages/experiments/LsmTreePage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -639,6 +640,28 @@ export const labs: LabDefinition[] = [
     component: HyperLogLogPage,
     interaction: 'live',
     relatedArticle: 'hyperloglog-and-the-question-bloom-filters-cant-answer',
+  },
+  {
+    id: 'lsm-tree',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'A real log-structured merge tree (src/labs/lsmTree.ts, unit-tested) — writes land in an ' +
+        'in-memory memtable, flush as immutable sorted runs, and are only ever combined by an ' +
+        'explicit compaction step, never updated in place. Both sides of the trade-off are ' +
+        'measured, not stated: with no compaction, writeAmplification is exactly 1.0 (every ' +
+        'operation written to disk exactly once) but finalRunCount and the runsProbed cost of a ' +
+        'missing-key lookup both grow unbounded with total writes, asserted directly across two ' +
+        'different write volumes. With compaction, run count and read amplification are asserted ' +
+        'to stay bounded at a small constant regardless of write volume, while writeAmplification ' +
+        'is asserted to rise above 1.0 — and to rise further still when compaction runs more ' +
+        'frequently, a real relationship between compaction frequency and rewrite cost.',
+    },
+    title: 'LSM Trees',
+    description: 'Run a real log-structured merge tree — measure read amplification growing unbounded without compaction, then measure the real write-amplification cost of bounding it.',
+    component: LsmTreePage,
+    interaction: 'live',
+    relatedArticle: 'lsm-trees-and-the-write-youll-pay-for-later',
   },
 ];
 
