@@ -24,5 +24,6 @@
   "crdt",
   "bloom-filter",
   "merkle-tree",
-  "raft"
+  "raft",
+  "two-phase-commit-vs-saga"
 ]

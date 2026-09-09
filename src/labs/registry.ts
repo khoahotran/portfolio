@@ -75,6 +75,7 @@ const CrdtPage = lazy(() => import('../pages/experiments/CrdtPage'));
 const BloomFilterPage = lazy(() => import('../pages/experiments/BloomFilterPage'));
 const MerkleTreePage = lazy(() => import('../pages/experiments/MerkleTreePage'));
 const RaftPage = lazy(() => import('../pages/experiments/RaftPage'));
+const TwoPhaseCommitVsSagaPage = lazy(() => import('../pages/experiments/TwoPhaseCommitVsSagaPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -593,6 +594,27 @@ export const labs: LabDefinition[] = [
     component: RaftPage,
     interaction: 'live',
     relatedArticle: 'raft-and-the-commit-rule-replica-count-alone-cant-prove',
+  },
+  {
+    id: 'two-phase-commit-vs-saga',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'Two real distributed-transaction protocols (src/labs/twoPhaseCommitVsSaga.ts, unit-tested), ' +
+        'run on the same kind of failure — a step in a multi-participant transaction going wrong. ' +
+        'simulateTwoPhaseCommit models the actual blocking failure: a coordinator crash after every ' +
+        'participant votes yes but before the decision is broadcast leaves every yes-voter stuck ' +
+        'holding its locks, with no rule for deciding alone — the real cost of the atomicity ' +
+        'guarantee. simulateSaga models the mirror-image cost: nothing ever blocks, but a ' +
+        'compensation that itself fails (compensationSucceeds: false) leaves a committed side ' +
+        'effect with no built-in way back to a consistent state, asserted directly as a test rather ' +
+        'than assumed away.',
+    },
+    title: 'Two-Phase Commit vs. Saga',
+    description: "Run the real 2PC blocking failure and the real Saga compensation-failure gap side by side — see exactly what atomicity costs, and exactly what giving it up costs instead.",
+    component: TwoPhaseCommitVsSagaPage,
+    interaction: 'live',
+    relatedArticle: 'two-phase-commit-vs-saga-what-atomicity-actually-costs',
   },
 ];
 
