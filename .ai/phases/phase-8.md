@@ -312,6 +312,45 @@ fallback — the same split as every other lab) was reached on a later attempt. 
 (135×7 viewports+dark, concurrency=1), rerun against the fixed build, came back a clean
 **PASS — 0 failures**.
 
+### 8.9 ✅ New lab: HyperLogLog — DONE (2026-09-09)
+
+Track B was empty again after 8.8; a fresh scan turned up HyperLogLog, LSM Tree, and Skip List —
+Khoa picked HyperLogLog, which had already surfaced twice in prior scans (§8.7, §8.8) without being
+picked. The Bloom filter lab (§8.5) answers "have I seen this exact item"; this one answers the
+genuinely different, adjacent question — "how many *distinct* items have I seen" — in fixed space,
+without storing a single item either. Neither structure answers the other's question.
+
+`src/labs/hyperLogLog.ts` (7 tests) implements the real algorithm (Flajolet et al., 2007): hash each
+item, keep the longest leading-zero run per register, estimate cardinality from the harmonic mean
+across registers. **The finding, measured against ground truth, not asserted:** `runCardinalityTrial`
+builds a sketch from a known true count and reports the actual estimation error; the test suite
+checks that error against `theoreticalStandardError` (`1.04/√m`) across cardinalities from 100 to
+100,000 — a real relationship between register count and accuracy. **The sharper finding, the same
+"caught by writing the test, not designed into it" pattern as this session's other labs:** below
+roughly `2.5m` true items, most registers are still untouched zeros, and the raw harmonic-mean
+formula doesn't account for that — at 50 true items against 1,024 registers, the uncorrected formula
+overestimates by more than 10×. The paper's own fix (linear counting, `m·ln(m/zeroRegisters)`) is
+implemented as `estimateCardinality`'s small-range branch and asserted directly against the raw,
+uncorrected version (`estimateCardinalityRaw`, exported specifically so the difference is a real
+before/after comparison, not prose). **The second real feature, not just an accuracy exercise:**
+`mergeHyperLogLog` (elementwise max per register) is asserted to correctly estimate a true union
+cardinality even under heavy overlap between two independently-built sketches, while naively summing
+their two individual estimates is asserted to be measurably wrong — it double-counts the overlap,
+by a margin the test checks directly (>20% off at 500/1500 overlap/union in the calibration run).
+
+Registered as the 28th lab (`hyperloglog`, provenance `implementation`). Companion article:
+`content/experiments/2026-09-09-hyperloglog-and-the-question-bloom-filters-cant-answer.md`, with
+reciprocal `related:` links added to `bloom-filters-and-the-capacity-you-cant-see-coming` (the
+direct "answers a different question" pairing) and `merkle-trees-and-the-diff-nobody-has-to-compute`
+(both are "aggregate first, coordinate never" mechanisms, applied to counting vs. reconciliation).
+Verified: typecheck/lint/288 tests green; `npm run build` + prerender clean on the first attempt
+(137 pages + 22 redirects, including the `/experiments/hyperloglog` → `/labs/hyperloglog` redirect
+stub confirmed correct); given the ProvenanceNote overflow bug §8.8 just caught, the new page was
+checked directly for horizontal overflow at 320px with a throwaway Playwright script *before*
+running the full sweep this time (both the lab page and its article page confirmed
+`scrollWidth === clientWidth`); `check:responsive` (137×7 viewports+dark, concurrency=1) came back a
+clean **PASS — 0 failures**.
+
 ---
 
 Next: none yet — see `future.md` for what's still in Track B.
