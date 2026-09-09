@@ -8,6 +8,19 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer",
+      "url": "https://khoahotran.github.io/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer",
+      "title": "HyperLogLog and the Question Bloom Filters Can't Answer",
+      "summary": "Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.",
+      "date_published": "2026-09-09T00:00:00.000Z",
+      "tags": [
+        "distributed-systems",
+        "trade-offs",
+        "benchmark"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/hyperloglog-and-the-question-bloom-filters-cant-answer.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove",
       "url": "https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove",
       "title": "Raft and the Commit Rule Replica Count Alone Can't Prove",

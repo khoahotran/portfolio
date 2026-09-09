@@ -7,6 +7,13 @@
     <language>en-us</language>
     <lastBuildDate>Wed, 09 Sep 2026 00:00:00 GMT</lastBuildDate>
     <item>
+      <title>HyperLogLog and the Question Bloom Filters Can&apos;t Answer</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer</guid>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.</description>
+    </item>
+    <item>
       <title>Raft and the Commit Rule Replica Count Alone Can&apos;t Prove</title>
       <link>https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove</guid>

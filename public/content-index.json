@@ -1,5 +1,25 @@
 [
   {
+    "title": "HyperLogLog and the Question Bloom Filters Can't Answer",
+    "date": "2026-09-09",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "benchmark"
+    ],
+    "summary": "Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.",
+    "draft": false,
+    "slug": "hyperloglog-and-the-question-bloom-filters-cant-answer",
+    "collection": "experiments",
+    "ogImage": "/og/hyperloglog-and-the-question-bloom-filters-cant-answer.png",
+    "related": [
+      "experiments/bloom-filters-and-the-capacity-you-cant-see-coming",
+      "experiments/merkle-trees-and-the-diff-nobody-has-to-compute"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
     "title": "Raft and the Commit Rule Replica Count Alone Can't Prove",
     "date": "2026-09-09",
     "tags": [
@@ -55,7 +75,8 @@
     "collection": "experiments",
     "ogImage": "/og/bloom-filters-and-the-capacity-you-cant-see-coming.png",
     "related": [
-      "experiments/consistent-hashing-and-the-rebalancing-nobody-notices"
+      "experiments/consistent-hashing-and-the-rebalancing-nobody-notices",
+      "experiments/hyperloglog-and-the-question-bloom-filters-cant-answer"
     ],
     "readingMinutes": 4,
     "readingText": "4 min read"
@@ -114,7 +135,8 @@
     "collection": "experiments",
     "ogImage": "/og/merkle-trees-and-the-diff-nobody-has-to-compute.png",
     "related": [
-      "experiments/consistent-hashing-and-the-rebalancing-nobody-notices"
+      "experiments/consistent-hashing-and-the-rebalancing-nobody-notices",
+      "experiments/hyperloglog-and-the-question-bloom-filters-cant-answer"
     ],
     "readingMinutes": 4,
     "readingText": "4 min read"
