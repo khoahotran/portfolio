@@ -22,5 +22,6 @@
   "idempotency-store",
   "vector-clocks",
   "crdt",
-  "bloom-filter"
+  "bloom-filter",
+  "merkle-tree"
 ]
