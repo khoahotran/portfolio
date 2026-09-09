@@ -250,6 +250,68 @@ clean on the first attempt (133 pages, including the `/experiments/raft` → `/l
 stub confirmed with correct title/canonical/og:image); `check:responsive` (133×7 viewports+dark,
 concurrency=1) came back a clean **PASS — 0 failures**, first attempt, no reruns needed.
 
+### 8.8 ✅ New lab: Two-Phase Commit vs. Saga — DONE (2026-09-09)
+
+Track B was empty again after 8.7; asked directly, a fresh scan (grep across `content/` for
+"two-phase commit", "saga", and related terms) turned up three fresh candidates presented directly
+— Khoa picked this one. Saga itself already had a lab (`saga-state-machine-visualizer`) and a deep
+system-design write-up (`implementing-the-saga-pattern-for-distributed-transfers`, Core Banking's
+real orchestrator), but **2PC had never been implemented anywhere on the site** — every prior
+mention was a name in a comparison table, never run. This lab runs both, on the same kind of
+transaction, so the trade-off is a measured contrast rather than two write-ups that never meet.
+
+`src/labs/twoPhaseCommitVsSaga.ts` (11 tests) implements both protocols' real failure modes.
+**2PC's actual cost:** a participant that votes yes enters the "prepared" state and cannot resolve
+itself — it needs the coordinator's broadcast decision. If the coordinator crashes after collecting
+all-yes votes but before broadcasting, every yes-voter is left blocked indefinitely
+(`blockedParticipants`), regardless of cluster size — there's no quorum to fall back on the way
+Raft's commit rule has one. A no-voter, by contrast, is never at risk: it aborts locally the instant
+it votes, so it's never blocked by anything that happens to the coordinator afterward — asserted
+directly as a test, not just described. **Saga's actual cost, made a first-class case rather than a
+table row:** `simulateSaga` accepts a `compensationSucceeds` flag per step; when a compensation
+itself fails partway through unwind, the saga has no equivalent of 2PC's held locks to fall back
+on — the earlier step's committed side effect is just left standing, uncompensated, and the unwind
+correctly stops there rather than compensating still-earlier steps out of their real dependency
+order (`compensationsFailed`, `fullyCompensated: false`, tested directly). The saga result type
+carries no `blockedParticipants`-equivalent field at all — asserted directly in a test — because
+nothing in the model ever waits on anyone; that absence is the actual point of the comparison.
+
+Registered as the 27th lab (`two-phase-commit-vs-saga`, provenance `implementation`). Companion
+article: `content/experiments/2026-09-09-two-phase-commit-vs-saga-what-atomicity-actually-costs.md`,
+with reciprocal `related:` links added to three articles: `leader-election-bully-algorithm` (2PC's
+single-coordinator blocking is the same single-point-of-failure shape as Bully's leader, contrasted
+with Raft's quorum fallback), `implementing-the-saga-pattern-for-distributed-transfers` (the Core
+Banking real-orchestrator piece this lab's Saga side is the abstract companion to), and
+`saga-state-machine-visualizer` (the existing Saga lab, which this one extends with the
+compensation-failure case it didn't cover).
+
+**A real bug caught by `check:responsive`, not by the test suite — the first time this session a
+shipped lab's own responsive check caught a genuine regression rather than transient host
+flakiness.** The first `check:responsive` run reported an actual overflow FAIL (not a retry-then-
+pass) on `/labs/two-phase-commit-vs-saga` at 320px: `scrollWidth 325 > clientWidth 320`. Investigated
+directly with a throwaway Playwright script rather than assumed transient, per this session's
+established discipline — the offending element was the shared `ProvenanceNote` component's basis
+text, which embeds each lab's source path (`src/labs/twoPhaseCommitVsSaga.ts`, the longest lab
+filename yet) as a single unbreakable token with no spaces. `min-w-0` on the ancestor lets the flex
+item shrink, but doesn't make an unbreakable word wrap, so a long enough path forces real horizontal
+overflow — every prior lab's path just happened to be short enough not to trip it. Fixed in the
+shared component (`break-words` added to every text branch of `ProvenanceNote`'s `Body`), not
+patched only in this lab's own file, since any future lab's path is exactly as unbreakable. Verified
+directly: a throwaway script confirmed `scrollWidth === clientWidth` at 320px after the fix, and the
+full gate (typecheck/lint/281 tests) stayed green.
+
+Verified: typecheck/lint/281 tests green; `npm run build` + prerender needed several retries to get
+a clean run — the host was under heavy, well-documented-this-session load (uptime showed load
+average 15+ at one point) and threw `ERR_NETWORK_CHANGED` on a different random, unrelated route
+each attempt (never the same route twice, never this lab's own routes) — confirmed transient by
+direct `curl` against each reported route immediately after, consistent with every other instance of
+this host-level flakiness this session; a clean prerender (135 pages + 21 redirects, including the
+`/experiments/two-phase-commit-vs-saga` → `/labs/two-phase-commit-vs-saga` redirect stub confirmed
+correct, and the article's own dedicated OG image confirmed against the lab page's `og-default.png`
+fallback — the same split as every other lab) was reached on a later attempt. `check:responsive`
+(135×7 viewports+dark, concurrency=1), rerun against the fixed build, came back a clean
+**PASS — 0 failures**.
+
 ---
 
 Next: none yet — see `future.md` for what's still in Track B.
