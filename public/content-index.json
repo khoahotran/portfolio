@@ -20,6 +20,27 @@
     "readingText": "4 min read"
   },
   {
+    "title": "LSM Trees and the Write You'll Pay for Later",
+    "date": "2026-09-09",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "postgresql",
+      "benchmark"
+    ],
+    "summary": "Run a real log-structured merge tree — measure read amplification growing unbounded without compaction, then measure the real write-amplification cost of bounding it.",
+    "draft": false,
+    "slug": "lsm-trees-and-the-write-youll-pay-for-later",
+    "collection": "experiments",
+    "ogImage": "/og/lsm-trees-and-the-write-youll-pay-for-later.png",
+    "related": [
+      "research/database-indexing-btree-vs-brin-for-time-series",
+      "experiments/bloom-filters-and-the-capacity-you-cant-see-coming"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
     "title": "Raft and the Commit Rule Replica Count Alone Can't Prove",
     "date": "2026-09-09",
     "tags": [
@@ -76,7 +97,8 @@
     "ogImage": "/og/bloom-filters-and-the-capacity-you-cant-see-coming.png",
     "related": [
       "experiments/consistent-hashing-and-the-rebalancing-nobody-notices",
-      "experiments/hyperloglog-and-the-question-bloom-filters-cant-answer"
+      "experiments/hyperloglog-and-the-question-bloom-filters-cant-answer",
+      "experiments/lsm-trees-and-the-write-youll-pay-for-later"
     ],
     "readingMinutes": 4,
     "readingText": "4 min read"
@@ -369,7 +391,8 @@
     "collection": "research",
     "ogImage": "/og/database-indexing-btree-vs-brin-for-time-series.png",
     "related": [
-      "projects/quant-alpha"
+      "projects/quant-alpha",
+      "experiments/lsm-trees-and-the-write-youll-pay-for-later"
     ],
     "readingMinutes": 4,
     "readingText": "4 min read"

@@ -21,6 +21,20 @@
       "image": "https://khoahotran.github.io/portfolio/og/hyperloglog-and-the-question-bloom-filters-cant-answer.png"
     },
     {
+      "id": "https://khoahotran.github.io/portfolio/experiments/lsm-trees-and-the-write-youll-pay-for-later",
+      "url": "https://khoahotran.github.io/portfolio/experiments/lsm-trees-and-the-write-youll-pay-for-later",
+      "title": "LSM Trees and the Write You'll Pay for Later",
+      "summary": "Run a real log-structured merge tree — measure read amplification growing unbounded without compaction, then measure the real write-amplification cost of bounding it.",
+      "date_published": "2026-09-09T00:00:00.000Z",
+      "tags": [
+        "distributed-systems",
+        "trade-offs",
+        "postgresql",
+        "benchmark"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/lsm-trees-and-the-write-youll-pay-for-later.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove",
       "url": "https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove",
       "title": "Raft and the Commit Rule Replica Count Alone Can't Prove",
