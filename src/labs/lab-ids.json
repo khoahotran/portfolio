@@ -25,5 +25,6 @@
   "bloom-filter",
   "merkle-tree",
   "raft",
-  "two-phase-commit-vs-saga"
+  "two-phase-commit-vs-saga",
+  "hyperloglog"
 ]

@@ -76,6 +76,7 @@ const BloomFilterPage = lazy(() => import('../pages/experiments/BloomFilterPage'
 const MerkleTreePage = lazy(() => import('../pages/experiments/MerkleTreePage'));
 const RaftPage = lazy(() => import('../pages/experiments/RaftPage'));
 const TwoPhaseCommitVsSagaPage = lazy(() => import('../pages/experiments/TwoPhaseCommitVsSagaPage'));
+const HyperLogLogPage = lazy(() => import('../pages/experiments/HyperLogLogPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -615,6 +616,29 @@ export const labs: LabDefinition[] = [
     component: TwoPhaseCommitVsSagaPage,
     interaction: 'live',
     relatedArticle: 'two-phase-commit-vs-saga-what-atomicity-actually-costs',
+  },
+  {
+    id: 'hyperloglog',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'A real HyperLogLog sketch (src/labs/hyperLogLog.ts, unit-tested) — hashes each item, ' +
+        'keeps only the longest leading-zero run per register, and estimates cardinality from the ' +
+        'harmonic mean across registers. Accuracy is measured directly against a true count, not ' +
+        'claimed: relativeError from runCardinalityTrial is checked against ' +
+        'theoreticalStandardError (1.04/sqrt(m)) across a wide range of true cardinalities. The ' +
+        'small-range (linear counting) correction is also asserted directly — at low true ' +
+        'cardinality, the uncorrected formula overestimates by more than 10x, tested as a real ' +
+        'before/after comparison, not described in prose. mergeHyperLogLog (elementwise max per ' +
+        'register) is asserted to estimate a true union cardinality correctly even under heavy ' +
+        'overlap, while naively summing two independent estimates is asserted to be measurably ' +
+        "wrong by double-counting the overlap.",
+    },
+    title: 'HyperLogLog',
+    description: 'Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.',
+    component: HyperLogLogPage,
+    interaction: 'live',
+    relatedArticle: 'hyperloglog-and-the-question-bloom-filters-cant-answer',
   },
 ];
 
