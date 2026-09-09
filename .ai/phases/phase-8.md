@@ -351,6 +351,42 @@ running the full sweep this time (both the lab page and its article page confirm
 `scrollWidth === clientWidth`); `check:responsive` (137×7 viewports+dark, concurrency=1) came back a
 clean **PASS — 0 failures**.
 
+### 8.10 ✅ New lab: LSM Trees — DONE (2026-09-09)
+
+Track B was empty again after 8.9; asked directly, a fresh scan turned up LSM Tree, Skip List, and
+MVCC & Write Skew — Khoa picked LSM Tree, which had surfaced once before (§8.9's scan) without
+being picked. The site's B-Tree vs. BRIN research piece already covers the in-place-update index
+PostgreSQL defaults to; this lab runs the structurally different design most write-heavy real-world
+key-value stores (LevelDB, RocksDB, Cassandra) actually ship — one that never updates in place at
+all.
+
+`src/labs/lsmTree.ts` (7 tests) implements a real memtable + immutable sorted-run structure, with an
+explicit `compact` step. **The finding, measured on both sides, at two different write volumes:**
+with no compaction, `writeAmplification` is asserted to be exactly `1.0` (every write operation
+lands on disk exactly once, ever) — but `runCount` and the cost of a missing-key lookup
+(`runsProbed`) are asserted to grow in exact proportion to total writes (100 runs at 5,000
+operations, 400 runs at 20,000 — a real 4× for a real 4×, not an estimate). With compaction, run
+count and read amplification are asserted to stay bounded at a small constant regardless of write
+volume — but write amplification is asserted to rise above `1.0` (measured `3.42×` at one
+compaction cadence), and to rise *further* when compaction runs more often (`5.8×` at double the
+cadence, with read amplification unchanged — it was already at the floor of 1). A separate test
+asserts the correctness properties underneath the trade-off: a newer run's value correctly shadows
+an older run's for the same key, and a tombstone correctly shadows a deleted key until compaction,
+at which point it — and the key it hid — are dropped entirely, not left behind as dead weight.
+
+Registered as the 29th lab (`lsm-tree`, provenance `implementation`). Companion article:
+`content/experiments/2026-09-09-lsm-trees-and-the-write-youll-pay-for-later.md`, with reciprocal
+`related:` links added to `database-indexing-btree-vs-brin-for-time-series` (the direct
+in-place-vs-never-in-place contrast) and `bloom-filters-and-the-capacity-you-cant-see-coming` (named
+in an honest scope note as the real mitigation this lab deliberately doesn't model — per-run Bloom
+filters, which soften but don't eliminate the read-amplification side of the trade-off). Verified:
+typecheck/lint/295 tests green; `npm run build` + prerender clean on the first attempt (139 pages +
+23 redirects, including the `/experiments/lsm-tree` → `/labs/lsm-tree` redirect stub confirmed
+correct); following the discipline established after §8.8's ProvenanceNote bug, both new pages were
+checked directly for horizontal overflow at 320px with a throwaway Playwright script *before*
+running the full sweep (both confirmed `scrollWidth === clientWidth`); `check:responsive` (139×7
+viewports+dark, concurrency=1) came back a clean **PASS — 0 failures**.
+
 ---
 
 Next: none yet — see `future.md` for what's still in Track B.
