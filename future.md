@@ -8,12 +8,12 @@ graduates into a real `Phase N` section (in `.ai/phases/phase-N.md` — see `con
 index) with its own verification section, and gets deleted from this file. Nothing in this file
 should be read as "planned" — only "considered."
 
-Snapshot at time of writing (2026-09-08, updated after Phase 8's fifth item):
-57 articles across 6 collections, 24 interactive labs, 5 real Docker benchmark harnesses,
-Phases 5-8 in progress (Phase 8 has shipped five items — consistent hashing, the idempotency-key
-store, vector clocks, CRDTs, and Bloom filters — see `.ai/phases/phase-8.md` §8.1-8.5). One item
-(§5.2, flagship deepening) genuinely blocked rather than deferred by choice — see Track A. Track B
-has one candidate left: Merkle trees.
+Snapshot at time of writing (2026-09-08, updated after Phase 8 closed out its second Track B set):
+58 articles across 6 collections, 25 interactive labs, 5 real Docker benchmark harnesses,
+Phases 5-8 in progress (Phase 8 has shipped six items across two Track B sets — consistent hashing,
+the idempotency-key store, vector clocks, CRDTs, Bloom filters, and Merkle trees — see
+`.ai/phases/phase-8.md` §8.1-8.6). One item (§5.2, flagship deepening) genuinely blocked rather
+than deferred by choice — see Track A. Track B is empty again — see the note below it.
 
 **Pace note, 2026-09-08:** after Track B's post-Phase-7 set closed out and was immediately
 repopulated, Khoa explicitly asked to go through the fresh set "step by step" — i.e. continue
@@ -62,31 +62,22 @@ nothing; re-attempting them without the blocker having changed just re-produces 
 | Custom domain (Phase 4 Batch 6) | Depends on Khoa buying a domain | Khoa says a domain exists — `site.config.mjs` already centralizes the URL, so this is mechanical once triggered |
 | `rehype-sanitize` (`.ai/audit-followups.md` item 3) | Content is still 100% author-controlled, no XSS surface today | Any move toward CMS input, comments, or user-generated content |
 | Build-time Markdown rendering (`.ai/audit-followups.md` item 7) | Re-measured 2026-08-28: chunk cost is dominated by the library, not corpus size (2.4% growth vs. 36% article growth) | A *library* change (new rehype/remark plugin), not further corpus growth |
-| `search-index.json` scale (§5.7) | Re-measured 2026-09-08: 293 KB / 57 docs (up from 187 KB / 38 docs) — growing, but still well under the trigger | Corpus crosses ~100 articles or the file crosses ~500 KB |
+| `search-index.json` scale (§5.7) | Re-measured 2026-09-08: 298 KB / 58 docs (up from 187 KB / 38 docs) — growing, but still well under the trigger | Corpus crosses ~100 articles or the file crosses ~500 KB |
 
 ---
 
 ## Track B — Content candidates (unstarted, unordered — not a queue)
 
-Repopulated 2026-09-08 immediately after the post-Phase-7 set closed out (§8.1-8.3: consistent
-hashing, the idempotency-key store, vector clocks) — see `.ai/phases/phase-7.md` §7.1-7.8 and
-`.ai/phases/phase-8.md` for the full record of everything shipped so far. This fresh set was
-grounded the same way every prior one was: checked against the actual lab registry
-(`src/labs/lab-ids.json`, 22 entries at the time) and a `grep` across `content/`, not assumed. The
-first two items — CRDTs and Bloom filters — have since shipped (§8.4-8.5). One remains:
+**Empty again as of 2026-09-08** — the set repopulated right after the post-Phase-7 set closed out
+(CRDTs, Bloom filters, Merkle trees) has now also shipped in full; see `.ai/phases/phase-8.md`
+§8.4-8.6. This is the second time this file's Track B has emptied out completely. Per the pace note
+above, this set was picked up continuously at Khoa's explicit "step by step" request — that
+instruction does not carry forward automatically; the next set, whenever it's repopulated, defaults
+back to the "slow down deliberately" framing unless told otherwise again.
 
-- **Merkle trees (anti-entropy reconciliation)** — not covered anywhere in `content/` (confirmed by
-  grep). The mechanism Dynamo, Cassandra, and git all use to compare two replicas efficiently: build
-  a real Merkle tree over each dataset, compare root hashes to detect *any* difference in O(1), then
-  walk down only the subtrees whose hashes actually disagree to find exactly which keys differ —
-  real, measurable O(log n) targeted diffing against a naive O(n) full-dataset compare for the
-  identical two datasets, the same "both sides run for real, against the same input" comparison
-  shape as consistent-hashing's naive-modulo-vs-ring contrast.
-
-Do not start any of these without first re-confirming the deep-vs-wide question above (now updated
-for Phase 7's pace) — a short field-note and a full lab+article pair still cost very different
-amounts of the same budget, and per the "slow down deliberately" decision, repopulating this list
-is not itself a decision to start picking through it.
+The next entries have to come from a fresh check of the lab registry (`src/labs/lab-ids.json`, 25
+entries as of this update) and content corpus, the same way every prior set was, not assumed from
+memory.
 
 ---
 

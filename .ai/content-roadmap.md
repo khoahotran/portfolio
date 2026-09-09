@@ -24,7 +24,7 @@ in the repo root — that file is pre-commitment scratch space, this one is the 
   backpressure, canary rollout, cache freshness), 2 new benchmark harnesses (PgBouncer vs direct,
   gRPC vs REST). Closed Track B out entirely — see `future.md` for what's next.
 - [Phase 8 — Deliberately Slower, Picked Up One at a Time](phases/phase-8.md) — consistent hashing
-  / hash ring, the idempotency-key store (extended an existing article), vector clocks, CRDTs, and
-  Bloom filters (§8.1-8.5). The first three closed out one Track B set entirely; the last two are
-  from a freshly repopulated set, picked up continuously at Khoa's explicit request rather than
-  spaced out.
+  / hash ring, the idempotency-key store (extended an existing article), vector clocks, CRDTs,
+  Bloom filters, and Merkle trees (§8.1-8.6), across two Track B sets — the first spaced out one at
+  a time, the second picked up continuously at Khoa's explicit "step by step" request. Both sets
+  closed out entirely — see `future.md` for what's next.

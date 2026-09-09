@@ -191,6 +191,38 @@ confirmed with correct title/canonical/og:image); `check:responsive` (129×7 vie
 concurrency=1) came back a clean **PASS — 0 failures** (five transient network blips across
 unrelated, pre-existing routes, all auto-retried successfully).
 
+### 8.6 ✅ New lab: Merkle Trees (Anti-Entropy Reconciliation) — DONE (2026-09-08)
+
+Third and final pick from the current Track B set, closing it out entirely.
+
+`src/labs/merkleTree.ts` (16 tests) builds a real Merkle tree over two 1,024-entry datasets and
+runs a real targeted walk that only descends into a subtree whose hash actually differs, against a
+naive full-scan baseline on the identical pair. **The finding, measured at every point on the
+spectrum:** two identical datasets cost the targeted walk exactly 1 node visit — an O(1) proof of
+full equality — versus the naive scan's fixed 1,024; a single differing key costs ~21 visits; five
+scattered differences cost ~80. The honest fourth case, deliberately included rather than omitted:
+when **every** key differs, the targeted walk visits ~2,047 nodes, genuinely *more* than the naive
+scan's 1,024 — proof that the win is specific to sparse differences (the case anti-entropy repair
+actually expects), not a universal speedup, asserted directly as a test rather than left as an
+unstated caveat.
+
+Registered as the 25th lab (`merkle-tree`, provenance `implementation`). Companion article:
+`content/experiments/2026-09-08-merkle-trees-and-the-diff-nobody-has-to-compute.md`, with a
+reciprocal `related:` link added to `consistent-hashing-and-the-rebalancing-nobody-notices` (now
+linking gossip-protocol-visualizer, bloom filters, and Merkle trees — its three natural pairings,
+all real Dynamo-style mechanisms viewed from different angles). Verified: typecheck/lint/259 tests
+green; `npm run build` + prerender clean on the first attempt (131 pages, including the
+`/experiments/merkle-tree` → `/labs/merkle-tree` redirect stub confirmed with correct
+title/canonical/og:image); `check:responsive` (131×7 viewports+dark, concurrency=1) needed one
+rerun — the first attempt failed on `/tags/security` (`ERR_NETWORK_CHANGED`, exhausted 3 retries)
+alongside an unusually high rate of transient blips across unrelated routes throughout that same
+run; investigated rather than accepted (both the route and its asset chunk confirmed serving
+cleanly via direct `curl` immediately after), and the rerun came back a clean **PASS — 0 failures**.
+
+This closes the current Track B set entirely (§8.4-8.6: CRDTs, Bloom filters, Merkle trees) — see
+`future.md` for what's next. Per Khoa's explicit instruction, no new Track B set was invented
+unprompted after this one closed out.
+
 ---
 
 Next: none yet — see `future.md` for what's still in Track B.
