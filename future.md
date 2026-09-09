@@ -8,12 +8,18 @@ graduates into a real `Phase N` section (in `.ai/phases/phase-N.md` — see `con
 index) with its own verification section, and gets deleted from this file. Nothing in this file
 should be read as "planned" — only "considered."
 
-Snapshot at time of writing (2026-09-08, updated after Phase 8 closed out its second Track B set):
-58 articles across 6 collections, 25 interactive labs, 5 real Docker benchmark harnesses,
-Phases 5-8 in progress (Phase 8 has shipped six items across two Track B sets — consistent hashing,
-the idempotency-key store, vector clocks, CRDTs, Bloom filters, and Merkle trees — see
-`.ai/phases/phase-8.md` §8.1-8.6). One item (§5.2, flagship deepening) genuinely blocked rather
-than deferred by choice — see Track A. Track B is empty again — see the note below it.
+Snapshot at time of writing (2026-09-09, updated after Phase 8's seventh item):
+59 articles across 6 collections, 26 interactive labs, 5 real Docker benchmark harnesses,
+Phases 5-8 in progress (Phase 8 has shipped seven items — consistent hashing, the idempotency-key
+store, vector clocks, CRDTs, Bloom filters, Merkle trees, and Raft — see `.ai/phases/phase-8.md`
+§8.1-8.7). One item (§5.2, flagship deepening) genuinely blocked rather than deferred by choice —
+see Track A. Track B is empty — see the note below it.
+
+**Raft (§8.7)** wasn't picked from a pre-populated Track B list — asked "what is the next action?"
+with both tracks empty, a live scan (lab registry + `grep` across `content/`) surfaced three fresh
+candidates presented directly, and Khoa picked one. The other two it surfaced (Two-Phase Commit vs.
+Saga, HyperLogLog) were never added to Track B below; if they're still relevant next time Track B
+needs repopulating, they'd need re-confirming as unshipped, not assumed from this note.
 
 **Pace note, 2026-09-08:** after Track B's post-Phase-7 set closed out and was immediately
 repopulated, Khoa explicitly asked to go through the fresh set "step by step" — i.e. continue
@@ -62,7 +68,7 @@ nothing; re-attempting them without the blocker having changed just re-produces 
 | Custom domain (Phase 4 Batch 6) | Depends on Khoa buying a domain | Khoa says a domain exists — `site.config.mjs` already centralizes the URL, so this is mechanical once triggered |
 | `rehype-sanitize` (`.ai/audit-followups.md` item 3) | Content is still 100% author-controlled, no XSS surface today | Any move toward CMS input, comments, or user-generated content |
 | Build-time Markdown rendering (`.ai/audit-followups.md` item 7) | Re-measured 2026-08-28: chunk cost is dominated by the library, not corpus size (2.4% growth vs. 36% article growth) | A *library* change (new rehype/remark plugin), not further corpus growth |
-| `search-index.json` scale (§5.7) | Re-measured 2026-09-08: 298 KB / 58 docs (up from 187 KB / 38 docs) — growing, but still well under the trigger | Corpus crosses ~100 articles or the file crosses ~500 KB |
+| `search-index.json` scale (§5.7) | Re-measured 2026-09-09: 303 KB / 59 docs (up from 187 KB / 38 docs) — growing, but still well under the trigger | Corpus crosses ~100 articles or the file crosses ~500 KB |
 
 ---
 

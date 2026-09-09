@@ -25,6 +25,5 @@ in the repo root — that file is pre-commitment scratch space, this one is the 
   gRPC vs REST). Closed Track B out entirely — see `future.md` for what's next.
 - [Phase 8 — Deliberately Slower, Picked Up One at a Time](phases/phase-8.md) — consistent hashing
   / hash ring, the idempotency-key store (extended an existing article), vector clocks, CRDTs,
-  Bloom filters, and Merkle trees (§8.1-8.6), across two Track B sets — the first spaced out one at
-  a time, the second picked up continuously at Khoa's explicit "step by step" request. Both sets
-  closed out entirely — see `future.md` for what's next.
+  Bloom filters, Merkle trees, and Raft (§8.1-8.7), across two Track B sets plus one directly-picked
+  item. Both Track B sets closed out entirely — see `future.md` for what's next.

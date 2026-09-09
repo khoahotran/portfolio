@@ -223,6 +223,33 @@ This closes the current Track B set entirely (§8.4-8.6: CRDTs, Bloom filters, M
 `future.md` for what's next. Per Khoa's explicit instruction, no new Track B set was invented
 unprompted after this one closed out.
 
+### 8.7 ✅ New lab: Raft Consensus — DONE (2026-09-09)
+
+Asked "what is the next action?" with Track B and Track A both empty of ready work, a fresh scan
+(lab registry, 25 entries; grep across `content/`) turned up three unexplored candidates presented
+directly rather than pre-added to `future.md` first — Khoa picked Raft.
+
+`src/labs/raft.ts` (11 tests) implements two real Raft mechanisms, the algorithm the
+leader-election article's own comparison table names as what production systems actually reach for
+over Bully. **Election restriction:** a candidate's log is compared against every alive peer's
+(higher last-log term wins outright; equal term falls back to log length), and a stale candidate
+loses even when every peer is alive and willing — the direct fix for what Bully's pure id-based
+election can't rule out. **Commit-index safety**, the subtler rule the Raft paper's own Figure 8
+exists to justify: an entry replicated to a majority is asserted as genuinely *not* committed
+unless it's also from the leader's current term (`wouldBeUnsafeWithoutTermCheck`, tested directly
+against the exact shape of that scenario), and correctly commits — together with everything before
+it — once a current-term entry also reaches that majority.
+
+Registered as the 26th lab (`raft`, provenance `implementation`). Companion article:
+`content/experiments/2026-09-09-raft-and-the-commit-rule-replica-count-alone-cant-prove.md`, with a
+reciprocal `related:` link added to `leader-election-bully-algorithm` (now linking
+gossip-protocol-visualizer, Redlock, and Raft — the three pieces it most directly sets up or
+contrasts with). Verified: typecheck/lint/270 tests green (one real lint warning caught and fixed
+— a `useMemo` missing the `leaderLog` dependency — before it shipped); `npm run build` + prerender
+clean on the first attempt (133 pages, including the `/experiments/raft` → `/labs/raft` redirect
+stub confirmed with correct title/canonical/og:image); `check:responsive` (133×7 viewports+dark,
+concurrency=1) came back a clean **PASS — 0 failures**, first attempt, no reruns needed.
+
 ---
 
 Next: none yet — see `future.md` for what's still in Track B.
