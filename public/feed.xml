@@ -28,6 +28,13 @@
       <description>Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set — see exactly which concurrent updates the naive designs silently lose, and why detecting concurrency is only half the problem.</description>
     </item>
     <item>
+      <title>Merkle Trees and the Diff Nobody Has to Compute</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/merkle-trees-and-the-diff-nobody-has-to-compute</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/merkle-trees-and-the-diff-nobody-has-to-compute</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run a real Merkle-tree targeted diff against a naive full scan on the same two datasets — see the O(1) proof of full equality, the near-O(log n) cost of a sparse diff, and the honest case where the targeted walk actually loses.</description>
+    </item>
+    <item>
       <title>Vector Clocks and the Clock Skew That Fools Last-Write-Wins</title>
       <link>https://khoahotran.github.io/portfolio/experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins</guid>
@@ -348,13 +355,6 @@
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout</guid>
       <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
       <description>What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.</description>
-    </item>
-    <item>
-      <title>System Design Notes: Idempotency</title>
-      <link>https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency</link>
-      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency</guid>
-      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
-      <description>Practical patterns for making API writes replay-safe under network retries and partial distributed failures.</description>
     </item>
   </channel>
 </rss>

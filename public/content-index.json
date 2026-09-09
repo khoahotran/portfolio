@@ -33,7 +33,8 @@
     "ogImage": "/og/consistent-hashing-and-the-rebalancing-nobody-notices.png",
     "related": [
       "experiments/gossip-protocol-visualizer",
-      "experiments/bloom-filters-and-the-capacity-you-cant-see-coming"
+      "experiments/bloom-filters-and-the-capacity-you-cant-see-coming",
+      "experiments/merkle-trees-and-the-diff-nobody-has-to-compute"
     ],
     "readingMinutes": 4,
     "readingText": "4 min read"
@@ -53,6 +54,25 @@
     "ogImage": "/og/crdts-what-to-do-once-you-know-two-writes-are-concurrent.png",
     "related": [
       "experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "Merkle Trees and the Diff Nobody Has to Compute",
+    "date": "2026-09-08",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "benchmark"
+    ],
+    "summary": "Run a real Merkle-tree targeted diff against a naive full scan on the same two datasets — see the O(1) proof of full equality, the near-O(log n) cost of a sparse diff, and the honest case where the targeted walk actually loses.",
+    "draft": false,
+    "slug": "merkle-trees-and-the-diff-nobody-has-to-compute",
+    "collection": "experiments",
+    "ogImage": "/og/merkle-trees-and-the-diff-nobody-has-to-compute.png",
+    "related": [
+      "experiments/consistent-hashing-and-the-rebalancing-nobody-notices"
     ],
     "readingMinutes": 4,
     "readingText": "4 min read"
