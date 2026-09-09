@@ -2,7 +2,7 @@
 title: "Merkle Trees and the Diff Nobody Has to Compute"
 date: "2026-09-08"
 tags: ["distributed-systems", "trade-offs", "benchmark"]
-related: ["experiments/consistent-hashing-and-the-rebalancing-nobody-notices"]
+related: ["experiments/consistent-hashing-and-the-rebalancing-nobody-notices", "experiments/hyperloglog-and-the-question-bloom-filters-cant-answer"]
 summary: "Run a real Merkle-tree targeted diff against a naive full scan on the same two datasets — see the O(1) proof of full equality, the near-O(log n) cost of a sparse diff, and the honest case where the targeted walk actually loses."
 ---
 
