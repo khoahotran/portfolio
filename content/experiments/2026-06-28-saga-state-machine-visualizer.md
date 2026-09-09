@@ -2,7 +2,7 @@
 title: "Interactive Saga State Machine Visualizer"
 date: "2026-06-28"
 tags: ["distributed-systems", "saga-pattern", "benchmark"]
-related: ["projects/core-banking"]
+related: ["projects/core-banking", "experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs"]
 summary: "An interactive visualization of the Saga distributed transaction pattern, demonstrating automated compensating rollbacks."
 ---
 
