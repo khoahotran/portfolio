@@ -74,6 +74,7 @@ const VectorClocksPage = lazy(() => import('../pages/experiments/VectorClocksPag
 const CrdtPage = lazy(() => import('../pages/experiments/CrdtPage'));
 const BloomFilterPage = lazy(() => import('../pages/experiments/BloomFilterPage'));
 const MerkleTreePage = lazy(() => import('../pages/experiments/MerkleTreePage'));
+const RaftPage = lazy(() => import('../pages/experiments/RaftPage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at
@@ -572,6 +573,26 @@ export const labs: LabDefinition[] = [
     component: MerkleTreePage,
     interaction: 'live',
     relatedArticle: 'merkle-trees-and-the-diff-nobody-has-to-compute',
+  },
+  {
+    id: 'raft',
+    provenance: {
+      kind: 'implementation',
+      basis:
+        'Two real Raft mechanisms (src/labs/raft.ts, unit-tested), the algorithm the leader-election ' +
+        'lab\'s own comparison table names as what production systems reach for over Bully. ' +
+        "simulateElection is the real election restriction: a candidate's log is compared against " +
+        "every alive peer's, and a stale candidate loses regardless of how many peers are alive — " +
+        "unlike Bully, which elects purely by node id. advanceCommitIndex is Raft's subtle commit " +
+        "safety rule: an entry replicated to a majority is asserted as NOT committed unless it's " +
+        "also from the leader's current term (wouldBeUnsafeWithoutTermCheck, tested directly), " +
+        'and correctly commits once a current-term entry also reaches that majority.',
+    },
+    title: 'Raft Consensus',
+    description: "Run Raft's real election restriction and commit-index safety rule — see why a stale node can't win an election, and why replica count alone can't prove a log entry is safely committed.",
+    component: RaftPage,
+    interaction: 'live',
+    relatedArticle: 'raft-and-the-commit-rule-replica-count-alone-cant-prove',
   },
 ];
 

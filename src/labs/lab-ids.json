@@ -23,5 +23,6 @@
   "vector-clocks",
   "crdt",
   "bloom-filter",
-  "merkle-tree"
+  "merkle-tree",
+  "raft"
 ]
