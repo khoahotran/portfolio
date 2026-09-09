@@ -5,7 +5,14 @@
     <link>https://khoahotran.github.io/portfolio</link>
     <description>Case studies, system design notes, and interactive engineering experiments.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 08 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 09 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Raft and the Commit Rule Replica Count Alone Can&apos;t Prove</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove</guid>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run Raft&apos;s real election restriction and commit-index safety rule — see why a stale node can&apos;t win an election no matter how many peers are alive, and why a majority of replicas alone still can&apos;t prove a log entry is safely committed.</description>
+    </item>
     <item>
       <title>Bloom Filters and the Capacity You Can&apos;t See Coming</title>
       <link>https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming</link>
@@ -348,13 +355,6 @@
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products</guid>
       <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
       <description>A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path.</description>
-    </item>
-    <item>
-      <title>Engineering Lessons from a Failed Rollout</title>
-      <link>https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout</link>
-      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout</guid>
-      <pubDate>Sat, 21 Mar 2026 00:00:00 GMT</pubDate>
-      <description>What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.</description>
     </item>
   </channel>
 </rss>

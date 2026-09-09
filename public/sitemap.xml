@@ -176,7 +176,18 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://khoahotran.github.io/portfolio/labs/raft</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://khoahotran.github.io/portfolio/tags</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

@@ -8,6 +8,19 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove",
+      "url": "https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove",
+      "title": "Raft and the Commit Rule Replica Count Alone Can't Prove",
+      "summary": "Run Raft's real election restriction and commit-index safety rule — see why a stale node can't win an election no matter how many peers are alive, and why a majority of replicas alone still can't prove a log entry is safely committed.",
+      "date_published": "2026-09-09T00:00:00.000Z",
+      "tags": [
+        "distributed-systems",
+        "trade-offs",
+        "benchmark"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/raft-and-the-commit-rule-replica-count-alone-cant-prove.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming",
       "url": "https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming",
       "title": "Bloom Filters and the Capacity You Can't See Coming",

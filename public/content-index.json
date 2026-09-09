@@ -1,5 +1,25 @@
 [
   {
+    "title": "Raft and the Commit Rule Replica Count Alone Can't Prove",
+    "date": "2026-09-09",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "benchmark"
+    ],
+    "summary": "Run Raft's real election restriction and commit-index safety rule — see why a stale node can't win an election no matter how many peers are alive, and why a majority of replicas alone still can't prove a log entry is safely committed.",
+    "draft": false,
+    "slug": "raft-and-the-commit-rule-replica-count-alone-cant-prove",
+    "collection": "experiments",
+    "ogImage": "/og/raft-and-the-commit-rule-replica-count-alone-cant-prove.png",
+    "related": [
+      "experiments/leader-election-bully-algorithm",
+      "experiments/distributed-locks-redlock-and-the-pause-that-breaks-it"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
     "title": "Bloom Filters and the Capacity You Can't See Coming",
     "date": "2026-09-08",
     "tags": [
@@ -206,7 +226,8 @@
     "ogImage": "/og/leader-election-bully-algorithm.png",
     "related": [
       "experiments/gossip-protocol-visualizer",
-      "experiments/distributed-locks-redlock-and-the-pause-that-breaks-it"
+      "experiments/distributed-locks-redlock-and-the-pause-that-breaks-it",
+      "experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove"
     ],
     "readingMinutes": 3,
     "readingText": "3 min read"

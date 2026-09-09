@@ -5,7 +5,14 @@
     <link>https://khoahotran.github.io/portfolio/experiments</link>
     <description>experiments articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 08 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 09 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Raft and the Commit Rule Replica Count Alone Can&apos;t Prove</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove</guid>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run Raft&apos;s real election restriction and commit-index safety rule — see why a stale node can&apos;t win an election no matter how many peers are alive, and why a majority of replicas alone still can&apos;t prove a log entry is safely committed.</description>
+    </item>
     <item>
       <title>Bloom Filters and the Capacity You Can&apos;t See Coming</title>
       <link>https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming</link>
