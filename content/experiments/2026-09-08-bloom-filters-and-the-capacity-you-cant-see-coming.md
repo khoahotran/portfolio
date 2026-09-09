@@ -2,7 +2,7 @@
 title: "Bloom Filters and the Capacity You Can't See Coming"
 date: "2026-09-08"
 tags: ["distributed-systems", "trade-offs", "benchmark"]
-related: ["experiments/consistent-hashing-and-the-rebalancing-nobody-notices", "experiments/hyperloglog-and-the-question-bloom-filters-cant-answer"]
+related: ["experiments/consistent-hashing-and-the-rebalancing-nobody-notices", "experiments/hyperloglog-and-the-question-bloom-filters-cant-answer", "experiments/lsm-trees-and-the-write-youll-pay-for-later"]
 summary: "Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real, not just in a formula."
 ---
 

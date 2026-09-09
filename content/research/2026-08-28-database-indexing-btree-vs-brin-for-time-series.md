@@ -2,7 +2,7 @@
 title: "Database Indexing for Time-Series: B-Tree vs BRIN in PostgreSQL"
 date: "2026-08-28"
 tags: ["postgresql", "architecture", "hft"]
-related: ["projects/quant-alpha"]
+related: ["projects/quant-alpha", "experiments/lsm-trees-and-the-write-youll-pay-for-later"]
 summary: "Why a Block Range Index, not the default B-Tree, is the right structure for naturally time-ordered data — and why QuantAlpha's tick-ingestion pipeline hasn't needed it yet."
 ---
 
