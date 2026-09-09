@@ -40,10 +40,16 @@ function Body({ provenance }: { provenance: LabProvenance }) {
   switch (provenance.kind) {
     case 'implementation':
     case 'model':
-      return <p className="text-slate-700">{provenance.basis}</p>;
+      // break-words: this text routinely embeds a source path (e.g. "src/labs/raft.ts") — an
+      // unbreakable token with no spaces. min-w-0 on the ancestor lets the flex item shrink, but
+      // it doesn't make an unbreakable word wrap; without this, a long enough path (as happened
+      // with twoPhaseCommitVsSaga.ts, the longest lab filename yet) forces real horizontal
+      // overflow at narrow viewports. Caught by check:responsive, fixed here rather than in the
+      // one file that happened to trip it, since any future lab's path is exactly as unbreakable.
+      return <p className="break-words text-slate-700">{provenance.basis}</p>;
     case 'measured':
       return (
-        <div className="space-y-1.5 text-slate-700">
+        <div className="space-y-1.5 break-words text-slate-700">
           <p>
             <span className="font-semibold">Environment:</span> {provenance.environment}
           </p>
@@ -71,7 +77,7 @@ function Body({ provenance }: { provenance: LabProvenance }) {
         </div>
       );
     case 'unverified':
-      return <p className="text-slate-700">{provenance.note}</p>;
+      return <p className="break-words text-slate-700">{provenance.note}</p>;
   }
 }
 
