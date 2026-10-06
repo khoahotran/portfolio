@@ -1,16 +1,593 @@
 [
   {
+    "title": "HyperLogLog and the Question Bloom Filters Can't Answer",
+    "date": "2026-09-09",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "benchmark"
+    ],
+    "summary": "Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.",
+    "draft": false,
+    "slug": "hyperloglog-and-the-question-bloom-filters-cant-answer",
+    "collection": "experiments",
+    "ogImage": "/og/hyperloglog-and-the-question-bloom-filters-cant-answer.png",
+    "related": [
+      "experiments/bloom-filters-and-the-capacity-you-cant-see-coming",
+      "experiments/merkle-trees-and-the-diff-nobody-has-to-compute"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "LSM Trees and the Write You'll Pay for Later",
+    "date": "2026-09-09",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "postgresql",
+      "benchmark"
+    ],
+    "summary": "Run a real log-structured merge tree — measure read amplification growing unbounded without compaction, then measure the real write-amplification cost of bounding it.",
+    "draft": false,
+    "slug": "lsm-trees-and-the-write-youll-pay-for-later",
+    "collection": "experiments",
+    "ogImage": "/og/lsm-trees-and-the-write-youll-pay-for-later.png",
+    "related": [
+      "research/database-indexing-btree-vs-brin-for-time-series",
+      "experiments/bloom-filters-and-the-capacity-you-cant-see-coming"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "Raft and the Commit Rule Replica Count Alone Can't Prove",
+    "date": "2026-09-09",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "benchmark"
+    ],
+    "summary": "Run Raft's real election restriction and commit-index safety rule — see why a stale node can't win an election no matter how many peers are alive, and why a majority of replicas alone still can't prove a log entry is safely committed.",
+    "draft": false,
+    "slug": "raft-and-the-commit-rule-replica-count-alone-cant-prove",
+    "collection": "experiments",
+    "ogImage": "/og/raft-and-the-commit-rule-replica-count-alone-cant-prove.png",
+    "related": [
+      "experiments/leader-election-bully-algorithm",
+      "experiments/distributed-locks-redlock-and-the-pause-that-breaks-it"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Two-Phase Commit vs. Saga: What Atomicity Actually Costs",
+    "date": "2026-09-09",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "saga-pattern",
+      "benchmark"
+    ],
+    "summary": "Run the real 2PC blocking failure and the real Saga compensation-failure gap on the same kind of transaction — see exactly what atomicity costs, and exactly what giving it up costs instead.",
+    "draft": false,
+    "slug": "two-phase-commit-vs-saga-what-atomicity-actually-costs",
+    "collection": "experiments",
+    "ogImage": "/og/two-phase-commit-vs-saga-what-atomicity-actually-costs.png",
+    "related": [
+      "experiments/leader-election-bully-algorithm",
+      "system-design/implementing-the-saga-pattern-for-distributed-transfers",
+      "experiments/saga-state-machine-visualizer"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "Bloom Filters and the Capacity You Can't See Coming",
+    "date": "2026-09-08",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "benchmark"
+    ],
+    "summary": "Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real, not just in a formula.",
+    "draft": false,
+    "slug": "bloom-filters-and-the-capacity-you-cant-see-coming",
+    "collection": "experiments",
+    "ogImage": "/og/bloom-filters-and-the-capacity-you-cant-see-coming.png",
+    "related": [
+      "experiments/consistent-hashing-and-the-rebalancing-nobody-notices",
+      "experiments/hyperloglog-and-the-question-bloom-filters-cant-answer",
+      "experiments/lsm-trees-and-the-write-youll-pay-for-later"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "Consistent Hashing and the Rebalancing Nobody Notices",
+    "date": "2026-09-08",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "system-design"
+    ],
+    "summary": "Run the real hash-ring placement algorithm against naive modulo hashing on the same key set — see how little of the keyspace a ring actually moves when a node joins or leaves, and what happens without enough virtual nodes to spread the luck around.",
+    "draft": false,
+    "slug": "consistent-hashing-and-the-rebalancing-nobody-notices",
+    "collection": "experiments",
+    "ogImage": "/og/consistent-hashing-and-the-rebalancing-nobody-notices.png",
+    "related": [
+      "experiments/gossip-protocol-visualizer",
+      "experiments/bloom-filters-and-the-capacity-you-cant-see-coming",
+      "experiments/merkle-trees-and-the-diff-nobody-has-to-compute"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "CRDTs: What to Do Once You Know Two Writes Are Concurrent",
+    "date": "2026-09-08",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "benchmark"
+    ],
+    "summary": "Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set — see exactly which concurrent updates the naive designs silently lose, and why detecting concurrency is only half the problem.",
+    "draft": false,
+    "slug": "crdts-what-to-do-once-you-know-two-writes-are-concurrent",
+    "collection": "experiments",
+    "ogImage": "/og/crdts-what-to-do-once-you-know-two-writes-are-concurrent.png",
+    "related": [
+      "experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "Merkle Trees and the Diff Nobody Has to Compute",
+    "date": "2026-09-08",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "benchmark"
+    ],
+    "summary": "Run a real Merkle-tree targeted diff against a naive full scan on the same two datasets — see the O(1) proof of full equality, the near-O(log n) cost of a sparse diff, and the honest case where the targeted walk actually loses.",
+    "draft": false,
+    "slug": "merkle-trees-and-the-diff-nobody-has-to-compute",
+    "collection": "experiments",
+    "ogImage": "/og/merkle-trees-and-the-diff-nobody-has-to-compute.png",
+    "related": [
+      "experiments/consistent-hashing-and-the-rebalancing-nobody-notices",
+      "experiments/hyperloglog-and-the-question-bloom-filters-cant-answer"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "Vector Clocks and the Clock Skew That Fools Last-Write-Wins",
+    "date": "2026-09-08",
+    "tags": [
+      "distributed-systems",
+      "trade-offs",
+      "benchmark"
+    ],
+    "summary": "Run the real happens-before/happens-after/concurrent test on a scripted causal history, then watch a naive last-write-wins resolver flip its answer under clock skew alone — while the causal verdict never moves.",
+    "draft": false,
+    "slug": "vector-clocks-and-the-clock-skew-that-fools-last-write-wins",
+    "collection": "experiments",
+    "ogImage": "/og/vector-clocks-and-the-clock-skew-that-fools-last-write-wins.png",
+    "related": [
+      "experiments/gossip-protocol-visualizer",
+      "experiments/crdts-what-to-do-once-you-know-two-writes-are-concurrent"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "Backpressure: Four Policies, One Overload",
+    "date": "2026-09-07",
+    "tags": [
+      "distributed-systems",
+      "queues",
+      "trade-offs"
+    ],
+    "summary": "Block, drop-new, drop-old, and circuit breaker, run against the same producer that outruns its consumer — including proof that drop-new and drop-old discard the same number of items, but never the same ones.",
+    "draft": false,
+    "slug": "backpressure-four-policies-one-overload",
+    "collection": "experiments",
+    "ogImage": "/og/backpressure-four-policies-one-overload.png",
+    "related": [
+      "experiments/rate-limiting-algorithms"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "Cache Freshness: What Stale-While-Revalidate Actually Buys You",
+    "date": "2026-09-07",
+    "tags": [
+      "system-design",
+      "trade-offs",
+      "benchmark"
+    ],
+    "summary": "Three real cache-freshness policies run against the same origin outage — TTL-blocking errors, stale-while-revalidate never blocks at all, and stale-if-error sits in between, paying for a synchronous origin attempt even when it ends up serving the same stale content SWR would have served for free.",
+    "draft": false,
+    "slug": "cache-freshness-what-stale-while-revalidate-actually-buys-you",
+    "collection": "experiments",
+    "ogImage": "/og/cache-freshness-what-stale-while-revalidate-actually-buys-you.png",
+    "related": [
+      "system-design/system-design-trade-offs-in-practice"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Canary Deploys and the Sample Size Nobody Checks",
+    "date": "2026-09-07",
+    "tags": [
+      "incident-response",
+      "trade-offs",
+      "benchmark"
+    ],
+    "summary": "A real two-proportion z-test canary analysis, run stage by stage — proving that the same real regression can go completely undetected at a small sample size and get caught at a larger one, using the exact statistic, not a story about it.",
+    "draft": false,
+    "slug": "canary-deploys-and-the-sample-size-nobody-checks",
+    "collection": "experiments",
+    "ogImage": "/og/canary-deploys-and-the-sample-size-nobody-checks.png",
+    "related": [
+      "blog/engineering-lessons-from-a-failed-rollout"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Distributed Locks: Redlock and the Pause That Breaks It",
+    "date": "2026-09-07",
+    "tags": [
+      "distributed-systems",
+      "redis",
+      "trade-offs"
+    ],
+    "summary": "Run the real Redlock quorum algorithm against nodes you crash yourself, then simulate the exact pause Martin Kleppmann's 2016 critique is about — and see why Antirez's own rebuttal doesn't actually disagree with it.",
+    "draft": false,
+    "slug": "distributed-locks-redlock-and-the-pause-that-breaks-it",
+    "collection": "experiments",
+    "ogImage": "/og/distributed-locks-redlock-and-the-pause-that-breaks-it.png",
+    "related": [
+      "experiments/leader-election-bully-algorithm"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "gRPC vs REST: When the Smaller Payload Loses",
+    "date": "2026-09-07",
+    "tags": [
+      "grpc",
+      "api-design",
+      "benchmark"
+    ],
+    "summary": "A real harness measuring gRPC against REST for the same data, same server, same Go process — and REST wins throughput at every concurrency level tested for a small payload, and at half the concurrency levels tested for a 100x larger one.",
+    "draft": false,
+    "slug": "grpc-vs-rest-when-the-smaller-payload-loses",
+    "collection": "experiments",
+    "ogImage": "/og/grpc-vs-rest-when-the-smaller-payload-loses.png",
+    "related": [
+      "blog/grpc-service-mesh-in-go-aegis-architecture"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It",
+    "date": "2026-09-07",
+    "tags": [
+      "distributed-systems",
+      "benchmark"
+    ],
+    "summary": "Crash the leader and watch the real Bully algorithm elect a new one, message by message — including the O(n^2) worst case the protocol is criticized for.",
+    "draft": false,
+    "slug": "leader-election-bully-algorithm",
+    "collection": "experiments",
+    "ogImage": "/og/leader-election-bully-algorithm.png",
+    "related": [
+      "experiments/gossip-protocol-visualizer",
+      "experiments/distributed-locks-redlock-and-the-pause-that-breaks-it",
+      "experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove",
+      "experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Connection Pooling: When PgBouncer Actually Helps",
+    "date": "2026-09-07",
+    "tags": [
+      "postgresql",
+      "benchmark",
+      "trade-offs"
+    ],
+    "summary": "A real harness measuring PgBouncer against direct Postgres across two connection lifecycles — the advantage widens under one and reverses under the other, so 'add a pooler' isn't a universal answer.",
+    "draft": false,
+    "slug": "pgbouncer-vs-direct-connection-pooling",
+    "collection": "experiments",
+    "ogImage": "/og/pgbouncer-vs-direct-connection-pooling.png",
+    "related": [
+      "research/database-indexing-btree-vs-brin-for-time-series"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "Field Note: What My Own Git Log Proves About Spec-Driven Development",
+    "date": "2026-09-07",
+    "tags": [
+      "spec-driven-development",
+      "testing",
+      "trade-offs"
+    ],
+    "summary": "PFM's governance docs claim every business rule traces from spec to test to code. A plain git log, not the docs, is what actually proves it — and it also shows two honest cases of deliberately not fixing something.",
+    "draft": false,
+    "slug": "what-git-log-proves-about-spec-driven-development",
+    "collection": "field-notes",
+    "ogImage": "/og/what-git-log-proves-about-spec-driven-development.png",
+    "related": [
+      "projects/pfm",
+      "field-notes/measuring-contrast-instead-of-guessing"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "The Hidden Costs of Firebase Cloud Functions",
+    "date": "2026-08-28",
+    "tags": [
+      "serverless",
+      "trade-offs"
+    ],
+    "summary": "A follow-up to the field note on choosing Firebase Functions over Cloud Run: two costs the concurrency model doesn't advertise on its own.",
+    "draft": false,
+    "slug": "hidden-costs-of-firebase-cloud-functions",
+    "collection": "blog",
+    "ogImage": "/og/hidden-costs-of-firebase-cloud-functions.png",
+    "related": [
+      "field-notes/why-i-chose-firebase-functions-over-cloud-run"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "ADR: Tracing vs Metrics for Observability in Aegis",
+    "date": "2026-08-28",
+    "tags": [
+      "adr",
+      "observability",
+      "opentelemetry",
+      "trade-offs"
+    ],
+    "summary": "An Architecture Decision Record on why distributed tracing and metrics answer different questions in Aegis, and which one should gate a page for what.",
+    "draft": false,
+    "slug": "adr-tracing-vs-metrics-in-microservices",
+    "collection": "research",
+    "ogImage": "/og/adr-tracing-vs-metrics-in-microservices.png",
+    "related": [
+      "projects/aegis",
+      "research/distributed-tracing-with-opentelemetry-and-jaeger"
+    ],
+    "readingMinutes": 5,
+    "readingText": "5 min read"
+  },
+  {
+    "title": "Database Indexing for Time-Series: B-Tree vs BRIN in PostgreSQL",
+    "date": "2026-08-28",
+    "tags": [
+      "postgresql",
+      "architecture",
+      "hft"
+    ],
+    "summary": "Why a Block Range Index, not the default B-Tree, is the right structure for naturally time-ordered data — and why QuantAlpha's tick-ingestion pipeline hasn't needed it yet.",
+    "draft": false,
+    "slug": "database-indexing-btree-vs-brin-for-time-series",
+    "collection": "research",
+    "ogImage": "/og/database-indexing-btree-vs-brin-for-time-series.png",
+    "related": [
+      "projects/quant-alpha",
+      "experiments/lsm-trees-and-the-write-youll-pay-for-later"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "Gossip Protocol Visualizer: How Cluster Membership Actually Spreads",
+    "date": "2026-08-28",
+    "tags": [
+      "distributed-systems",
+      "benchmark"
+    ],
+    "summary": "A real push-based epidemic broadcast, run and scrubbed round by round, showing why gossip converges in O(log n) rounds instead of O(n).",
+    "draft": false,
+    "slug": "gossip-protocol-visualizer",
+    "collection": "experiments",
+    "ogImage": "/og/gossip-protocol-visualizer.png",
+    "related": [
+      "experiments/consistent-hashing-and-the-rebalancing-nobody-notices",
+      "experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window",
+    "date": "2026-08-28",
+    "tags": [
+      "api-design",
+      "distributed-systems",
+      "benchmark"
+    ],
+    "summary": "Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it's named.",
+    "draft": false,
+    "slug": "rate-limiting-algorithms",
+    "collection": "experiments",
+    "ogImage": "/og/rate-limiting-algorithms.png",
+    "related": [
+      "projects/aegis",
+      "system-design/designing-a-global-api-gateway",
+      "experiments/backpressure-four-policies-one-overload"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "WebSockets vs Server-Sent Events: What Holding 5,000 Connections Open Actually Costs",
+    "date": "2026-08-28",
+    "tags": [
+      "go",
+      "benchmark",
+      "architecture"
+    ],
+    "summary": "A real harness measuring server memory for thousands of concurrent WebSocket vs SSE connections — written before the article, per the lesson from three prior benchmark rewrites.",
+    "draft": false,
+    "slug": "websockets-vs-sse",
+    "collection": "experiments",
+    "ogImage": "/og/websockets-vs-sse.png",
+    "related": [
+      "system-design/designing-a-global-api-gateway"
+    ],
+    "readingMinutes": 3,
+    "readingText": "3 min read"
+  },
+  {
+    "title": "Designing a Global API Gateway: Edge Routing Beyond a Single Aegis Instance",
+    "date": "2026-08-28",
+    "tags": [
+      "system-design",
+      "api-design",
+      "architecture",
+      "go"
+    ],
+    "summary": "Aegis's GraphQL gateway solves API shape for one instance. This is the layer above it a real deployment would need once there's more than one — and why that's a different problem, not a bigger version of the same one.",
+    "draft": false,
+    "slug": "designing-a-global-api-gateway",
+    "collection": "system-design",
+    "ogImage": "/og/designing-a-global-api-gateway.png",
+    "related": [
+      "projects/aegis",
+      "research/adr-graphql-gateway-over-rest",
+      "experiments/rate-limiting-algorithms",
+      "experiments/websockets-vs-sse"
+    ],
+    "readingMinutes": 5,
+    "readingText": "5 min read"
+  },
+  {
+    "title": "The SPA Google Never Saw",
+    "date": "2026-08-27",
+    "tags": [
+      "seo",
+      "react",
+      "frontend-architecture"
+    ],
+    "summary": "This portfolio was a client-rendered SPA on GitHub Pages for months. Every deep link a crawler could find returned 404. Here's how I found it, and what I built instead of migrating frameworks.",
+    "draft": false,
+    "slug": "the-spa-google-never-saw",
+    "collection": "blog",
+    "ogImage": "/og/the-spa-google-never-saw.png",
+    "readingMinutes": 6,
+    "readingText": "6 min read"
+  },
+  {
+    "title": "ADR: Why Prerender Instead of Migrating to Next.js",
+    "date": "2026-08-27",
+    "tags": [
+      "adr",
+      "frontend-architecture",
+      "react",
+      "seo",
+      "architecture"
+    ],
+    "summary": "This portfolio's original decision to build a custom JAMstack instead of using Next.js still held once a crawler-visibility bug surfaced. Here's why the fix was a build step, not a framework migration.",
+    "draft": false,
+    "slug": "why-prerender-instead-of-migrating-to-next-js",
+    "collection": "research",
+    "ogImage": "/og/why-prerender-instead-of-migrating-to-next-js.png",
+    "related": [
+      "blog/the-spa-google-never-saw",
+      "field-notes/measuring-contrast-instead-of-guessing"
+    ],
+    "readingMinutes": 5,
+    "readingText": "5 min read"
+  },
+  {
+    "title": "Field Note: A Diagram That Wouldn't Render",
+    "date": "2026-08-27",
+    "tags": [
+      "frontend-architecture",
+      "testing"
+    ],
+    "summary": "A sequence diagram in a new case study failed to parse. The cause wasn't the character I suspected first — and the fix I tried second broke the same way for a different reason.",
+    "draft": false,
+    "slug": "a-diagram-that-wouldnt-render",
+    "collection": "field-notes",
+    "ogImage": "/og/a-diagram-that-wouldnt-render.png",
+    "related": [
+      "projects/pfm"
+    ],
+    "readingMinutes": 2,
+    "readingText": "2 min read"
+  },
+  {
+    "title": "Field Note: Measuring Contrast Instead of Guessing at It",
+    "date": "2026-08-27",
+    "tags": [
+      "accessibility",
+      "frontend-architecture",
+      "testing",
+      "trade-offs"
+    ],
+    "summary": "A prior audit flagged 44 text-slate-400 occurrences as 'potentially borderline' and correctly refused to fix them blind. Building a real contrast checker turned that judgment call into a number — and found two unrelated bugs on the way.",
+    "draft": false,
+    "slug": "measuring-contrast-instead-of-guessing",
+    "collection": "field-notes",
+    "ogImage": "/og/measuring-contrast-instead-of-guessing.png",
+    "related": [
+      "blog/the-spa-google-never-saw"
+    ],
+    "readingMinutes": 4,
+    "readingText": "4 min read"
+  },
+  {
+    "title": "PFM: A Spec-Driven, Invite-Only Personal Finance Tracker",
+    "date": "2026-08-27",
+    "tags": [
+      "go",
+      "frontend-architecture",
+      "postgresql",
+      "redis",
+      "spec-driven-development"
+    ],
+    "summary": "A React 19 + Go financial tracker built spec-first: every business rule traces from an SRS to an SDS to a passing integration test, with a hard server-side boundary between the browser and the API.",
+    "draft": false,
+    "slug": "pfm",
+    "collection": "projects",
+    "ogImage": "/og/pfm.png",
+    "related": [
+      "research/designing-a-permission-system",
+      "system-design/designing-a-multi-service-auth-platform"
+    ],
+    "readingMinutes": 8,
+    "readingText": "8 min read"
+  },
+  {
     "title": "Building Jujuja: A Production Quest System for Burst Traffic",
     "date": "2026-06-28",
     "tags": [
-      "case-study",
-      "nestjs",
+      "architecture",
+      "typescript",
       "redis",
-      "bullmq",
+      "queues",
       "firestore"
     ],
     "summary": "How we built the Jujuja backend to handle 1,500 concurrent users per minute during campaign bursts, processing daily quests and loyalty points using BullMQ and NestJS.",
-    "reading_time": "12 min",
     "draft": false,
     "slug": "building-jujuja-a-production-quest-system",
     "collection": "blog",
@@ -30,11 +607,10 @@
       "system-design",
       "go",
       "python",
-      "redis-streams",
+      "redis",
       "hft"
     ],
     "summary": "How I architected QuantAlpha Lab, a distributed research platform that bridges the gap between Python data science and Go backend engineering.",
-    "reading_time": "11 min",
     "draft": false,
     "slug": "designing-a-multi-role-hft-research-platform",
     "collection": "blog",
@@ -52,13 +628,12 @@
     "tags": [
       "go",
       "grpc",
-      "microservices",
-      "auth",
+      "distributed-systems",
+      "security",
       "opentelemetry",
-      "protobuf"
+      "api-design"
     ],
     "summary": "A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.",
-    "reading_time": "12 min read",
     "draft": false,
     "slug": "grpc-service-mesh-in-go-aegis-architecture",
     "collection": "blog",
@@ -66,7 +641,8 @@
     "related": [
       "projects/aegis",
       "system-design/designing-a-multi-service-auth-platform",
-      "research/distributed-tracing-with-opentelemetry-and-jaeger"
+      "research/distributed-tracing-with-opentelemetry-and-jaeger",
+      "experiments/grpc-vs-rest-when-the-smaller-payload-loses"
     ],
     "readingMinutes": 7,
     "readingText": "7 min read"
@@ -82,7 +658,6 @@
       "architecture"
     ],
     "summary": "An Architecture Decision Record detailing why Firestore was chosen over PostgreSQL as the primary EventStore for the Event-Driven Core Banking platform.",
-    "reading_time": "6 min",
     "draft": false,
     "slug": "adr-firestore-vs-postgresql-event-sourcing",
     "collection": "research",
@@ -99,20 +674,19 @@
     "date": "2026-06-28",
     "tags": [
       "adr",
-      "graphql",
-      "api-gateway",
+      "api-design",
       "architecture",
       "go"
     ],
     "summary": "An Architecture Decision Record detailing why Aegis uses a GraphQL API Gateway to aggregate internal gRPC microservices instead of a traditional REST API.",
-    "reading_time": "7 min",
     "draft": false,
     "slug": "adr-graphql-gateway-over-rest",
     "collection": "research",
     "ogImage": "/og/adr-graphql-gateway-over-rest.png",
     "related": [
       "projects/aegis",
-      "system-design/designing-a-multi-service-auth-platform"
+      "system-design/designing-a-multi-service-auth-platform",
+      "system-design/designing-a-global-api-gateway"
     ],
     "readingMinutes": 3,
     "readingText": "3 min read"
@@ -122,12 +696,9 @@
     "date": "2026-06-28",
     "tags": [
       "system-design",
-      "algolia",
-      "search",
-      "geolocation"
+      "search"
     ],
     "summary": "How we leveraged Algolia to build a blazing fast, geo-aware store discovery engine for SeensioGO and Jujuja, achieving 150-300ms latency.",
-    "reading_time": "9 min",
     "draft": false,
     "slug": "algolia-geo-search-for-store-discovery",
     "collection": "research",
@@ -144,21 +715,19 @@
     "date": "2026-06-28",
     "tags": [
       "opentelemetry",
-      "jaeger",
       "observability",
       "go",
-      "distributed-systems",
-      "tracing"
+      "distributed-systems"
     ],
     "summary": "A practical guide to instrumenting Go microservices with OpenTelemetry: from SDK setup to trace context propagation, sampling strategies, and reading Jaeger flame graphs.",
-    "reading_time": "10 min read",
     "draft": false,
     "slug": "distributed-tracing-with-opentelemetry-and-jaeger",
     "collection": "research",
     "ogImage": "/og/distributed-tracing-with-opentelemetry-and-jaeger.png",
     "related": [
       "projects/aegis",
-      "blog/grpc-service-mesh-in-go-aegis-architecture"
+      "blog/grpc-service-mesh-in-go-aegis-architecture",
+      "research/adr-tracing-vs-metrics-in-microservices"
     ],
     "readingMinutes": 6,
     "readingText": "6 min read"
@@ -170,12 +739,11 @@
       "event-sourcing",
       "cqrs",
       "architecture",
-      "database",
+      "system-design",
       "go",
       "trade-offs"
     ],
     "summary": "A decision framework for choosing between Event Sourcing and traditional CRUD, based on building both a CRUD loyalty API and a full event-sourced core banking system.",
-    "reading_time": "10 min read",
     "draft": false,
     "slug": "event-sourcing-vs-crud-when-to-choose-each",
     "collection": "research",
@@ -193,13 +761,12 @@
     "date": "2026-06-28",
     "tags": [
       "machine-learning",
-      "finance",
+      "fintech",
       "python",
       "hft",
-      "research"
+      "adr"
     ],
     "summary": "Research notes on extracting Order Book Imbalance (OBI) features from Level-3 market data (VN30F2112) to train rolling-window ML classifiers for High-Frequency Trading.",
-    "reading_time": "10 min",
     "draft": false,
     "slug": "order-book-imbalance-hft-signal",
     "collection": "research",
@@ -218,10 +785,9 @@
       "architecture",
       "event-sourcing",
       "cqrs",
-      "interactive-demo"
+      "benchmark"
     ],
     "summary": "An interactive visualization of how application state is derived from an immutable, append-only event log.",
-    "reading_time": "5 min",
     "draft": false,
     "slug": "event-sourcing-replay",
     "collection": "experiments",
@@ -236,17 +802,13 @@
     "title": "Redis Streams vs BullMQ: Choosing Your Job Queue",
     "date": "2026-06-28",
     "tags": [
-      "experiment",
       "benchmark",
       "redis",
-      "bullmq",
       "queues",
       "go",
-      "typescript",
-      "async-jobs"
+      "typescript"
     ],
     "summary": "A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns.",
-    "reading_time": "10 min read",
     "draft": false,
     "slug": "redis-streams-vs-bullmq-job-queue-comparison",
     "collection": "experiments",
@@ -255,26 +817,27 @@
       "projects/quant-alpha",
       "blog/building-jujuja-a-production-quest-system"
     ],
-    "readingMinutes": 5,
-    "readingText": "5 min read"
+    "series": "The Benchmark Rewrites",
+    "seriesOrder": 1,
+    "readingMinutes": 6,
+    "readingText": "6 min read"
   },
   {
     "title": "Interactive Saga State Machine Visualizer",
     "date": "2026-06-28",
     "tags": [
       "distributed-systems",
-      "microservices",
       "saga-pattern",
-      "interactive-demo"
+      "benchmark"
     ],
     "summary": "An interactive visualization of the Saga distributed transaction pattern, demonstrating automated compensating rollbacks.",
-    "reading_time": "5 min",
     "draft": false,
     "slug": "saga-state-machine-visualizer",
     "collection": "experiments",
     "ogImage": "/og/saga-state-machine-visualizer.png",
     "related": [
-      "projects/core-banking"
+      "projects/core-banking",
+      "experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs"
     ],
     "readingMinutes": 1,
     "readingText": "1 min read"
@@ -290,7 +853,6 @@
       "architecture"
     ],
     "summary": "A deep dive into Aegis, a high-performance authorization platform using gRPC microservices, a GraphQL gateway, Kafka audit logging, and OpenTelemetry.",
-    "reading_time": "15 min",
     "draft": false,
     "slug": "designing-a-multi-service-auth-platform",
     "collection": "system-design",
@@ -310,12 +872,11 @@
     "tags": [
       "system-design",
       "go",
-      "finance",
-      "event-driven",
+      "fintech",
+      "distributed-systems",
       "architecture"
     ],
     "summary": "How I built a real-time fraud detection engine using Event Sourcing, CQRS, and velocity rules to automatically freeze malicious accounts in a core banking system.",
-    "reading_time": "14 min",
     "draft": false,
     "slug": "designing-a-real-time-fraud-detection-engine",
     "collection": "system-design",
@@ -336,17 +897,17 @@
       "event-sourcing",
       "go",
       "firestore",
-      "banking"
+      "fintech"
     ],
     "summary": "How I designed a Saga orchestrator pattern for two-phase distributed transfers between account aggregates, with automatic compensation and dead-letter recovery.",
-    "reading_time": "11 min read",
     "draft": false,
     "slug": "implementing-the-saga-pattern-for-distributed-transfers",
     "collection": "system-design",
     "ogImage": "/og/implementing-the-saga-pattern-for-distributed-transfers.png",
     "related": [
       "projects/core-banking",
-      "system-design/designing-a-real-time-fraud-detection-engine"
+      "system-design/designing-a-real-time-fraud-detection-engine",
+      "experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs"
     ],
     "readingMinutes": 5,
     "readingText": "5 min read"
@@ -357,13 +918,11 @@
     "tags": [
       "go",
       "typescript",
-      "backend",
-      "language-comparison",
       "architecture",
+      "benchmark",
       "trade-offs"
     ],
     "summary": "A working engineer's honest comparison of Go and TypeScript for backend services, based on using both in production — and a framework for choosing between them.",
-    "reading_time": "8 min read",
     "draft": false,
     "slug": "go-vs-typescript-for-backend-services",
     "collection": "field-notes",
@@ -382,10 +941,9 @@
       "event-sourcing",
       "postgresql",
       "firestore",
-      "database"
+      "system-design"
     ],
     "summary": "An interactive benchmark comparing the time it takes to replay tens of thousands of immutable events into a Read Projection.",
-    "reading_time": "5 min",
     "draft": false,
     "slug": "db-event-replay-benchmark",
     "collection": "experiments",
@@ -394,8 +952,10 @@
       "research/adr-firestore-vs-postgresql-event-sourcing",
       "projects/core-banking"
     ],
-    "readingMinutes": 1,
-    "readingText": "1 min read"
+    "series": "The Benchmark Rewrites",
+    "seriesOrder": 2,
+    "readingMinutes": 2,
+    "readingText": "2 min read"
   },
   {
     "title": "Benchmark: Go vs TypeScript Concurrency",
@@ -403,11 +963,9 @@
     "tags": [
       "benchmark",
       "go",
-      "typescript",
-      "concurrency"
+      "typescript"
     ],
     "summary": "An interactive benchmark visualizing memory footprint and execution time for handling tens of thousands of concurrent network-bound tasks.",
-    "reading_time": "4 min",
     "draft": false,
     "slug": "go-vs-ts-concurrency",
     "collection": "experiments",
@@ -416,8 +974,10 @@
       "blog/grpc-service-mesh-in-go-aegis-architecture",
       "field-notes/go-vs-typescript-for-backend-services"
     ],
-    "readingMinutes": 1,
-    "readingText": "1 min read"
+    "series": "The Benchmark Rewrites",
+    "seriesOrder": 3,
+    "readingMinutes": 2,
+    "readingText": "2 min read"
   },
   {
     "title": "Event-Driven Core Banking System",
@@ -430,7 +990,6 @@
       "firestore"
     ],
     "summary": "A core banking ledger demonstrating Event Sourcing, CQRS, and distributed Saga transfers.",
-    "reading_time": "12 min",
     "draft": false,
     "slug": "core-banking",
     "collection": "projects",
@@ -451,13 +1010,10 @@
     "date": "2026-06-03",
     "tags": [
       "firestore",
-      "nosql",
       "distributed-systems",
-      "transactions",
-      "atomic-operations"
+      "fintech"
     ],
     "summary": "Implementing virtual currency transactions on Firestore with <1% consistency errors, covering atomic operation design and edge case handling.",
-    "reading_time": "9 min read",
     "draft": false,
     "slug": "atomic-financial-transactions-in-nosql",
     "collection": "system-design",
@@ -473,14 +1029,12 @@
     "title": "Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System",
     "date": "2026-06-03",
     "tags": [
-      "nestjs",
-      "async-jobs",
-      "scalability",
+      "typescript",
       "queues",
-      "firebase-functions"
+      "benchmark",
+      "serverless"
     ],
     "summary": "How we redesigned daily quest processing from synchronous handlers to a queue-driven worker pool that handles 1,500 concurrent users during campaign windows.",
-    "reading_time": "9 min read",
     "draft": false,
     "slug": "designing-a-burst-traffic-async-job-pipeline",
     "collection": "system-design",
@@ -496,21 +1050,18 @@
     "title": "Field Note: Why I Chose Firebase Functions Over Cloud Run",
     "date": "2026-06-03",
     "tags": [
-      "system-architecture",
       "serverless",
-      "firebase",
-      "gcp",
       "trade-offs"
     ],
     "summary": "A practical evaluation of Firebase Functions vs Cloud Run, and why the simplest serverless model won out for our specific workloads.",
-    "reading_time": "8 min read",
     "draft": false,
     "slug": "why-i-chose-firebase-functions-over-cloud-run",
     "collection": "field-notes",
     "ogImage": "/og/why-i-chose-firebase-functions-over-cloud-run.png",
     "related": [
       "system-design/designing-a-burst-traffic-async-job-pipeline",
-      "research/algolia-geo-search-for-store-discovery"
+      "research/algolia-geo-search-for-store-discovery",
+      "blog/hidden-costs-of-firebase-cloud-functions"
     ],
     "readingMinutes": 3,
     "readingText": "3 min read"
@@ -521,13 +1072,12 @@
     "tags": [
       "go",
       "grpc",
-      "microservices",
+      "distributed-systems",
       "redis",
       "kafka",
       "opentelemetry"
     ],
     "summary": "A modular, high-performance Identity and Policy microservice platform in Go, featuring sub-5ms RBAC evaluations and distributed tracing.",
-    "reading_time": "10 min",
     "draft": false,
     "slug": "aegis",
     "collection": "projects",
@@ -536,10 +1086,12 @@
       "blog/grpc-service-mesh-in-go-aegis-architecture",
       "system-design/designing-a-multi-service-auth-platform",
       "research/distributed-tracing-with-opentelemetry-and-jaeger",
-      "research/adr-graphql-gateway-over-rest"
+      "research/adr-graphql-gateway-over-rest",
+      "experiments/rate-limiting-algorithms",
+      "system-design/designing-a-global-api-gateway"
     ],
-    "readingMinutes": 2,
-    "readingText": "2 min read"
+    "readingMinutes": 3,
+    "readingText": "3 min read"
   },
   {
     "title": "Architecture Breakdown: CQRS for Mid-size Products",
@@ -547,12 +1099,9 @@
     "tags": [
       "cqrs",
       "architecture",
-      "backend",
-      "system-design",
-      "database"
+      "system-design"
     ],
     "summary": "A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path.",
-    "reading_time": "10 min read",
     "draft": false,
     "slug": "architecture-breakdown-cqrs-for-mid-size-products",
     "collection": "blog",
@@ -564,18 +1113,16 @@
     "title": "Engineering Lessons from a Failed Rollout",
     "date": "2026-03-21",
     "tags": [
-      "incident-response",
-      "release-engineering",
-      "devops",
-      "sre",
-      "lessons"
+      "incident-response"
     ],
     "summary": "What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.",
-    "reading_time": "9 min read",
     "draft": false,
     "slug": "engineering-lessons-from-a-failed-rollout",
     "collection": "blog",
     "ogImage": "/og/engineering-lessons-from-a-failed-rollout.png",
+    "related": [
+      "experiments/canary-deploys-and-the-sample-size-nobody-checks"
+    ],
     "readingMinutes": 4,
     "readingText": "4 min read"
   },
@@ -585,30 +1132,24 @@
     "tags": [
       "idempotency",
       "api-design",
-      "distributed-systems",
-      "resilience"
+      "distributed-systems"
     ],
     "summary": "Practical patterns for making API writes replay-safe under network retries and partial distributed failures.",
-    "reading_time": "10 min read",
     "draft": false,
     "slug": "system-design-notes-idempotency",
     "collection": "blog",
     "ogImage": "/og/system-design-notes-idempotency.png",
-    "readingMinutes": 3,
-    "readingText": "3 min read"
+    "readingMinutes": 5,
+    "readingText": "5 min read"
   },
   {
     "title": "Designing a Permission System: Beyond Simple Roles",
     "date": "2026-03-21",
     "tags": [
-      "authorization",
-      "rbac",
       "security",
-      "policy-engine",
       "architecture"
     ],
     "summary": "How to evolve from brittle role checks to a maintainable, high-performance policy-based authorization engine.",
-    "reading_time": "10 min read",
     "draft": false,
     "slug": "designing-a-permission-system",
     "collection": "research",
@@ -621,13 +1162,10 @@
     "date": "2026-03-21",
     "tags": [
       "queues",
-      "workers",
-      "scaling",
-      "backend",
-      "performance"
+      "architecture",
+      "benchmark"
     ],
     "summary": "Operational patterns and practical lessons for scaling asynchronous jobs while keeping failure rates and costs predictable.",
-    "reading_time": "9 min read",
     "draft": false,
     "slug": "scaling-background-jobs",
     "collection": "research",
@@ -639,14 +1177,11 @@
     "title": "Queue vs Pub/Sub Comparison Notes",
     "date": "2026-03-21",
     "tags": [
-      "experiment",
+      "benchmark",
       "queues",
-      "pubsub",
-      "messaging",
       "system-design"
     ],
     "summary": "How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems.",
-    "reading_time": "9 min read",
     "draft": false,
     "slug": "queue-vs-pub-sub-comparison-notes",
     "collection": "experiments",
@@ -658,13 +1193,9 @@
     "title": "Throughput Simulation Notes",
     "date": "2026-03-21",
     "tags": [
-      "experiment",
-      "throughput",
-      "capacity-planning",
-      "simulation"
+      "benchmark"
     ],
     "summary": "Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations.",
-    "reading_time": "8 min read",
     "draft": false,
     "slug": "throughput-simulation-notes",
     "collection": "experiments",
@@ -676,14 +1207,13 @@
     "title": "Building an Event-Driven Architecture",
     "date": "2026-03-21",
     "tags": [
-      "event-driven",
+      "distributed-systems",
       "architecture",
-      "messaging",
+      "queues",
       "system-design",
       "kafka"
     ],
     "summary": "A practical blueprint for introducing domain events to untangle a monolith without losing delivery guarantees.",
-    "reading_time": "9 min read",
     "draft": false,
     "slug": "building-an-event-driven-architecture",
     "collection": "system-design",
@@ -697,14 +1227,16 @@
     "tags": [
       "trade-offs",
       "architecture",
-      "engineering-management"
+      "incident-response"
     ],
     "summary": "A structured framework to communicate architecture trade-offs with product, operations, and engineering teams.",
-    "reading_time": "8 min read",
     "draft": false,
     "slug": "system-design-trade-offs-in-practice",
     "collection": "system-design",
     "ogImage": "/og/system-design-trade-offs-in-practice.png",
+    "related": [
+      "experiments/cache-freshness-what-stale-while-revalidate-actually-buys-you"
+    ],
     "readingMinutes": 3,
     "readingText": "3 min read"
   },
@@ -714,12 +1246,11 @@
     "tags": [
       "go",
       "python",
-      "redis-streams",
+      "redis",
       "machine-learning",
       "hft"
     ],
     "summary": "A distributed research platform for High-Frequency Trading (HFT) utilizing Redis Streams for asynchronous model training and order book imbalance (OBI) analysis.",
-    "reading_time": "11 min",
     "draft": false,
     "slug": "quant-alpha",
     "collection": "projects",
@@ -727,9 +1258,10 @@
     "related": [
       "blog/designing-a-multi-role-hft-research-platform",
       "research/order-book-imbalance-hft-signal",
-      "experiments/redis-streams-vs-bullmq-job-queue-comparison"
+      "experiments/redis-streams-vs-bullmq-job-queue-comparison",
+      "research/database-indexing-btree-vs-brin-for-time-series"
     ],
-    "readingMinutes": 6,
-    "readingText": "6 min read"
+    "readingMinutes": 7,
+    "readingText": "7 min read"
   }
 ]

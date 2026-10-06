@@ -9,7 +9,7 @@
 
 ### 1. Fix reading-time calculation
 
-**Status:** Open
+**Status:** ✅ CLOSED (2026-08-26)
 
 Current reading-time calculation appears inflated on 32/33 articles.
 
@@ -34,9 +34,26 @@ Acceptance criteria:
 - existing articles display reasonable reading-time estimates;
 - no unnecessary content files need to be rewritten.
 
+---
+
+**Resolution.** The computed value already satisfied every acceptance criterion above — `estimateReading()`
+in `scripts/lib/content.mjs` counts prose at 220 wpm and charges a flat ~20s per code block and ~30s
+per Mermaid diagram, excluding inline code, raw HTML, table rows and LaTeX. That is what the UI has
+been showing.
+
+What remained was the frontmatter field itself, which was still *required* by the schema while being
+read by nothing and carrying values roughly 2.6x the real figure (305 declared minutes across the
+corpus against ~118 computed). A required field that is simultaneously unread and wrong is worse
+than no field: it costs every future author accuracy work for no benefit, and it invites a reader
+who spots the discrepancy to distrust the rest of the metadata.
+
+`reading_time` was therefore removed from all 33 articles, from `ContentFrontmatter`, from the
+generated index, and from the authoring templates in `content/README.md`,
+`.ai/writing-style-guide.md` and `.ai/quality-gates.md`. Reading time is computed, full stop.
+
 ### 2. Review borderline text contrast
 
-**Status:** Open / Low Priority
+**Status:** ✅ CLOSED (2026-08-26) — resolved by measurement, see `.ai/decision-log.md` Decision 9.
 
 Approximately 44 `text-slate-400` occurrences were identified as potentially borderline for WCAG contrast.
 
@@ -56,6 +73,26 @@ Future review should classify these occurrences by semantic importance:
 Only adjust colors where the text carries meaningful information and the contrast is genuinely insufficient.
 
 Do not perform a blind global replacement.
+
+---
+
+**Resolution.** `scripts/check-contrast.mjs` (`npm run check:contrast`) now measures every visible
+text node on every route in both themes and fails CI below WCAG AA, so this stopped being a
+judgement call. What the measurement showed:
+
+- Every flagged `text-slate-400` node carried real information — section labels, the footer
+  copyright, employment dates — not decoration. So the classification this item asked for came out
+  one-sided, and all 33 moved to `slate-500`.
+- **Except inside `bg-panel`**, where that same bump made things *worse*: `slate-500` measures
+  3.75:1 on the dark panel while `slate-400` was around 6:1. Those use the panel's own muted token
+  instead. This is exactly the trap the "no blind global replacement" instruction was guarding
+  against, and it was only visible because the check measures the effective background rather than
+  the class name.
+- The bigger finding was that `text-slate-400` was not the worst offender. `text-teal-600` failed at
+  3.58:1 across 53 routes, and white-on-`teal-600` buttons at 3.74:1. Both are fixed.
+
+Two defects surfaced that no other check would have caught — see `.ai/decision-log.md` Decision 10.
+The corpus now measures clean in both themes.
 
 ### 3. Evaluate Markdown HTML sanitization
 
@@ -85,7 +122,8 @@ Do not add sanitization blindly if it would break intentional HTML-based content
 
 ### 4. Add automated responsive regression checks
 
-**Status:** Open / Recommended
+**Status:** ✅ CLOSED — `scripts/check-responsive.mjs` covers all 54 routes x 7 viewports, plus a
+dark-theme pass at the widest viewport (added 2026-08-26).
 
 The current audit verified 0/70 route × viewport combinations with horizontal overflow, but only 10 representative routes were tested manually.
 
@@ -225,11 +263,21 @@ Potential costs:
 
 Do not implement unless article count, performance measurements, or deployment requirements justify it.
 
+**Re-measured 2026-08-28 (Phase 6), corpus now 45 articles (was 33 at the original measurement):**
+521 KB raw / 159.4 KB gzip — a 2.4% increase in raw size against a 36% increase in article count.
+This confirms this chunk is dominated by the markdown/unified/remark/rehype *library* cost, which is
+paid once regardless of corpus size, not a per-article cost that scales with content volume — the
+trigger this item names ("article count... justify it") was based on an assumption that doesn't
+hold. The real trigger, if this is ever revisited, is a *library* change (e.g. adding a new rehype
+plugin), not corpus growth. Still not urgent; noted so a future pass doesn't re-measure expecting
+growth to have moved this and act on a false read.
+
 ## Future — Design System
 
 ### 8. Evaluate repeated Card / Badge components
 
-**Status:** Observation
+**Status:** Partially closed (2026-08-28, Phase 6) — one real match found and extracted; the rest
+correctly left alone.
 
 Repeated patterns exist across:
 
@@ -248,6 +296,21 @@ Only extract when:
 - abstraction reduces rather than increases complexity.
 
 Avoid premature design-system abstraction.
+
+---
+
+**Resolution.** Grepped for the exact tag/badge `className` string rather than eyeballing "looks
+similar" — found `rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600` byte-identical
+(not just visually close) in three places: `ContentListPage.tsx`'s and `ArticleHeader.tsx`'s tag
+pills, and `Projects.tsx`'s tech-stack badge. That crosses this item's own 3+/genuinely-shared bar
+cleanly — extracted as `src/components/TagPill.tsx`.
+
+Three *other* rounded-pill badges (the `/tags` count badge, `TagDetailPage`'s collection label,
+`SeriesNav`'s "Part N of M") were deliberately left as their own one-off spans: each carries a
+different padding/weight/casing treatment, so folding them into `TagPill` would need a handful of
+variant props to reproduce three barely-related shapes — the "increases complexity" case this item
+explicitly says not to force. This is the item working as designed: it found one real extraction and
+correctly rejected three fake ones that only *looked* similar.
 
 ---
 

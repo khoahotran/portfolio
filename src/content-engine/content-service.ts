@@ -50,6 +50,17 @@ export async function getLatestContent(limit = 6): Promise<ContentIndexItem[]> {
 }
 
 /**
+ * Every non-draft article across all six collections, unsliced. Backs `/tags` and `/tags/:tag`
+ * (`TagsIndexPage`, `TagDetailPage`) — tags mean nothing scoped to one collection (`.ai/phases/phase-5.md`
+ * §5.5 measured tags only ever being filterable within a single collection as the actual problem),
+ * so both pages need the full corpus, unlike `getContentIndex`'s single-collection scope.
+ */
+export async function getAllContentIndex(): Promise<ContentIndexItem[]> {
+  const items = await loadContentIndex();
+  return items.filter(shouldInclude);
+}
+
+/**
  * Counts for the homepage's "what exists here" strip (see PortfolioHome) —
  * derived from the real index rather than hardcoded, so they can't drift out
  * of date as content is added or removed. `projects` is the flagship-case-study
@@ -80,7 +91,11 @@ export async function getRelatedArticles(
   const bySlugPath = new Map(items.map((item) => [`${item.collection}/${item.slug}`, item]));
   const curated = curatedRelated
     .map((ref) => bySlugPath.get(ref))
-    .filter((item): item is ContentIndexItem => item !== undefined && shouldInclude(item));
+    // `item.slug !== currentSlug` guards against an article's own `related:` accidentally
+    // referencing itself (a typo, or a copy-pasted frontmatter block) — without it, that article
+    // would render itself in its own "Read Next" section. build-search-index.mjs also rejects this
+    // at build time; this is defense-in-depth for content that predates that check.
+    .filter((item): item is ContentIndexItem => item !== undefined && item.slug !== currentSlug && shouldInclude(item));
 
   const curatedSlugs = new Set(curated.map((item) => item.slug));
   const tagSet = new Set(tags);

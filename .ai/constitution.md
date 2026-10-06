@@ -15,7 +15,11 @@ These are the immutable rules of engagement for all AI agents operating in this 
 - **Continuously Update Progress:** Update `task.md` or the user as you complete milestones.
 
 ## 3. Documentation Rules
-- **Maintain Portfolio Narrative:** The user is a Staff-level engineer. Write in a professional, first-person plural ("we") or authoritative first-person singular ("I") as defined in the `writing-style-guide.md`.
+- **Maintain Portfolio Narrative:** The author is an early-career backend/distributed-systems engineer
+  who writes with senior-level rigor — see `.ai/portfolio-context.md` "Career Stage". Write in a
+  professional, first-person plural ("we") or authoritative first-person singular ("I") as defined in the
+  `writing-style-guide.md`. Never claim a seniority title, years of experience, or team leadership the
+  timeline does not support.
 - **Preserve Writing Style:** High-signal, low-noise. Use Mermaid diagrams over walls of text.
 - **Maintain Cross-links:** When a new concept is introduced, link it to existing articles (e.g., `[Core Banking](/projects/core-banking)`).
 - **Update Related Documents:** If you change a project's architecture, update `.ai/flagship-projects.md` and `.ai/architecture-catalog.md`.

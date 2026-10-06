@@ -14,7 +14,7 @@ export default function Metrics() {
           {metrics.map((metric, idx) => (
             <div
               key={idx}
-              className="rounded-2xl bg-white border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+              className="rounded-2xl bg-surface border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow"
             >
               <p className="text-xs uppercase tracking-wide text-slate-500">{metric.label}</p>
               <p className="text-3xl font-semibold text-slate-900 mt-2">{metric.value}</p>

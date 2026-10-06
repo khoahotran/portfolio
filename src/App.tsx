@@ -12,6 +12,8 @@ const PortfolioHome = lazy(() => import('./pages/PortfolioHome'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const KnowledgeGraphPage = lazy(() => import('./pages/KnowledgeGraphPage'));
 const LabsIndexPage = lazy(() => import('./pages/LabsIndexPage'));
+const TagsIndexPage = lazy(() => import('./pages/TagsIndexPage'));
+const TagDetailPage = lazy(() => import('./pages/TagDetailPage'));
 const ContentListPage = lazy(() => import('./pages/content/ContentListPage'));
 const ContentDetailPage = lazy(() => import('./pages/content/ContentDetailPage'));
 const SearchPage = lazy(() => import('./pages/SearchPage'));
@@ -121,6 +123,8 @@ function AppRoutes() {
           />
           <Route path="/field-notes/:slug" element={<ContentDetailPage collection="field-notes" />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/tags" element={<TagsIndexPage />} />
+          <Route path="/tags/:tag" element={<TagDetailPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
@@ -135,7 +139,7 @@ function App() {
       <div className="min-h-screen bg-slate-50 text-slate-900">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-slate-900 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg"
         >
           Skip to content
         </a>

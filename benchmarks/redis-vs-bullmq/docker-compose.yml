@@ -1,0 +1,21 @@
+services:
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      retries: 20
+
+  go-harness:
+    build: ./go
+    depends_on:
+      redis:
+        condition: service_healthy
+    profiles: ["run"]
+
+  node-harness:
+    build: ./node
+    depends_on:
+      redis:
+        condition: service_healthy
+    profiles: ["run"]

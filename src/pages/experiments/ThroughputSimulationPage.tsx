@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { Pause, Play } from 'lucide-react';
 import LabBackLink from '../../labs/LabBackLink';
+import ProvenanceNote from '../../labs/ProvenanceNote';
 import { useSeo } from '../../seo/useSeo';
 
 function ThroughputSimulationPage() {
@@ -57,13 +58,15 @@ function ThroughputSimulationPage() {
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Throughput Simulation</h1>
       <p className="mt-2 text-slate-600">Model how worker count, latency, and failure rates impact effective throughput in an asynchronous processing pipeline.</p>
 
+      <ProvenanceNote labId="throughput-simulation" />
+
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
           <div className="space-y-4">
             <label className="block text-sm font-semibold text-slate-700">
               <div className="flex justify-between">
                 <span>Concurrency (Workers)</span>
-                <span className="text-teal-600">{workers}</span>
+                <span className="text-teal-700">{workers}</span>
               </div>
               <input
                 type="range"
@@ -78,7 +81,7 @@ function ThroughputSimulationPage() {
             <label className="block text-sm font-semibold text-slate-700 pt-2">
               <div className="flex justify-between">
                 <span>Processing Latency</span>
-                <span className="text-teal-600">{processingMs} ms</span>
+                <span className="text-teal-700">{processingMs} ms</span>
               </div>
               <input
                 type="range"
@@ -94,7 +97,7 @@ function ThroughputSimulationPage() {
             <label className="block text-sm font-semibold text-slate-700 pt-2">
               <div className="flex justify-between">
                 <span>Failure Rate</span>
-                <span className="text-teal-600">{failureRate}%</span>
+                <span className="text-teal-700">{failureRate}%</span>
               </div>
               <input
                 type="range"
@@ -108,7 +111,7 @@ function ThroughputSimulationPage() {
           </div>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col">
+        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm flex flex-col">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">Live simulation</h2>
             <button
@@ -128,7 +131,7 @@ function ThroughputSimulationPage() {
             </div>
             <div className="bg-teal-50 p-4 rounded-xl border border-teal-100">
               <div className="text-xs uppercase tracking-widest text-teal-700 font-semibold mb-1">Effective</div>
-              <div className="text-2xl font-bold text-teal-700">{result.effectiveThroughput.toFixed(1)} <span className="text-sm font-normal text-teal-600/70">req/s</span></div>
+              <div className="text-2xl font-bold text-teal-700">{result.effectiveThroughput.toFixed(1)} <span className="text-sm font-normal text-teal-700">req/s</span></div>
             </div>
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
               <div className="text-xs uppercase tracking-widest text-slate-500 font-semibold mb-1">P95 Latency</div>

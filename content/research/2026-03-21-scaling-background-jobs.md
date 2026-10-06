@@ -1,9 +1,8 @@
 ---
 title: "Scaling Background Jobs: Adaptive Concurrency"
 date: "2026-03-21"
-tags: ["queues", "workers", "scaling", "backend", "performance"]
+tags: ["queues", "architecture", "benchmark"]
 summary: "Operational patterns and practical lessons for scaling asynchronous jobs while keeping failure rates and costs predictable."
-reading_time: "9 min read"
 ---
 
 ## The Static Scaling Trap

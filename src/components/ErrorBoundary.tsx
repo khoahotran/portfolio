@@ -52,7 +52,7 @@ class ErrorBoundary extends Component<Props, State> {
         <button
           type="button"
           onClick={this.handleReload}
-          className="rounded-full bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+          className="rounded-full bg-inverse px-6 py-2.5 text-sm font-semibold text-inverse-fg transition hover:bg-inverse/90"
         >
           Reload page
         </button>

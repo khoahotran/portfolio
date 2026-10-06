@@ -2,9 +2,9 @@ import { skillCategoriesData as skillCategories } from '../data/portfolioData';
 
 export default function Skills() {
   return (
-    <section className="py-24 px-6 bg-white">
+    <section className="py-24 px-6 bg-surface">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-sm uppercase tracking-widest text-teal-600 mb-12 font-medium italic">
+        <h2 className="text-sm uppercase tracking-widest text-teal-700 mb-12 font-medium italic">
           / Capabilities
         </h2>
         <div className="grid md:grid-cols-2 gap-8">
@@ -17,7 +17,7 @@ export default function Skills() {
                 {category.skills.map((skill, i) => (
                   <span
                     key={i}
-                    className="px-3 py-1 bg-white text-slate-700 rounded-full border border-slate-200 text-sm"
+                    className="px-3 py-1 bg-surface text-slate-700 rounded-full border border-slate-200 text-sm"
                   >
                     {skill}
                   </span>
