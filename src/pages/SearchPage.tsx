@@ -160,7 +160,7 @@ function SearchPage() {
             setParams(next);
           }}
           placeholder="Search architecture, retries, event-driven..."
-          className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none ring-teal-500 transition focus:ring"
+          className="w-full rounded-xl border border-slate-300 bg-surface px-4 py-3 text-sm text-slate-900 outline-none ring-teal-500 transition focus:ring"
         />
       </label>
 
@@ -168,7 +168,7 @@ function SearchPage() {
         <button
           type="button"
           aria-pressed={!selectedCollection}
-          className={`rounded-full border px-3 py-1 text-xs font-semibold ${!selectedCollection ? 'border-teal-500 bg-teal-500 text-white' : 'border-slate-300 text-slate-700'}`}
+          className={`rounded-full border px-3 py-1 text-xs font-semibold ${!selectedCollection ? 'border-accent bg-accent text-accent-fg' : 'border-slate-300 text-slate-700'}`}
           onClick={() => setParams(query ? { q: query } : {})}
         >
           All
@@ -178,7 +178,7 @@ function SearchPage() {
             key={collection}
             type="button"
             aria-pressed={selectedCollection === collection}
-            className={`rounded-full border px-3 py-1 text-xs font-semibold capitalize ${selectedCollection === collection ? 'border-teal-500 bg-teal-500 text-white' : 'border-slate-300 text-slate-700'}`}
+            className={`rounded-full border px-3 py-1 text-xs font-semibold capitalize ${selectedCollection === collection ? 'border-accent bg-accent text-accent-fg' : 'border-slate-300 text-slate-700'}`}
             onClick={() => setParams(query ? { q: query, collection } : { collection })}
           >
             {collectionLabel(collection)}
@@ -204,10 +204,10 @@ function SearchPage() {
         {!loading &&
           !error &&
           results.map((item) => (
-            <article key={`${item.collection}-${item.slug}`} className="rounded-xl border border-slate-200 bg-white p-4">
+            <article key={`${item.collection}-${item.slug}`} className="rounded-xl border border-slate-200 bg-surface p-4">
               <p className="text-[11px] uppercase tracking-wide text-slate-500">{item.collection}</p>
               <h2 className="mt-1 text-lg font-semibold text-slate-900">
-                <Link to={`${routeForCollection(item.collection)}/${item.slug}`} className="hover:text-teal-600">
+                <Link to={`${routeForCollection(item.collection)}/${item.slug}`} className="hover:text-teal-700">
                   {item.title}
                 </Link>
               </h2>

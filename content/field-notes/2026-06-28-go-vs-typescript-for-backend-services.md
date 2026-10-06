@@ -1,10 +1,9 @@
 ---
 title: "Field Note: Go vs TypeScript for Backend Services"
 date: "2026-06-28"
-tags: ["go", "typescript", "backend", "language-comparison", "architecture", "trade-offs"]
+tags: ["go", "typescript", "architecture", "benchmark", "trade-offs"]
 related: ["experiments/go-vs-ts-concurrency"]
 summary: "A working engineer's honest comparison of Go and TypeScript for backend services, based on using both in production — and a framework for choosing between them."
-reading_time: "8 min read"
 ---
 
 I have built production backend services in both Go and TypeScript. Not as academic exercises — as systems that serve real users, handle real money, and wake me up at night when they break.

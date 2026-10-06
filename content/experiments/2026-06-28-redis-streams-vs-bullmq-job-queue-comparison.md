@@ -1,10 +1,11 @@
 ---
 title: "Redis Streams vs BullMQ: Choosing Your Job Queue"
 date: "2026-06-28"
-tags: ["experiment", "benchmark", "redis", "bullmq", "queues", "go", "typescript", "async-jobs"]
+tags: ["benchmark", "redis", "queues", "go", "typescript"]
 related: ["projects/quant-alpha", "blog/building-jujuja-a-production-quest-system"]
+series: "The Benchmark Rewrites"
+seriesOrder: 1
 summary: "A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns."
-reading_time: "10 min read"
 ---
 
 ## The Same Infrastructure, Two Different Abstractions
@@ -259,10 +260,25 @@ events.on('failed', async ({ jobId, failedReason }) => {
 
 ### Methodology
 
-- **Hardware:** Dedicated 4-core AWS EC2 instance (c6g.xlarge).
-- **Network:** Redis and the workers were hosted on the same VPC.
-- **BullMQ:** Node.js v20. Used the standard `Worker` class.
-- **Redis Streams:** Go 1.22. Used the `go-redis` client with `XADD` and `XREADGROUP` commands.
+- **Hardware:** A local Docker Compose stack (Redis 7, a Go 1.22 producer/consumer, and a Node 20
+  BullMQ worker as separate containers on the same bridge network) — not the AWS c6g.xlarge cited
+  in an earlier version of this article, whose harness was lost. Rewritten as a runnable harness
+  rather than reconstructed from memory; see below.
+- **BullMQ:** Node.js 20. One `Worker` instance per configured worker count, concurrency 1 each.
+- **Redis Streams:** Go 1.22. `go-redis`, `XADD` to enqueue, `XREADGROUP` against a shared consumer
+  group to drain, one goroutine per worker.
+- **Protocol:** Enqueue all jobs first, only then start the workers, so both engines are measured
+  draining an identical backlog rather than production and consumption overlapping unevenly.
+  Job counts: 3,000 for 1&nbsp;KB/10&nbsp;KB payloads, 1,000 for 100&nbsp;KB (kept lower purely to
+  bound total runtime — same count for both engines within each payload size).
+
+> [!NOTE]
+> **Reproducibility.** This harness is real and committed:
+> [`benchmarks/redis-vs-bullmq/`](https://github.com/khoahotran/portfolio/tree/main/benchmarks/redis-vs-bullmq)
+> in the portfolio repository — a Docker Compose stack plus a `run.sh` that reproduces every number
+> below from a cold start. The interactive lab imports this exact `results.json`, not a hand-picked
+> subset. Numbers will vary run to run and host to host — that's true of any benchmark — but the
+> methodology is no longer something you have to take on faith.
 
 ### Key Observations
 
@@ -270,9 +286,27 @@ BullMQ is an incredible piece of software with built-in retries, backoff, and re
 
 Native Redis Streams via Go, on the other hand, just appends and reads from a log.
 
-If your system requires raw, unadulterated throughput (e.g., passing millions of tiny websocket events or tick data), Redis Streams in Go completely annihilates BullMQ, offering up to **4-5x higher throughput** and significantly lower P99 latency. However, if you need complex job management (e.g., pausing queues, rate limiting, parent/child jobs), BullMQ's overhead is well worth it.
+| Payload | Workers | Redis Streams (jobs/s) | BullMQ (jobs/s) | Ratio |
+| :--- | :--- | ---: | ---: | ---: |
+| 1 KB | 1 | 1,745 | 783 | 2.2x |
+| 1 KB | 5 | 4,061 | 1,363 | 3.0x |
+| 10 KB | 1 | 1,614 | 707 | 2.3x |
+| 10 KB | 5 | 3,467 | 1,208 | 2.9x |
+| 100 KB | 1 | 1,379 | 273 | 5.1x |
+| 100 KB | 5 | 1,707 | 308 | 5.5x |
 
-<a href="/labs/redis-vs-bullmq" class="not-prose inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 hover:shadow-md transition-all mt-4 mb-8">
+The gap is not a flat multiplier — it grows with payload size. At 1&nbsp;KB and 10&nbsp;KB, Redis
+Streams runs roughly 2-3x BullMQ's throughput; at 100&nbsp;KB, that widens to 5-5.5x. BullMQ's
+per-job Lua-script overhead is largely fixed regardless of payload size, so as the payload itself
+gets more expensive to move and JSON-serialize, that fixed overhead becomes a smaller fraction of
+BullMQ's total cost per job — while Redis Streams, with no such per-job scripting cost, keeps
+scaling more cleanly with raw I/O. If your system requires raw, unadulterated throughput (e.g.,
+passing millions of tiny websocket events or tick data), Redis Streams in Go is the clear win — and
+the win gets larger, not smaller, as payloads grow. If you need complex job management (pausing
+queues, rate limiting, parent/child jobs), BullMQ's overhead is well worth it, and the gap above is
+the price of that convenience, not a reason to avoid it.
+
+<a href="/labs/redis-vs-bullmq" class="lab-cta">
   View Interactive Benchmark
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
 </a>

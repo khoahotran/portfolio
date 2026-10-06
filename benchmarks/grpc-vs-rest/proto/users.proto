@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package users;
+
+option go_package = "grpc-vs-rest/pb";
+
+// Deliberately not a trivial ping/pong message — a payload with a handful of scalar fields, a
+// repeated field, and a longer text field, so both protobuf's binary encoding and Go's
+// encoding/json have real serialization work to do. A single-int64 "ping" would flatter whichever
+// protocol has the smaller fixed framing overhead and say nothing about a realistic payload.
+message User {
+  int64 id = 1;
+  string name = 2;
+  string email = 3;
+  repeated string tags = 4;
+  int64 created_at_unix = 5;
+  string bio = 6;
+}
+
+message GetUserRequest {
+  int64 id = 1;
+}
+
+message ListUsersRequest {
+  int32 count = 1;
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+}
+
+service UserService {
+  rpc GetUser(GetUserRequest) returns (User);
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+}

@@ -1,10 +1,9 @@
 ---
 title: "Distributed Tracing with OpenTelemetry and Jaeger"
 date: "2026-06-28"
-tags: ["opentelemetry", "jaeger", "observability", "go", "distributed-systems", "tracing"]
-related: ["projects/aegis", "blog/grpc-service-mesh-in-go-aegis-architecture"]
+tags: ["opentelemetry", "observability", "go", "distributed-systems"]
+related: ["projects/aegis", "blog/grpc-service-mesh-in-go-aegis-architecture", "research/adr-tracing-vs-metrics-in-microservices"]
 summary: "A practical guide to instrumenting Go microservices with OpenTelemetry: from SDK setup to trace context propagation, sampling strategies, and reading Jaeger flame graphs."
-reading_time: "10 min read"
 ---
 
 ## The Debugging Problem at Scale

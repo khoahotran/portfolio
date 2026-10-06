@@ -9,11 +9,11 @@ export default function Hero() {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-white text-slate-900 relative overflow-hidden">
+    <section className="min-h-screen flex items-center justify-center bg-surface text-slate-900 relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(20,184,166,0.05),transparent_25%),radial-gradient(circle_at_80%_80%,rgba(14,165,233,0.05),transparent_25%)]" />
       <div className="relative text-center px-6 max-w-5xl mx-auto space-y-10">
         <div className="space-y-4 animate-fade-in">
-          <p className="text-sm uppercase tracking-[0.35em] text-teal-600 font-medium">{heroData.role}</p>
+          <p className="text-sm uppercase tracking-[0.35em] text-teal-700 font-medium">{heroData.role}</p>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-slate-900">
             {heroData.name}
           </h1>
@@ -21,10 +21,10 @@ export default function Hero() {
             {heroData.tagline}
           </p>
           <p className="text-sm text-slate-500">{heroData.location}</p>
-          <div className="flex items-center justify-center gap-6 pt-4 text-slate-400">
-            <a href={`mailto:${heroData.email}`} aria-label="Email" className="hover:text-teal-600 transition-colors"><Mail size={24} /></a>
-            <a href={heroData.github} aria-label="GitHub Profile" target="_blank" rel="noopener noreferrer" className="hover:text-teal-600 transition-colors"><Github size={24} /></a>
-            <a href={heroData.linkedin} aria-label="LinkedIn Profile" target="_blank" rel="noopener noreferrer" className="hover:text-teal-600 transition-colors"><Linkedin size={24} /></a>
+          <div className="flex items-center justify-center gap-6 pt-4 text-slate-500">
+            <a href={`mailto:${heroData.email}`} aria-label="Email" className="hover:text-teal-700 transition-colors"><Mail size={24} /></a>
+            <a href={heroData.github} aria-label="GitHub Profile" target="_blank" rel="noopener noreferrer" className="hover:text-teal-700 transition-colors"><Github size={24} /></a>
+            <a href={heroData.linkedin} aria-label="LinkedIn Profile" target="_blank" rel="noopener noreferrer" className="hover:text-teal-700 transition-colors"><Linkedin size={24} /></a>
           </div>
         </div>
 
@@ -53,13 +53,13 @@ export default function Hero() {
         <div className="flex flex-wrap items-center justify-center gap-4">
           <a
             href="#projects"
-            className="px-8 py-3 rounded-full bg-slate-900 text-white font-semibold shadow-lg shadow-slate-200 hover:bg-slate-800 transition-all hover:-translate-y-0.5"
+            className="px-8 py-3 rounded-full bg-inverse text-inverse-fg font-semibold shadow-lg shadow-slate-200 hover:bg-inverse/90 transition-all hover:-translate-y-0.5"
           >
             View Projects
           </a>
           <a
             href="#contact"
-            className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-600 transition-colors"
+            className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-700 transition-colors"
           >
             Get in touch
           </a>
@@ -67,7 +67,7 @@ export default function Hero() {
 
         <button
           onClick={scrollToContent}
-          className="animate-bounce-slow mt-8 text-slate-400 hover:text-teal-600 transition-colors"
+          className="animate-bounce-slow mt-8 text-slate-500 hover:text-teal-700 transition-colors"
           aria-label="Scroll to content"
         >
           <ChevronDown size={32} />

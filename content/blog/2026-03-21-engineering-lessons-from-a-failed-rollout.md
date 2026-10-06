@@ -1,9 +1,9 @@
 ---
 title: "Engineering Lessons from a Failed Rollout"
 date: "2026-03-21"
-tags: ["incident-response", "release-engineering", "devops", "sre", "lessons"]
+tags: ["incident-response"]
+related: ["experiments/canary-deploys-and-the-sample-size-nobody-checks"]
 summary: "What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline."
-reading_time: "9 min read"
 ---
 
 ## The Incident

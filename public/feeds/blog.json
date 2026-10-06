@@ -8,16 +8,41 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/blog/hidden-costs-of-firebase-cloud-functions",
+      "url": "https://khoahotran.github.io/portfolio/blog/hidden-costs-of-firebase-cloud-functions",
+      "title": "The Hidden Costs of Firebase Cloud Functions",
+      "summary": "A follow-up to the field note on choosing Firebase Functions over Cloud Run: two costs the concurrency model doesn't advertise on its own.",
+      "date_published": "2026-08-28T00:00:00.000Z",
+      "tags": [
+        "serverless",
+        "trade-offs"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/hidden-costs-of-firebase-cloud-functions.png"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw",
+      "url": "https://khoahotran.github.io/portfolio/blog/the-spa-google-never-saw",
+      "title": "The SPA Google Never Saw",
+      "summary": "This portfolio was a client-rendered SPA on GitHub Pages for months. Every deep link a crawler could find returned 404. Here's how I found it, and what I built instead of migrating frameworks.",
+      "date_published": "2026-08-27T00:00:00.000Z",
+      "tags": [
+        "seo",
+        "react",
+        "frontend-architecture"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/the-spa-google-never-saw.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system",
       "url": "https://khoahotran.github.io/portfolio/blog/building-jujuja-a-production-quest-system",
       "title": "Building Jujuja: A Production Quest System for Burst Traffic",
       "summary": "How we built the Jujuja backend to handle 1,500 concurrent users per minute during campaign bursts, processing daily quests and loyalty points using BullMQ and NestJS.",
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
-        "case-study",
-        "nestjs",
+        "architecture",
+        "typescript",
         "redis",
-        "bullmq",
+        "queues",
         "firestore"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/building-jujuja-a-production-quest-system.png"
@@ -32,7 +57,7 @@
         "system-design",
         "go",
         "python",
-        "redis-streams",
+        "redis",
         "hft"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/designing-a-multi-role-hft-research-platform.png"
@@ -46,10 +71,10 @@
       "tags": [
         "go",
         "grpc",
-        "microservices",
-        "auth",
+        "distributed-systems",
+        "security",
         "opentelemetry",
-        "protobuf"
+        "api-design"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/grpc-service-mesh-in-go-aegis-architecture.png"
     },
@@ -62,9 +87,7 @@
       "tags": [
         "cqrs",
         "architecture",
-        "backend",
-        "system-design",
-        "database"
+        "system-design"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/architecture-breakdown-cqrs-for-mid-size-products.png"
     },
@@ -75,11 +98,7 @@
       "summary": "What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
-        "incident-response",
-        "release-engineering",
-        "devops",
-        "sre",
-        "lessons"
+        "incident-response"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/engineering-lessons-from-a-failed-rollout.png"
     },
@@ -92,8 +111,7 @@
       "tags": [
         "idempotency",
         "api-design",
-        "distributed-systems",
-        "resilience"
+        "distributed-systems"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/system-design-notes-idempotency.png"
     }

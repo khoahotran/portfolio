@@ -22,14 +22,23 @@ jobs:
 
       - run: npm run lint
 
-      # npm run build already runs build:search-index first (see package.json).
-      - run: npm run build
+      # Pure-logic unit tests: lab registry / lab-ids.json parity, slugify parity between the app
+      # and the build script, and the frontmatter + reading-time helpers. Runs before the build
+      # because a slugify divergence would otherwise produce a green build full of unreachable
+      # articles. See src/content-engine/slugify.test.ts for why that one matters most.
+      - run: npm test
 
-      # Chromium only — the regression check doesn't need Firefox/WebKit for
-      # every push. Resolved from the `playwright` devDependency already in
-      # package.json, not installed ad hoc.
+      # Chromium only — neither the prerender pass nor the regression check needs
+      # Firefox/WebKit. Resolved from the `playwright` devDependency already in
+      # package.json, not installed ad hoc. Must come BEFORE the build: `npm run build`
+      # now ends with `npm run prerender`, which drives headless Chromium.
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
+
+      # build:search-index -> vite build -> prerender (see package.json). The prerender
+      # step fails the build if any route ships without its own title/canonical/og:image,
+      # which is the regression it exists to prevent.
+      - run: npm run build
 
       - name: Start preview server
         run: npx vite preview --port 4173 --strictPort &
@@ -49,3 +58,79 @@ jobs:
       # regressing as new components are added.
       - name: Responsive regression check
         run: npm run check:responsive
+
+      # WCAG AA contrast across every route in BOTH themes. This is what makes the dark theme
+      # verifiable rather than asserted, and it closes .ai/audit-followups.md item 2 with a
+      # measurement instead of an opinion — the whole point of that item was that nobody had
+      # measured which `text-slate-400` uses actually failed.
+      - name: Contrast check
+        run: npm run check:contrast
+
+      # Only a fully green job produces the artifact the deploy job consumes, and only for a push
+      # to main — a PR build has nothing to deploy. Keeping the upload last means every gate above
+      # has already passed by the time this runs, so there is no window where a half-checked build
+      # could reach the deploy job.
+      - name: Upload built site
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 1
+
+  # Why this lives in ci.yml as a dependent job rather than its own workflow: a separate workflow
+  # triggered on push to main would race this one, and could publish a build whose checks had not
+  # finished — or had failed. `needs: build-and-check` makes "the site is live" mean "every gate
+  # passed", which is the whole point of having the gates.
+  #
+  # Before this existed, deploy was `npm run deploy` (gh-pages -d dist) run by hand from a laptop,
+  # and main had no technical role at all: Pages serves gh-pages, and nothing connected the two.
+  # main could sit 160 commits ahead of the live site with nothing to signal it — which is exactly
+  # what happened between 2026-08-20 and 2026-10-06.
+  deploy:
+    needs: build-and-check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: deploy-gh-pages
+      cancel-in-progress: false
+    steps:
+      - name: Check out the deploy branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Download the built site
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      # --delete is deliberate: the deploy branch mirrors dist/ exactly, so a route or asset that
+      # disappears from the build must disappear from the live site too. This also clears the stray
+      # .gitignore the branch has carried since it was created — it listed `dist` and `node_modules`,
+      # which would silently drop any future build output that happened to match those names.
+      - name: Sync the build into the deploy branch
+        run: rsync -a --delete --exclude '.git' dist/ gh-pages/
+
+      # dist/ has no underscore-prefixed paths today, so Jekyll would not eat anything right now.
+      # This is insurance against a future asset named that way, and it skips Jekyll processing
+      # entirely on a site that is already fully built.
+      - name: Disable Jekyll processing
+        run: touch gh-pages/.nojekyll
+
+      - name: Commit and push
+        working-directory: gh-pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Built output is byte-identical to what is already live — nothing to deploy."
+            exit 0
+          fi
+          git commit -m "Deploy ${GITHUB_SHA:0:7} from main"
+          git push origin gh-pages

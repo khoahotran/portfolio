@@ -7,9 +7,15 @@ const markdownLoaders = import.meta.glob('../../content/{blog,research,experimen
 
 const rawLoaderMap = new Map<string, () => Promise<string>>();
 
-// Kept identical to the slugify() in scripts/build-search-index.mjs, which produces
-// the canonical slugs stored in the generated content index.
-function slugify(value: string): string {
+/**
+ * MUST stay byte-identical to `slugify()` in scripts/lib/content.mjs, which produces the canonical
+ * slugs stored in the generated content index. If the two ever diverge, an article keeps its entry
+ * in the index and the sitemap but stops resolving at its own URL — the same failure mode
+ * .ai/decision-log.md Decision 5 had to fix once already.
+ *
+ * Exported solely so that invariant can be asserted: see src/content-engine/slugify.test.ts.
+ */
+export function slugify(value: string): string {
   return value
     .toLowerCase()
     .trim()

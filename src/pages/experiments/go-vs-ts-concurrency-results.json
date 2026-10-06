@@ -1,0 +1,38 @@
+[
+  {
+    "language": "go",
+    "tasks": 1000,
+    "peakMemoryMB": 4.890625,
+    "durationMs": 55.211
+  },
+  {
+    "language": "node",
+    "tasks": 1000,
+    "peakMemoryMB": 50.125,
+    "durationMs": 58.417877000000004
+  },
+  {
+    "language": "go",
+    "tasks": 10000,
+    "peakMemoryMB": 27.8515625,
+    "durationMs": 99.221
+  },
+  {
+    "language": "node",
+    "tasks": 10000,
+    "peakMemoryMB": 57.89453125,
+    "durationMs": 129.58466
+  },
+  {
+    "language": "go",
+    "tasks": 50000,
+    "peakMemoryMB": 71.15234375,
+    "durationMs": 175.594
+  },
+  {
+    "language": "node",
+    "tasks": 50000,
+    "peakMemoryMB": 84.640625,
+    "durationMs": 228.06383799999998
+  }
+]

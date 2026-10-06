@@ -8,6 +8,45 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/field-notes/what-git-log-proves-about-spec-driven-development",
+      "url": "https://khoahotran.github.io/portfolio/field-notes/what-git-log-proves-about-spec-driven-development",
+      "title": "Field Note: What My Own Git Log Proves About Spec-Driven Development",
+      "summary": "PFM's governance docs claim every business rule traces from spec to test to code. A plain git log, not the docs, is what actually proves it — and it also shows two honest cases of deliberately not fixing something.",
+      "date_published": "2026-09-07T00:00:00.000Z",
+      "tags": [
+        "spec-driven-development",
+        "testing",
+        "trade-offs"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/what-git-log-proves-about-spec-driven-development.png"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/field-notes/a-diagram-that-wouldnt-render",
+      "url": "https://khoahotran.github.io/portfolio/field-notes/a-diagram-that-wouldnt-render",
+      "title": "Field Note: A Diagram That Wouldn't Render",
+      "summary": "A sequence diagram in a new case study failed to parse. The cause wasn't the character I suspected first — and the fix I tried second broke the same way for a different reason.",
+      "date_published": "2026-08-27T00:00:00.000Z",
+      "tags": [
+        "frontend-architecture",
+        "testing"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/a-diagram-that-wouldnt-render.png"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/field-notes/measuring-contrast-instead-of-guessing",
+      "url": "https://khoahotran.github.io/portfolio/field-notes/measuring-contrast-instead-of-guessing",
+      "title": "Field Note: Measuring Contrast Instead of Guessing at It",
+      "summary": "A prior audit flagged 44 text-slate-400 occurrences as 'potentially borderline' and correctly refused to fix them blind. Building a real contrast checker turned that judgment call into a number — and found two unrelated bugs on the way.",
+      "date_published": "2026-08-27T00:00:00.000Z",
+      "tags": [
+        "accessibility",
+        "frontend-architecture",
+        "testing",
+        "trade-offs"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/measuring-contrast-instead-of-guessing.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/field-notes/go-vs-typescript-for-backend-services",
       "url": "https://khoahotran.github.io/portfolio/field-notes/go-vs-typescript-for-backend-services",
       "title": "Field Note: Go vs TypeScript for Backend Services",
@@ -16,9 +55,8 @@
       "tags": [
         "go",
         "typescript",
-        "backend",
-        "language-comparison",
         "architecture",
+        "benchmark",
         "trade-offs"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/go-vs-typescript-for-backend-services.png"
@@ -30,10 +68,7 @@
       "summary": "A practical evaluation of Firebase Functions vs Cloud Run, and why the simplest serverless model won out for our specific workloads.",
       "date_published": "2026-06-03T00:00:00.000Z",
       "tags": [
-        "system-architecture",
         "serverless",
-        "firebase",
-        "gcp",
         "trade-offs"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/why-i-chose-firebase-functions-over-cloud-run.png"

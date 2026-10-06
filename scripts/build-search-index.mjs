@@ -1,6 +1,19 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
+import { siteDescription, siteTitle, siteUrl } from '../site.config.mjs';
+import { collections, staticRoutes } from './lib/site-routes.mjs';
+import { CANONICAL_TAGS } from './lib/tag-taxonomy.mjs';
+import {
+  escapeXml,
+  estimateReading,
+  findCrossCollectionSlugCollisions,
+  parseFrontmatterBlock,
+  parseScalar,
+  slugify,
+  splitFrontmatter,
+  stripSearchNoise,
+} from './lib/content.mjs';
 
 const rootDir = process.cwd();
 const contentDir = path.join(rootDir, 'content');
@@ -17,163 +30,9 @@ const jsonFeedPath = path.join(publicDir, 'feed.json');
 const feedsDir = path.join(publicDir, 'feeds');
 const ogDir = path.join(publicDir, 'og');
 
-const siteUrl = 'https://khoahotran.github.io/portfolio';
-const siteTitle = 'Khoa Tran Engineering Portfolio';
-const siteDescription = 'Case studies, system design notes, and interactive engineering experiments.';
-const collections = ['blog', 'research', 'experiments', 'system-design', 'field-notes', 'projects'];
-
-// Kept in sync manually with src/labs/registry.ts (a plain Node script can't import
-// TSX without an extra loader, and this list rarely changes).
-const labIds = [
-  'throughput-simulation',
-  'retry-strategy',
-  'failure-injection',
-  'queue-vs-pubsub',
-  'saga-state-machine',
-  'event-sourcing-replay',
-  'redis-vs-bullmq',
-  'go-vs-ts-concurrency',
-  'db-event-replay-benchmark',
-];
-
-const staticRoutes = [
-  '/',
-  '/about',
-  '/graph',
-  '/blog',
-  '/research',
-  '/experiments',
-  '/system-design',
-  '/field-notes',
-  '/projects',
-  '/labs',
-  ...labIds.map((id) => `/labs/${id}`),
-];
-
-function slugify(value) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-}
-
-function escapeXml(value) {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
-}
-
-function parseScalar(raw) {
-  const cleaned = raw.trim().replace(/^"|"$/g, '').replace(/^'|'$/g, '');
-  if (cleaned === 'true') {
-    return true;
-  }
-
-  if (cleaned === 'false') {
-    return false;
-  }
-
-  return cleaned;
-}
-
-function parseFrontmatterBlock(block) {
-  const parsed = {};
-
-  block
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line && !line.startsWith('#'))
-    .forEach((line) => {
-      const separatorIndex = line.indexOf(':');
-      if (separatorIndex === -1) {
-        return;
-      }
-
-      const key = line.slice(0, separatorIndex).trim();
-      const value = line.slice(separatorIndex + 1).trim();
-
-      if (value.startsWith('[') && value.endsWith(']')) {
-        parsed[key] = value
-          .slice(1, -1)
-          .split(',')
-          .map((item) => parseScalar(item))
-          .map(String)
-          .map((item) => item.trim())
-          .filter(Boolean);
-        return;
-      }
-
-      parsed[key] = parseScalar(value);
-    });
-
-  return parsed;
-}
-
-function splitFrontmatter(raw) {
-  if (!raw.startsWith('---')) {
-    return { data: {}, body: raw };
-  }
-
-  const match = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
-  if (!match) {
-    return { data: {}, body: raw };
-  }
-
-  return {
-    data: parseFrontmatterBlock(match[1]),
-    body: match[2],
-  };
-}
-
-function stripSearchNoise(body) {
-  return body
-    .replace(/```[\s\S]*?```/g, ' ') // fenced code blocks, incl. Mermaid source
-    .replace(/`[^`]*`/g, ' ') // inline code
-    .replace(/<[^>]+>/g, ' ') // raw HTML (CTA buttons, etc.)
-    .replace(/^\s*\|.*$/gm, ' ') // table rows
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-// Reading time is derived from the article, not from the hand-written
-// `reading_time` frontmatter (kept in the files as authorial intent, but no
-// longer read for display — see .ai/audit-followups.md item 1). Prose reads
-// at 220 wpm; a code block adds ~20s (skimming, not executing); a Mermaid
-// diagram adds ~30s (reading the shape). Measured across the corpus: this
-// produces ~107 total minutes vs. 305 declared and 72 for prose-only, which
-// better reflects that a diagram-heavy or code-heavy article genuinely takes
-// longer to read than its prose word count alone implies.
-function estimateReading(body) {
-  let codeBlocks = 0;
-  let mermaidBlocks = 0;
-
-  const prose = body
-    .replace(/```(\w*)\n[\s\S]*?```/g, (_match, lang) => {
-      if (lang.trim().toLowerCase() === 'mermaid') {
-        mermaidBlocks += 1;
-      } else {
-        codeBlocks += 1;
-      }
-      return ' ';
-    })
-    .replace(/`[^`]*`/g, ' ') // inline code
-    .replace(/<[^>]+>/g, ' ') // raw HTML (CTA buttons, etc.)
-    .replace(/^\s*\|.*$/gm, ' ') // table rows
-    .replace(/\$\$[\s\S]*?\$\$/g, ' ') // block LaTeX
-    .replace(/\$[^$\n]+\$/g, ' ') // inline LaTeX
-    .replace(/^#{1,6}\s+/gm, '') // heading markers (keep the heading text)
-    .replace(/[*_>[\]()#-]/g, ' '); // remaining markdown punctuation
-
-  const proseWords = prose.trim().split(/\s+/).filter(Boolean).length;
-  const minutes = Math.max(1, Math.round(proseWords / 220 + codeBlocks * (20 / 60) + mermaidBlocks * (30 / 60)));
-
-  return { readingMinutes: minutes, readingText: `${minutes} min read` };
-}
+// siteUrl/siteTitle/siteDescription come from site.config.mjs, and the collection + lab-id +
+// static-route lists from scripts/lib/site-routes.mjs, so this script no longer keeps its own
+// copy of either. See the header comments in those two files.
 
 // Word-wraps into at most `maxLines` lines of roughly `maxCharsPerLine` characters,
 // ellipsizing the last line if there's more text than fits. Previously the title
@@ -263,8 +122,18 @@ function articleUrl(doc) {
   return `${siteUrl}/${doc.collection}/${doc.slug}`;
 }
 
+// `docs` is always sorted newest-first (see the `docs.sort()` call in buildAssets, preserved by
+// every subsequent `.filter()`), so its first entry's date is deterministic — driven by content,
+// not wall-clock time. Previously this was `new Date().toUTCString()`, which dirtied every feed
+// file on every build regardless of whether any content had changed (measured: 7 files under
+// public/feeds/ on a zero-change rerun), defeating the point of Decision 3's chore(build)-commits-
+// separately rule — a commit with no real change should diff clean, not just look small.
+function lastBuildDateFor(docs) {
+  return docs.length > 0 ? toRssDate(docs[0].date) : toRssDate('1970-01-01');
+}
+
 function buildRss(docs, channelTitle, channelDescription, channelLink) {
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>${escapeXml(channelTitle)}</title>\n    <link>${escapeXml(channelLink)}</link>\n    <description>${escapeXml(channelDescription)}</description>\n    <language>en-us</language>\n    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>\n${docs
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>${escapeXml(channelTitle)}</title>\n    <link>${escapeXml(channelLink)}</link>\n    <description>${escapeXml(channelDescription)}</description>\n    <language>en-us</language>\n    <lastBuildDate>${lastBuildDateFor(docs)}</lastBuildDate>\n${docs
     .slice(0, 50)
     .map(
       (doc) => `    <item>\n      <title>${escapeXml(doc.title)}</title>\n      <link>${escapeXml(articleUrl(doc))}</link>\n      <guid isPermaLink="true">${escapeXml(articleUrl(doc))}</guid>\n      <pubDate>${toRssDate(doc.date)}</pubDate>\n      <description>${escapeXml(doc.summary)}</description>\n    </item>`
@@ -326,6 +195,8 @@ async function buildAssets() {
       const slug = slugify(String(data.slug ?? fileSlug));
       const tags = Array.isArray(data.tags) ? data.tags.map(String) : [];
       const related = Array.isArray(data.related) ? data.related.map(String) : undefined;
+      const series = data.series !== undefined ? String(data.series) : undefined;
+      const seriesOrder = data.seriesOrder !== undefined ? Number(data.seriesOrder) : undefined;
       const reading = estimateReading(body);
       const title = String(data.title ?? fileSlug.replace(/-/g, ' '));
       const summary = String(data.summary ?? 'Engineering write-up');
@@ -339,12 +210,13 @@ async function buildAssets() {
         date: String(data.date ?? new Date().toISOString().slice(0, 10)),
         tags,
         summary,
-        reading_time: data.reading_time ? String(data.reading_time) : undefined,
         draft: Boolean(data.draft),
         slug,
         collection,
         ogImage,
         related,
+        series,
+        seriesOrder,
         readingMinutes: reading.readingMinutes,
         // Always the computed value now, not the frontmatter override — see the
         // comment on estimateReading(). `reading_time` above still carries the
@@ -369,12 +241,27 @@ async function buildAssets() {
 
   docs.sort((a, b) => b.date.localeCompare(a.date));
 
+  // See findCrossCollectionSlugCollisions's own doc comment (scripts/lib/content.mjs) for why this
+  // has to be enforced at all: several places in src/ compare articles by bare `item.slug` across
+  // collections, an assumption nothing previously guaranteed. Found while reviewing
+  // getRelatedArticles's self-reference guard (Decision 20). This also would have caused a silent
+  // OG-image clobber above (two colliding docs writing to the same `og/<slug>.png`) before this
+  // check ever ran.
+  for (const { slug, collections } of findCrossCollectionSlugCollisions(docs)) {
+    throw new Error(
+      `Slug "${slug}" is used in more than one collection (${collections.join(', ')}) — slugs must ` +
+        'be unique across the entire corpus, not just within a collection, because several parts ' +
+        'of the app (related-articles lookup, OG image generation) key by slug alone. Rename one.'
+    );
+  }
+
   // Fail the build on a typo'd `related:` reference rather than letting it
   // silently render nothing — a curated cross-link is only worth adding if
   // it's checked, and a slug rename elsewhere is exactly the kind of change
   // that would otherwise break this invisibly.
   const validSlugs = new Set(docs.map((doc) => `${doc.collection}/${doc.slug}`));
   for (const doc of docs) {
+    const selfPath = `${doc.collection}/${doc.slug}`;
     for (const ref of doc.related ?? []) {
       if (!validSlugs.has(ref)) {
         throw new Error(
@@ -382,6 +269,60 @@ async function buildAssets() {
             'Expected format: "collection/slug" (e.g. "projects/aegis").'
         );
       }
+      // An article referencing itself is always a mistake (a typo, or a copy-pasted frontmatter
+      // block) — never a real cross-link — and would otherwise render the article in its own
+      // "Read Next" section. Caught here, at the same place the same field's other authoring
+      // mistakes already fail the build, rather than only guarded defensively at render time in
+      // getRelatedArticles.
+      if (ref === selfPath) {
+        throw new Error(`"related:" in ${selfPath} references itself — remove the self-reference.`);
+      }
+    }
+  }
+
+  // Same enforcement, same reason, for tags: a tag outside the canonical vocabulary in
+  // scripts/lib/tag-taxonomy.mjs can't group anything — that vocabulary was migrated from 92 tags
+  // (56 used exactly once) down to ~35 precisely to stop that drift starting again silently. See
+  // .ai/tag-taxonomy.md for the rationale and .ai/decision-log.md Decision 15.
+  for (const doc of docs) {
+    for (const tag of doc.tags ?? []) {
+      if (!CANONICAL_TAGS.has(tag)) {
+        throw new Error(
+          `Unknown tag "${tag}" in ${doc.collection}/${doc.slug} — not in the canonical vocabulary. ` +
+            'Either use an existing tag from .ai/tag-taxonomy.md, or add the new tag to both that ' +
+            'doc and scripts/lib/tag-taxonomy.mjs in the same change.'
+        );
+      }
+    }
+  }
+
+  // `series` is opt-in, unlike `collection` (every doc has one by construction), so a typo'd or
+  // missing `seriesOrder` would otherwise fail silently — a "Part N of M" badge that just never
+  // renders — rather than loudly. Same fail-the-build philosophy as the related/tag checks above.
+  // See .ai/phases/phase-5.md §5.6.
+  const seriesGroups = new Map();
+  for (const doc of docs) {
+    if (doc.series === undefined) {
+      continue;
+    }
+    if (doc.seriesOrder === undefined || Number.isNaN(doc.seriesOrder)) {
+      throw new Error(
+        `"${doc.collection}/${doc.slug}" declares series "${doc.series}" but has no valid ` +
+          '"seriesOrder:" — every part of a series must declare its 1-indexed position.'
+      );
+    }
+    if (!seriesGroups.has(doc.series)) {
+      seriesGroups.set(doc.series, []);
+    }
+    seriesGroups.get(doc.series).push(doc);
+  }
+  for (const [seriesName, group] of seriesGroups) {
+    const orders = group.map((doc) => doc.seriesOrder);
+    if (new Set(orders).size !== orders.length) {
+      throw new Error(
+        `Series "${seriesName}" has two parts sharing the same seriesOrder — each part needs a ` +
+          `distinct position. Parts: ${group.map((doc) => `${doc.collection}/${doc.slug}`).join(', ')}.`
+      );
     }
   }
 
@@ -407,12 +348,16 @@ async function buildAssets() {
   await fs.writeFile(outputIndexPath, JSON.stringify(docs, null, 2), 'utf-8');
 
   const dynamicRoutes = publicDocs.map((doc) => `/${doc.collection}/${doc.slug}`);
+  // One /tags/:tag per distinct tag actually in use — computed here rather than via
+  // readTagRoutes() (scripts/lib/site-routes.mjs) because publicDocs is already in memory; that
+  // function exists for scripts that run after this one has already written content-index.json.
+  const tagRoutes = [...new Set(publicDocs.flatMap((doc) => doc.tags))].sort().map((tag) => `/tags/${tag}`);
   // Only dynamic (article) routes have a natural "last modified" date from
-  // frontmatter; static routes (/, /about, /labs, ...) get no <lastmod>,
+  // frontmatter; static routes (/, /about, /labs, /tags/:tag, ...) get no <lastmod>,
   // which is valid per the sitemap spec — it's an optional element.
   const lastmodByRoute = new Map(publicDocs.map((doc) => [`/${doc.collection}/${doc.slug}`, doc.date]));
 
-  const urls = [...new Set([...staticRoutes, ...dynamicRoutes])];
+  const urls = [...new Set([...staticRoutes, ...dynamicRoutes, ...tagRoutes])];
   const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
     .map((route) => {
       const lastmod = lastmodByRoute.get(route);

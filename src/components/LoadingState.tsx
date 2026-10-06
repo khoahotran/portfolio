@@ -21,7 +21,7 @@ function LoadingState({ label = 'Loading…', className = '' }: Props) {
       role="status"
       aria-live="polite"
     >
-      <Loader2 className="h-4 w-4 animate-spin text-teal-600" aria-hidden="true" />
+      <Loader2 className="h-4 w-4 animate-spin text-teal-700" aria-hidden="true" />
       <span>{label}</span>
     </div>
   );
