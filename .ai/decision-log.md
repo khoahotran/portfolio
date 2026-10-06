@@ -557,3 +557,55 @@ same "don't duplicate the thing that's supposed to catch a real class of bug" re
   same discipline Decision 21 named as the strongest argument for this project's whole audit culture,
   now caught turned on the auditing tooling itself rather than application code.
 - `future.md`'s Track B "PFM as a content source" candidate is done; removed from that file.
+
+---
+
+## Decision 23 — Deploy is a gated job on `main`, not a command run by hand
+
+**Date:** 2026-10-06
+
+**Context.** GitHub Pages serves the `gh-pages` branch, and `gh-pages` was only ever written by
+`npm run deploy` (`gh-pages -d dist`) run manually from a laptop. Nothing connected `main` to the
+live site: `main` could pass CI and still have no relationship to what visitors saw. It did not
+stay theoretical — between 2026-08-20 and 2026-10-06, `main` sat 160 commits behind the work
+branch while the live site served a build with 33 documents, 52 sitemap URLs and **no prerendered
+routes at all**, meaning it was still shipping the exact SEO defect Decision 6's prerendering was
+written to fix. Nothing anywhere signalled the gap; it was found only by reading `gh-pages` directly
+while auditing branch state.
+
+A second gap compounded it: `ci.yml` triggers on push to `main`/`dev` and on pull requests, so a
+long-lived `feat/**` branch never ran CI at all. Phase 8 shipped ten labs that way, and
+`check:contrast` — a gate that existed and worked — went unrun for all ten, accumulating 11 WCAG AA
+failures nobody saw.
+
+**Decision.** Deploy as a `deploy` job inside `ci.yml` with `needs: build-and-check`, conditioned on
+`github.event_name == 'push' && github.ref == 'refs/heads/main'`. The build job uploads `dist/` as an
+artifact on exactly that condition; the deploy job downloads it, rsyncs it into a checkout of
+`gh-pages` with `--delete`, and pushes.
+
+Rejected: a separate `deploy.yml` triggered on push to `main`. It would run *concurrently* with
+`ci.yml` rather than after it, so a push could publish while its own checks were still running — or
+had already failed. `needs:` is what makes "it is live" mean "every gate passed", which is the only
+reason to have gates.
+
+Rejected: rebuilding inside the deploy job. The build is already done and verified; rebuilding
+would re-run Playwright install and prerender for a second, unverified artifact.
+
+Also rejected: `actions/deploy-pages` with Pages switched to "GitHub Actions" as source. It is the
+more modern path, but it changes a repo-level setting and makes the `gh-pages` branch vestigial.
+Keeping the branch keeps the deploy history (and a human-readable record of exactly what is live)
+and leaves `npm run deploy` working as an emergency escape hatch.
+
+**Consequences:**
+- `main` acquires a real technical role. It was previously only the default branch — the repo's
+  public face, which matters for a portfolio, but with no connection to the running site.
+- `--delete` on the rsync means the deploy branch mirrors `dist/` exactly, so a removed route or
+  asset actually disappears. It also drops the stray `.gitignore` that branch has carried since
+  creation, which listed `dist` and `node_modules` and would have silently excluded any future
+  build output matching those names.
+- `.nojekyll` is now written on every deploy. Nothing in `dist/` is underscore-prefixed today, so
+  this changes nothing now; it removes a whole class of future surprise.
+- The remaining hole is the one that caused this: `feat/**` still does not run CI. The fix is to
+  open the PR early rather than batching 161 commits behind an unverified branch, not to widen the
+  trigger — a push-triggered run on every feature branch would spend a full Playwright sweep on
+  every work-in-progress commit.

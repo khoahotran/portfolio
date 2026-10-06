@@ -27,6 +27,16 @@
 - `npm run build`: index generation, then Vite build, then prerender
 - `npm run predeploy` (runs before `npm run deploy`): typecheck, then lint, then build — a type or lint error blocks deploy
 
+## Deployment
+
+Pushing to `main` deploys. `.github/workflows/ci.yml` runs every gate (typecheck, lint, tests,
+build + prerender, responsive, contrast) and only then, on a push to `main`, publishes the built
+`dist/` to the `gh-pages` branch that GitHub Pages serves. "Live" therefore means "passed every
+gate on main" — see `.ai/decision-log.md` Decision 23.
+
+`npm run deploy` (`gh-pages -d dist`) still exists for an emergency manual publish from a laptop,
+but it bypasses every check and leaves no record on `main`. Prefer merging to `main`.
+
 ## Content structure
 
 - `content/blog`
