@@ -5,6 +5,8 @@
  * dynamically imported here, so pages without diagrams never pay for it.
  */
 
+import { takePrerenderedDiagram } from './mermaid-prerendered';
+
 let mermaidPromise: Promise<typeof import('mermaid').default> | null = null;
 let idCounter = 0;
 
@@ -52,6 +54,20 @@ function renderError(container: HTMLElement, source: string) {
 }
 
 /**
+ * Mermaid's output SVG has no text alternative by default, so screen readers either skip it
+ * entirely or read through its internal <text> nodes out of context. A generic label at least
+ * announces it as a diagram rather than silence or noise — a real per-diagram description would
+ * mean writing content, not a rendering fix.
+ */
+function applyDiagramLabel(container: HTMLElement): void {
+  const svgEl = container.querySelector('svg');
+  if (svgEl && !svgEl.hasAttribute('aria-label')) {
+    svgEl.setAttribute('role', 'img');
+    svgEl.setAttribute('aria-label', 'Architecture diagram');
+  }
+}
+
+/**
  * Renders a mermaid diagram into `container`. Safe to call on an element that
  * gets unmounted mid-render: pass an `isStale` callback (e.g. reading a ref
  * flipped in an effect cleanup) and the result is discarded instead of being
@@ -65,6 +81,22 @@ export async function renderMermaidInto(
 ): Promise<void> {
   const trimmed = source.trim();
   if (!trimmed) {
+    return;
+  }
+
+  // Prerendering already drew this one. Reusing its SVG keeps the diagram in the first painted
+  // frame instead of arriving up to a second later, and skips loading mermaid entirely. Done
+  // before the first `await` on purpose: the whole point is that nothing is deferred to a later
+  // tick, so the container is filled in the same turn the effect runs. See mermaid-prerendered.ts.
+  const alreadyRendered = takePrerenderedDiagram(trimmed);
+  if (alreadyRendered !== undefined) {
+    if (isStale()) {
+      return;
+    }
+    container.innerHTML = alreadyRendered;
+    container.classList.add('mermaid-rendered');
+    applyDiagramLabel(container);
+    onRendered?.(container);
     return;
   }
 
@@ -87,11 +119,7 @@ export async function renderMermaidInto(
     // nodes out of context. A generic label at least announces it as a
     // diagram rather than silence or noise — a real per-diagram description
     // would mean writing content, not a rendering fix.
-    const svgEl = container.querySelector('svg');
-    if (svgEl && !svgEl.hasAttribute('aria-label')) {
-      svgEl.setAttribute('role', 'img');
-      svgEl.setAttribute('aria-label', 'Architecture diagram');
-    }
+    applyDiagramLabel(container);
 
     // Optional hook for callers that need to post-process the rendered SVG —
     // e.g. wiring up `click nodeId href "..."` anchors (see KnowledgeGraphPage)
