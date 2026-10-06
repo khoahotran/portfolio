@@ -142,6 +142,23 @@ function outputPathFor(route) {
  *  - every .mermaid-diagram has reached .mermaid-rendered (mermaid renders async well after
  *    mount, and an unrendered diagram serializes as an empty skeleton box).
  */
+/**
+ * Drops the `modulepreload` hints Vite emits for the mermaid chunks.
+ *
+ * Every diagram on a prerendered page already ships as finished SVG, and the client reuses that
+ * markup rather than rendering it again (src/content-engine/mermaid-prerendered.ts) — so on a
+ * first visit mermaid is never imported, yet the preload hint fetched all 634 KB of it anyway.
+ *
+ * Removing a hint cannot break anything: the dynamic `import()` in content-engine/mermaid.ts still
+ * loads the chunk the moment something actually needs it, which now only happens on a client-side
+ * navigation to a page whose diagrams were not part of the initial HTML. That path pays the
+ * download it would otherwise have had warm — a worthwhile trade against charging every first-time
+ * reader for a library they do not need.
+ */
+function dropMermaidPreload(html) {
+  return html.replace(/<link rel="modulepreload"[^>]*href="[^"]*\/mermaid[^"]*"[^>]*>/g, '');
+}
+
 async function waitForRender(page) {
   await page.waitForFunction(
     () => {
@@ -248,7 +265,7 @@ async function renderRoute(page, serverOrigin, route) {
     if (!response?.ok()) throw new Error(`navigation returned ${response?.status()}`);
     await waitForRender(page);
     const serialized = await page.evaluate(() => document.documentElement.outerHTML);
-    const html = rewriteOrigin(`<!doctype html>\n${serialized}`, serverOrigin);
+    const html = dropMermaidPreload(rewriteOrigin(`<!doctype html>\n${serialized}`, serverOrigin));
 
     // Checks for the exact server origin (scheme + IP + port), not the bare "127.0.0.1" substring —
     // an article can legitimately mention that IP in its own prose (see
@@ -296,6 +313,14 @@ async function main() {
 
   const worker = async () => {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
+    // The prerendered-snapshot bridge (src/prerender-snapshot.ts) is a client-only device. It must
+    // not run here: this script's SPA fallback serves an already-prerendered dist/index.html, so
+    // later routes would load a DOM that already has content, build an overlay around a copy of
+    // it, and serialize that copy into the output — 2 MB of duplicated, aria-hidden markup, and
+    // selectors like the mermaid-rendered wait matching the copy instead of the live tree.
+    await page.addInitScript(() => {
+      window.__PRERENDER__ = true;
+    });
     try {
       while (cursor < routes.length) {
         const route = routes[cursor++];
@@ -329,6 +354,14 @@ async function main() {
   // unknown path is a true 404 and should look like one instead of bouncing through the SPA.
   {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
+    // The prerendered-snapshot bridge (src/prerender-snapshot.ts) is a client-only device. It must
+    // not run here: this script's SPA fallback serves an already-prerendered dist/index.html, so
+    // later routes would load a DOM that already has content, build an overlay around a copy of
+    // it, and serialize that copy into the output — 2 MB of duplicated, aria-hidden markup, and
+    // selectors like the mermaid-rendered wait matching the copy instead of the live tree.
+    await page.addInitScript(() => {
+      window.__PRERENDER__ = true;
+    });
     try {
       const { html } = await renderRoute(page, origin, '/this-route-does-not-exist');
       await writeFile(path.join(distDir, '404.html'), html, 'utf8');
