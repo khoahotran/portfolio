@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>gRPC vs REST: When the Smaller Payload Loses | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="A real harness measuring gRPC against REST for the same data, same server, same Go process — and REST wins throughput at every concurrency level tested for a small payload, and at half the concurrency levels tested for a 100x larger one.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="gRPC vs REST: When the Smaller Payload Loses | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="A real harness measuring gRPC against REST for the same data, same server, same Go process — and REST wins throughput at every concurrency level tested for a small payload, and at half the concurrency levels tested for a 100x larger one.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/grpc-vs-rest-when-the-smaller-payload-loses.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/grpc-vs-rest-when-the-smaller-payload-loses.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/experiments/grpc-vs-rest-when-the-smaller-payload-loses"><meta name="twitter:title" content="gRPC vs REST: When the Smaller Payload Loses | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="A real harness measuring gRPC against REST for the same data, same server, same Go process — and REST wins throughput at every concurrency level tested for a small payload, and at half the concurrency levels tested for a 100x larger one."><link rel="canonical" href="https://khoahotran.github.io/portfolio/experiments/grpc-vs-rest-when-the-smaller-payload-loses"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"gRPC vs REST: When the Smaller Payload Loses","datePublished":"2026-09-07","description":"A real harness measuring gRPC against REST for the same data, same server, same Go process — and REST wins throughput at every concurrency level tested for a small payload, and at half the concurrency levels tested for a 100x larger one.","keywords":"grpc, api-design, benchmark","articleSection":"experiments","image":"https://khoahotran.github.io/portfolio/og/grpc-vs-rest-when-the-smaller-payload-loses.png","url":"https://khoahotran.github.io/portfolio/experiments/grpc-vs-rest-when-the-smaller-payload-loses","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/experiments/grpc-vs-rest-when-the-smaller-payload-loses"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/experiments" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to experiments</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">gRPC vs REST: When the Smaller Payload Loses</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Sep 07, 2026</span><span>3 min read</span></div><p class="mt-3 text-sm text-slate-600">A real harness measuring gRPC against REST for the same data, same server, same Go process — and REST wins throughput at every concurrency level tested for a small payload, and at half the concurrency levels tested for a 100x larger one.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#grpc</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#api-design</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#benchmark</span></div></header><div class="markdown-body"><p>"gRPC is faster than REST" is close to received wisdom — smaller binary payloads, HTTP/2
+multiplexing, code-generated clients. This harness tests that claim directly, on the same server
+process, serving the same data, so the only variable between a gRPC call and a REST call is the
+protocol itself. The result isn't what the received wisdom predicts.</p>
+<div class="mt-8 mb-12">
+  <a href="/portfolio/labs/grpc-vs-rest" class="lab-cta-inverse">
+    Try the Interactive gRPC vs REST Benchmark
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+  </a>
+</div>
+<h2 id="the-setup"><a class="heading-anchor" aria-label="Copy heading link" href="#the-setup" data-enhanced="true"><span class="icon icon-link"></span></a>The Setup</h2>
+<p>One Go server runs a gRPC listener (protobuf, HTTP/2) and a REST/JSON listener (<code>net/http</code>,
+HTTP/1.1) side by side, both reading from the same deterministic data generator — a given user id
+returns byte-identical <em>content</em> whether it's fetched over gRPC or REST. Two payload shapes are
+measured: a <strong>single</strong> record (~245 bytes as protobuf, ~312 as JSON) and a <strong>list</strong> of 100 records
+(~24 KB as protobuf, ~30 KB as JSON). Both clients use one shared, reused connection for the whole
+run — a single <code>*grpc.ClientConn</code> (HTTP/2 multiplexes every concurrent call over it) and a single
+<code>*http.Client</code> with a transport sized to the concurrency — the realistic way either protocol is
+actually deployed, not a strawman that reconnects per request on only one side.</p>
+<h2 id="the-finding-protobufs-smaller-payload-is-real-and-doesnt-reliably-win"><a class="heading-anchor" aria-label="Copy heading link" href="#the-finding-protobufs-smaller-payload-is-real-and-doesnt-reliably-win" data-enhanced="true"><span class="icon icon-link"></span></a>The Finding: Protobuf's Smaller Payload Is Real, and Doesn't Reliably Win</h2>
+<p>Protobuf's wire-size advantage shows up exactly where you'd expect — the 100-record payload is
+consistently <strong>~20% smaller</strong> as protobuf than as JSON, at every concurrency level. That part of
+the received wisdom is simply true. What it doesn't predict is what happens to <em>throughput</em>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Clients</th><th>gRPC (single)</th><th>REST (single)</th><th>REST's multiple</th></tr></thead><tbody><tr><td>10</td><td>699 req/s</td><td>1,320 req/s</td><td>1.9x</td></tr><tr><td>25</td><td>716 req/s</td><td>1,805 req/s</td><td>2.5x</td></tr><tr><td>50</td><td>2,621 req/s</td><td>3,032 req/s</td><td>1.2x</td></tr></tbody></table>
+<p>For the small payload, <strong>REST wins throughput at every concurrency level tested</strong> — not narrowly,
+either: nearly 2x at 10 clients, 2.5x at 25. A spot-check rerun of the 10-client case reproduced the
+same direction on a second run (REST still ahead on both throughput and latency), though the exact
+multiple shifted with host load — see the caveat at the end.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Clients</th><th>gRPC (list, 100 records)</th><th>REST (list, 100 records)</th><th>Winner</th></tr></thead><tbody><tr><td>10</td><td>294 req/s</td><td>495 req/s</td><td>REST, by 1.7x</td></tr><tr><td>25</td><td>680 req/s</td><td>431 req/s</td><td>gRPC, by 1.6x</td></tr><tr><td>50</td><td>480 req/s</td><td>459 req/s</td><td>Roughly tied</td></tr></tbody></table>
+<p>Even with a real, measured 20% smaller payload, gRPC only wins outright at 25 clients — REST wins
+at 10, and the two are within a rounding error of each other at 50. There is no concurrency level in
+this matrix where gRPC's smaller payload translates into a clean, consistent win.</p>
+<div class="callout callout-note"><p class="callout-title">Note</p>
+<p>The likely mechanism, and it's a real, structural one, not measurement noise: this harness's gRPC
+client uses one shared <code>*grpc.ClientConn</code>, and grpc-go serializes every outbound frame for every
+concurrent call through that connection's single internal write loop — the standard, recommended
+way to use a gRPC connection, and exactly what HTTP/2 multiplexing is <em>for</em>. REST's <code>*http.Client</code>
+instead pools multiple independent TCP connections, so concurrent requests get real OS-level
+parallelism on the write path that a single multiplexed HTTP/2 connection doesn't offer the same
+way. Isolating clients=1 from this matrix (not shown above) confirms it: gRPC's tail latency
+already exceeds REST's even with <em>zero</em> concurrency, and the gap widens as concurrency rises —
+consistent with a serialization point inside the shared connection, not with payload size at all.</p>
+</div>
+<h2 id="what-this-doesnt-mean"><a class="heading-anchor" aria-label="Copy heading link" href="#what-this-doesnt-mean" data-enhanced="true"><span class="icon icon-link"></span></a>What This Doesn't Mean</h2>
+<p>This is not "REST is faster than gRPC," full stop — it's "gRPC's real advantages (smaller wire
+payload, one persistent connection instead of a pool, code-generated typed clients, native
+streaming) do not automatically translate into a throughput win for typical unary request/response
+traffic on a single connection." gRPC's connection-pooling story changes if you shard load across
+<em>multiple</em> <code>ClientConn</code>s (its own docs recommend this for high-throughput services) — this harness
+deliberately didn't, because "one connection, HTTP/2 multiplexing" is both the default and the
+selling point most adoption arguments actually lean on. Testing the sharded-connection variant is a
+natural follow-up, not something this run's numbers can speak to.</p>
+<h2 id="honesty-about-the-environment"><a class="heading-anchor" aria-label="Copy heading link" href="#honesty-about-the-environment" data-enhanced="true"><span class="icon icon-link"></span></a>Honesty About the Environment</h2>
+<p>The full matrix ran on the same local host under this session's already-documented fluctuating CPU
+contention from unrelated concurrent processes — see the
+<a href="https://github.com/khoahotran/portfolio/blob/main/benchmarks/grpc-vs-rest/README.md" target="_blank" rel="noopener noreferrer">harness README</a>.
+A spot-check rerun of the single-mode, 10-client case reproduced the same <em>direction</em> (REST ahead on
+both throughput and latency) but a different <em>magnitude</em> (throughput ratio 1.9x on one run, 2.5x on
+the rerun) — read the direction of every result here as reliable, the exact multiples as this run's,
+not a universal constant. The wire-size numbers (protobuf ~20% smaller for the 100-record payload)
+are structural, not load-dependent, and should reproduce on any host.</p></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/experiments/leader-election-bully-algorithm" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Distributed Locks: Redlock and the Pause That Breaks It</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">blog</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">gRPC Service Mesh in Go: Designing the Aegis Auth Platform</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>7 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/rate-limiting-algorithms" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it's named.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Aug 28, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">HyperLogLog and the Question Bloom Filters Can't Answer</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#the-setup" class="toc-link">The Setup</a></li><li><a href="#the-finding-protobufs-smaller-payload-is-real-and-doesnt-reliably-win" class="toc-link">The Finding: Protobuf's Smaller Payload Is Real, and Doesn't Reliably Win</a></li><li><a href="#what-this-doesnt-mean" class="toc-link">What This Doesn't Mean</a></li><li><a href="#honesty-about-the-environment" class="toc-link">Honesty About the Environment</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

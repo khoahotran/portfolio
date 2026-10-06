@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>System Design Notes: Idempotency | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="Practical patterns for making API writes replay-safe under network retries and partial distributed failures.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="System Design Notes: Idempotency | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="Practical patterns for making API writes replay-safe under network retries and partial distributed failures.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/system-design-notes-idempotency.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/system-design-notes-idempotency.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency"><meta name="twitter:title" content="System Design Notes: Idempotency | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="Practical patterns for making API writes replay-safe under network retries and partial distributed failures."><link rel="canonical" href="https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"BlogPosting","headline":"System Design Notes: Idempotency","datePublished":"2026-03-21","description":"Practical patterns for making API writes replay-safe under network retries and partial distributed failures.","keywords":"idempotency, api-design, distributed-systems","articleSection":"blog","image":"https://khoahotran.github.io/portfolio/og/system-design-notes-idempotency.png","url":"https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/blog/system-design-notes-idempotency"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-BQ1B_Piy.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-DVNwT64z.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/katex-CMdAwrm5.js"><link rel="stylesheet" crossorigin="" href="/portfolio/assets/katex-CJ2tWXjN.css"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/blog" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to blog</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">System Design Notes: Idempotency</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Mar 21, 2026</span><span>5 min read</span></div><p class="mt-3 text-sm text-slate-600">Practical patterns for making API writes replay-safe under network retries and partial distributed failures.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#idempotency</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#api-design</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#distributed-systems</span></div></header><div class="markdown-body"><h2 id="why-idempotency-matters"><a class="heading-anchor" aria-label="Copy heading link" href="#why-idempotency-matters" data-enhanced="true"><span class="icon icon-link"></span></a>Why Idempotency Matters</h2>
+<p>In any distributed system, the network is inherently unreliable. Clients will experience timeouts, load balancers will drop connections, and services will occasionally crash mid-request.</p>
+<p>To cope with this, clients <em>must</em> retry failed requests. Retries are healthy and necessary for resilience. However, if a client retries a payment request that actually succeeded on the backend (but the response was lost in transit), the user gets charged twice. Duplicate side effects are catastrophic.</p>
+<p>This is where <strong>idempotency</strong> comes in: the property that a given operation can be applied multiple times without changing the result beyond the initial application.</p>
+<p><em>Updated 2026-09-08: added "<a href="#the-race-the-interceptor-below-doesnt-close">The Race the Interceptor Below Doesn't Close</a>" — the interceptor code in this post has a real concurrency bug, demonstrated (not just described) in an <a href="/portfolio/labs/idempotency-store">interactive lab</a>.</em></p>
+<div class="mt-8 mb-12">
+  <a href="/portfolio/labs/idempotency-store" class="lab-cta-inverse">
+    Try the Interactive Idempotency-Key Store Lab
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+  </a>
+</div>
+<hr>
+<h2 id="the-core-pattern-the-idempotency-key"><a class="heading-anchor" aria-label="Copy heading link" href="#the-core-pattern-the-idempotency-key" data-enhanced="true"><span class="icon icon-link"></span></a>The Core Pattern: The Idempotency Key</h2>
+<p>The standard approach is to require the client to generate a unique <code>Idempotency-Key</code> (usually a UUID v4) and pass it in the HTTP header for all mutating (<code>POST</code>, <code>PUT</code>, <code>PATCH</code>) requests.</p>
+<p>The backend request lifecycle looks like this:</p>
+<pre><code>Client                  API Gateway / Backend               Redis Cache / DB
+  |                               |                                |
+  |-- POST /charge (Idemp-Key) --&gt;|                                |
+  |                               |-- GET key (Lock &amp; Check) -----&gt;|
+  |                               |&lt;-- Key Not Found --------------|
+  |                               |                                |
+  |                               |-- SET key (State: IN_PROGRESS) -&gt;|
+  |                               |                                |
+  |                               |-- Execute Stripe Charge ------&gt;|
+  |                               |                                |
+  |                               |-- UPDATE key (State: SUCCESS) -&gt;|
+  |                               |   (Store Response Payload)     |
+  |&lt;-- HTTP 200 (Success) --------|                                |
+  |                               |                                |
+  | [Client Retries Timeout]      |                                |
+  |-- POST /charge (Idemp-Key) --&gt;|                                |
+  |                               |-- GET key --------------------&gt;|
+  |                               |&lt;-- Response Found (SUCCESS) ---|
+  |&lt;-- HTTP 200 (Cached Response)-|                                |
+</code></pre>
+<h3 id="scoping-the-key"><a class="heading-anchor" aria-label="Copy heading link" href="#scoping-the-key" data-enhanced="true"><span class="icon icon-link"></span></a>Scoping the Key</h3>
+<p>An idempotency key shouldn't be global. It should be scoped by <strong>actor</strong> (User ID) and <strong>operation intent</strong>. For example, a key might be compound: <code>user:123:create_order:uuid-456</code>. This prevents accidental collisions between different users who might generate the same UUID or malicious users trying to guess other users' keys.</p>
+<hr>
+<h2 id="technical-implementation-nestjs--redis"><a class="heading-anchor" aria-label="Copy heading link" href="#technical-implementation-nestjs--redis" data-enhanced="true"><span class="icon icon-link"></span></a>Technical Implementation (NestJS + Redis)</h2>
+<p>Here is a concrete implementation of an Idempotency Interceptor in NestJS using Redis (<code>ioredis</code>) for locking, payload verification, and response caching.</p>
+<h3 id="1-the-interceptor-code"><a class="heading-anchor" aria-label="Copy heading link" href="#1-the-interceptor-code" data-enhanced="true"><span class="icon icon-link"></span></a>1. The Interceptor Code</h3>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">typescript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-typescript"><span class="hljs-keyword">import</span> {
+  <span class="hljs-title class_">Injectable</span>,
+  <span class="hljs-title class_">NestInterceptor</span>,
+  <span class="hljs-title class_">ExecutionContext</span>,
+  <span class="hljs-title class_">CallHandler</span>,
+  <span class="hljs-title class_">BadRequestException</span>,
+  <span class="hljs-title class_">ConflictException</span>,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Observable</span>, <span class="hljs-keyword">of</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs'</span>;
+<span class="hljs-keyword">import</span> { mergeMap } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs/operators'</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> crypto <span class="hljs-keyword">from</span> <span class="hljs-string">'crypto'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">Redis</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'ioredis'</span>;
+
+<span class="hljs-meta">@Injectable</span>()
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">IdempotencyInterceptor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">NestInterceptor</span> {
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">redis</span>: <span class="hljs-title class_">Redis</span>;
+
+  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Redis</span>(process.<span class="hljs-property">env</span>.<span class="hljs-property">REDIS_URL</span> || <span class="hljs-string">'redis://localhost:6379'</span>);
+  }
+
+  <span class="hljs-comment">// Generate a SHA256 hash of the request body to detect payload mismatches</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-title function_">hashPayload</span>(<span class="hljs-attr">payload</span>: <span class="hljs-built_in">any</span>): <span class="hljs-built_in">string</span> {
+    <span class="hljs-keyword">const</span> serialized = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(payload || {});
+    <span class="hljs-keyword">return</span> crypto.<span class="hljs-title function_">createHash</span>(<span class="hljs-string">'sha256'</span>).<span class="hljs-title function_">update</span>(serialized).<span class="hljs-title function_">digest</span>(<span class="hljs-string">'hex'</span>);
+  }
+
+  <span class="hljs-keyword">async</span> <span class="hljs-title function_">intercept</span>(<span class="hljs-attr">context</span>: <span class="hljs-title class_">ExecutionContext</span>, <span class="hljs-attr">next</span>: <span class="hljs-title class_">CallHandler</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-title class_">Observable</span>&lt;<span class="hljs-built_in">any</span>&gt;&gt; {
+    <span class="hljs-keyword">const</span> request = context.<span class="hljs-title function_">switchToHttp</span>().<span class="hljs-title function_">getRequest</span>();
+    
+    <span class="hljs-comment">// Only apply idempotency to mutating requests</span>
+    <span class="hljs-keyword">if</span> (![<span class="hljs-string">'POST'</span>, <span class="hljs-string">'PUT'</span>, <span class="hljs-string">'PATCH'</span>].<span class="hljs-title function_">includes</span>(request.<span class="hljs-property">method</span>)) {
+      <span class="hljs-keyword">return</span> next.<span class="hljs-title function_">handle</span>();
+    }
+
+    <span class="hljs-keyword">const</span> idempotencyKey = request.<span class="hljs-property">headers</span>[<span class="hljs-string">'x-idempotency-key'</span>];
+    <span class="hljs-keyword">const</span> userId = request.<span class="hljs-property">headers</span>[<span class="hljs-string">'x-user-id'</span>]; <span class="hljs-comment">// Scoping factor</span>
+
+    <span class="hljs-keyword">if</span> (!idempotencyKey) {
+      <span class="hljs-comment">// Decide if you want to enforce it or bypass</span>
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'X-Idempotency-Key header is required for this operation.'</span>);
+    }
+
+    <span class="hljs-keyword">const</span> cacheKey = <span class="hljs-string">`idemp:<span class="hljs-subst">${userId}</span>:<span class="hljs-subst">${idempotencyKey}</span>`</span>;
+    <span class="hljs-keyword">const</span> currentPayloadHash = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">hashPayload</span>(request.<span class="hljs-property">body</span>);
+
+    <span class="hljs-comment">// 1. Try to acquire lock and check cache atomically</span>
+    <span class="hljs-keyword">const</span> cachedData = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">get</span>(cacheKey);
+
+    <span class="hljs-keyword">if</span> (cachedData) {
+      <span class="hljs-keyword">const</span> { state, payloadHash, response } = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(cachedData);
+
+      <span class="hljs-comment">// Check if client is sending different parameters under the same key</span>
+      <span class="hljs-keyword">if</span> (payloadHash !== currentPayloadHash) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConflictException</span>(<span class="hljs-string">'Idempotency key collision: Payload mismatch.'</span>);
+      }
+
+      <span class="hljs-keyword">if</span> (state === <span class="hljs-string">'IN_PROGRESS'</span>) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConflictException</span>(<span class="hljs-string">'Operation is already in progress. Please retry later.'</span>);
+      }
+
+      <span class="hljs-comment">// Return cached response directly</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-title function_">of</span>(response);
+    }
+
+    <span class="hljs-comment">// 2. Set key to IN_PROGRESS to lock the request</span>
+    <span class="hljs-comment">// Set 5 minutes timeout for in-progress locks to prevent deadlocks</span>
+    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">set</span>(
+      cacheKey,
+      <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>({ <span class="hljs-attr">state</span>: <span class="hljs-string">'IN_PROGRESS'</span>, <span class="hljs-attr">payloadHash</span>: currentPayloadHash }),
+      <span class="hljs-string">'EX'</span>,
+      <span class="hljs-number">300</span>
+    );
+
+    <span class="hljs-comment">// 3. Process request and cache output</span>
+    <span class="hljs-keyword">return</span> next.<span class="hljs-title function_">handle</span>().<span class="hljs-title function_">pipe</span>(
+      <span class="hljs-title function_">mergeMap</span>(<span class="hljs-title function_">async</span> (response) =&gt; {
+        <span class="hljs-comment">// Cache the successful response for 24 hours</span>
+        <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">set</span>(
+          cacheKey,
+          <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>({
+            <span class="hljs-attr">state</span>: <span class="hljs-string">'SUCCESS'</span>,
+            <span class="hljs-attr">payloadHash</span>: currentPayloadHash,
+            response,
+          }),
+          <span class="hljs-string">'EX'</span>,
+          <span class="hljs-number">86400</span>
+        );
+        <span class="hljs-keyword">return</span> response;
+      })
+    );
+  }
+}
+</code></pre>
+<hr>
+<h2 id="the-race-the-interceptor-below-doesnt-close"><a class="heading-anchor" aria-label="Copy heading link" href="#the-race-the-interceptor-below-doesnt-close" data-enhanced="true"><span class="icon icon-link"></span></a>The Race the Interceptor Below Doesn't Close</h2>
+<p>Look closely at the interceptor above, specifically these two lines:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">typescript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-typescript"><span class="hljs-keyword">const</span> cachedData = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">get</span>(cacheKey);
+<span class="hljs-comment">// ...</span>
+<span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">set</span>(cacheKey, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>({ <span class="hljs-attr">state</span>: <span class="hljs-string">'IN_PROGRESS'</span>, ... }), <span class="hljs-string">'EX'</span>, <span class="hljs-number">300</span>);
+</code></pre>
+<p>The check (<code>GET</code>) and the claim (<code>SET ... IN_PROGRESS</code>) are <strong>two separate Redis round-trips, not
+one atomic operation.</strong> If two requests carrying the same idempotency key arrive close enough
+together — a genuine concurrent duplicate, like a client double-clicking "Pay," not a retry after
+the first one already finished — both can run their <code>GET</code> before either has run its <code>SET</code>. Both see
+<code>cachedData</code> as empty. Both proceed to charge the card.</p>
+<p>The <code>IN_PROGRESS</code> state this code writes is real and does help — but only for a request that
+arrives <em>after</em> the winning request's <code>SET</code> has already landed. It does nothing for the window
+between the two Redis calls, which is exactly where a concurrent duplicate lives.</p>
+<p>The <a href="/portfolio/labs/idempotency-store">interactive lab</a> makes this a measured count instead of a paragraph
+you have to take on faith: <code>check-then-set</code> mode runs the identical GET-then-SET shape above, and a
+burst of concurrent duplicates for the same key genuinely reprocesses — every one of them gets its
+own distinct result, meaning its own distinct charge. <code>atomic-claim</code> mode replaces the two Redis
+calls with one — the equivalent of <code>SET key value NX EX 300</code> (set only if the key does not already
+exist, atomically) — and the identical burst of duplicates instead <strong>coalesces</strong>: every duplicate
+that arrives while the winning request is still in flight waits for that request's result and
+shares it, rather than starting a race to claim the key at all.</p>
+<div class="mt-8 mb-12">
+  <a href="/portfolio/labs/idempotency-store" class="lab-cta-inverse">
+    Try the Interactive Idempotency-Key Store Lab
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+  </a>
+</div>
+<div class="callout callout-note"><p class="callout-title">Note</p>
+<p>Coalescing (wait for the in-flight result) is one valid fix once the check-and-claim is atomic —
+it's what the lab demonstrates because it's the strongest guarantee: every duplicate gets the
+real result, none of them are told to go away. The interceptor's own <code>409 Conflict</code> response for
+an in-progress key is a legitimate simpler alternative <em>given</em> an atomic claim — reject the
+duplicate and let the client retry after a short backoff. What actually matters, and what the
+interceptor above is missing, is the atomicity of the claim itself. Which resolution you pick for
+a duplicate that loses the race is a secondary decision; if the claim isn't atomic, both options
+are moot, because you can't reliably tell a duplicate lost the race in the first place.</p>
+</div>
+<hr>
+<h2 id="handling-edge-cases-and-conflicts"><a class="heading-anchor" aria-label="Copy heading link" href="#handling-edge-cases-and-conflicts" data-enhanced="true"><span class="icon icon-link"></span></a>Handling Edge Cases and Conflicts</h2>
+<p>What happens if a client sends the same idempotency key, but the JSON payload is different?</p>
+<p>This is a dangerous edge case. If you blindly accept it and return the cached response, the client might mistakenly believe their <em>new</em> payload was processed. If you process it, you break the idempotency contract.</p>
+<p><strong>The Rule</strong>: Fail fast. Hash the incoming payload and store it alongside the idempotency key. If a request arrives with an existing key but a mismatched payload hash, return a <code>400 Bad Request</code> or <code>409 Conflict</code> with explicit details about the mismatch.</p>
+<h3 id="http-response-mapping-for-idempotency-failures"><a class="heading-anchor" aria-label="Copy heading link" href="#http-response-mapping-for-idempotency-failures" data-enhanced="true"><span class="icon icon-link"></span></a>HTTP Response Mapping for Idempotency Failures</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Scenario</th><th align="left">HTTP Status Code</th><th align="left">Response Body</th><th align="left">Action Required</th></tr></thead><tbody><tr><td align="left"><strong>Missing Key</strong></td><td align="left"><code>400 Bad Request</code></td><td align="left"><code>{"message": "Idempotency key required"}</code></td><td align="left">Generate UUID and retry</td></tr><tr><td align="left"><strong>Concurrent Double Submit</strong></td><td align="left"><code>409 Conflict</code></td><td align="left"><code>{"message": "Request already in progress"}</code></td><td align="left">Backoff and retry with same key</td></tr><tr><td align="left"><strong>Payload Mismatch</strong></td><td align="left"><code>409 Conflict</code></td><td align="left"><code>{"message": "Payload mismatch for key"}</code></td><td align="left">Correct parameters or use new key</td></tr><tr><td align="left"><strong>Key Expired (&gt;24h)</strong></td><td align="left"><code>200 OK (Fresh)</code></td><td align="left"><em>Standard Success Response</em></td><td align="left">Will execute as a brand new request</td></tr></tbody></table>
+<hr>
+<h2 id="the-golden-rule-of-persistence"><a class="heading-anchor" aria-label="Copy heading link" href="#the-golden-rule-of-persistence" data-enhanced="true"><span class="icon icon-link"></span></a>The Golden Rule of Persistence</h2>
+<p>Make the idempotency persistence durable <em>before</em> issuing any external side effects (like charging a credit card or sending an email). If you send an email and then fail to save the idempotency record to the database, the next retry will send a second email.</p>
+<p>In distributed systems, this is solved by using <strong>Distributed Transactions</strong> or <strong>Saga Patterns</strong>. In simpler setups:</p>
+<ol>
+<li>Initialize the idempotency key in your local DB (with status <code>DRAFT</code> or <code>IN_PROGRESS</code>) in the same transaction as your user records.</li>
+<li>Trigger the external API call (e.g. Stripe).</li>
+<li>Update the DB status to <code>SUCCESS</code> and store the transaction reference.</li>
+<li>If step 2 fails, update the status to <code>FAILED</code>. A retry will then see <code>FAILED</code> and know it is safe to attempt the external call again.</li>
+</ol></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><div></div><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/blog/engineering-lessons-from-a-failed-rollout" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Engineering Lessons from a Failed Rollout</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/rate-limiting-algorithms" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it's named.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Aug 28, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">blog</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">gRPC Service Mesh in Go: Designing the Aegis Auth Platform</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>7 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">HyperLogLog and the Question Bloom Filters Can't Answer</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#why-idempotency-matters" class="toc-link">Why Idempotency Matters</a></li><li><a href="#the-core-pattern-the-idempotency-key" class="toc-link">The Core Pattern: The Idempotency Key</a></li><li class="toc-sub"><a href="#scoping-the-key" class="toc-link">Scoping the Key</a></li><li><a href="#technical-implementation-nestjs--redis" class="toc-link">Technical Implementation (NestJS + Redis)</a></li><li class="toc-sub"><a href="#1-the-interceptor-code" class="toc-link">1. The Interceptor Code</a></li><li><a href="#the-race-the-interceptor-below-doesnt-close" class="toc-link">The Race the Interceptor Below Doesn't Close</a></li><li><a href="#handling-edge-cases-and-conflicts" class="toc-link">Handling Edge Cases and Conflicts</a></li><li class="toc-sub"><a href="#http-response-mapping-for-idempotency-failures" class="toc-link">HTTP Response Mapping for Idempotency Failures</a></li><li><a href="#the-golden-rule-of-persistence" class="toc-link">The Golden Rule of Persistence</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

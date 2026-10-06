@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>Two-Phase Commit vs. Saga: What Atomicity Actually Costs | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="Run the real 2PC blocking failure and the real Saga compensation-failure gap on the same kind of transaction — see exactly what atomicity costs, and exactly what giving it up costs instead.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="Two-Phase Commit vs. Saga: What Atomicity Actually Costs | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="Run the real 2PC blocking failure and the real Saga compensation-failure gap on the same kind of transaction — see exactly what atomicity costs, and exactly what giving it up costs instead.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/two-phase-commit-vs-saga-what-atomicity-actually-costs.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/two-phase-commit-vs-saga-what-atomicity-actually-costs.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs"><meta name="twitter:title" content="Two-Phase Commit vs. Saga: What Atomicity Actually Costs | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="Run the real 2PC blocking failure and the real Saga compensation-failure gap on the same kind of transaction — see exactly what atomicity costs, and exactly what giving it up costs instead."><link rel="canonical" href="https://khoahotran.github.io/portfolio/experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"Two-Phase Commit vs. Saga: What Atomicity Actually Costs","datePublished":"2026-09-09","description":"Run the real 2PC blocking failure and the real Saga compensation-failure gap on the same kind of transaction — see exactly what atomicity costs, and exactly what giving it up costs instead.","keywords":"distributed-systems, trade-offs, saga-pattern, benchmark","articleSection":"experiments","image":"https://khoahotran.github.io/portfolio/og/two-phase-commit-vs-saga-what-atomicity-actually-costs.png","url":"https://khoahotran.github.io/portfolio/experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/experiments" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to experiments</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Two-Phase Commit vs. Saga: What Atomicity Actually Costs</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div><p class="mt-3 text-sm text-slate-600">Run the real 2PC blocking failure and the real Saga compensation-failure gap on the same kind of transaction — see exactly what atomicity costs, and exactly what giving it up costs instead.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#distributed-systems</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#trade-offs</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#saga-pattern</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#benchmark</span></div></header><div class="markdown-body"><p>The <a href="/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers">Core Banking Saga write-up</a>
+already covers, in real Go, why cross-aggregate money transfers give up atomicity for liveness. What
+it doesn't cover is the protocol Sagas exist specifically to avoid: <strong>Two-Phase Commit</strong>, the
+textbook way to get atomicity across participants that a single database transaction can't reach.
+Nobody on this site had actually run 2PC's failure mode before — every prior mention of it was a
+name in a comparison table. This lab runs it for real, on the same kind of scenario the Saga lab
+already uses, so the trade-off is a measured contrast rather than two separate write-ups that never
+meet.</p>
+<div class="mt-8 mb-12">
+  <a href="/portfolio/labs/two-phase-commit-vs-saga" class="lab-cta-inverse">
+    Try the Interactive 2PC vs. Saga Lab
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+  </a>
+</div>
+<h2 id="what-2pc-actually-guarantees-and-what-it-costs-to-guarantee-it"><a class="heading-anchor" aria-label="Copy heading link" href="#what-2pc-actually-guarantees-and-what-it-costs-to-guarantee-it" data-enhanced="true"><span class="icon icon-link"></span></a>What 2PC Actually Guarantees, and What It Costs to Guarantee It</h2>
+<p>Two-Phase Commit has one coordinator and any number of participants. Phase one: the coordinator
+asks everyone to <em>prepare</em> — lock whatever resources the transaction touches, then vote yes or no.
+Phase two: if everyone voted yes, the coordinator broadcasts <code>COMMIT</code>; if anyone voted no, it
+broadcasts <code>ABORT</code>. Every participant that voted yes obeys whichever it's told.</p>
+<p>That's the whole protocol, and it's genuinely atomic — every yes-voter really does end up either
+all committed or all aborted, never a mix. The cost is where Stage 1 of the lab points directly:
+<strong>a participant that votes yes enters the <em>prepared</em> state and cannot leave it on its own.</strong> It has
+locked its resources and is waiting for the coordinator's decision message. If the coordinator
+crashes after collecting all-yes votes but before broadcasting the decision, every one of those
+participants is stuck — not for a little while, but indefinitely, because 2PC gives a prepared
+participant no rule for deciding alone. Toggle the "coordinator crashes" switch in the lab with four
+yes-votes and watch all four participants land on "blocked, holding locks," regardless of how many
+there are — there's no majority to fall back on here the way <a href="/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove">Raft's commit rule</a>
+falls back on a quorum. 2PC has exactly one coordinator, and its decision is the only thing that can
+unblock anyone. This is the same single-point-of-failure shape as <a href="/portfolio/experiments/leader-election-bully-algorithm">Bully's leader</a> —
+one node's outage stalls everyone downstream of it — except Bully's failure mode is <em>no leader at
+all</em> until a new election finishes, while 2PC's failure mode is <em>every prepared participant frozen</em>
+until the old coordinator, specifically, comes back or a human intervenes.</p>
+<p>A participant that voted no, by contrast, is never at risk here — it aborts locally the instant it
+casts that vote, because it never entered the prepared state waiting on anyone. The lab shows this
+directly: mix in a no-vote alongside three yes-votes and crash the coordinator, and only the
+yes-voters end up blocked.</p>
+<h2 id="what-saga-actually-guarantees-and-what-it-costs-to-guarantee-it"><a class="heading-anchor" aria-label="Copy heading link" href="#what-saga-actually-guarantees-and-what-it-costs-to-guarantee-it" data-enhanced="true"><span class="icon icon-link"></span></a>What Saga Actually Guarantees, and What It Costs to Guarantee It</h2>
+<p>The Saga side runs the mirror image: a sequence of local transactions, each one really committed
+the moment it succeeds — no prepared state, no lock held pending anyone's decision. If a step
+fails, the saga walks backward through every step that already committed and runs its
+<strong>compensating transaction</strong>, undoing the effect. Nothing here ever blocks; that's the entire
+appeal.</p>
+<p>The Core Banking write-up already names the cost in its failure table: a compensation that itself
+fails leaves a <code>COMPENSATION_FAILED</code> state requiring manual intervention. Stage 2 of this lab makes
+that failure a first-class, adjustable case instead of a table row: pick a step to fail, then
+separately pick whether <em>unwinding</em> an earlier step also fails. When it does, the lab shows exactly
+what a saga has instead of 2PC's held locks — nothing. The step's committed side effect is just
+still out there, uncompensated, and the unwind stops at that point rather than compensating earlier
+steps out of their real dependency order. There is no equivalent of <code>blockedParticipants</code> in
+<code>simulateSaga</code>'s result type at all, and that absence is the point: a saga can't get stuck waiting,
+but it can get stuck <em>wrong</em> — a real, standing side effect with no built-in path back to
+consistency, something 2PC's design specifically rules out by holding the locks until a decision
+is certain.</p>
+<h2 id="the-actual-trade-off-not-a-verdict"><a class="heading-anchor" aria-label="Copy heading link" href="#the-actual-trade-off-not-a-verdict" data-enhanced="true"><span class="icon icon-link"></span></a>The Actual Trade-off, Not a Verdict</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>2PC</th><th>Saga</th></tr></thead><tbody><tr><td><strong>Failure mode this lab runs</strong></td><td>Coordinator crash after all-yes votes, before broadcast</td><td>A compensation that itself fails partway through unwind</td></tr><tr><td><strong>What gets stuck</strong></td><td>Every prepared participant, holding locks, indefinitely</td><td>One committed side effect, permanently, with no fallback</td></tr><tr><td><strong>Ever blocks?</strong></td><td>Yes — that's the mechanism, not a bug</td><td>Never — that's the mechanism, not a feature that erases the cost</td></tr><tr><td><strong>What restores consistency</strong></td><td>The original coordinator recovering (or manual unblock)</td><td>Nothing automatic — the same manual intervention 2PC needs, just for a different reason</td></tr></tbody></table>
+<p>Neither protocol actually escapes needing a human on the worst day; they just fail differently while
+waiting for one. 2PC trades liveness for a guarantee that nothing is ever half-done — the price is
+every prepared participant frozen the moment the one coordinator that could unblock them disappears.
+Saga trades that guarantee for liveness — nothing ever blocks, but the system's only real safety net
+is compensations succeeding, and this lab asserts directly (not just states) what happens the one
+time that assumption doesn't hold.</p></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Bloom Filters and the Capacity You Can't See Coming</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Raft and the Commit Rule Replica Count Alone Can't Prove</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/leader-election-bully-algorithm" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Crash the leader and watch the real Bully algorithm elect a new one, message by message — including the O(n^2) worst case the protocol is criticized for.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 07, 2026</span><span>3 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/system-design/implementing-the-saga-pattern-for-distributed-transfers" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">system design</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Implementing the Saga Pattern for Distributed Money Transfers</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">How I designed a Saga orchestrator pattern for two-phase distributed transfers between account aggregates, with automatic compensation and dead-letter recovery.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>5 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/saga-state-machine-visualizer" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Interactive Saga State Machine Visualizer</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">An interactive visualization of the Saga distributed transaction pattern, demonstrating automated compensating rollbacks.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>1 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#what-2pc-actually-guarantees-and-what-it-costs-to-guarantee-it" class="toc-link">What 2PC Actually Guarantees, and What It Costs to Guarantee It</a></li><li><a href="#what-saga-actually-guarantees-and-what-it-costs-to-guarantee-it" class="toc-link">What Saga Actually Guarantees, and What It Costs to Guarantee It</a></li><li><a href="#the-actual-trade-off-not-a-verdict" class="toc-link">The Actual Trade-off, Not a Verdict</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

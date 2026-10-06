@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>Building an Event-Driven Architecture | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="A practical blueprint for introducing domain events to untangle a monolith without losing delivery guarantees.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="Building an Event-Driven Architecture | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="A practical blueprint for introducing domain events to untangle a monolith without losing delivery guarantees.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/building-an-event-driven-architecture.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/building-an-event-driven-architecture.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture"><meta name="twitter:title" content="Building an Event-Driven Architecture | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="A practical blueprint for introducing domain events to untangle a monolith without losing delivery guarantees."><link rel="canonical" href="https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"Building an Event-Driven Architecture","datePublished":"2026-03-21","description":"A practical blueprint for introducing domain events to untangle a monolith without losing delivery guarantees.","keywords":"distributed-systems, architecture, queues, system-design, kafka","articleSection":"system-design","image":"https://khoahotran.github.io/portfolio/og/building-an-event-driven-architecture.png","url":"https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/system-design/building-an-event-driven-architecture"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-BQ1B_Piy.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-DVNwT64z.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/katex-CMdAwrm5.js"><link rel="stylesheet" crossorigin="" href="/portfolio/assets/katex-CJ2tWXjN.css"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/system-design" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to system design</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Building an Event-Driven Architecture</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Mar 21, 2026</span><span>3 min read</span></div><p class="mt-3 text-sm text-slate-600">A practical blueprint for introducing domain events to untangle a monolith without losing delivery guarantees.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#distributed-systems</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#architecture</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#queues</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#system-design</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#kafka</span></div></header><div class="markdown-body"><h2 id="the-monolith-bottleneck"><a class="heading-anchor" aria-label="Copy heading link" href="#the-monolith-bottleneck" data-enhanced="true"><span class="icon icon-link"></span></a>The Monolith Bottleneck</h2>
+<p>In our core backend platform, a single HTTP request for store onboarding triggered an enormous cascade of synchronous side effects. A typical flow involved:</p>
+<ol>
+<li>Writing the store profile to the database.</li>
+<li>Synchronizing the initial inventory with a third-party ERP.</li>
+<li>Provisioning a Stripe Connect account.</li>
+<li>Sending an onboarding email.</li>
+<li>Updating the promotion engine's cache.</li>
+</ol>
+<p>As the platform grew, this synchronous design became a massive liability. If the ERP API was slow, the entire request timed out, rolling back the store creation. Median write latency crept up to 420ms, and engineers were terrified to add new features to the onboarding flow.</p>
+<hr>
+<h2 id="the-event-driven-shift-transactional-outbox"><a class="heading-anchor" aria-label="Copy heading link" href="#the-event-driven-shift-transactional-outbox" data-enhanced="true"><span class="icon icon-link"></span></a>The Event-Driven Shift: Transactional Outbox</h2>
+<p>We needed to decouple these side effects. The solution was migrating to an Event-Driven Architecture (EDA) using the <strong>Transactional Outbox</strong> pattern to ensure we never lost an event.</p>
+<pre><code>[ HTTP POST ] ──&gt; [ API Server ]
+                        │
+                        ▼ (Start Transaction)
+           ┌───────────────────────────┐
+           │ 1. Write Store Profile    │
+           │ 2. Write Event to Outbox  │
+           └───────────────────────────┘
+                        │
+                        ▼ (Commit Transaction)
+                [ PostgreSQL DB ]
+                        │
+             (Polls via `SKIP LOCKED`)
+                        ▼
+            [ Outbox Publisher Worker ]
+                        │
+                        ├─► 1. Publish Event ──► [ Kafka Topic ]
+                        │
+                        └─► 2. Mark Outbox as PROCESSED
+</code></pre>
+<p>Instead of executing side effects immediately, the command handler now does exactly two things inside a single database transaction:</p>
+<ol>
+<li>Writes the business state (e.g., <code>INSERT INTO stores</code>).</li>
+<li>Writes an event payload to an outbox table (e.g., <code>INSERT INTO outbox (event_type, payload)</code>).</li>
+</ol>
+<p>Because these two writes are part of the same ACID transaction, they are guaranteed to either both succeed or both fail.</p>
+<hr>
+<h2 id="technical-implementation-outbox-publisher"><a class="heading-anchor" aria-label="Copy heading link" href="#technical-implementation-outbox-publisher" data-enhanced="true"><span class="icon icon-link"></span></a>Technical Implementation: Outbox Publisher</h2>
+<p>Here is the complete database schema and a Node.js worker implementation that publishes outbox events using a concurrency-safe <code>SKIP LOCKED</code> query.</p>
+<h3 id="1-database-schema-postgresql"><a class="heading-anchor" aria-label="Copy heading link" href="#1-database-schema-postgresql" data-enhanced="true"><span class="icon icon-link"></span></a>1. Database Schema (PostgreSQL)</h3>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">sql</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-sql"><span class="hljs-comment">-- Store profile table</span>
+<span class="hljs-keyword">CREATE TABLE</span> stores (
+    id UUID <span class="hljs-keyword">PRIMARY KEY</span>,
+    name <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">NOT NULL</span>,
+    email <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">NOT NULL</span>,
+    created_at <span class="hljs-type">TIMESTAMP</span> <span class="hljs-keyword">WITH</span> <span class="hljs-type">TIME</span> ZONE <span class="hljs-keyword">DEFAULT</span> NOW()
+);
+
+<span class="hljs-comment">-- Transactional Outbox table</span>
+<span class="hljs-keyword">CREATE TABLE</span> outbox_events (
+    id UUID <span class="hljs-keyword">PRIMARY KEY</span>,
+    event_type <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT NULL</span>,
+    payload JSONB <span class="hljs-keyword">NOT NULL</span>,
+    status <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">'PENDING'</span>, <span class="hljs-comment">-- PENDING, PROCESSED, FAILED</span>
+    error_message TEXT,
+    retry_count <span class="hljs-type">INT</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-number">0</span>,
+    created_at <span class="hljs-type">TIMESTAMP</span> <span class="hljs-keyword">WITH</span> <span class="hljs-type">TIME</span> ZONE <span class="hljs-keyword">DEFAULT</span> NOW(),
+    processed_at <span class="hljs-type">TIMESTAMP</span> <span class="hljs-keyword">WITH</span> <span class="hljs-type">TIME</span> ZONE
+);
+
+<span class="hljs-keyword">CREATE</span> INDEX idx_outbox_pending <span class="hljs-keyword">ON</span> outbox_events(status, created_at) <span class="hljs-keyword">WHERE</span> status <span class="hljs-operator">=</span> <span class="hljs-string">'PENDING'</span>;
+</code></pre>
+<h3 id="2-the-nodejs-outbox-polling-publisher"><a class="heading-anchor" aria-label="Copy heading link" href="#2-the-nodejs-outbox-polling-publisher" data-enhanced="true"><span class="icon icon-link"></span></a>2. The Node.js Outbox Polling Publisher</h3>
+<p>This service runs in a background process, querying the database and publishing messages safely:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">typescript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Client</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'pg'</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Kafka</span>, <span class="hljs-title class_">Producer</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'kafkajs'</span>;
+
+<span class="hljs-keyword">const</span> pgClient = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Client</span>({ <span class="hljs-attr">connectionString</span>: process.<span class="hljs-property">env</span>.<span class="hljs-property">DATABASE_URL</span> });
+<span class="hljs-keyword">const</span> kafka = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Kafka</span>({ <span class="hljs-attr">clientId</span>: <span class="hljs-string">'outbox-publisher'</span>, <span class="hljs-attr">brokers</span>: [<span class="hljs-string">'localhost:9092'</span>] });
+<span class="hljs-keyword">let</span> <span class="hljs-attr">kafkaProducer</span>: <span class="hljs-title class_">Producer</span>;
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">initialize</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">await</span> pgClient.<span class="hljs-title function_">connect</span>();
+  kafkaProducer = kafka.<span class="hljs-title function_">producer</span>();
+  <span class="hljs-keyword">await</span> kafkaProducer.<span class="hljs-title function_">connect</span>();
+  
+  <span class="hljs-comment">// Start polling loop</span>
+  <span class="hljs-title function_">pollOutbox</span>();
+}
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">pollOutbox</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
+    <span class="hljs-keyword">let</span> hasProcessed = <span class="hljs-literal">false</span>;
+    
+    <span class="hljs-keyword">try</span> {
+      <span class="hljs-comment">// 1. Begin transaction to lock and fetch oldest pending events</span>
+      <span class="hljs-keyword">await</span> pgClient.<span class="hljs-title function_">query</span>(<span class="hljs-string">'BEGIN'</span>);
+      
+      <span class="hljs-keyword">const</span> fetchQuery = <span class="hljs-string">`
+        SELECT id, event_type, payload 
+        FROM outbox_events 
+        WHERE status = 'PENDING' 
+        ORDER BY created_at ASC 
+        LIMIT 10 
+        FOR UPDATE SKIP LOCKED; -- High concurrency safety
+      `</span>;
+      
+      <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> pgClient.<span class="hljs-title function_">query</span>(fetchQuery);
+      
+      <span class="hljs-keyword">if</span> (res.<span class="hljs-property">rows</span>.<span class="hljs-property">length</span> &gt; <span class="hljs-number">0</span>) {
+        hasProcessed = <span class="hljs-literal">true</span>;
+        
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> row <span class="hljs-keyword">of</span> res.<span class="hljs-property">rows</span>) {
+          <span class="hljs-keyword">try</span> {
+            <span class="hljs-comment">// 2. Publish to Kafka</span>
+            <span class="hljs-keyword">await</span> kafkaProducer.<span class="hljs-title function_">send</span>({
+              <span class="hljs-attr">topic</span>: <span class="hljs-string">`domain-<span class="hljs-subst">${row.event_type.split(<span class="hljs-string">'.'</span>)[<span class="hljs-number">0</span>]}</span>`</span>,
+              <span class="hljs-attr">messages</span>: [{ <span class="hljs-attr">key</span>: row.<span class="hljs-property">id</span>, <span class="hljs-attr">value</span>: <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(row.<span class="hljs-property">payload</span>) }],
+            });
+
+            <span class="hljs-comment">// 3. Mark as processed</span>
+            <span class="hljs-keyword">await</span> pgClient.<span class="hljs-title function_">query</span>(
+              <span class="hljs-string">`UPDATE outbox_events 
+               SET status = 'PROCESSED', processed_at = NOW() 
+               WHERE id = $1`</span>, 
+              [row.<span class="hljs-property">id</span>]
+            );
+          } <span class="hljs-keyword">catch</span> (publishError) {
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">`Failed to publish event <span class="hljs-subst">${row.id}</span>:`</span>, publishError);
+            
+            <span class="hljs-comment">// Mark as failed for human intervention / retry</span>
+            <span class="hljs-keyword">await</span> pgClient.<span class="hljs-title function_">query</span>(
+              <span class="hljs-string">`UPDATE outbox_events 
+               SET status = 'FAILED', error_message = $2, retry_count = retry_count + 1 
+               WHERE id = $1`</span>, 
+              [row.<span class="hljs-property">id</span>, publishError.<span class="hljs-property">message</span>]
+            );
+          }
+        }
+      }
+      
+      <span class="hljs-keyword">await</span> pgClient.<span class="hljs-title function_">query</span>(<span class="hljs-string">'COMMIT'</span>);
+    } <span class="hljs-keyword">catch</span> (dbError) {
+      <span class="hljs-keyword">await</span> pgClient.<span class="hljs-title function_">query</span>(<span class="hljs-string">'ROLLBACK'</span>);
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">'Database transaction error in outbox poller:'</span>, dbError);
+    }
+
+    <span class="hljs-comment">// Dynamic sleep interval: sleep longer if no events were found</span>
+    <span class="hljs-keyword">const</span> sleepDuration = hasProcessed ? <span class="hljs-number">50</span> : <span class="hljs-number">1000</span>;
+    <span class="hljs-keyword">await</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> <span class="hljs-built_in">setTimeout</span>(resolve, sleepDuration));
+  }
+}
+
+<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">catch</span>(<span class="hljs-variable language_">console</span>.<span class="hljs-property">error</span>);
+</code></pre>
+<hr>
+<h2 id="event-schema-versioning-strategy"><a class="heading-anchor" aria-label="Copy heading link" href="#event-schema-versioning-strategy" data-enhanced="true"><span class="icon icon-link"></span></a>Event Schema Versioning Strategy</h2>
+<p>Since events represent a public contract across services, changing their shape requires extreme caution. We followed three strict rules:</p>
+<ul>
+<li><strong>Backward Compatibility</strong>: Field removal or modification is forbidden. If a change is needed, append optional fields.</li>
+<li><strong>Forward Compatibility</strong>: Consumers must be configured to tolerate and ignore unknown fields.</li>
+<li><strong>Explicit Versioning</strong>: Include a version integer in the envelope of every event:
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">json</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"eventId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"event-uuid-789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"eventType"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"store.created"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"version"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"timestamp"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2026-03-21T12:00:00Z"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> ... <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+</li>
+</ul>
+<hr>
+<h2 id="key-takeaways"><a class="heading-anchor" aria-label="Copy heading link" href="#key-takeaways" data-enhanced="true"><span class="icon icon-link"></span></a>Key Takeaways</h2>
+<ol>
+<li><strong>Transactional Outbox prevents lost events</strong>: Writing to the outbox and application table in the same transaction guarantees event delivery, even if the publisher crashes.</li>
+<li><strong>Use <code>SKIP LOCKED</code> for polling scaling</strong>: It prevents multiple instances of the publisher service from locking the same rows, enabling horizontal scalability.</li>
+<li><strong>Idempotency is mandatory on the consumer</strong>: Since events can be redelivered during failure recovery (at-least-once delivery), consumers must store processed event IDs to prevent duplicate actions.</li>
+</ol></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/system-design/system-design-trade-offs-in-practice" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">System Design Trade-offs in Practice</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/system-design/designing-a-burst-traffic-async-job-pipeline" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/system-design/designing-a-multi-service-auth-platform" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">system design</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Designing a Multi-Service Auth Platform: The Aegis Architecture</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A deep dive into Aegis, a high-performance authorization platform using gRPC microservices, a GraphQL gateway, Kafka audit logging, and OpenTelemetry.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>5 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/system-design/designing-a-real-time-fraud-detection-engine" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">system design</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Designing a Real-Time Fraud Detection Engine with Velocity Rules</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">How I built a real-time fraud detection engine using Event Sourcing, CQRS, and velocity rules to automatically freeze malicious accounts in a core banking system.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Consistent Hashing and the Rebalancing Nobody Notices</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run the real hash-ring placement algorithm against naive modulo hashing on the same key set — see how little of the keyspace a ring actually moves when a node joins or leaves, and what happens without enough virtual nodes to spread the luck around.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 08, 2026</span><span>4 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#the-monolith-bottleneck" class="toc-link">The Monolith Bottleneck</a></li><li><a href="#the-event-driven-shift-transactional-outbox" class="toc-link">The Event-Driven Shift: Transactional Outbox</a></li><li><a href="#technical-implementation-outbox-publisher" class="toc-link">Technical Implementation: Outbox Publisher</a></li><li class="toc-sub"><a href="#1-database-schema-postgresql" class="toc-link">1. Database Schema (PostgreSQL)</a></li><li class="toc-sub"><a href="#2-the-nodejs-outbox-polling-publisher" class="toc-link">2. The Node.js Outbox Polling Publisher</a></li><li><a href="#event-schema-versioning-strategy" class="toc-link">Event Schema Versioning Strategy</a></li><li><a href="#key-takeaways" class="toc-link">Key Takeaways</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

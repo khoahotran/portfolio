@@ -8,6 +8,48 @@
   "favicon": "https://khoahotran.github.io/portfolio/favicon.ico",
   "items": [
     {
+      "id": "https://khoahotran.github.io/portfolio/research/adr-tracing-vs-metrics-in-microservices",
+      "url": "https://khoahotran.github.io/portfolio/research/adr-tracing-vs-metrics-in-microservices",
+      "title": "ADR: Tracing vs Metrics for Observability in Aegis",
+      "summary": "An Architecture Decision Record on why distributed tracing and metrics answer different questions in Aegis, and which one should gate a page for what.",
+      "date_published": "2026-08-28T00:00:00.000Z",
+      "tags": [
+        "adr",
+        "observability",
+        "opentelemetry",
+        "trade-offs"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/adr-tracing-vs-metrics-in-microservices.png"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/research/database-indexing-btree-vs-brin-for-time-series",
+      "url": "https://khoahotran.github.io/portfolio/research/database-indexing-btree-vs-brin-for-time-series",
+      "title": "Database Indexing for Time-Series: B-Tree vs BRIN in PostgreSQL",
+      "summary": "Why a Block Range Index, not the default B-Tree, is the right structure for naturally time-ordered data — and why QuantAlpha's tick-ingestion pipeline hasn't needed it yet.",
+      "date_published": "2026-08-28T00:00:00.000Z",
+      "tags": [
+        "postgresql",
+        "architecture",
+        "hft"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/database-indexing-btree-vs-brin-for-time-series.png"
+    },
+    {
+      "id": "https://khoahotran.github.io/portfolio/research/why-prerender-instead-of-migrating-to-next-js",
+      "url": "https://khoahotran.github.io/portfolio/research/why-prerender-instead-of-migrating-to-next-js",
+      "title": "ADR: Why Prerender Instead of Migrating to Next.js",
+      "summary": "This portfolio's original decision to build a custom JAMstack instead of using Next.js still held once a crawler-visibility bug surfaced. Here's why the fix was a build step, not a framework migration.",
+      "date_published": "2026-08-27T00:00:00.000Z",
+      "tags": [
+        "adr",
+        "frontend-architecture",
+        "react",
+        "seo",
+        "architecture"
+      ],
+      "image": "https://khoahotran.github.io/portfolio/og/why-prerender-instead-of-migrating-to-next-js.png"
+    },
+    {
       "id": "https://khoahotran.github.io/portfolio/research/adr-firestore-vs-postgresql-event-sourcing",
       "url": "https://khoahotran.github.io/portfolio/research/adr-firestore-vs-postgresql-event-sourcing",
       "title": "ADR: Firestore vs PostgreSQL for Event Sourcing in Core Banking",
@@ -30,8 +72,7 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "adr",
-        "graphql",
-        "api-gateway",
+        "api-design",
         "architecture",
         "go"
       ],
@@ -45,9 +86,7 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "system-design",
-        "algolia",
-        "search",
-        "geolocation"
+        "search"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/algolia-geo-search-for-store-discovery.png"
     },
@@ -59,11 +98,9 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "opentelemetry",
-        "jaeger",
         "observability",
         "go",
-        "distributed-systems",
-        "tracing"
+        "distributed-systems"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/distributed-tracing-with-opentelemetry-and-jaeger.png"
     },
@@ -77,7 +114,7 @@
         "event-sourcing",
         "cqrs",
         "architecture",
-        "database",
+        "system-design",
         "go",
         "trade-offs"
       ],
@@ -91,10 +128,10 @@
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "machine-learning",
-        "finance",
+        "fintech",
         "python",
         "hft",
-        "research"
+        "adr"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/order-book-imbalance-hft-signal.png"
     },
@@ -105,10 +142,7 @@
       "summary": "How to evolve from brittle role checks to a maintainable, high-performance policy-based authorization engine.",
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
-        "authorization",
-        "rbac",
         "security",
-        "policy-engine",
         "architecture"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/designing-a-permission-system.png"
@@ -121,10 +155,8 @@
       "date_published": "2026-03-21T00:00:00.000Z",
       "tags": [
         "queues",
-        "workers",
-        "scaling",
-        "backend",
-        "performance"
+        "architecture",
+        "benchmark"
       ],
       "image": "https://khoahotran.github.io/portfolio/og/scaling-background-jobs.png"
     }

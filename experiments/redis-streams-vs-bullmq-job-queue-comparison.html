@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>Redis Streams vs BullMQ: Choosing Your Job Queue | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="Redis Streams vs BullMQ: Choosing Your Job Queue | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/redis-streams-vs-bullmq-job-queue-comparison.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/redis-streams-vs-bullmq-job-queue-comparison.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/experiments/redis-streams-vs-bullmq-job-queue-comparison"><meta name="twitter:title" content="Redis Streams vs BullMQ: Choosing Your Job Queue | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns."><link rel="canonical" href="https://khoahotran.github.io/portfolio/experiments/redis-streams-vs-bullmq-job-queue-comparison"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"Redis Streams vs BullMQ: Choosing Your Job Queue","datePublished":"2026-06-28","description":"A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns.","keywords":"benchmark, redis, queues, go, typescript","articleSection":"experiments","image":"https://khoahotran.github.io/portfolio/og/redis-streams-vs-bullmq-job-queue-comparison.png","url":"https://khoahotran.github.io/portfolio/experiments/redis-streams-vs-bullmq-job-queue-comparison","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/experiments/redis-streams-vs-bullmq-job-queue-comparison"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-BQ1B_Piy.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-DVNwT64z.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/katex-CMdAwrm5.js"><link rel="stylesheet" crossorigin="" href="/portfolio/assets/katex-CJ2tWXjN.css"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/experiments" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to experiments</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Redis Streams vs BullMQ: Choosing Your Job Queue</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Jun 28, 2026</span><span>6 min read</span></div><p class="mt-3 text-sm text-slate-600">A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#benchmark</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#redis</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#queues</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#go</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#typescript</span></div><div class="mt-4"><span class="inline-block rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">Part 1 of 3 in The Benchmark Rewrites</span><nav class="mt-3 grid gap-3 sm:grid-cols-2" aria-label="Series navigation"><div></div><a class="group rounded-xl border border-slate-200 bg-surface p-3 text-right transition-colors hover:border-teal-500" href="/portfolio/experiments/db-event-replay-benchmark" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next in series</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Benchmark: Event Replay in PostgreSQL vs Firestore</div></a></nav></div></header><div class="markdown-body"><h2 id="the-same-infrastructure-two-different-abstractions"><a class="heading-anchor" aria-label="Copy heading link" href="#the-same-infrastructure-two-different-abstractions" data-enhanced="true"><span class="icon icon-link"></span></a>The Same Infrastructure, Two Different Abstractions</h2>
+<p>Both Redis Streams and BullMQ run on Redis. On the surface, they appear interchangeable for async job processing. After building <strong>QuantAlpha Lab</strong> with raw Redis Streams (in Go) and <strong>Jujuja</strong> with BullMQ (in TypeScript/NestJS), I can say with certainty: they are not interchangeable. They solve different problems with different trade-offs.</p>
+<hr>
+<h2 id="the-two-workloads"><a class="heading-anchor" aria-label="Copy heading link" href="#the-two-workloads" data-enhanced="true"><span class="icon icon-link"></span></a>The Two Workloads</h2>
+<h3 id="quantalpha-lab-redis-streams-go"><a class="heading-anchor" aria-label="Copy heading link" href="#quantalpha-lab-redis-streams-go" data-enhanced="true"><span class="icon icon-link"></span></a>QuantAlpha Lab: Redis Streams (Go)</h3>
+<p>The ML pipeline dispatches prediction jobs from a Go REST API to Python worker processes. The requirements were:</p>
+<ul>
+<li>Fan-out to multiple worker <em>types</em> (Data Scientist role, Quant Researcher role, Portfolio Manager role)</li>
+<li>Persistent job history for replay and audit</li>
+<li>Consumer groups that each process the full event stream independently</li>
+<li>Low overhead — we control the infrastructure directly</li>
+</ul>
+<h3 id="jujuja-bullmq-typescriptnestjs"><a class="heading-anchor" aria-label="Copy heading link" href="#jujuja-bullmq-typescriptnestjs" data-enhanced="true"><span class="icon icon-link"></span></a>Jujuja: BullMQ (TypeScript/NestJS)</h3>
+<p>The daily quest pipeline dispatches user completion events to reward workers. The requirements were:</p>
+<ul>
+<li>Task-style work distribution — exactly one worker processes each job</li>
+<li>Built-in retry with exponential backoff</li>
+<li>Dead letter queue with Slack alerting</li>
+<li>Dashboard visibility for on-call engineers</li>
+<li>Fast development iteration — the team is small</li>
+</ul>
+<hr>
+<h2 id="architectural-comparison"><a class="heading-anchor" aria-label="Copy heading link" href="#architectural-comparison" data-enhanced="true"><span class="icon icon-link"></span></a>Architectural Comparison</h2>
+<pre><code>REDIS STREAMS MODEL (QuantAlpha Lab)
+                                     ┌──► [Consumer Group A: Data Scientist Worker]
+[Go API] ──► XADD (stream) ──────────┼──► [Consumer Group B: Quant Researcher Worker]
+                                     └──► [Consumer Group C: Portfolio Manager Worker]
+Each consumer group reads ALL messages independently.
+Messages are retained based on MAXLEN policy (not deleted on ACK).
+
+BULLMQ MODEL (Jujuja)
+                    ┌──► [Worker Instance 1] (locks job, removes on success)
+[NestJS] ──► RPUSH ─┤
+                    └──► [Worker Instance 2] (one job, one worker, competing)
+Messages are removed from Redis on successful processing.
+Failed jobs move to DLQ (separate sorted set).
+</code></pre>
+<hr>
+<h2 id="implementation-redis-streams-go"><a class="heading-anchor" aria-label="Copy heading link" href="#implementation-redis-streams-go" data-enhanced="true"><span class="icon icon-link"></span></a>Implementation: Redis Streams (Go)</h2>
+<p>Here's the general pattern for a multi-consumer-group Redis Streams dispatcher in Go — the reference design behind QuantAlpha Lab's job-queue architecture (see the note after this section for how it compares to what's currently committed):</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">go</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-go"><span class="hljs-keyword">package</span> dispatch
+
+<span class="hljs-keyword">import</span> (
+    <span class="hljs-string">"context"</span>
+    <span class="hljs-string">"fmt"</span>
+    <span class="hljs-string">"time"</span>
+
+    <span class="hljs-string">"github.com/redis/go-redis/v9"</span>
+)
+
+<span class="hljs-keyword">const</span> (
+    streamKey = <span class="hljs-string">"hft:prediction-requests"</span>
+    maxLen    = <span class="hljs-number">10000</span> <span class="hljs-comment">// Retain last 10,000 messages</span>
+)
+
+<span class="hljs-keyword">type</span> Dispatcher <span class="hljs-keyword">struct</span> {
+    rdb *redis.Client
+}
+
+<span class="hljs-comment">// Publish adds a prediction request to the Redis Stream.</span>
+<span class="hljs-comment">// Each consumer group will receive its own copy of this message.</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(d *Dispatcher)</span></span> Publish(ctx context.Context, req PredictionRequest) (<span class="hljs-type">string</span>, <span class="hljs-type">error</span>) {
+    id, err := d.rdb.XAdd(ctx, &amp;redis.XAddArgs{
+        Stream: streamKey,
+        MaxLen: maxLen,
+        Approx: <span class="hljs-literal">true</span>, <span class="hljs-comment">// ~MAXLEN (allows minor over-count for performance)</span>
+        Values: <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>{}{
+            <span class="hljs-string">"model_id"</span>:   req.ModelID,
+            <span class="hljs-string">"window_sec"</span>: req.WindowSeconds,
+            <span class="hljs-string">"requested_at"</span>: time.Now().UnixMilli(),
+        },
+    }).Result()
+    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-string">""</span>, fmt.Errorf(<span class="hljs-string">"xadd to stream: %w"</span>, err)
+    }
+
+    <span class="hljs-keyword">return</span> id, <span class="hljs-literal">nil</span>
+}
+</code></pre>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">go</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-go"><span class="hljs-comment">// Consumer group setup (run once at service startup)</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(d *Dispatcher)</span></span> EnsureConsumerGroups(ctx context.Context) <span class="hljs-type">error</span> {
+    groups := []<span class="hljs-type">string</span>{<span class="hljs-string">"data-scientist-workers"</span>, <span class="hljs-string">"quant-researcher-workers"</span>, <span class="hljs-string">"portfolio-manager-workers"</span>}
+
+    <span class="hljs-keyword">for</span> _, group := <span class="hljs-keyword">range</span> groups {
+        err := d.rdb.XGroupCreateMkStream(ctx, streamKey, group, <span class="hljs-string">"0"</span>).Err()
+        <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &amp;&amp; err.Error() != <span class="hljs-string">"BUSYGROUP Consumer Group name already exists"</span> {
+            <span class="hljs-keyword">return</span> fmt.Errorf(<span class="hljs-string">"creating consumer group %s: %w"</span>, group, err)
+        }
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>
+}
+
+<span class="hljs-comment">// Worker reads from its consumer group and processes messages.</span>
+<span class="hljs-comment">// XACK removes the message from the PEL (Pending Entry List) after processing.</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">RunWorker</span><span class="hljs-params">(ctx context.Context, rdb *redis.Client, group, consumerName <span class="hljs-type">string</span>)</span></span> {
+    <span class="hljs-keyword">for</span> {
+        streams, err := rdb.XReadGroup(ctx, &amp;redis.XReadGroupArgs{
+            Group:    group,
+            Consumer: consumerName,
+            Streams:  []<span class="hljs-type">string</span>{streamKey, <span class="hljs-string">"&gt;"</span>},
+            Count:    <span class="hljs-number">5</span>,
+            Block:    <span class="hljs-number">5</span> * time.Second,
+        }).Result()
+
+        <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+            <span class="hljs-keyword">if</span> err == redis.Nil {
+                <span class="hljs-keyword">continue</span> <span class="hljs-comment">// No new messages — block timeout, retry</span>
+            }
+            <span class="hljs-keyword">continue</span>
+        }
+
+        <span class="hljs-keyword">for</span> _, stream := <span class="hljs-keyword">range</span> streams {
+            <span class="hljs-keyword">for</span> _, msg := <span class="hljs-keyword">range</span> stream.Messages {
+                <span class="hljs-keyword">if</span> err := processMessage(ctx, msg); err != <span class="hljs-literal">nil</span> {
+                    <span class="hljs-comment">// Do NOT ack — message stays in PEL for retry via XPENDING</span>
+                    <span class="hljs-keyword">continue</span>
+                }
+
+                <span class="hljs-comment">// Acknowledge successful processing</span>
+                rdb.XAck(ctx, streamKey, group, msg.ID)
+            }
+        }
+    }
+}
+</code></pre>
+<p><strong>Claiming stuck messages</strong> (the Redis Streams equivalent of retry):</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">go</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-go"><span class="hljs-comment">// XAUTOCLAIM reclaims messages that have been pending &gt; 30 seconds</span>
+<span class="hljs-comment">// (i.e., a worker died mid-processing). Run this as a periodic recovery goroutine.</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">reclaimStalePending</span><span class="hljs-params">(ctx context.Context, rdb *redis.Client, group, consumer <span class="hljs-type">string</span>)</span></span> {
+    msgs, _, err := rdb.XAutoClaim(ctx, &amp;redis.XAutoClaimArgs{
+        Stream:   streamKey,
+        Group:    group,
+        Consumer: consumer,
+        MinIdle:  <span class="hljs-number">30</span> * time.Second,
+        Start:    <span class="hljs-string">"0-0"</span>,
+        Count:    <span class="hljs-number">10</span>,
+    }).Result()
+
+    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> || <span class="hljs-built_in">len</span>(msgs) == <span class="hljs-number">0</span> {
+        <span class="hljs-keyword">return</span>
+    }
+
+    <span class="hljs-keyword">for</span> _, msg := <span class="hljs-keyword">range</span> msgs {
+        processMessage(ctx, msg)
+        rdb.XAck(ctx, streamKey, group, msg.ID)
+    }
+}
+</code></pre>
+<blockquote>
+<p><strong>Current implementation vs. this pattern:</strong> the QuantAlpha Lab (<code>HFT</code>) repository's actual dispatch code is simpler than the reference pattern above — one stream (<code>job_queue</code>), one consumer group (<code>worker_group</code>), and no <code>XAutoClaim</code>/<code>XClaim</code> anywhere in the codebase. Recovery of stuck jobs is a startup-time PEL scan by the worker's own consumer identity, not a periodic cross-consumer reclaim goroutine, and there's no multi-group fan-out by role (Data Scientist / Quant Researcher / Portfolio Manager) in the committed code. The pattern above remains the reference design this comparison illustrates; it is not what's currently running.</p>
+</blockquote>
+<hr>
+<h2 id="implementation-bullmq-typescript"><a class="heading-anchor" aria-label="Copy heading link" href="#implementation-bullmq-typescript" data-enhanced="true"><span class="icon icon-link"></span></a>Implementation: BullMQ (TypeScript)</h2>
+<p>In Jujuja, BullMQ wraps all of the above complexity behind a clean API:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">typescript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Queue</span>, <span class="hljs-title class_">Worker</span>, <span class="hljs-title class_">QueueEvents</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'bullmq'</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Redis</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'ioredis'</span>;
+
+<span class="hljs-keyword">const</span> connection = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Redis</span>(process.<span class="hljs-property">env</span>.<span class="hljs-property">REDIS_URL</span> || <span class="hljs-string">'redis://localhost:6379'</span>);
+
+<span class="hljs-comment">// Producer: push a quest completion job</span>
+<span class="hljs-keyword">const</span> questQueue = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Queue</span>(<span class="hljs-string">'quest-completions'</span>, { connection });
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">enqueueQuestCompletion</span>(<span class="hljs-params"><span class="hljs-attr">userId</span>: <span class="hljs-built_in">string</span>, <span class="hljs-attr">questId</span>: <span class="hljs-built_in">string</span></span>) {
+  <span class="hljs-keyword">const</span> jobId = <span class="hljs-string">`quest:<span class="hljs-subst">${userId}</span>:<span class="hljs-subst">${questId}</span>:<span class="hljs-subst">${<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().toDateString()}</span>`</span>;
+
+  <span class="hljs-keyword">await</span> questQueue.<span class="hljs-title function_">add</span>(
+    <span class="hljs-string">'process-completion'</span>,
+    { userId, questId },
+    {
+      jobId,             <span class="hljs-comment">// BullMQ deduplicates by jobId automatically</span>
+      <span class="hljs-attr">attempts</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">backoff</span>: {
+        <span class="hljs-attr">type</span>: <span class="hljs-string">'exponential'</span>,
+        <span class="hljs-attr">delay</span>: <span class="hljs-number">5000</span>,     <span class="hljs-comment">// 5s → 10s → 20s</span>
+      },
+      <span class="hljs-attr">removeOnComplete</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">removeOnFail</span>: {
+        <span class="hljs-attr">age</span>: <span class="hljs-number">24</span> * <span class="hljs-number">3600</span>, <span class="hljs-comment">// Keep failed jobs in DLQ for 24h</span>
+      },
+    }
+  );
+}
+
+<span class="hljs-comment">// Consumer: process one job at a time, with automatic retry on failure</span>
+<span class="hljs-keyword">const</span> worker = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Worker</span>(
+  <span class="hljs-string">'quest-completions'</span>,
+  <span class="hljs-title function_">async</span> (job) =&gt; {
+    <span class="hljs-keyword">const</span> { userId, questId } = job.<span class="hljs-property">data</span>;
+
+    <span class="hljs-comment">// This is called on every retry — idempotency must be handled inside</span>
+    <span class="hljs-keyword">await</span> <span class="hljs-title function_">validateAndAllocateReward</span>(userId, questId);
+  },
+  {
+    connection,
+    <span class="hljs-attr">concurrency</span>: <span class="hljs-number">10</span>,
+  }
+);
+
+<span class="hljs-comment">// Observability: alert when jobs land in DLQ</span>
+<span class="hljs-keyword">const</span> events = <span class="hljs-keyword">new</span> <span class="hljs-title class_">QueueEvents</span>(<span class="hljs-string">'quest-completions'</span>, { connection });
+events.<span class="hljs-title function_">on</span>(<span class="hljs-string">'failed'</span>, <span class="hljs-title function_">async</span> ({ jobId, failedReason }) =&gt; {
+  <span class="hljs-keyword">const</span> job = <span class="hljs-keyword">await</span> questQueue.<span class="hljs-title function_">getJob</span>(jobId);
+  <span class="hljs-keyword">if</span> (job &amp;&amp; job.<span class="hljs-property">attemptsMade</span> &gt;= <span class="hljs-number">3</span>) {
+    <span class="hljs-keyword">await</span> <span class="hljs-title function_">sendSlackAlert</span>(<span class="hljs-string">`Quest job <span class="hljs-subst">${jobId}</span> exhausted retries: <span class="hljs-subst">${failedReason}</span>`</span>);
+  }
+});
+</code></pre>
+<hr>
+<h2 id="feature-comparison"><a class="heading-anchor" aria-label="Copy heading link" href="#feature-comparison" data-enhanced="true"><span class="icon icon-link"></span></a>Feature Comparison</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Dimension</th><th align="left">Redis Streams (raw)</th><th align="left">BullMQ</th></tr></thead><tbody><tr><td align="left"><strong>Message model</strong></td><td align="left">Append-only log; consumers track offsets</td><td align="left">Task queue; message removed on success</td></tr><tr><td align="left"><strong>Fan-out</strong></td><td align="left"><span class="status-mark status-mark--yes" role="img" aria-label="Yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg></span>Native consumer groups — each gets full stream</td><td align="left"><span class="status-mark status-mark--no" role="img" aria-label="No"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg></span>Competing consumers only</td></tr><tr><td align="left"><strong>Message retention</strong></td><td align="left"><span class="status-mark status-mark--yes" role="img" aria-label="Yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg></span>Configurable (MAXLEN) — replay possible</td><td align="left"><span class="status-mark status-mark--no" role="img" aria-label="No"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg></span>Deleted on success</td></tr><tr><td align="left"><strong>Retry mechanism</strong></td><td align="left">Manual XAUTOCLAIM or XPENDING handling</td><td align="left"><span class="status-mark status-mark--yes" role="img" aria-label="Yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg></span>Built-in with exponential backoff</td></tr><tr><td align="left"><strong>DLQ</strong></td><td align="left">Manual — move to separate stream on failure</td><td align="left"><span class="status-mark status-mark--yes" role="img" aria-label="Yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg></span>Automatic sorted set</td></tr><tr><td align="left"><strong>Deduplication</strong></td><td align="left">Manual — check before XAck</td><td align="left"><span class="status-mark status-mark--yes" role="img" aria-label="Yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg></span>Job IDs deduplicate automatically</td></tr><tr><td align="left"><strong>Dashboard</strong></td><td align="left">None (build your own or use Redis Insight)</td><td align="left"><span class="status-mark status-mark--yes" role="img" aria-label="Yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg></span>Bull Board (npm package)</td></tr><tr><td align="left"><strong>Language support</strong></td><td align="left">Any Redis client</td><td align="left">Primarily Node.js/TypeScript</td></tr><tr><td align="left"><strong>Operational overhead</strong></td><td align="left">High — own the retry and reclaim logic</td><td align="left">Low — managed by library</td></tr></tbody></table>
+<hr>
+<h2 id="benchmark-numbers"><a class="heading-anchor" aria-label="Copy heading link" href="#benchmark-numbers" data-enhanced="true"><span class="icon icon-link"></span></a>Benchmark Numbers</h2>
+<h3 id="methodology"><a class="heading-anchor" aria-label="Copy heading link" href="#methodology" data-enhanced="true"><span class="icon icon-link"></span></a>Methodology</h3>
+<ul>
+<li><strong>Hardware:</strong> A local Docker Compose stack (Redis 7, a Go 1.22 producer/consumer, and a Node 20
+BullMQ worker as separate containers on the same bridge network) — not the AWS c6g.xlarge cited
+in an earlier version of this article, whose harness was lost. Rewritten as a runnable harness
+rather than reconstructed from memory; see below.</li>
+<li><strong>BullMQ:</strong> Node.js 20. One <code>Worker</code> instance per configured worker count, concurrency 1 each.</li>
+<li><strong>Redis Streams:</strong> Go 1.22. <code>go-redis</code>, <code>XADD</code> to enqueue, <code>XREADGROUP</code> against a shared consumer
+group to drain, one goroutine per worker.</li>
+<li><strong>Protocol:</strong> Enqueue all jobs first, only then start the workers, so both engines are measured
+draining an identical backlog rather than production and consumption overlapping unevenly.
+Job counts: 3,000 for 1&nbsp;KB/10&nbsp;KB payloads, 1,000 for 100&nbsp;KB (kept lower purely to
+bound total runtime — same count for both engines within each payload size).</li>
+</ul>
+<div class="callout callout-note"><p class="callout-title">Note</p>
+<p><strong>Reproducibility.</strong> This harness is real and committed:
+<a href="https://github.com/khoahotran/portfolio/tree/main/benchmarks/redis-vs-bullmq" target="_blank" rel="noopener noreferrer"><code>benchmarks/redis-vs-bullmq/</code></a>
+in the portfolio repository — a Docker Compose stack plus a <code>run.sh</code> that reproduces every number
+below from a cold start. The interactive lab imports this exact <code>results.json</code>, not a hand-picked
+subset. Numbers will vary run to run and host to host — that's true of any benchmark — but the
+methodology is no longer something you have to take on faith.</p>
+</div>
+<h3 id="key-observations"><a class="heading-anchor" aria-label="Copy heading link" href="#key-observations" data-enhanced="true"><span class="icon icon-link"></span></a>Key Observations</h3>
+<p>BullMQ is an incredible piece of software with built-in retries, backoff, and repeatable jobs. However, to achieve these features, it relies on complex Lua scripts that run atomically inside Redis for every single job state transition (Waiting -&gt; Active -&gt; Completed).</p>
+<p>Native Redis Streams via Go, on the other hand, just appends and reads from a log.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Payload</th><th align="left">Workers</th><th align="right">Redis Streams (jobs/s)</th><th align="right">BullMQ (jobs/s)</th><th align="right">Ratio</th></tr></thead><tbody><tr><td align="left">1 KB</td><td align="left">1</td><td align="right">1,745</td><td align="right">783</td><td align="right">2.2x</td></tr><tr><td align="left">1 KB</td><td align="left">5</td><td align="right">4,061</td><td align="right">1,363</td><td align="right">3.0x</td></tr><tr><td align="left">10 KB</td><td align="left">1</td><td align="right">1,614</td><td align="right">707</td><td align="right">2.3x</td></tr><tr><td align="left">10 KB</td><td align="left">5</td><td align="right">3,467</td><td align="right">1,208</td><td align="right">2.9x</td></tr><tr><td align="left">100 KB</td><td align="left">1</td><td align="right">1,379</td><td align="right">273</td><td align="right">5.1x</td></tr><tr><td align="left">100 KB</td><td align="left">5</td><td align="right">1,707</td><td align="right">308</td><td align="right">5.5x</td></tr></tbody></table>
+<p>The gap is not a flat multiplier — it grows with payload size. At 1&nbsp;KB and 10&nbsp;KB, Redis
+Streams runs roughly 2-3x BullMQ's throughput; at 100&nbsp;KB, that widens to 5-5.5x. BullMQ's
+per-job Lua-script overhead is largely fixed regardless of payload size, so as the payload itself
+gets more expensive to move and JSON-serialize, that fixed overhead becomes a smaller fraction of
+BullMQ's total cost per job — while Redis Streams, with no such per-job scripting cost, keeps
+scaling more cleanly with raw I/O. If your system requires raw, unadulterated throughput (e.g.,
+passing millions of tiny websocket events or tick data), Redis Streams in Go is the clear win — and
+the win gets larger, not smaller, as payloads grow. If you need complex job management (pausing
+queues, rate limiting, parent/child jobs), BullMQ's overhead is well worth it, and the gap above is
+the price of that convenience, not a reason to avoid it.</p>
+<a href="/portfolio/labs/redis-vs-bullmq" class="lab-cta">
+  View Interactive Benchmark
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+</a>
+<hr>
+<h2 id="when-to-choose-which"><a class="heading-anchor" aria-label="Copy heading link" href="#when-to-choose-which" data-enhanced="true"><span class="icon icon-link"></span></a>When to Choose Which</h2>
+<p>Use <strong>Redis Streams</strong> when:</p>
+<ul>
+<li>You need fan-out: multiple independent services must each process every event</li>
+<li>You need replay: you want to reprocess historical events (e.g., rebuild ML model state)</li>
+<li>You control the consumer in Go or another non-Node language</li>
+<li>The extra control is worth the extra code</li>
+</ul>
+<p>Use <strong>BullMQ</strong> when:</p>
+<ul>
+<li>This is a task queue — one job, one worker</li>
+<li>You are in a TypeScript/NestJS codebase and want built-in retry, DLQ, and dashboard</li>
+<li>Your team is small and you need to ship fast without implementing retry logic from scratch</li>
+<li>Dead letter queue observability is a hard requirement (it almost always is)</li>
+</ul>
+<hr>
+<h2 id="lessons-learned"><a class="heading-anchor" aria-label="Copy heading link" href="#lessons-learned" data-enhanced="true"><span class="icon icon-link"></span></a>Lessons Learned</h2>
+<ol>
+<li><strong>Redis Streams is closer to Kafka than to a job queue.</strong> If you think of it as a Kafka replacement for event streaming, it makes sense. If you think of it as BullMQ with lower abstraction, you will be frustrated by missing features.</li>
+<li><strong>BullMQ's automatic deduplication via job IDs is underrated.</strong> In Jujuja, this single feature eliminated an entire class of double-reward bugs without any application-level coordination.</li>
+<li><strong>XAUTOCLAIM is non-negotiable for Redis Streams.</strong> Without periodic reclaim of stuck pending messages, a crashed worker silently orphans jobs forever. This is easy to forget and hard to debug.</li>
+</ol></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/experiments/saga-state-machine-visualizer" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Interactive Saga State Machine Visualizer</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/experiments/event-sourcing-replay" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Interactive Event Sourcing Replay</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/projects/quant-alpha" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">projects</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">QuantAlpha: High-Frequency Trading Research Platform</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A distributed research platform for High-Frequency Trading (HFT) utilizing Redis Streams for asynchronous model training and order book imbalance (OBI) analysis.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Feb 20, 2026</span><span>7 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/blog/building-jujuja-a-production-quest-system" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">blog</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Building Jujuja: A Production Quest System for Burst Traffic</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">How we built the Jujuja backend to handle 1,500 concurrent users per minute during campaign bursts, processing daily quests and loyalty points using BullMQ and NestJS.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>3 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/field-notes/go-vs-typescript-for-backend-services" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">field notes</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Field Note: Go vs TypeScript for Backend Services</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A working engineer's honest comparison of Go and TypeScript for backend services, based on using both in production — and a framework for choosing between them.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>5 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#the-same-infrastructure-two-different-abstractions" class="toc-link">The Same Infrastructure, Two Different Abstractions</a></li><li><a href="#the-two-workloads" class="toc-link">The Two Workloads</a></li><li class="toc-sub"><a href="#quantalpha-lab-redis-streams-go" class="toc-link">QuantAlpha Lab: Redis Streams (Go)</a></li><li class="toc-sub"><a href="#jujuja-bullmq-typescriptnestjs" class="toc-link">Jujuja: BullMQ (TypeScript/NestJS)</a></li><li><a href="#architectural-comparison" class="toc-link">Architectural Comparison</a></li><li><a href="#implementation-redis-streams-go" class="toc-link">Implementation: Redis Streams (Go)</a></li><li><a href="#implementation-bullmq-typescript" class="toc-link">Implementation: BullMQ (TypeScript)</a></li><li><a href="#feature-comparison" class="toc-link">Feature Comparison</a></li><li><a href="#benchmark-numbers" class="toc-link">Benchmark Numbers</a></li><li class="toc-sub"><a href="#methodology" class="toc-link">Methodology</a></li><li class="toc-sub"><a href="#key-observations" class="toc-link">Key Observations</a></li><li><a href="#when-to-choose-which" class="toc-link">When to Choose Which</a></li><li><a href="#lessons-learned" class="toc-link">Lessons Learned</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

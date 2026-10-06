@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it's named.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it's named.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/rate-limiting-algorithms.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/rate-limiting-algorithms.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms"><meta name="twitter:title" content="Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it's named."><link rel="canonical" href="https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window","datePublished":"2026-08-28","description":"Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it's named.","keywords":"api-design, distributed-systems, benchmark","articleSection":"experiments","image":"https://khoahotran.github.io/portfolio/og/rate-limiting-algorithms.png","url":"https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/experiments" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to experiments</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Aug 28, 2026</span><span>4 min read</span></div><p class="mt-3 text-sm text-slate-600">Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it's named.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#api-design</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#distributed-systems</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#benchmark</span></div></header><div class="markdown-body"><p>Every API gateway eventually needs to answer the same question: <em>how many requests is one client
+allowed to make, and what happens when they go over?</em> Three algorithms answer it differently enough
+that picking the wrong one is a real operational mistake, not a stylistic preference. The
+<a href="/portfolio/labs/rate-limiting-algorithms">interactive lab</a> runs the actual algorithms — not modelled
+approximations — against an identical arrival timeline, so the differences below come from the
+algorithms, not from cherry-picked inputs.</p>
+<div class="mt-8 mb-12">
+  <a href="/portfolio/labs/rate-limiting-algorithms" class="lab-cta-inverse">
+    Try the Interactive Rate Limiting Lab
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+  </a>
+</div>
+<h2 id="the-shared-scenario"><a class="heading-anchor" aria-label="Copy heading link" href="#the-shared-scenario" data-enhanced="true"><span class="icon icon-link"></span></a>The Shared Scenario</h2>
+<p>Every request in this write-up (and in the lab) arrives on the same timeline: a sustained rate well
+under the limit, plus one burst injected at a single instant. A pure sustained rate below the limit
+doesn't distinguish anything — all three algorithms admit it identically. The burst is where they
+disagree.</p>
+<h2 id="token-bucket"><a class="heading-anchor" aria-label="Copy heading link" href="#token-bucket" data-enhanced="true"><span class="icon icon-link"></span></a>Token Bucket</h2>
+<p>A bucket holds up to <code>capacity</code> tokens and refills continuously at <code>refillPerSec</code> tokens/second.
+Each request consumes one token; an empty bucket rejects the request outright.</p>
+<pre><code>tokens = min(capacity, tokens + elapsed_seconds * refillPerSec)
+if tokens &gt;= 1: allow, tokens -= 1
+else: reject
+</code></pre>
+<p><strong>What this means for the burst:</strong> Token Bucket <em>absorbs</em> a burst up to <code>capacity</code>, admitting it
+immediately, then rejects the overflow. If the bucket had been idle long enough to refill fully
+before the burst, the entire burst up to capacity gets through in one instant — this is a
+deliberate design property (bursty traffic that's still within budget shouldn't be smoothed out
+artificially), not a leak.</p>
+<h2 id="leaky-bucket-as-a-queue"><a class="heading-anchor" aria-label="Copy heading link" href="#leaky-bucket-as-a-queue" data-enhanced="true"><span class="icon icon-link"></span></a>Leaky Bucket (as a Queue)</h2>
+<p>A bucket holds up to <code>capacity</code> requests and drains at <code>leakPerSec</code> requests/second. An arriving
+request is queued if there's room after the elapsed drain; otherwise it overflows.</p>
+<pre><code>queue_level = max(0, queue_level - elapsed_seconds * leakPerSec)
+if queue_level &lt; capacity: allow, queue_level += 1
+else: reject
+</code></pre>
+<p><strong>What this means for the burst:</strong> Leaky Bucket queues the burst up to capacity and then rejects
+the rest — structurally similar to Token Bucket's admission boundary, but the <em>output</em> rate it
+implies is steady (bounded by <code>leakPerSec</code>), which is the property that matters when the thing on
+the other side of the limiter is a fixed-capacity downstream worker rather than a client that can
+simply retry.</p>
+<h2 id="fixed-window-counter"><a class="heading-anchor" aria-label="Copy heading link" href="#fixed-window-counter" data-enhanced="true"><span class="icon icon-link"></span></a>Fixed Window Counter</h2>
+<p>Time is divided into consecutive windows of <code>windowSeconds</code>; each window allows up to <code>limit</code>
+requests, and the counter resets hard at every window boundary.</p>
+<pre><code>window = floor(t / windowSeconds)
+if window changed: count = 0
+if count &lt; limit: allow, count += 1
+else: reject
+</code></pre>
+<p><strong>What this means for the burst — the algorithm's actual flaw, not a hypothetical one:</strong> a burst
+split across a window edge can be admitted <em>twice</em>. Two requests at <code>limit</code> each, one just before
+a boundary and one just after, both get through in full — up to ~2x <code>limit</code> in a span far shorter
+than <code>windowSeconds</code>. The <a href="https://github.com/khoahotran/portfolio/blob/main/src/labs/rateLimiting.test.ts" target="_blank" rel="noopener noreferrer">lab's test suite</a>
+asserts this directly (<code>demonstrates the boundary-burst flaw</code>) rather than describing it only in
+prose — it's the one behavior in this article that's genuinely worth distrusting until you've seen
+it reproduce.</p>
+<h2 id="choosing-one"><a class="heading-anchor" aria-label="Copy heading link" href="#choosing-one" data-enhanced="true"><span class="icon icon-link"></span></a>Choosing One</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>Absorbs a legitimate burst</th><th>Smooths output rate</th><th>Boundary flaw</th></tr></thead><tbody><tr><td><strong>Token Bucket</strong></td><td>Yes, up to capacity</td><td>No — bursty by design</td><td>None</td></tr><tr><td><strong>Leaky Bucket</strong></td><td>Yes, up to capacity</td><td>Yes — output is steady</td><td>None</td></tr><tr><td><strong>Fixed Window</strong></td><td>Only within one window</td><td>No</td><td>Yes — up to ~2x at an edge</td></tr></tbody></table>
+<p>Fixed Window is the cheapest to implement (a counter and a timestamp) and the easiest to reason
+about — which is exactly why it's still common in practice despite the flaw, for limits generous
+enough that occasionally admitting 2x for a few hundred milliseconds isn't worth the extra state a
+sliding window or token bucket requires. For anything where the limit is protecting a resource that
+actually breaks under 2x load — a downstream connection pool, a per-key quota with real cost behind
+it — Token Bucket or Leaky Bucket is the correct default, not Fixed Window with a "we'll tune the
+limit down" patch.</p>
+<p><strong>Where this fits Aegis:</strong> the <a href="/portfolio/projects/aegis">Aegis</a> API Gateway is the natural place a rate
+limiter belongs in this portfolio's own architecture, ahead of the Identity and Policy services it
+fronts — sitting between an untrusted client and a sub-5ms RBAC evaluation is exactly the position
+where absorbing a legitimate burst without amplifying a hostile one matters. That guard is not yet
+implemented in the Aegis repository; this write-up is the algorithm groundwork for it, not a
+description of code that ships there today.</p></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/experiments/websockets-vs-sse" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">WebSockets vs Server-Sent Events: What Holding 5,000 Connections Open Actually Costs</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/experiments/gossip-protocol-visualizer" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Gossip Protocol Visualizer: How Cluster Membership Actually Spreads</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/projects/aegis" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">projects</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Aegis: High-Performance Auth &amp; Authorization Platform</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A modular, high-performance Identity and Policy microservice platform in Go, featuring sub-5ms RBAC evaluations and distributed tracing.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Apr 10, 2026</span><span>3 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/system-design/designing-a-global-api-gateway" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">system design</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Designing a Global API Gateway: Edge Routing Beyond a Single Aegis Instance</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Aegis's GraphQL gateway solves API shape for one instance. This is the layer above it a real deployment would need once there's more than one — and why that's a different problem, not a bigger version of the same one.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Aug 28, 2026</span><span>5 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/backpressure-four-policies-one-overload" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Backpressure: Four Policies, One Overload</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Block, drop-new, drop-old, and circuit breaker, run against the same producer that outruns its consumer — including proof that drop-new and drop-old discard the same number of items, but never the same ones.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 07, 2026</span><span>4 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#the-shared-scenario" class="toc-link">The Shared Scenario</a></li><li><a href="#token-bucket" class="toc-link">Token Bucket</a></li><li><a href="#leaky-bucket-as-a-queue" class="toc-link">Leaky Bucket (as a Queue)</a></li><li><a href="#fixed-window-counter" class="toc-link">Fixed Window Counter</a></li><li><a href="#choosing-one" class="toc-link">Choosing One</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>Bloom Filters and the Capacity You Can't See Coming | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real, not just in a formula.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="Bloom Filters and the Capacity You Can't See Coming | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real, not just in a formula.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/bloom-filters-and-the-capacity-you-cant-see-coming.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/bloom-filters-and-the-capacity-you-cant-see-coming.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming"><meta name="twitter:title" content="Bloom Filters and the Capacity You Can't See Coming | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real, not just in a formula."><link rel="canonical" href="https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"Bloom Filters and the Capacity You Can't See Coming","datePublished":"2026-09-08","description":"Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real, not just in a formula.","keywords":"distributed-systems, trade-offs, benchmark","articleSection":"experiments","image":"https://khoahotran.github.io/portfolio/og/bloom-filters-and-the-capacity-you-cant-see-coming.png","url":"https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/experiments" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to experiments</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Bloom Filters and the Capacity You Can't See Coming</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Sep 08, 2026</span><span>4 min read</span></div><p class="mt-3 text-sm text-slate-600">Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real, not just in a formula.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#distributed-systems</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#trade-offs</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#benchmark</span></div></header><div class="markdown-body"><p>"Have I seen this key before?" is a question a lot of systems ask constantly — an SSTable deciding
+whether to bother reading from disk, a CDN deciding whether an object might be cached anywhere, a
+crawler deciding whether a URL is already visited. Answering it exactly means storing every key
+somewhere, which doesn't scale past a point. A <strong>Bloom filter</strong> (Bloom, 1970) answers approximately
+instead, in a fixed amount of space regardless of how many keys you insert — at the cost of an
+asymmetric kind of wrongness: it can say "maybe" when the real answer is no, but it can <strong>never</strong>
+say "no" when the real answer is yes. The <a href="/portfolio/labs/bloom-filter">interactive lab</a> runs a real
+bit-array filter, not a formula, so both halves of that trade — the guarantee that never breaks,
+and the accuracy that degrades in a specific, measurable way — are things you watch happen.</p>
+<div class="mt-8 mb-12">
+  <a href="/portfolio/labs/bloom-filter" class="lab-cta-inverse">
+    Try the Interactive Bloom Filter Lab
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+  </a>
+</div>
+<h2 id="the-structure"><a class="heading-anchor" aria-label="Copy heading link" href="#the-structure" data-enhanced="true"><span class="icon icon-link"></span></a>The Structure</h2>
+<p>A Bloom filter is a fixed-size bit array of length <code>m</code>, plus <code>k</code> independent hash functions. Adding
+an item sets <code>k</code> bits; checking an item asks whether all <code>k</code> of its bits are already set
+(<code>src/labs/bloomFilter.ts</code>):</p>
+<pre><code>add(item):          for i in 0..k: bits[hash_i(item)] = true
+mightContain(item):  every one of item's k bits set?  -&gt; maybe present
+                     any of them unset?                -&gt; definitely absent
+</code></pre>
+<p>Real implementations don't run <code>k</code> genuinely separate hash algorithms — the lab uses the standard
+<strong>Kirsch-Mitzenmacher construction</strong>, deriving all <code>k</code> positions from exactly two real hash
+computations: <code>h_i(x) = h1(x) + i·h2(x) mod m</code>. It's a real, cited optimization (Kirsch &amp; Mitzenmacher,
+2006), not a simplification the lab invented — two hashes are provably sufficient to simulate <code>k</code>
+independent ones for this purpose.</p>
+<h2 id="half-the-guarantee-is-absolute"><a class="heading-anchor" aria-label="Copy heading link" href="#half-the-guarantee-is-absolute" data-enhanced="true"><span class="icon icon-link"></span></a>Half the Guarantee Is Absolute</h2>
+<p>Insert an item, and it will <strong>always</strong> test as present — the lab's test suite asserts this across
+every configuration it runs, at zero exceptions, because it's a structural property, not a
+probabilistic one: setting a bit can only ever make <code>mightContain</code> more likely to return true for
+some item, never less likely for the item whose bits were just set. A Bloom filter never forgets
+something it was told.</p>
+<h2 id="the-other-half-is-a-real-measured-curve"><a class="heading-anchor" aria-label="Copy heading link" href="#the-other-half-is-a-real-measured-curve" data-enhanced="true"><span class="icon icon-link"></span></a>The Other Half Is a Real, Measured Curve</h2>
+<p>The reverse direction — "definitely absent" — is where the probability lives. Every item's k bits
+overlap, by chance, with bits other items also set. As more items go in, the array fills up, and
+the odds that some brand-new item's k bits all happen to already be set (by coincidence, from other
+insertions) climb. The closed-form estimate for that rate is:</p>
+<pre><code>p ≈ (1 - e^(-kn/m))^k
+</code></pre>
+<p>The lab computes this formula <strong>and</strong> measures the real rate — insert <code>n</code> items into the actual
+bit array, then test thousands of items that were genuinely never inserted, and count how many
+wrongly come back "maybe." At the filter's designed capacity (sized so <code>k</code> is chosen to minimize
+this rate for the expected <code>n</code>), the two numbers track each other closely, both comfortably in the
+low single digits of a percent. Drag the "items inserted" slider up past that designed capacity —
+to two, three, five times what the filter was sized for — and both numbers climb together, sharply:
+by 5× over capacity, the measured false-positive rate lands around 80%, matching the formula within
+a few points the whole way. Past a certain fill level, a Bloom filter isn't a cheap probabilistic
+optimization anymore — it's barely better than always answering "maybe."</p>
+<div class="callout callout-note"><p class="callout-title">Note</p>
+<p>This is the actual risk with Bloom filters in production, and it's not a sizing mistake anyone
+makes on purpose: capacity is usually chosen for an <em>expected</em> item count, and the failure mode
+when real growth exceeds that estimate isn't a crash or an error — it's the filter quietly
+getting less and less useful, false-positive by false-positive, with no signal unless someone is
+actually watching the fill ratio. The formula this lab measures against is exactly the number
+that sizing should be revisited against, not a one-time calculation done at design time and
+never checked again.</p>
+</div>
+<h2 id="what-this-buys-you-and-what-it-doesnt"><a class="heading-anchor" aria-label="Copy heading link" href="#what-this-buys-you-and-what-it-doesnt" data-enhanced="true"><span class="icon icon-link"></span></a>What This Buys You, and What It Doesn't</h2>
+<p>A Bloom filter is never a substitute for the real check — it's a <strong>pre-filter</strong> that lets you skip
+the real check when it says "definitely absent," which is most of the time when properly sized.
+The systems that use them (Cassandra's per-SSTable filters, CDN edge caches, browser
+safe-browsing lists) all still fall back to the authoritative source on a "maybe" — the filter's
+entire value is in how rarely that fallback needs to fire, and this lab's finding is exactly the
+knob that number depends on: not just "how many hash functions," but "how full is this filter
+actually running, right now, compared to what it was sized for."</p></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Consistent Hashing and the Rebalancing Nobody Notices</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Two-Phase Commit vs. Saga: What Atomicity Actually Costs</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Consistent Hashing and the Rebalancing Nobody Notices</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run the real hash-ring placement algorithm against naive modulo hashing on the same key set — see how little of the keyspace a ring actually moves when a node joins or leaves, and what happens without enough virtual nodes to spread the luck around.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 08, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">HyperLogLog and the Question Bloom Filters Can't Answer</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/lsm-trees-and-the-write-youll-pay-for-later" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">LSM Trees and the Write You'll Pay for Later</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real log-structured merge tree — measure read amplification growing unbounded without compaction, then measure the real write-amplification cost of bounding it.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#the-structure" class="toc-link">The Structure</a></li><li><a href="#half-the-guarantee-is-absolute" class="toc-link">Half the Guarantee Is Absolute</a></li><li><a href="#the-other-half-is-a-real-measured-curve" class="toc-link">The Other Half Is a Real, Measured Curve</a></li><li><a href="#what-this-buys-you-and-what-it-doesnt" class="toc-link">What This Buys You, and What It Doesn't</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

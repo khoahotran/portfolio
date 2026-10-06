@@ -1,0 +1,1 @@
+const t={blog:"/blog",research:"/research",experiments:"/experiments","system-design":"/system-design","field-notes":"/field-notes",projects:"/projects"};function o(e){return t[e]}function r(e){return e.replace("-"," ")}function n(e){return new Date(`${e}T00:00:00`).toLocaleDateString("en-US",{day:"2-digit",month:"short",year:"numeric"})}export{r as c,n as f,o as r};

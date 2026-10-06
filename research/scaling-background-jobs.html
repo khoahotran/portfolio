@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>Scaling Background Jobs: Adaptive Concurrency | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="Operational patterns and practical lessons for scaling asynchronous jobs while keeping failure rates and costs predictable.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="Scaling Background Jobs: Adaptive Concurrency | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="Operational patterns and practical lessons for scaling asynchronous jobs while keeping failure rates and costs predictable.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/scaling-background-jobs.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/scaling-background-jobs.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/research/scaling-background-jobs"><meta name="twitter:title" content="Scaling Background Jobs: Adaptive Concurrency | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="Operational patterns and practical lessons for scaling asynchronous jobs while keeping failure rates and costs predictable."><link rel="canonical" href="https://khoahotran.github.io/portfolio/research/scaling-background-jobs"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"Scaling Background Jobs: Adaptive Concurrency","datePublished":"2026-03-21","description":"Operational patterns and practical lessons for scaling asynchronous jobs while keeping failure rates and costs predictable.","keywords":"queues, architecture, benchmark","articleSection":"research","image":"https://khoahotran.github.io/portfolio/og/scaling-background-jobs.png","url":"https://khoahotran.github.io/portfolio/research/scaling-background-jobs","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/research/scaling-background-jobs"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-BQ1B_Piy.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-DVNwT64z.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/katex-CMdAwrm5.js"><link rel="stylesheet" crossorigin="" href="/portfolio/assets/katex-CJ2tWXjN.css"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/research" data-discover="true">Research</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/research" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to research</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Scaling Background Jobs: Adaptive Concurrency</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Mar 21, 2026</span><span>3 min read</span></div><p class="mt-3 text-sm text-slate-600">Operational patterns and practical lessons for scaling asynchronous jobs while keeping failure rates and costs predictable.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#queues</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#architecture</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#benchmark</span></div></header><div class="markdown-body"><h2 id="the-static-scaling-trap"><a class="heading-anchor" aria-label="Copy heading link" href="#the-static-scaling-trap" data-enhanced="true"><span class="icon icon-link"></span></a>The Static Scaling Trap</h2>
+<p>When we first built our asynchronous job pipeline to handle daily quest completions, we provisioned a static number of workers. Most of the day, these workers sat idle, burning infrastructure costs. But during our marketing campaign windows, traffic spiked violently.</p>
+<p>The static worker pool couldn't consume the messages fast enough. Queue lag climbed from seconds to minutes, and users started complaining that their quest rewards weren't being delivered. Our immediate reaction was to simply crank up the static worker count to handle the peak load, but this proved prohibitively expensive and wildly inefficient during off-peak hours.</p>
+<hr>
+<h2 id="the-adaptive-architecture"><a class="heading-anchor" aria-label="Copy heading link" href="#the-adaptive-architecture" data-enhanced="true"><span class="icon icon-link"></span></a>The Adaptive Architecture</h2>
+<p>We needed a system that could dynamically breathe with the traffic. We implemented a queue-driven worker pool with an adaptive concurrency control loop.</p>
+<pre><code>                  [ Monitor Queue &amp; Success Metrics ]
+                                  │
+                                  ▼
+                     / Check: Success Rate &gt; 95% \
+                    /                             \
+            [ No ] ───                             ─── [ Yes ]
+              │                                         │
+              ▼                                         ▼
+     [ Trigger Circuit Breaker ]           / Check: Queue Lag &gt; 30s \
+     (Freeze Scaling / Backoff)           /                          \
+                                  [ No ] ───                         ─── [ Yes ]
+                                    │                                     │
+                                    ▼                                     ▼
+                           [ Scale Down / Maintain ]              [ Spin Up Workers ]
+</code></pre>
+<p>Instead of scaling based on raw CPU or Memory utilization (which are lagging indicators for queue-driven workloads), our control loop monitors two primary metrics:</p>
+<ol>
+<li><strong>Queue Depth/Lag</strong>: How many messages are waiting, and how old is the oldest message?</li>
+<li><strong>Worker Success Rate</strong>: Are the workers actually succeeding, or are they crashing because a downstream dependency is overwhelmed?</li>
+</ol>
+<hr>
+<h2 id="technical-implementation-the-autoscaler-controller"><a class="heading-anchor" aria-label="Copy heading link" href="#technical-implementation-the-autoscaler-controller" data-enhanced="true"><span class="icon icon-link"></span></a>Technical Implementation: The Autoscaler Controller</h2>
+<p>Here is a NestJS implementation of an adaptive autoscaling service using BullMQ. The service periodically inspects queue metrics and dynamically updates concurrency bounds:</p>
+<h3 id="1-the-queue-scaling-controller-service"><a class="heading-anchor" aria-label="Copy heading link" href="#1-the-queue-scaling-controller-service" data-enhanced="true"><span class="icon icon-link"></span></a>1. The Queue Scaling Controller Service</h3>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">typescript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Injectable</span>, <span class="hljs-title class_">Logger</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"@nestjs/common"</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Queue</span>, <span class="hljs-title class_">QueueEvents</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"bullmq"</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">Redis</span> <span class="hljs-keyword">from</span> <span class="hljs-string">"ioredis"</span>;
+
+<span class="hljs-meta">@Injectable</span>()
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">QueueAutoscalerService</span> {
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> logger = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Logger</span>(<span class="hljs-title class_">QueueAutoscalerService</span>.<span class="hljs-property">name</span>);
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">redis</span>: <span class="hljs-title class_">Redis</span>;
+  <span class="hljs-keyword">private</span> currentConcurrency = <span class="hljs-number">5</span>; <span class="hljs-comment">// Start with baseline</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> minConcurrency = <span class="hljs-number">2</span>;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> maxConcurrency = <span class="hljs-number">50</span>;
+
+  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Redis</span>(process.<span class="hljs-property">env</span>.<span class="hljs-property">REDIS_URL</span> || <span class="hljs-string">"redis://localhost:6379"</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">startControlLoop</span>();
+  }
+
+  <span class="hljs-comment">// Periodic control loop executing every 15 seconds</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-title function_">startControlLoop</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-built_in">setInterval</span>(<span class="hljs-title function_">async</span> () =&gt; {
+      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">evaluateQueueScaling</span>();
+    }, <span class="hljs-number">15000</span>);
+  }
+
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">async</span> <span class="hljs-title function_">getQueueMetrics</span>(): <span class="hljs-title class_">Promise</span>&lt;{
+    <span class="hljs-attr">queueLagMs</span>: <span class="hljs-built_in">number</span>;
+    <span class="hljs-attr">successRate</span>: <span class="hljs-built_in">number</span>;
+  }&gt; {
+    <span class="hljs-keyword">const</span> queueName = <span class="hljs-string">"quest-processing"</span>;
+
+    <span class="hljs-comment">// Resolve Queue Depth &amp; Job Age</span>
+    <span class="hljs-keyword">const</span> pendingJobs = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">xlen</span>(<span class="hljs-string">`bull:<span class="hljs-subst">${queueName}</span>:events`</span>);
+    <span class="hljs-keyword">const</span> activeJobs = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">llen</span>(<span class="hljs-string">`bull:<span class="hljs-subst">${queueName}</span>:active`</span>);
+
+    <span class="hljs-comment">// Read the oldest job waiting</span>
+    <span class="hljs-keyword">const</span> jobs = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">lrange</span>(<span class="hljs-string">`bull:<span class="hljs-subst">${queueName}</span>:wait`</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>);
+    <span class="hljs-keyword">let</span> queueLagMs = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">if</span> (jobs.<span class="hljs-property">length</span> &gt; <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">const</span> jobData = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(
+        (<span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">hget</span>(<span class="hljs-string">`bull:<span class="hljs-subst">${queueName}</span>:<span class="hljs-subst">${jobs[<span class="hljs-number">0</span>]}</span>`</span>, <span class="hljs-string">"opts"</span>)) || <span class="hljs-string">"{}"</span>,
+      );
+      <span class="hljs-keyword">const</span> timestamp = jobData.<span class="hljs-property">timestamp</span> || <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
+      queueLagMs = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>() - timestamp;
+    }
+
+    <span class="hljs-comment">// Resolve Success Rate from last 100 executions</span>
+    <span class="hljs-keyword">const</span> completed = <span class="hljs-built_in">parseInt</span>(
+      (<span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">`metrics:<span class="hljs-subst">${queueName}</span>:completed`</span>)) || <span class="hljs-string">"0"</span>,
+      <span class="hljs-number">10</span>,
+    );
+    <span class="hljs-keyword">const</span> failed = <span class="hljs-built_in">parseInt</span>(
+      (<span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">`metrics:<span class="hljs-subst">${queueName}</span>:failed`</span>)) || <span class="hljs-string">"0"</span>,
+      <span class="hljs-number">10</span>,
+    );
+    <span class="hljs-keyword">const</span> total = completed + failed;
+
+    <span class="hljs-keyword">const</span> successRate = total &gt; <span class="hljs-number">0</span> ? (completed / total) * <span class="hljs-number">100</span> : <span class="hljs-number">100</span>;
+
+    <span class="hljs-comment">// Reset counters for next interval window</span>
+    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">set</span>(<span class="hljs-string">`metrics:<span class="hljs-subst">${queueName}</span>:completed`</span>, <span class="hljs-string">"0"</span>);
+    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">set</span>(<span class="hljs-string">`metrics:<span class="hljs-subst">${queueName}</span>:failed`</span>, <span class="hljs-string">"0"</span>);
+
+    <span class="hljs-keyword">return</span> { queueLagMs, successRate };
+  }
+
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">async</span> <span class="hljs-title function_">evaluateQueueScaling</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">const</span> { queueLagMs, successRate } = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getQueueMetrics</span>();
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">log</span>(
+      <span class="hljs-string">`Current Metrics -&gt; Lag: <span class="hljs-subst">${(queueLagMs / <span class="hljs-number">1000</span>).toFixed(<span class="hljs-number">1</span>)}</span>s, Success Rate: <span class="hljs-subst">${successRate.toFixed(<span class="hljs-number">1</span>)}</span>%`</span>,
+    );
+
+    <span class="hljs-comment">// Rule 1: Circuit Breaker</span>
+    <span class="hljs-keyword">if</span> (successRate &lt; <span class="hljs-number">92.0</span>) {
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">warn</span>(
+        <span class="hljs-string">`High failure rate (<span class="hljs-subst">${successRate.toFixed(<span class="hljs-number">1</span>)}</span>%). Halting scaling to protect downstream services.`</span>,
+      );
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentConcurrency</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">minConcurrency</span>,
+        <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentConcurrency</span> * <span class="hljs-number">0.7</span>),
+      );
+      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">applyConcurrency</span>();
+      <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-comment">// Rule 2: Scale Up</span>
+    <span class="hljs-keyword">if</span> (queueLagMs &gt; <span class="hljs-number">30000</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentConcurrency</span> &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">maxConcurrency</span>) {
+      <span class="hljs-keyword">const</span> step = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(<span class="hljs-number">5</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">maxConcurrency</span> - <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentConcurrency</span>);
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentConcurrency</span> += step;
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">log</span>(
+        <span class="hljs-string">`Scaling up worker concurrency by +<span class="hljs-subst">${step}</span>. New concurrency: <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.currentConcurrency}</span>`</span>,
+      );
+      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">applyConcurrency</span>();
+      <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-comment">// Rule 3: Scale Down</span>
+    <span class="hljs-keyword">if</span> (queueLagMs &lt; <span class="hljs-number">5000</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentConcurrency</span> &gt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">minConcurrency</span>) {
+      <span class="hljs-keyword">const</span> step = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(
+        <span class="hljs-number">1</span>,
+        <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentConcurrency</span> - <span class="hljs-variable language_">this</span>.<span class="hljs-property">minConcurrency</span>) * <span class="hljs-number">0.2</span>),
+      );
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentConcurrency</span> -= step;
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">log</span>(
+        <span class="hljs-string">`Queue is clear. Scaling down worker concurrency by -<span class="hljs-subst">${step}</span>. New concurrency: <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.currentConcurrency}</span>`</span>,
+      );
+      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">applyConcurrency</span>();
+    }
+  }
+
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">async</span> <span class="hljs-title function_">applyConcurrency</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-comment">// Write target concurrency configuration to shared state (Redis)</span>
+    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">set</span>(
+      <span class="hljs-string">"config:quest-worker:concurrency"</span>,
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentConcurrency</span>.<span class="hljs-title function_">toString</span>(),
+    );
+  }
+}
+</code></pre>
+<h3 id="2-bounded-retries-and-dlq-config"><a class="heading-anchor" aria-label="Copy heading link" href="#2-bounded-retries-and-dlq-config" data-enhanced="true"><span class="icon icon-link"></span></a>2. Bounded Retries and DLQ Config</h3>
+<p>To prevent poison pills (corrupted jobs that fail repeatedly) from causing the queue metrics to lie, we defined strict retry options with exponential backoff on our worker setup:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">typescript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Queue</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"bullmq"</span>;
+
+<span class="hljs-keyword">const</span> questQueue = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Queue</span>(<span class="hljs-string">"quest-processing"</span>);
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">addQuestJob</span>(<span class="hljs-params"><span class="hljs-attr">data</span>: <span class="hljs-built_in">any</span></span>) {
+  <span class="hljs-keyword">await</span> questQueue.<span class="hljs-title function_">add</span>(<span class="hljs-string">"process-quest"</span>, data, {
+    <span class="hljs-attr">attempts</span>: <span class="hljs-number">3</span>, <span class="hljs-comment">// Hard boundary</span>
+    <span class="hljs-attr">backoff</span>: {
+      <span class="hljs-attr">type</span>: <span class="hljs-string">"exponential"</span>,
+      <span class="hljs-attr">delay</span>: <span class="hljs-number">5000</span>, <span class="hljs-comment">// Start with 5s delay, then 10s, 20s</span>
+    },
+    <span class="hljs-attr">removeOnComplete</span>: <span class="hljs-literal">true</span>, <span class="hljs-comment">// Clean up history to save memory</span>
+    <span class="hljs-attr">removeOnFail</span>: {
+      <span class="hljs-attr">age</span>: <span class="hljs-number">24</span> * <span class="hljs-number">3600</span>, <span class="hljs-comment">// Keep in DLQ for 24 hours for inspection</span>
+    },
+  });
+}
+</code></pre>
+<hr>
+<h2 id="autoscaling-decision-matrix"><a class="heading-anchor" aria-label="Copy heading link" href="#autoscaling-decision-matrix" data-enhanced="true"><span class="icon icon-link"></span></a>Autoscaling Decision Matrix</h2>
+<p>Here is how our controller responds to varying system health states:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Queue Lag</th><th align="left">Success Rate</th><th align="left">Decision State</th><th align="left">Worker Action</th></tr></thead><tbody><tr><td align="left"><strong>&lt; 5s</strong></td><td align="left">&gt; 95%</td><td align="left">System Idle</td><td align="left"><strong>Scale down</strong> to min-concurrency (save costs)</td></tr><tr><td align="left"><strong>&gt; 30s</strong></td><td align="left">&gt; 95%</td><td align="left">Under Load</td><td align="left"><strong>Scale up</strong> (+5 concurrency per tick)</td></tr><tr><td align="left"><strong>&gt; 30s</strong></td><td align="left">&lt; 92%</td><td align="left">Downstream Outage</td><td align="left"><strong>Scale down</strong> (Trigger Circuit Breaker)</td></tr><tr><td align="left"><strong>&lt; 5s</strong></td><td align="left">&lt; 92%</td><td align="left">Faulty Jobs</td><td align="left"><strong>Halt</strong> (No scale actions; log errors)</td></tr></tbody></table>
+<hr>
+<h2 id="key-lessons-learned"><a class="heading-anchor" aria-label="Copy heading link" href="#key-lessons-learned" data-enhanced="true"><span class="icon icon-link"></span></a>Key Lessons Learned</h2>
+<ol>
+<li><strong>Don't scale on CPU; scale on Queue Lag</strong>: Workers processing sleep/network-bound tasks might use 5% CPU while the queue backs up with millions of jobs. Ingest lag is the source of truth.</li>
+<li><strong>Never scale up into a failure</strong>: Monitor worker success rates before provisioning more workers. Throwing more concurrency at a failing database completes its collapse.</li>
+<li><strong>Retries must be bounded and observable</strong>: If failing jobs are endlessly retried without moving to a Dead Letter Queue (DLQ), your queue depth metric is lying to you, and your autoscaler will spin up instances to process poison pills.</li>
+</ol></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><div></div><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/research/designing-a-permission-system" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Designing a Permission System: Beyond Simple Roles</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/websockets-vs-sse" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">WebSockets vs Server-Sent Events: What Holding 5,000 Connections Open Actually Costs</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A real harness measuring server memory for thousands of concurrent WebSocket vs SSE connections — written before the article, per the lesson from three prior benchmark rewrites.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Aug 28, 2026</span><span>3 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/blog/building-jujuja-a-production-quest-system" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">blog</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Building Jujuja: A Production Quest System for Burst Traffic</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">How we built the Jujuja backend to handle 1,500 concurrent users per minute during campaign bursts, processing daily quests and loyalty points using BullMQ and NestJS.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>3 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/event-sourcing-replay" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Interactive Event Sourcing Replay</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">An interactive visualization of how application state is derived from an immutable, append-only event log.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>1 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#the-static-scaling-trap" class="toc-link">The Static Scaling Trap</a></li><li><a href="#the-adaptive-architecture" class="toc-link">The Adaptive Architecture</a></li><li><a href="#technical-implementation-the-autoscaler-controller" class="toc-link">Technical Implementation: The Autoscaler Controller</a></li><li class="toc-sub"><a href="#1-the-queue-scaling-controller-service" class="toc-link">1. The Queue Scaling Controller Service</a></li><li class="toc-sub"><a href="#2-bounded-retries-and-dlq-config" class="toc-link">2. Bounded Retries and DLQ Config</a></li><li><a href="#autoscaling-decision-matrix" class="toc-link">Autoscaling Decision Matrix</a></li><li><a href="#key-lessons-learned" class="toc-link">Key Lessons Learned</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

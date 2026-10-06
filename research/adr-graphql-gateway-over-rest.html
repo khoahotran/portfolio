@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>ADR: Choosing a GraphQL Gateway Over REST for Aegis | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="An Architecture Decision Record detailing why Aegis uses a GraphQL API Gateway to aggregate internal gRPC microservices instead of a traditional REST API.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="ADR: Choosing a GraphQL Gateway Over REST for Aegis | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="An Architecture Decision Record detailing why Aegis uses a GraphQL API Gateway to aggregate internal gRPC microservices instead of a traditional REST API.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/adr-graphql-gateway-over-rest.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/adr-graphql-gateway-over-rest.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/research/adr-graphql-gateway-over-rest"><meta name="twitter:title" content="ADR: Choosing a GraphQL Gateway Over REST for Aegis | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="An Architecture Decision Record detailing why Aegis uses a GraphQL API Gateway to aggregate internal gRPC microservices instead of a traditional REST API."><link rel="canonical" href="https://khoahotran.github.io/portfolio/research/adr-graphql-gateway-over-rest"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"ADR: Choosing a GraphQL Gateway Over REST for Aegis","datePublished":"2026-06-28","description":"An Architecture Decision Record detailing why Aegis uses a GraphQL API Gateway to aggregate internal gRPC microservices instead of a traditional REST API.","keywords":"adr, api-design, architecture, go","articleSection":"research","image":"https://khoahotran.github.io/portfolio/og/adr-graphql-gateway-over-rest.png","url":"https://khoahotran.github.io/portfolio/research/adr-graphql-gateway-over-rest","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/research/adr-graphql-gateway-over-rest"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/research" data-discover="true">Research</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/research" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to research</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">ADR: Choosing a GraphQL Gateway Over REST for Aegis</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Jun 28, 2026</span><span>3 min read</span></div><p class="mt-3 text-sm text-slate-600">An Architecture Decision Record detailing why Aegis uses a GraphQL API Gateway to aggregate internal gRPC microservices instead of a traditional REST API.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#adr</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#api-design</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#architecture</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#go</span></div></header><div class="markdown-body"><h2 id="context-and-problem-statement"><a class="heading-anchor" aria-label="Copy heading link" href="#context-and-problem-statement" data-enhanced="true"><span class="icon icon-link"></span></a>Context and Problem Statement</h2>
+<p>The Aegis authorization platform is internally composed of multiple Go microservices (Identity, Policy, Audit) communicating via gRPC.</p>
+<p>However, external clients (web applications, mobile apps, and other downstream systems) need to interact with Aegis to perform actions like registering users, logging in, requesting password resets, and checking permissions.</p>
+<p>We need an API Gateway to act as the single entry point for these external clients. The gateway must route requests, aggregate data from multiple backend gRPC services, and handle cross-cutting concerns like rate limiting and initial authentication.</p>
+<p>The choice came down to two architectural styles for the external-facing gateway:</p>
+<ol>
+<li><strong>REST</strong> (using a framework like Gin or Chi in Go).</li>
+<li><strong>GraphQL</strong> (using <code>gqlgen</code> in Go).</li>
+</ol>
+<h2 id="considered-options"><a class="heading-anchor" aria-label="Copy heading link" href="#considered-options" data-enhanced="true"><span class="icon icon-link"></span></a>Considered Options</h2>
+<h3 id="option-1-rest-gateway"><a class="heading-anchor" aria-label="Copy heading link" href="#option-1-rest-gateway" data-enhanced="true"><span class="icon icon-link"></span></a>Option 1: REST Gateway</h3>
+<p>A standard RESTful JSON API. For example, a <code>POST /api/v1/auth/login</code> endpoint would map internally to the <code>IdentityService.AuthenticateUser</code> gRPC method.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Ubiquitous; every client knows how to consume REST.</li>
+<li>Trivial to cache at the edge (CDN/Cloudflare) using standard HTTP verbs and status codes.</li>
+<li>Simpler mental model for routing (URL path maps cleanly to gRPC service).</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li><strong>Over-fetching / Under-fetching:</strong> Clients receive fixed payloads. If the mobile app only needs a <code>token</code> but the web app needs the <code>token</code> and <code>user.profile.permissions</code>, REST requires either two endpoints or sending a bloated payload.</li>
+<li><strong>Multiple Round Trips:</strong> If a client needs to fetch the user profile and their associated policies, it requires calling <code>/users/me</code> and then <code>/users/me/policies</code>.</li>
+<li><strong>Documentation Drift:</strong> Requires maintaining OpenAPI (Swagger) specs alongside gRPC Protobuf definitions.</li>
+</ul>
+<h3 id="option-2-graphql-gateway"><a class="heading-anchor" aria-label="Copy heading link" href="#option-2-graphql-gateway" data-enhanced="true"><span class="icon icon-link"></span></a>Option 2: GraphQL Gateway</h3>
+<p>A single <code>/graphql</code> endpoint where clients specify exactly what data they need, and the gateway resolves the query by fanning out to the appropriate gRPC backends.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li><strong>Client-Driven Payloads:</strong> The client dictates the shape of the response. Mobile can request less data than Web.</li>
+<li><strong>Aggregation:</strong> A single GraphQL query can resolve <code>User</code> data from the Identity service and <code>Permissions</code> data from the Policy service in one network request from the client.</li>
+<li><strong>Strong Typing:</strong> GraphQL's schema is strongly typed, acting as a strict contract between frontend and backend.</li>
+<li><strong>Tooling:</strong> Excellent developer experience for clients using tools like Apollo or Relay.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li><strong>Complexity in Go:</strong> Writing GraphQL resolvers in Go (via <code>gqlgen</code>) requires boilerplate to map GraphQL types to generated Protobuf structs.</li>
+<li><strong>Caching Difficulty:</strong> Since everything is a <code>POST /graphql</code>, edge caching (CDN) is much harder compared to REST GET requests.</li>
+<li><strong>N+1 Problem:</strong> Naive GraphQL resolvers can trigger N+1 gRPC calls if not batched properly.</li>
+</ul>
+<h2 id="decision-outcome"><a class="heading-anchor" aria-label="Copy heading link" href="#decision-outcome" data-enhanced="true"><span class="icon icon-link"></span></a>Decision Outcome</h2>
+<p><strong>Decision:</strong> We chose <strong>Option 2: GraphQL Gateway (via <code>gqlgen</code>)</strong>.</p>
+<h3 id="rationale"><a class="heading-anchor" aria-label="Copy heading link" href="#rationale" data-enhanced="true"><span class="icon icon-link"></span></a>Rationale</h3>
+<p>The decisive factor was <strong>UI data aggregation</strong>. Aegis is not just a token issuer; it is a full Identity and Policy platform. Downstream clients frequently need to fetch a user, their associated metadata, and their specific permissions for a UI view all at once.</p>
+<p>With REST, this required multiple round trips from the client to the gateway. With GraphQL, the client issues a single query:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">graphql</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-graphql"><span class="hljs-keyword">query</span> GetUserProfile <span class="hljs-punctuation">{</span>
+  me <span class="hljs-punctuation">{</span>
+    id
+    email
+    profile <span class="hljs-punctuation">{</span>
+      firstName
+      lastName
+    <span class="hljs-punctuation">}</span>
+    permissions<span class="hljs-punctuation">(</span><span class="hljs-symbol">resource</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"dashboard"</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+      canRead
+      canWrite
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p>The Aegis GraphQL gateway parses this query and efficiently executes it:</p>
+<ol>
+<li>Calls the <strong>Identity gRPC Service</strong> for the <code>me</code> and <code>profile</code> fields.</li>
+<li>Concurrently calls the <strong>Policy gRPC Service</strong> for the <code>permissions</code> fields.</li>
+<li>Stitches the results together and returns exactly what was requested.</li>
+</ol>
+<h3 id="mitigation-of-cons"><a class="heading-anchor" aria-label="Copy heading link" href="#mitigation-of-cons" data-enhanced="true"><span class="icon icon-link"></span></a>Mitigation of Cons</h3>
+<ul>
+<li><strong>N+1 Problem:</strong> We implemented the <code>dataloader</code> pattern in the Go gateway to batch concurrent requests to the internal gRPC services.</li>
+<li><strong>Caching:</strong> While edge caching is lost, policy checks change rapidly. We rely on the internal Redis cache at the Policy Service layer rather than edge caching.</li>
+<li><strong>Boilerplate:</strong> We use <code>gqlgen</code>'s schema-first code generation to automatically bind GraphQL types to our generated Protobuf structs where possible, minimizing manual mapping code.</li>
+</ul>
+<h2 id="consequences"><a class="heading-anchor" aria-label="Copy heading link" href="#consequences" data-enhanced="true"><span class="icon icon-link"></span></a>Consequences</h2>
+<ul>
+<li>Frontend teams have a strictly typed GraphQL schema and excellent tooling (GraphiQL) to explore the API.</li>
+<li>The Go gateway code is strictly a routing and aggregation layer. It contains zero business logic, ensuring concerns remain cleanly separated in the microservices.</li>
+<li>We accepted that CDN-level caching is not viable for this architecture, placing more load on internal caches (Redis).</li>
+</ul></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/research/algolia-geo-search-for-store-discovery" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Sub-300ms Store Discovery: Designing Geo-Search with Algolia</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/research/adr-firestore-vs-postgresql-event-sourcing" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">ADR: Firestore vs PostgreSQL for Event Sourcing in Core Banking</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/projects/aegis" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">projects</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Aegis: High-Performance Auth &amp; Authorization Platform</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A modular, high-performance Identity and Policy microservice platform in Go, featuring sub-5ms RBAC evaluations and distributed tracing.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Apr 10, 2026</span><span>3 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/system-design/designing-a-multi-service-auth-platform" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">system design</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Designing a Multi-Service Auth Platform: The Aegis Architecture</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A deep dive into Aegis, a high-performance authorization platform using gRPC microservices, a GraphQL gateway, Kafka audit logging, and OpenTelemetry.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>5 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/system-design/designing-a-global-api-gateway" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">system design</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Designing a Global API Gateway: Edge Routing Beyond a Single Aegis Instance</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Aegis's GraphQL gateway solves API shape for one instance. This is the layer above it a real deployment would need once there's more than one — and why that's a different problem, not a bigger version of the same one.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Aug 28, 2026</span><span>5 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#context-and-problem-statement" class="toc-link">Context and Problem Statement</a></li><li><a href="#considered-options" class="toc-link">Considered Options</a></li><li class="toc-sub"><a href="#option-1-rest-gateway" class="toc-link">Option 1: REST Gateway</a></li><li class="toc-sub"><a href="#option-2-graphql-gateway" class="toc-link">Option 2: GraphQL Gateway</a></li><li><a href="#decision-outcome" class="toc-link">Decision Outcome</a></li><li class="toc-sub"><a href="#rationale" class="toc-link">Rationale</a></li><li class="toc-sub"><a href="#mitigation-of-cons" class="toc-link">Mitigation of Cons</a></li><li><a href="#consequences" class="toc-link">Consequences</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>Queue vs Pub/Sub Comparison Notes | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="Queue vs Pub/Sub Comparison Notes | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/queue-vs-pub-sub-comparison-notes.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/queue-vs-pub-sub-comparison-notes.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes"><meta name="twitter:title" content="Queue vs Pub/Sub Comparison Notes | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems."><link rel="canonical" href="https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"Queue vs Pub/Sub Comparison Notes","datePublished":"2026-03-21","description":"How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems.","keywords":"benchmark, queues, system-design","articleSection":"experiments","image":"https://khoahotran.github.io/portfolio/og/queue-vs-pub-sub-comparison-notes.png","url":"https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/experiments/queue-vs-pub-sub-comparison-notes"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-BQ1B_Piy.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-DVNwT64z.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/katex-CMdAwrm5.js"><link rel="stylesheet" crossorigin="" href="/portfolio/assets/katex-CJ2tWXjN.css"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/experiments" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to experiments</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Queue vs Pub/Sub Comparison Notes</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Mar 21, 2026</span><span>3 min read</span></div><p class="mt-3 text-sm text-slate-600">How delivery semantics and fan-out requirements should dictate your choice between Message Queues and Pub/Sub systems.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#benchmark</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#queues</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#system-design</span></div></header><div class="markdown-body"><h2 id="the-habit-of-defaulting"><a class="heading-anchor" aria-label="Copy heading link" href="#the-habit-of-defaulting" data-enhanced="true"><span class="icon icon-link"></span></a>The Habit of Defaulting</h2>
+<p>In modern backend engineering, teams often choose messaging patterns based on habit rather than rigorous requirement analysis. If a team has experience with RabbitMQ, they use queues for everything. If they love Kafka, everything becomes an event stream.</p>
+<p>However, choosing the wrong messaging paradigm leads to architectural friction, complex workarounds, and brittle systems. We recently evaluated two distinct workloads to clarify when to use which pattern.</p>
+<hr>
+<h2 id="architectural-comparison"><a class="heading-anchor" aria-label="Copy heading link" href="#architectural-comparison" data-enhanced="true"><span class="icon icon-link"></span></a>Architectural Comparison</h2>
+<pre><code>PARADIGM 1: TRADITIONAL MESSAGE QUEUE (Work Queue)
+[Producer] ──&gt; [ Queue ] ──┬──&gt; [ Worker A ] (Locks &amp; Processes Task 1)
+                           ├──&gt; [ Worker B ] (Locks &amp; Processes Task 2)
+                           └──&gt; [ Worker C ] (Idle/Available)
+
+PARADIGM 2: PUB/SUB (Fan-out Event Stream)
+                          ┌──&gt; [ Consumer Group 1 (Social Feed Service) ]
+[Publisher] ──&gt; [ Topic ] ┼──&gt; [ Consumer Group 2 (Recommendation Engine) ]
+                          └──&gt; [ Consumer Group 3 (Cache Invalidator) ]
+</code></pre>
+<hr>
+<h2 id="workload-a-the-task-processor"><a class="heading-anchor" aria-label="Copy heading link" href="#workload-a-the-task-processor" data-enhanced="true"><span class="icon icon-link"></span></a>Workload A: The Task Processor</h2>
+<p>The first workload involved processing video encoding jobs. The requirements were strict:</p>
+<ul>
+<li>Each job must be processed exactly once (or at least, only one worker should attempt it at a time).</li>
+<li>Workers take a long, unpredictable amount of time to finish (from 20 seconds to 15 minutes).</li>
+<li>If a worker dies mid-processing, the job must be safely retried by another worker.</li>
+<li>Scaling should be based on competing consumer counts.</li>
+</ul>
+<p><strong>The Solution: A Traditional Message Queue (e.g., AWS SQS or RabbitMQ)</strong></p>
+<p>Queues excel at distributing work. They maintain state about which message is currently being processed and who holds the lock (e.g., SQS Visibility Timeout). They provide simple backpressure and straightforward dead-letter routing. Using a Pub/Sub system here would require building complex manual locking mechanisms.</p>
+<h3 id="typescript-sqs-task-consumer-implementation"><a class="heading-anchor" aria-label="Copy heading link" href="#typescript-sqs-task-consumer-implementation" data-enhanced="true"><span class="icon icon-link"></span></a>TypeScript SQS Task Consumer Implementation</h3>
+<p>Here is how we implemented the SQS worker loop in Node.js, utilizing message visibility updates for long-running jobs:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">typescript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">SQSClient</span>, <span class="hljs-title class_">ReceiveMessageCommand</span>, <span class="hljs-title class_">DeleteMessageCommand</span>, <span class="hljs-title class_">ChangeMessageVisibilityCommand</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@aws-sdk/client-sqs'</span>;
+
+<span class="hljs-keyword">const</span> sqs = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SQSClient</span>({ <span class="hljs-attr">region</span>: <span class="hljs-string">'us-east-1'</span> });
+<span class="hljs-keyword">const</span> <span class="hljs-variable constant_">QUEUE_URL</span> = process.<span class="hljs-property">env</span>.<span class="hljs-property">VIDEO_ENCODING_QUEUE_URL</span>;
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">processVideoTask</span>(<span class="hljs-params"><span class="hljs-attr">message</span>: <span class="hljs-built_in">any</span></span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-built_in">void</span>&gt; {
+  <span class="hljs-keyword">const</span> payload = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(message.<span class="hljs-property">Body</span>);
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`Starting video encoding for: <span class="hljs-subst">${payload.videoId}</span>`</span>);
+  
+  <span class="hljs-comment">// Simulate processing that takes time</span>
+  <span class="hljs-keyword">await</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> <span class="hljs-built_in">setTimeout</span>(resolve, <span class="hljs-number">15000</span>));
+  
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`Video encoding completed: <span class="hljs-subst">${payload.videoId}</span>`</span>);
+}
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">startWorker</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
+    <span class="hljs-keyword">try</span> {
+      <span class="hljs-keyword">const</span> receiveRes = <span class="hljs-keyword">await</span> sqs.<span class="hljs-title function_">send</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ReceiveMessageCommand</span>({
+        <span class="hljs-title class_">QueueUrl</span>: <span class="hljs-variable constant_">QUEUE_URL</span>,
+        <span class="hljs-title class_">MaxNumberOfMessages</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-title class_">WaitTimeSeconds</span>: <span class="hljs-number">20</span>, <span class="hljs-comment">// Long Polling</span>
+        <span class="hljs-title class_">VisibilityTimeout</span>: <span class="hljs-number">30</span> <span class="hljs-comment">// Lock message for 30 seconds</span>
+      }));
+
+      <span class="hljs-keyword">if</span> (!receiveRes.<span class="hljs-property">Messages</span> || receiveRes.<span class="hljs-property">Messages</span>.<span class="hljs-property">length</span> === <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">continue</span>;
+      }
+
+      <span class="hljs-keyword">const</span> message = receiveRes.<span class="hljs-property">Messages</span>[<span class="hljs-number">0</span>];
+      <span class="hljs-keyword">const</span> receiptHandle = message.<span class="hljs-property">ReceiptHandle</span>;
+
+      <span class="hljs-comment">// Heartbeat helper for long tasks (extends SQS lock)</span>
+      <span class="hljs-keyword">const</span> heartbeatInterval = <span class="hljs-built_in">setInterval</span>(<span class="hljs-title function_">async</span> () =&gt; {
+        <span class="hljs-keyword">try</span> {
+          <span class="hljs-keyword">await</span> sqs.<span class="hljs-title function_">send</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ChangeMessageVisibilityCommand</span>({
+            <span class="hljs-title class_">QueueUrl</span>: <span class="hljs-variable constant_">QUEUE_URL</span>,
+            <span class="hljs-title class_">ReceiptHandle</span>: receiptHandle,
+            <span class="hljs-title class_">VisibilityTimeout</span>: <span class="hljs-number">30</span>
+          }));
+          <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'SQS visibility timeout extended (heartbeat)'</span>);
+        } <span class="hljs-keyword">catch</span> (err) {
+          <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">'Failed to extend visibility timeout'</span>, err);
+        }
+      }, <span class="hljs-number">20000</span>); <span class="hljs-comment">// Heartbeat every 20s</span>
+
+      <span class="hljs-keyword">try</span> {
+        <span class="hljs-keyword">await</span> <span class="hljs-title function_">processVideoTask</span>(message);
+        
+        <span class="hljs-comment">// Success: Delete message from queue</span>
+        <span class="hljs-keyword">await</span> sqs.<span class="hljs-title function_">send</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">DeleteMessageCommand</span>({
+          <span class="hljs-title class_">QueueUrl</span>: <span class="hljs-variable constant_">QUEUE_URL</span>,
+          <span class="hljs-title class_">ReceiptHandle</span>: receiptHandle
+        }));
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Message successfully deleted'</span>);
+      } <span class="hljs-keyword">finally</span> {
+        <span class="hljs-built_in">clearInterval</span>(heartbeatInterval);
+      }
+    } <span class="hljs-keyword">catch</span> (error) {
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">'Error in SQS worker loop:'</span>, error);
+      <span class="hljs-keyword">await</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> <span class="hljs-built_in">setTimeout</span>(resolve, <span class="hljs-number">5000</span>));
+    }
+  }
+}
+
+<span class="hljs-title function_">startWorker</span>();
+</code></pre>
+<hr>
+<h2 id="workload-b-the-state-broadcaster"><a class="heading-anchor" aria-label="Copy heading link" href="#workload-b-the-state-broadcaster" data-enhanced="true"><span class="icon icon-link"></span></a>Workload B: The State Broadcaster</h2>
+<p>The second workload involved user profile updates. When a user changed their avatar, three entirely separate services (the Social Feed, the Recommendation Engine, and the Cache Invalidator) needed to know about it.</p>
+<ul>
+<li>Each service needed a copy of the exact same event.</li>
+<li>The services were maintained by different teams with different deployment schedules.</li>
+<li>If one service was down, the others should not be blocked.</li>
+</ul>
+<p><strong>The Solution: A Pub/Sub Event Stream (e.g., Apache Kafka / Redpanda)</strong></p>
+<p>Pub/Sub excels at broadcast and fan-out. The producer simply announces "the profile changed" and walks away. The messaging system ensures that every registered consumer group gets its own independent copy of the event to process at its own pace.</p>
+<h3 id="nodejs-kafka-consumer-group-implementation"><a class="heading-anchor" aria-label="Copy heading link" href="#nodejs-kafka-consumer-group-implementation" data-enhanced="true"><span class="icon icon-link"></span></a>Node.js Kafka Consumer Group Implementation</h3>
+<p>Here is a Kafka consumer setup using <code>kafkajs</code> demonstrating independent consumer groups:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">typescript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Kafka</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'kafkajs'</span>;
+
+<span class="hljs-keyword">const</span> kafka = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Kafka</span>({
+  <span class="hljs-attr">clientId</span>: <span class="hljs-string">'profile-service-broadcaster'</span>,
+  <span class="hljs-attr">brokers</span>: [process.<span class="hljs-property">env</span>.<span class="hljs-property">KAFKA_BROKER</span> || <span class="hljs-string">'localhost:9092'</span>]
+});
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">runConsumer</span>(<span class="hljs-params"><span class="hljs-attr">consumerGroupId</span>: <span class="hljs-built_in">string</span></span>) {
+  <span class="hljs-keyword">const</span> consumer = kafka.<span class="hljs-title function_">consumer</span>({ <span class="hljs-attr">groupId</span>: consumerGroupId });
+
+  <span class="hljs-keyword">await</span> consumer.<span class="hljs-title function_">connect</span>();
+  <span class="hljs-keyword">await</span> consumer.<span class="hljs-title function_">subscribe</span>({ <span class="hljs-attr">topic</span>: <span class="hljs-string">'user-profile-updates'</span>, <span class="hljs-attr">fromBeginning</span>: <span class="hljs-literal">false</span> });
+
+  <span class="hljs-keyword">await</span> consumer.<span class="hljs-title function_">run</span>({
+    <span class="hljs-attr">eachMessage</span>: <span class="hljs-title function_">async</span> ({ topic, partition, message }) =&gt; {
+      <span class="hljs-keyword">const</span> value = message.<span class="hljs-property">value</span>?.<span class="hljs-title function_">toString</span>();
+      <span class="hljs-keyword">const</span> event = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(value || <span class="hljs-string">'{}'</span>);
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`[Group: <span class="hljs-subst">${consumerGroupId}</span>] Received profile update:`</span>, event.<span class="hljs-property">userId</span>);
+      
+      <span class="hljs-comment">// Execute business logic specific to this service</span>
+      <span class="hljs-keyword">if</span> (consumerGroupId === <span class="hljs-string">'social-feed-service'</span>) {
+        <span class="hljs-comment">// Update user card in feed caches</span>
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (consumerGroupId === <span class="hljs-string">'recommendation-engine'</span>) {
+        <span class="hljs-comment">// Retrain graph nodes</span>
+      }
+    },
+  });
+}
+
+<span class="hljs-comment">// Running multiple consumers concurrently representing different services</span>
+<span class="hljs-title function_">runConsumer</span>(<span class="hljs-string">'social-feed-service'</span>);
+<span class="hljs-title function_">runConsumer</span>(<span class="hljs-string">'recommendation-engine'</span>);
+</code></pre>
+<hr>
+<h2 id="sqs-vs-kafka-architectural-trade-offs"><a class="heading-anchor" aria-label="Copy heading link" href="#sqs-vs-kafka-architectural-trade-offs" data-enhanced="true"><span class="icon icon-link"></span></a>SQS vs Kafka: Architectural Trade-offs</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Dimension</th><th align="left">Message Queue (e.g., SQS / RabbitMQ)</th><th align="left">Event Stream (e.g., Apache Kafka)</th></tr></thead><tbody><tr><td align="left"><strong>Primary Unit</strong></td><td align="left">A temporary Message buffer</td><td align="left">An append-only persistent Log</td></tr><tr><td align="left"><strong>Message Lifetime</strong></td><td align="left">Deleted immediately upon successful process</td><td align="left">Retained based on duration/size policy</td></tr><tr><td align="left"><strong>Consumer State</strong></td><td align="left">Managed by Broker (Locks, Acks)</td><td align="left">Managed by Consumer (Offsets)</td></tr><tr><td align="left"><strong>Scaling Mechanism</strong></td><td align="left">Spanning Competing Consumers</td><td align="left">Partitioning keys across partition logs</td></tr><tr><td align="left"><strong>Ordering Guarantees</strong></td><td align="left">FIFO Queue limits throughput</td><td align="left">Guaranteed ordering <em>within a partition</em></td></tr><tr><td align="left"><strong>Ideal For</strong></td><td align="left">Competing tasks / Commands</td><td align="left">Event sourcing / Stream processing</td></tr></tbody></table>
+<hr>
+<h2 id="lessons-learned"><a class="heading-anchor" aria-label="Copy heading link" href="#lessons-learned" data-enhanced="true"><span class="icon icon-link"></span></a>Lessons Learned</h2>
+<ul>
+<li><strong>Queue</strong>: Simplifies ordering, exclusive processing, and backpressure. It is the right choice for <strong>commands</strong> (e.g., "resize this image").</li>
+<li><strong>Pub/Sub</strong>: Simplifies fan-out, decouples producers from consumers, and supports team autonomy. It is the right choice for <strong>events</strong> (e.g., "order was completed").</li>
+</ul>
+<p>Match your messaging semantics to your domain behavior first, then optimize the implementation. Don't force a queue to act like a broadcaster (e.g., using polling databases), and don't force a stream to manage task locks where worker progress is highly irregular.</p>
+<a href="/portfolio/labs/queue-vs-pubsub" class="lab-cta">
+  Try the Interactive Comparison
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+</a></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/experiments/throughput-simulation-notes" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Throughput Simulation Notes</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/experiments/go-vs-ts-concurrency" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Benchmark: Go vs TypeScript Concurrency</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/cache-freshness-what-stale-while-revalidate-actually-buys-you" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Cache Freshness: What Stale-While-Revalidate Actually Buys You</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Three real cache-freshness policies run against the same origin outage — TTL-blocking errors, stale-while-revalidate never blocks at all, and stale-if-error sits in between, paying for a synchronous origin attempt even when it ends up serving the same stale content SWR would have served for free.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 07, 2026</span><span>3 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/redis-streams-vs-bullmq-job-queue-comparison" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Redis Streams vs BullMQ: Choosing Your Job Queue</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>6 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/db-event-replay-benchmark" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Benchmark: Event Replay in PostgreSQL vs Firestore</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">An interactive benchmark comparing the time it takes to replay tens of thousands of immutable events into a Read Projection.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 27, 2026</span><span>2 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#the-habit-of-defaulting" class="toc-link">The Habit of Defaulting</a></li><li><a href="#architectural-comparison" class="toc-link">Architectural Comparison</a></li><li><a href="#workload-a-the-task-processor" class="toc-link">Workload A: The Task Processor</a></li><li class="toc-sub"><a href="#typescript-sqs-task-consumer-implementation" class="toc-link">TypeScript SQS Task Consumer Implementation</a></li><li><a href="#workload-b-the-state-broadcaster" class="toc-link">Workload B: The State Broadcaster</a></li><li class="toc-sub"><a href="#nodejs-kafka-consumer-group-implementation" class="toc-link">Node.js Kafka Consumer Group Implementation</a></li><li><a href="#sqs-vs-kafka-architectural-trade-offs" class="toc-link">SQS vs Kafka: Architectural Trade-offs</a></li><li><a href="#lessons-learned" class="toc-link">Lessons Learned</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>Canary Deploys and the Sample Size Nobody Checks | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="A real two-proportion z-test canary analysis, run stage by stage — proving that the same real regression can go completely undetected at a small sample size and get caught at a larger one, using the exact statistic, not a story about it.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="Canary Deploys and the Sample Size Nobody Checks | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="A real two-proportion z-test canary analysis, run stage by stage — proving that the same real regression can go completely undetected at a small sample size and get caught at a larger one, using the exact statistic, not a story about it.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/canary-deploys-and-the-sample-size-nobody-checks.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/canary-deploys-and-the-sample-size-nobody-checks.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks"><meta name="twitter:title" content="Canary Deploys and the Sample Size Nobody Checks | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="A real two-proportion z-test canary analysis, run stage by stage — proving that the same real regression can go completely undetected at a small sample size and get caught at a larger one, using the exact statistic, not a story about it."><link rel="canonical" href="https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"Canary Deploys and the Sample Size Nobody Checks","datePublished":"2026-09-07","description":"A real two-proportion z-test canary analysis, run stage by stage — proving that the same real regression can go completely undetected at a small sample size and get caught at a larger one, using the exact statistic, not a story about it.","keywords":"incident-response, trade-offs, benchmark","articleSection":"experiments","image":"https://khoahotran.github.io/portfolio/og/canary-deploys-and-the-sample-size-nobody-checks.png","url":"https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/experiments" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to experiments</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Canary Deploys and the Sample Size Nobody Checks</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Sep 07, 2026</span><span>3 min read</span></div><p class="mt-3 text-sm text-slate-600">A real two-proportion z-test canary analysis, run stage by stage — proving that the same real regression can go completely undetected at a small sample size and get caught at a larger one, using the exact statistic, not a story about it.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#incident-response</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#trade-offs</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#benchmark</span></div></header><div class="markdown-body"><p>"Ship to 5% of traffic, watch the error rate, promote if it looks fine." That's the mental model
+most people have of a canary deploy, and it has a silent assumption baked in: that "looks fine" is a
+meaningful judgment at whatever traffic percentage the first stage happens to use. It usually isn't
+— and the reason is arithmetic, not opinion. The <a href="/portfolio/labs/canary-rollout">interactive lab</a> runs the
+actual statistical test real canary systems use, not a described version of one.</p>
+<div class="mt-8 mb-12">
+  <a href="/portfolio/labs/canary-rollout" class="lab-cta-inverse">
+    Try the Interactive Canary Rollout Lab
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+  </a>
+</div>
+<h2 id="why-a-raw-threshold-isnt-enough"><a class="heading-anchor" aria-label="Copy heading link" href="#why-a-raw-threshold-isnt-enough" data-enhanced="true"><span class="icon icon-link"></span></a>Why a Raw Threshold Isn't Enough</h2>
+<p>The naive version of canary analysis is a threshold: "roll back if the canary's error rate exceeds
+X%." The problem is that an error rate computed from a handful of requests is mostly noise. Two
+requests failing out of twenty looks like a 10% error rate; two failing out of two thousand looks
+like 0.1%. Both could be observations of the <em>same underlying</em> 1% failure rate — the small sample
+just doesn't have enough data to say. A raw threshold treats both cases identically; a real canary
+system asks a different question: <strong>is this difference larger than sampling noise could plausibly
+explain?</strong></p>
+<p>That's a statistical significance test, and the lab (<code>src/labs/canaryRollout.ts</code>) runs a real one: a
+<strong>two-proportion z-test</strong>, one-tailed — the same class of test systems like Kayenta and Flagger use
+instead of a bare threshold. It only flags a canary as regressed when its error rate is
+<em>significantly</em> higher than baseline's, not merely numerically higher.</p>
+<h2 id="the-finding-the-same-regression-can-be-invisible-or-obvious-depending-only-on-sample-size"><a class="heading-anchor" aria-label="Copy heading link" href="#the-finding-the-same-regression-can-be-invisible-or-obvious-depending-only-on-sample-size" data-enhanced="true"><span class="icon icon-link"></span></a>The Finding: The Same Regression Can Be Invisible or Obvious, Depending Only on Sample Size</h2>
+<p>Fix the canary's true error rate at 2x the baseline's — a real, meaningful regression by any
+standard — and change nothing except how many requests each stage samples:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Requests per stage</th><th>Result</th></tr></thead><tbody><tr><td>15</td><td><strong>Fully promoted</strong> — the regression is real, but 15 samples can't distinguish it from noise</td></tr><tr><td>2,000</td><td><strong>Rolled back at stage 1</strong> — the identical regression is caught immediately</td></tr></tbody></table>
+<p>Nothing about the underlying bug changed between these two runs. The only variable is how much
+evidence the test had to work with. <code>canaryRollout.test.ts</code> asserts this pair directly — same error
+rates, only <code>bakeRequestsPerStage</code> differs, opposite outcomes — because a claim this important to a
+site about evidence shouldn't rest on a single, maybe-lucky example.</p>
+<div class="callout callout-note"><p class="callout-title">Note</p>
+<p>Try it yourself in the lab: set the canary rate to roughly 2x the baseline rate, then drag "requests
+sampled per stage" down toward its minimum. Watch the z-score shrink toward the ±1.96 threshold and
+the decision flip from "rollback" to "promote" — the exact same underlying regression, made
+statistically invisible by an under-sized sample.</p>
+</div>
+<h2 id="the-other-side-a-large-enough-sample-flags-differences-nobody-would-call-a-regression"><a class="heading-anchor" aria-label="Copy heading link" href="#the-other-side-a-large-enough-sample-flags-differences-nobody-would-call-a-regression" data-enhanced="true"><span class="icon icon-link"></span></a>The Other Side: A Large Enough Sample Flags Differences Nobody Would Call a Regression</h2>
+<p>The same mechanism cuts the other way. Set the canary's error rate to 1.05% against a 1.00%
+baseline — a difference small enough that no one would call it a regression in an incident review —
+and scale the sample size up far enough (the lab's own test uses 500,000 requests per stage to
+demonstrate this cleanly): the z-test calls it significant, and the rollout rolls back. Statistical
+significance answers "is this difference larger than noise?" — it does not answer "is this
+difference large enough to matter?" Those are different questions, and a canary system tuned only
+for the first one will eventually roll back a release for a difference too small to care about.</p>
+<h2 id="what-this-actually-means-for-staging-traffic"><a class="heading-anchor" aria-label="Copy heading link" href="#what-this-actually-means-for-staging-traffic" data-enhanced="true"><span class="icon icon-link"></span></a>What This Actually Means for Staging Traffic</h2>
+<ul>
+<li><strong>A "clean" first canary stage at low traffic is weak evidence, not strong evidence.</strong> If the
+first stage's sample size can't detect a 2x regression, "no rollback yet" mostly means "not enough
+data yet," not "probably fine." Either start with more traffic than intuition suggests, or bake
+longer before treating an early stage as a real signal.</li>
+<li><strong>Statistical significance alone is an incomplete rollback trigger at high traffic.</strong> A production
+system serving real volume can accumulate enough samples that a two-proportion test starts
+flagging differences that are real but not meaningful. A trustworthy canary gate needs both a
+significance test <em>and</em> a minimum-effect-size floor — "significantly different, <strong>and</strong> the
+difference is at least Y percentage points" — not significance alone.</li>
+<li><strong>The traffic-staging itself (5% → 25% → 50% → 100%) exists to buy sample size cheaply as
+confidence grows</strong>, not just to limit blast radius. Both are real reasons for staged rollout, and
+they're often conflated as if blast-radius limitation were the whole story.</li>
+</ul>
+<p>The failure mode this lab is built to make visible: reaching for "we do canary deploys" as if the
+practice itself guarantees safety, when the actual guarantee depends entirely on whether the
+statistical test behind it has enough data to say anything at all.</p></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Distributed Locks: Redlock and the Pause That Breaks It</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/experiments/cache-freshness-what-stale-while-revalidate-actually-buys-you" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Cache Freshness: What Stale-While-Revalidate Actually Buys You</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/blog/engineering-lessons-from-a-failed-rollout" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">blog</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Engineering Lessons from a Failed Rollout</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Mar 21, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">HyperLogLog and the Question Bloom Filters Can't Answer</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/lsm-trees-and-the-write-youll-pay-for-later" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">LSM Trees and the Write You'll Pay for Later</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real log-structured merge tree — measure read amplification growing unbounded without compaction, then measure the real write-amplification cost of bounding it.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#why-a-raw-threshold-isnt-enough" class="toc-link">Why a Raw Threshold Isn't Enough</a></li><li><a href="#the-finding-the-same-regression-can-be-invisible-or-obvious-depending-only-on-sample-size" class="toc-link">The Finding: The Same Regression Can Be Invisible or Obvious, Depending Only on Sample Size</a></li><li><a href="#the-other-side-a-large-enough-sample-flags-differences-nobody-would-call-a-regression" class="toc-link">The Other Side: A Large Enough Sample Flags Differences Nobody Would Call a Regression</a></li><li><a href="#what-this-actually-means-for-staging-traffic" class="toc-link">What This Actually Means for Staging Traffic</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

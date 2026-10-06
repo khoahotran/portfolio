@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>CRDTs: What to Do Once You Know Two Writes Are Concurrent | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set — see exactly which concurrent updates the naive designs silently lose, and why detecting concurrency is only half the problem.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="CRDTs: What to Do Once You Know Two Writes Are Concurrent | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set — see exactly which concurrent updates the naive designs silently lose, and why detecting concurrency is only half the problem.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/crdts-what-to-do-once-you-know-two-writes-are-concurrent.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/crdts-what-to-do-once-you-know-two-writes-are-concurrent.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/experiments/crdts-what-to-do-once-you-know-two-writes-are-concurrent"><meta name="twitter:title" content="CRDTs: What to Do Once You Know Two Writes Are Concurrent | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set — see exactly which concurrent updates the naive designs silently lose, and why detecting concurrency is only half the problem."><link rel="canonical" href="https://khoahotran.github.io/portfolio/experiments/crdts-what-to-do-once-you-know-two-writes-are-concurrent"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"CRDTs: What to Do Once You Know Two Writes Are Concurrent","datePublished":"2026-09-08","description":"Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set — see exactly which concurrent updates the naive designs silently lose, and why detecting concurrency is only half the problem.","keywords":"distributed-systems, trade-offs, benchmark","articleSection":"experiments","image":"https://khoahotran.github.io/portfolio/og/crdts-what-to-do-once-you-know-two-writes-are-concurrent.png","url":"https://khoahotran.github.io/portfolio/experiments/crdts-what-to-do-once-you-know-two-writes-are-concurrent","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/experiments/crdts-what-to-do-once-you-know-two-writes-are-concurrent"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/experiments" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to experiments</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">CRDTs: What to Do Once You Know Two Writes Are Concurrent</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Sep 08, 2026</span><span>4 min read</span></div><p class="mt-3 text-sm text-slate-600">Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set — see exactly which concurrent updates the naive designs silently lose, and why detecting concurrency is only half the problem.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#distributed-systems</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#trade-offs</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#benchmark</span></div></header><div class="markdown-body"><p><a href="/portfolio/experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins">Vector clocks</a> answer
+one question: given two writes, is there a causal link between them, or are they genuinely
+concurrent? That's real, useful information — but it's still only a diagnosis. Knowing two writes
+are concurrent doesn't tell a replicated system what value to actually converge on. <strong>CRDTs</strong>
+(Conflict-Free Replicated Data Types) are one principled answer: data structures whose merge
+function is designed so every replica converges to the same value, no matter what order updates
+arrive in and no matter how many times the same update is delivered twice — without silently
+discarding anyone's concurrent contribution the way a naive last-write-wins resolver does. The
+<a href="/portfolio/labs/crdt">interactive lab</a> runs two real CRDTs against the naive design each one replaces, on
+the identical scenario, so the difference is a measured count, not a claim.</p>
+<div class="mt-8 mb-12">
+  <a href="/portfolio/labs/crdt" class="lab-cta-inverse">
+    Try the Interactive CRDTs Lab
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+  </a>
+</div>
+<h2 id="g-counter-counting-without-losing-anyones-increments"><a class="heading-anchor" aria-label="Copy heading link" href="#g-counter-counting-without-losing-anyones-increments" data-enhanced="true"><span class="icon icon-link"></span></a>G-Counter: Counting Without Losing Anyone's Increments</h2>
+<p>A <strong>G-Counter</strong> (grow-only counter) gives every node its own slot in a shared vector. A node can
+only increment its own slot; the counter's value is the sum of every slot; merging two replicas is
+component-wise max — the same operation <code>mergeClocks</code> used for vector clocks, repurposed here
+(<code>src/labs/crdt.ts</code>):</p>
+<pre><code>increment(state, node):        state[node] += 1
+value(state):                  sum(state[*])
+merge(a, b):                   componentwise_max(a, b)
+</code></pre>
+<p>Contrast that against the naive alternative most systems reach for by default: an <strong>LWW register</strong>
+holding one value and one timestamp, where "merging" means keeping whichever replica's write has
+the later timestamp and throwing the other away entirely. The lab runs both against the identical
+scenario — two nodes, each applying some number of real local increments with no knowledge of the
+other — and the G-Counter's total is always correct, because every real increment landed in its
+own node's slot and summing slots can't lose anything. The naive register's total is whichever
+single node's count happened to have the later timestamp; every increment from the losing node is
+gone, silently, with no error and no trace.</p>
+<div class="callout callout-note"><p class="callout-title">Note</p>
+<p>Writing the test for "only one node contributed, so nothing should be lost" turned up a sharper
+version of the finding than the one it was written to check. With a <strong>timestamp tie</strong>, the
+register's deterministic tiebreak (nodeId comparison) can pick the <em>zero-contribution</em> node as
+the winner — discarding the other node's entire real work even though it did all of it. The
+lesson isn't "ties are rare, don't worry about it" — it's that <strong>LWW's "winner" is a property of
+the resolver's tiebreak rule, not of who actually did the work</strong>, and a tie is exactly the
+condition where that gap is most visible.</p>
+</div>
+<h2 id="or-set-surviving-a-concurrent-remove"><a class="heading-anchor" aria-label="Copy heading link" href="#or-set-surviving-a-concurrent-remove" data-enhanced="true"><span class="icon icon-link"></span></a>OR-Set: Surviving a Concurrent Remove</h2>
+<p>An <strong>OR-Set</strong> (observed-remove set) tags every <code>add</code> with a unique identity. A <code>remove</code> tombstones
+only the specific tags it has actually observed for that value — not the value itself. An element
+is present if it has at least one surviving, non-tombstoned tag. The lab runs one concrete
+sequence through both an OR-Set and a naive <strong>2P-Set</strong> (a plain "ever added" set plus a plain
+"ever removed" set, no per-operation identity at all): add "x", remove "x" (observing that add),
+then add "x" again with a fresh tag — a genuine re-add, not a replay of the same operation.</p>
+<p>Under the OR-Set, "x" survives: the re-add's tag was never tombstoned, because the remove only ever
+tombstoned the tag it had actually seen. Under the 2P-Set, "x" is gone <strong>permanently</strong> — once a
+value has ever been removed, the 2P-Set has no way to distinguish a fresh add of that same value
+from the one that was already removed, so it stays removed forever, even after a real add happens
+later. This is the textbook 2P-Set limitation, and the lab's test suite proves it as an actual
+assertion rather than a description: <code>compareReAddAfterRemove</code> returns <code>orSetHasElement: true</code> and
+<code>twoPhaseSetHasElement: false</code> for the identical sequence of operations.</p>
+<p>The lab's default scenario runs sequentially for legibility, but the property that actually
+matters is genuinely concurrent: two replicas, each evolving independently, one removing an
+element while the other is simultaneously re-adding it with no knowledge of the removal. The test
+suite covers that case directly too — merging two such replicas, in either order, leaves the
+element present, because the remove could only ever tombstone the one tag it had actually observed.</p>
+<h2 id="both-structures-obey-the-same-underlying-laws"><a class="heading-anchor" aria-label="Copy heading link" href="#both-structures-obey-the-same-underlying-laws" data-enhanced="true"><span class="icon icon-link"></span></a>Both Structures Obey the Same Underlying Laws</h2>
+<p>What makes something a CRDT isn't "has a merge function" — plenty of naive designs have one of
+those, including both naive contrasts above. It's that merge forms a genuine mathematical
+semilattice: <strong>commutative</strong> (<code>merge(a,b) == merge(b,a)</code>, so arrival order can't matter),
+<strong>associative</strong> (<code>merge(merge(a,b),c) == merge(a,merge(b,c))</code>, so it doesn't matter how merges get
+batched or pipelined across a cluster), and <strong>idempotent</strong> (<code>merge(a,a) == a</code>, and merging the same
+update twice has no additional effect — the property that makes at-least-once delivery safe to
+build on). <code>crdt.test.ts</code> asserts all three directly for both structures, not just that a specific
+demo scenario happens to converge. That's the actual guarantee: not "this example worked out," but
+"no matter how the network reorders, duplicates, or batches these merges, every replica ends up in
+the same place."</p></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/experiments/merkle-trees-and-the-diff-nobody-has-to-compute" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Merkle Trees and the Diff Nobody Has to Compute</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Consistent Hashing and the Rebalancing Nobody Notices</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Vector Clocks and the Clock Skew That Fools Last-Write-Wins</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run the real happens-before/happens-after/concurrent test on a scripted causal history, then watch a naive last-write-wins resolver flip its answer under clock skew alone — while the causal verdict never moves.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 08, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">HyperLogLog and the Question Bloom Filters Can't Answer</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/lsm-trees-and-the-write-youll-pay-for-later" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">LSM Trees and the Write You'll Pay for Later</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real log-structured merge tree — measure read amplification growing unbounded without compaction, then measure the real write-amplification cost of bounding it.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#g-counter-counting-without-losing-anyones-increments" class="toc-link">G-Counter: Counting Without Losing Anyone's Increments</a></li><li><a href="#or-set-surviving-a-concurrent-remove" class="toc-link">OR-Set: Surviving a Concurrent Remove</a></li><li><a href="#both-structures-obey-the-same-underlying-laws" class="toc-link">Both Structures Obey the Same Underlying Laws</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

@@ -5,7 +5,140 @@
     <link>https://khoahotran.github.io/portfolio/experiments</link>
     <description>experiments articles from Khoa Tran Engineering Portfolio.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 20 Aug 2026 04:05:11 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 09 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>HyperLogLog and the Question Bloom Filters Can&apos;t Answer</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer</guid>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.</description>
+    </item>
+    <item>
+      <title>LSM Trees and the Write You&apos;ll Pay for Later</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/lsm-trees-and-the-write-youll-pay-for-later</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/lsm-trees-and-the-write-youll-pay-for-later</guid>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run a real log-structured merge tree — measure read amplification growing unbounded without compaction, then measure the real write-amplification cost of bounding it.</description>
+    </item>
+    <item>
+      <title>Raft and the Commit Rule Replica Count Alone Can&apos;t Prove</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove</guid>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run Raft&apos;s real election restriction and commit-index safety rule — see why a stale node can&apos;t win an election no matter how many peers are alive, and why a majority of replicas alone still can&apos;t prove a log entry is safely committed.</description>
+    </item>
+    <item>
+      <title>Two-Phase Commit vs. Saga: What Atomicity Actually Costs</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs</guid>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run the real 2PC blocking failure and the real Saga compensation-failure gap on the same kind of transaction — see exactly what atomicity costs, and exactly what giving it up costs instead.</description>
+    </item>
+    <item>
+      <title>Bloom Filters and the Capacity You Can&apos;t See Coming</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real, not just in a formula.</description>
+    </item>
+    <item>
+      <title>Consistent Hashing and the Rebalancing Nobody Notices</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run the real hash-ring placement algorithm against naive modulo hashing on the same key set — see how little of the keyspace a ring actually moves when a node joins or leaves, and what happens without enough virtual nodes to spread the luck around.</description>
+    </item>
+    <item>
+      <title>CRDTs: What to Do Once You Know Two Writes Are Concurrent</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/crdts-what-to-do-once-you-know-two-writes-are-concurrent</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/crdts-what-to-do-once-you-know-two-writes-are-concurrent</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set — see exactly which concurrent updates the naive designs silently lose, and why detecting concurrency is only half the problem.</description>
+    </item>
+    <item>
+      <title>Merkle Trees and the Diff Nobody Has to Compute</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/merkle-trees-and-the-diff-nobody-has-to-compute</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/merkle-trees-and-the-diff-nobody-has-to-compute</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run a real Merkle-tree targeted diff against a naive full scan on the same two datasets — see the O(1) proof of full equality, the near-O(log n) cost of a sparse diff, and the honest case where the targeted walk actually loses.</description>
+    </item>
+    <item>
+      <title>Vector Clocks and the Clock Skew That Fools Last-Write-Wins</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run the real happens-before/happens-after/concurrent test on a scripted causal history, then watch a naive last-write-wins resolver flip its answer under clock skew alone — while the causal verdict never moves.</description>
+    </item>
+    <item>
+      <title>Backpressure: Four Policies, One Overload</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/backpressure-four-policies-one-overload</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/backpressure-four-policies-one-overload</guid>
+      <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Block, drop-new, drop-old, and circuit breaker, run against the same producer that outruns its consumer — including proof that drop-new and drop-old discard the same number of items, but never the same ones.</description>
+    </item>
+    <item>
+      <title>Cache Freshness: What Stale-While-Revalidate Actually Buys You</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/cache-freshness-what-stale-while-revalidate-actually-buys-you</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/cache-freshness-what-stale-while-revalidate-actually-buys-you</guid>
+      <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Three real cache-freshness policies run against the same origin outage — TTL-blocking errors, stale-while-revalidate never blocks at all, and stale-if-error sits in between, paying for a synchronous origin attempt even when it ends up serving the same stale content SWR would have served for free.</description>
+    </item>
+    <item>
+      <title>Canary Deploys and the Sample Size Nobody Checks</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks</guid>
+      <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+      <description>A real two-proportion z-test canary analysis, run stage by stage — proving that the same real regression can go completely undetected at a small sample size and get caught at a larger one, using the exact statistic, not a story about it.</description>
+    </item>
+    <item>
+      <title>Distributed Locks: Redlock and the Pause That Breaks It</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it</guid>
+      <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Run the real Redlock quorum algorithm against nodes you crash yourself, then simulate the exact pause Martin Kleppmann&apos;s 2016 critique is about — and see why Antirez&apos;s own rebuttal doesn&apos;t actually disagree with it.</description>
+    </item>
+    <item>
+      <title>gRPC vs REST: When the Smaller Payload Loses</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/grpc-vs-rest-when-the-smaller-payload-loses</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/grpc-vs-rest-when-the-smaller-payload-loses</guid>
+      <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+      <description>A real harness measuring gRPC against REST for the same data, same server, same Go process — and REST wins throughput at every concurrency level tested for a small payload, and at half the concurrency levels tested for a 100x larger one.</description>
+    </item>
+    <item>
+      <title>Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/leader-election-bully-algorithm</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/leader-election-bully-algorithm</guid>
+      <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Crash the leader and watch the real Bully algorithm elect a new one, message by message — including the O(n^2) worst case the protocol is criticized for.</description>
+    </item>
+    <item>
+      <title>Connection Pooling: When PgBouncer Actually Helps</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/pgbouncer-vs-direct-connection-pooling</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/pgbouncer-vs-direct-connection-pooling</guid>
+      <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+      <description>A real harness measuring PgBouncer against direct Postgres across two connection lifecycles — the advantage widens under one and reverses under the other, so &apos;add a pooler&apos; isn&apos;t a universal answer.</description>
+    </item>
+    <item>
+      <title>Gossip Protocol Visualizer: How Cluster Membership Actually Spreads</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>A real push-based epidemic broadcast, run and scrubbed round by round, showing why gossip converges in O(log n) rounds instead of O(n).</description>
+    </item>
+    <item>
+      <title>Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it&apos;s named.</description>
+    </item>
+    <item>
+      <title>WebSockets vs Server-Sent Events: What Holding 5,000 Connections Open Actually Costs</title>
+      <link>https://khoahotran.github.io/portfolio/experiments/websockets-vs-sse</link>
+      <guid isPermaLink="true">https://khoahotran.github.io/portfolio/experiments/websockets-vs-sse</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <description>A real harness measuring server memory for thousands of concurrent WebSocket vs SSE connections — written before the article, per the lesson from three prior benchmark rewrites.</description>
+    </item>
     <item>
       <title>Interactive Event Sourcing Replay</title>
       <link>https://khoahotran.github.io/portfolio/experiments/event-sourcing-replay</link>

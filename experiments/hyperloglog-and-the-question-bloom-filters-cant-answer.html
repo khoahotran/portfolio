@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>HyperLogLog and the Question Bloom Filters Can't Answer | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="HyperLogLog and the Question Bloom Filters Can't Answer | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/hyperloglog-and-the-question-bloom-filters-cant-answer.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/hyperloglog-and-the-question-bloom-filters-cant-answer.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer"><meta name="twitter:title" content="HyperLogLog and the Question Bloom Filters Can't Answer | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate."><link rel="canonical" href="https://khoahotran.github.io/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"HyperLogLog and the Question Bloom Filters Can't Answer","datePublished":"2026-09-09","description":"Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.","keywords":"distributed-systems, trade-offs, benchmark","articleSection":"experiments","image":"https://khoahotran.github.io/portfolio/og/hyperloglog-and-the-question-bloom-filters-cant-answer.png","url":"https://khoahotran.github.io/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/experiments" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to experiments</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">HyperLogLog and the Question Bloom Filters Can't Answer</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div><p class="mt-3 text-sm text-slate-600">Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#distributed-systems</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#trade-offs</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#benchmark</span></div></header><div class="markdown-body"><p>The <a href="/portfolio/labs/bloom-filter">Bloom filter lab</a> answers "have I seen this exact item" in fixed space,
+never storing a single one. <strong>HyperLogLog</strong> (Flajolet, Fusillo, Gandouet &amp; Meunier, 2007) answers
+the adjacent, genuinely different question — "how many <em>distinct</em> items have I seen" — also in
+fixed space, also without storing a single item. Neither structure can answer the other's question:
+a Bloom filter can't tell you a count, and a HyperLogLog sketch can't tell you whether one specific
+item was ever inserted. This lab runs the real algorithm, not the formula, the same way the Bloom
+filter lab does.</p>
+<div class="mt-8 mb-12">
+  <a href="/portfolio/labs/hyperloglog" class="lab-cta-inverse">
+    Try the Interactive HyperLogLog Lab
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+  </a>
+</div>
+<h2 id="the-trick-rare-runs-are-a-signal"><a class="heading-anchor" aria-label="Copy heading link" href="#the-trick-rare-runs-are-a-signal" data-enhanced="true"><span class="icon icon-link"></span></a>The Trick: Rare Runs Are a Signal</h2>
+<p>Hash every item to a uniform bit string, then split the hash in two: the first <code>p</code> bits pick one of
+<code>m = 2^p</code> registers, and the rest is searched for its longest run of leading zeros
+(<code>src/labs/hyperLogLog.ts</code>):</p>
+<pre><code>index(hash) = top p bits of hash
+rank(hash)  = position of the first 1-bit in the remaining bits, from 1
+registers[index] = max(registers[index], rank)   // per item, per register
+</code></pre>
+<p>A run of <code>k</code> leading zeros in a uniformly random bit string has probability <code>2^-(k+1)</code> — rare, and
+rarer the longer it gets. So the <em>longest</em> run any item produced for a given register is a real,
+if noisy, signal for how many distinct items must have hashed there. HyperLogLog's whole trick is
+averaging that noisy per-register signal across all <code>m</code> registers (a harmonic mean, not an
+arithmetic one — extreme registers shouldn't dominate) to bring the noise down to a standard error
+of roughly <code>1.04/√m</code>. That number is a design target, not a guarantee this lab just asserts:
+<code>runCardinalityTrial</code> builds a real sketch from a known true count and measures the actual error
+against it, and the test suite checks that measured error stays within a few multiples of
+<code>theoreticalStandardError(m)</code> across cardinalities from 100 to 100,000 — a real relationship
+between register count and accuracy, not two numbers that happen to agree once.</p>
+<h2 id="the-correction-most-explanations-skip"><a class="heading-anchor" aria-label="Copy heading link" href="#the-correction-most-explanations-skip" data-enhanced="true"><span class="icon icon-link"></span></a>The Correction Most Explanations Skip</h2>
+<p>Stage 1's fixed low-cardinality demo is the sharper finding: below roughly <code>2.5m</code> true items, most
+registers are still sitting at their untouched zero value, and the raw harmonic-mean formula
+doesn't know that — it extrapolates from a handful of populated registers as if every register were
+meaningfully filled. At 50 true items against a 1,024-register sketch, the raw formula estimates
+over 10× the true count. The fix, specified in the original paper and implemented directly here as
+<code>estimateCardinality</code>'s small-range branch, is <strong>linear counting</strong>: <code>m · ln(m / zeroRegisters)</code>,
+which uses the <em>fraction of registers still at zero</em> instead of the noisy max-run signal, and lands
+close to the true count in the same regime the raw formula gets badly wrong. <code>estimateCardinalityRaw</code>
+is exported specifically so the test suite — and the lab's UI — can show this difference directly,
+not describe it in prose.</p>
+<h2 id="merging-sketches-without-ever-touching-raw-data"><a class="heading-anchor" aria-label="Copy heading link" href="#merging-sketches-without-ever-touching-raw-data" data-enhanced="true"><span class="icon icon-link"></span></a>Merging Sketches Without Ever Touching Raw Data</h2>
+<p>Stage 2 is the feature exact counting structures don't offer without combining raw data: two
+independently-built sketches merge into a correct estimate of their <strong>union</strong>, by taking the
+elementwise max of their registers. That's not an approximation of merging — it's exactly what a
+single sketch that had seen everything both inputs saw would itself contain, since "did any item
+hash to a longer run in this register" doesn't care which sketch it came from.</p>
+<p>The lab makes the alternative's failure concrete: given two sketches with a real, adjustable
+overlap, naively summing their two individual cardinality estimates double-counts every item in
+that overlap — drag the overlap slider up toward either sketch's full size, and the naive sum keeps
+climbing well past the true union, while the properly merged sketch keeps tracking it, because the
+merge never counted anyone twice in the first place. This is exactly why HyperLogLog is practical at
+the scale it's actually used at (Redis's <code>PFCOUNT</code>/<code>PFMERGE</code>, Presto and BigQuery's <code>APPROX_COUNT_DISTINCT</code>,
+per-shard analytics that need a global unique-visitor count): every shard tracks its own sketch
+independently, and a merge afterward — no coordination, no raw data ever leaving a shard — is enough
+to estimate the whole dataset's cardinality.</p>
+<h2 id="what-this-buys-you-and-what-it-doesnt"><a class="heading-anchor" aria-label="Copy heading link" href="#what-this-buys-you-and-what-it-doesnt" data-enhanced="true"><span class="icon icon-link"></span></a>What This Buys You, and What It Doesn't</h2>
+<p>A HyperLogLog sketch will never tell you whether <em>this specific</em> item was ever seen — that's the
+Bloom filter's job, and the two structures solve genuinely disjoint problems even though both trade
+exactness for fixed memory. What it does buy: a real, bounded-error distinct-count that costs the
+same handful of bytes whether the true cardinality is a hundred or a hundred million, and that
+merges cleanly across shards without ever moving a single raw item between them — the same
+"aggregate first, coordinate never" shape as the <a href="/portfolio/labs/merkle-tree">Merkle tree lab's</a> targeted
+diff, applied to counting instead of reconciliation.</p></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/experiments/lsm-trees-and-the-write-youll-pay-for-later" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">LSM Trees and the Write You'll Pay for Later</div></a><div></div></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Bloom Filters and the Capacity You Can't See Coming</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real, not just in a formula.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 08, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/merkle-trees-and-the-diff-nobody-has-to-compute" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Merkle Trees and the Diff Nobody Has to Compute</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real Merkle-tree targeted diff against a naive full scan on the same two datasets — see the O(1) proof of full equality, the near-O(log n) cost of a sparse diff, and the honest case where the targeted walk actually loses.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 08, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/lsm-trees-and-the-write-youll-pay-for-later" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">LSM Trees and the Write You'll Pay for Later</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real log-structured merge tree — measure read amplification growing unbounded without compaction, then measure the real write-amplification cost of bounding it.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#the-trick-rare-runs-are-a-signal" class="toc-link">The Trick: Rare Runs Are a Signal</a></li><li><a href="#the-correction-most-explanations-skip" class="toc-link">The Correction Most Explanations Skip</a></li><li><a href="#merging-sketches-without-ever-touching-raw-data" class="toc-link">Merging Sketches Without Ever Touching Raw Data</a></li><li><a href="#what-this-buys-you-and-what-it-doesnt" class="toc-link">What This Buys You, and What It Doesn't</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

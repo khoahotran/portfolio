@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>gRPC Service Mesh in Go: Designing the Aegis Auth Platform | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="gRPC Service Mesh in Go: Designing the Aegis Auth Platform | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/grpc-service-mesh-in-go-aegis-architecture.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/grpc-service-mesh-in-go-aegis-architecture.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture"><meta name="twitter:title" content="gRPC Service Mesh in Go: Designing the Aegis Auth Platform | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation."><link rel="canonical" href="https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"BlogPosting","headline":"gRPC Service Mesh in Go: Designing the Aegis Auth Platform","datePublished":"2026-06-28","description":"A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.","keywords":"go, grpc, distributed-systems, security, opentelemetry, api-design","articleSection":"blog","image":"https://khoahotran.github.io/portfolio/og/grpc-service-mesh-in-go-aegis-architecture.png","url":"https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid.core-CAUcACSU.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/flowDiagram-23GEKE2U-C3OveLQd.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/chunk-5VM5RSS4-CzvKhrWf.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/chunk-XXDRQBXY-BsUyRLRb.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/chunk-VR4S4FIN-DHXrjx2a.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/chunk-32BRIVSS-DalFL85I.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/channel-LyFQTibn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/dagre-VKFMJZFB-DdBEAd-T.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/chunk-RYQCIY6F-XVh5s4Ay.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/graph-f5TA4eFB.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/map-C2CRsbjR.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/layout-G-VDwA2m.js"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/blog" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to blog</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">gRPC Service Mesh in Go: Designing the Aegis Auth Platform</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Jun 28, 2026</span><span>7 min read</span></div><p class="mt-3 text-sm text-slate-600">A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#go</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#grpc</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#distributed-systems</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#security</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#opentelemetry</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#api-design</span></div></header><div class="markdown-body"><h2 id="why-grpc-for-an-auth-platform"><a class="heading-anchor" aria-label="Copy heading link" href="#why-grpc-for-an-auth-platform" data-enhanced="true"><span class="icon icon-link"></span></a>Why gRPC for an Auth Platform?</h2>
+<p>When designing <strong>Aegis</strong>, the first question was: why gRPC over REST for internal service communication?</p>
+<p>The answer is schema contracts. In a security-sensitive system, the worst possible outcome is two services silently disagreeing about the shape of an authorization request. With REST and JSON, a field rename or type change ships invisibly. With gRPC and Protocol Buffers, the compiler rejects it — the contract is enforced at build time.</p>
+<p>Beyond contracts, gRPC gives us:</p>
+<ul>
+<li><strong>Multiplexed HTTP/2 streams</strong> — multiple in-flight RPC calls on a single connection</li>
+<li><strong>Bidirectional streaming</strong> — useful for token refresh event propagation</li>
+<li><strong>Built-in deadlines</strong> — every call carries a timeout, preventing runaway goroutines</li>
+<li><strong>Interceptor chains</strong> — a clean place to inject auth, tracing, and retry logic without polluting business code</li>
+</ul>
+<hr>
+<h2 id="architecture-overview"><a class="heading-anchor" aria-label="Copy heading link" href="#architecture-overview" data-enhanced="true"><span class="icon icon-link"></span></a>Architecture Overview</h2>
+<p>Aegis is composed of four services. Each owns a distinct domain responsibility with strict boundaries enforced by gRPC contracts:</p>
+<div class="mermaid-diagram mermaid-rendered" data-diagram="graph TD
+    Client[&quot;External Client\n(Web / Mobile)&quot;]
+    GW[&quot;API Gateway\n(GraphQL — gqlgen)&quot;]
+    IS[&quot;Identity Service\n(User registration, JWT issuance)&quot;]
+    PS[&quot;Policy Service\n(RBAC evaluation, Redis cache)&quot;]
+    AS[&quot;Audit Service\n(Kafka consumer → PostgreSQL)&quot;]
+    Kafka[&quot;Kafka Topic\nauth.events&quot;]
+    Redis[(&quot;Redis\nPolicy Cache&quot;)]
+    PG[(&quot;PostgreSQL\nIdentity Store&quot;)]
+    AuditDB[(&quot;PostgreSQL\nAudit Ledger&quot;)]
+    Jaeger[&quot;Jaeger\n(Distributed Tracing)&quot;]
+
+    Client --&gt;|HTTPS + GraphQL| GW
+    GW --&gt;|gRPC| IS
+    GW --&gt;|gRPC| PS
+    IS --&gt;|Publishes events| Kafka
+    PS --&gt;|Cache hit/miss| Redis
+    IS --&gt;|Writes| PG
+    Kafka --&gt;|Consumes| AS
+    AS --&gt;|Persists| AuditDB
+    GW &amp; IS &amp; PS &amp; AS --&gt;|OTel traces| Jaeger
+" style="min-height: 600px;"><svg id="mermaid-1" width="100%" xmlns="http://www.w3.org/2000/svg" class="flowchart" style="max-width: 925.921875px;" viewBox="0 0 925.921875 945.5986328125" role="img" aria-roledescription="flowchart-v2" aria-label="Architecture diagram"><style>#mermaid-1{font-family:ui-sans-serif,system-ui,sans-serif;font-size:16px;fill:#000000;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-1 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-1 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-1 .error-icon{fill:#552222;}#mermaid-1 .error-text{fill:#552222;stroke:#552222;}#mermaid-1 .edge-thickness-normal{stroke-width:1px;}#mermaid-1 .edge-thickness-thick{stroke-width:3.5px;}#mermaid-1 .edge-pattern-solid{stroke-dasharray:0;}#mermaid-1 .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-1 .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-1 .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-1 .marker{fill:#666;stroke:#666;}#mermaid-1 .marker.cross{stroke:#666;}#mermaid-1 svg{font-family:ui-sans-serif,system-ui,sans-serif;font-size:16px;}#mermaid-1 p{margin:0;}#mermaid-1 .label{font-family:ui-sans-serif,system-ui,sans-serif;color:#000000;}#mermaid-1 .cluster-label text{fill:#333;}#mermaid-1 .cluster-label span{color:#333;}#mermaid-1 .cluster-label span p{background-color:transparent;}#mermaid-1 .label text,#mermaid-1 span{fill:#000000;color:#000000;}#mermaid-1 .node rect,#mermaid-1 .node circle,#mermaid-1 .node ellipse,#mermaid-1 .node polygon,#mermaid-1 .node path{fill:#eee;stroke:#999;stroke-width:1px;}#mermaid-1 .rough-node .label text,#mermaid-1 .node .label text,#mermaid-1 .image-shape .label,#mermaid-1 .icon-shape .label{text-anchor:middle;}#mermaid-1 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#mermaid-1 .rough-node .label,#mermaid-1 .node .label,#mermaid-1 .image-shape .label,#mermaid-1 .icon-shape .label{text-align:center;}#mermaid-1 .node.clickable{cursor:pointer;}#mermaid-1 .root .anchor path{fill:#666!important;stroke-width:0;stroke:#666;}#mermaid-1 .arrowheadPath{fill:#333333;}#mermaid-1 .edgePath .path{stroke:#666;stroke-width:1px;}#mermaid-1 .flowchart-link{stroke:#666;fill:none;}#mermaid-1 .edgeLabel{background-color:white;text-align:center;}#mermaid-1 .edgeLabel p{background-color:white;}#mermaid-1 .edgeLabel rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1 .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#mermaid-1 .cluster rect{fill:hsl(0, 0%, 98.9215686275%);stroke:#707070;stroke-width:1px;}#mermaid-1 .cluster text{fill:#333;}#mermaid-1 .cluster span{color:#333;}#mermaid-1 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px;background:hsl(-160, 0%, 93.3333333333%);border:1px solid #707070;border-radius:2px;pointer-events:none;z-index:100;}#mermaid-1 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#000000;}#mermaid-1 rect.text{fill:none;stroke-width:0;}#mermaid-1 .icon-shape,#mermaid-1 .image-shape{background-color:white;text-align:center;}#mermaid-1 .icon-shape p,#mermaid-1 .image-shape p{background-color:white;padding:2px;}#mermaid-1 .icon-shape .label rect,#mermaid-1 .image-shape .label rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#mermaid-1 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#mermaid-1 .node .neo-node{stroke:#999;}#mermaid-1 [data-look="neo"].node rect,#mermaid-1 [data-look="neo"].cluster rect,#mermaid-1 [data-look="neo"].node polygon{stroke:url(#mermaid-1-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#mermaid-1 [data-look="neo"].swimlane.cluster rect{filter:none;}#mermaid-1 [data-look="neo"].node path{stroke:url(#mermaid-1-gradient);stroke-width:1px;}#mermaid-1 [data-look="neo"].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#mermaid-1 [data-look="neo"].node .neo-line path{stroke:#999;filter:none;}#mermaid-1 [data-look="neo"].node circle{stroke:url(#mermaid-1-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#mermaid-1 [data-look="neo"].node circle .state-start{fill:#000000;}#mermaid-1 [data-look="neo"].icon-shape .icon{fill:url(#mermaid-1-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#mermaid-1 [data-look="neo"].icon-shape .icon-neo path{stroke:url(#mermaid-1-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#mermaid-1 :root{--mermaid-font-family:ui-sans-serif,system-ui,sans-serif;}</style><g><marker id="mermaid-1_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1_flowchart-v2-pointEnd-margin" class="marker flowchart-v2" viewBox="0 0 11.5 14" refX="11.5" refY="7" markerUnits="userSpaceOnUse" markerWidth="10.5" markerHeight="14" orient="auto"><path d="M 0 0 L 11.5 7 L 0 14 z" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1_flowchart-v2-pointStart-margin" class="marker flowchart-v2" viewBox="0 0 11.5 14" refX="1" refY="7" markerUnits="userSpaceOnUse" markerWidth="11.5" markerHeight="14" orient="auto"><polygon points="0,7 11.5,14 11.5,0" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></polygon></marker><marker id="mermaid-1_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1_flowchart-v2-circleEnd-margin" class="marker flowchart-v2" viewBox="0 0 10 10" refY="5" refX="12.25" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1_flowchart-v2-circleStart-margin" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-2" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1_flowchart-v2-crossEnd-margin" class="marker cross flowchart-v2" viewBox="0 0 15 15" refX="17.7" refY="7.5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 1,1 L 14,14 M 1,14 L 14,1" class="arrowMarkerPath" style="stroke-width: 2.5;"></path></marker><marker id="mermaid-1_flowchart-v2-crossStart-margin" class="marker cross flowchart-v2" viewBox="0 0 15 15" refX="-3.5" refY="7.5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 1,1 L 14,14 M 1,14 L 14,1" class="arrowMarkerPath" style="stroke-width: 2.5; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edgePaths"><path d="M731.188,86L731.188,92.167C731.188,98.333,731.188,110.667,731.188,122.333C731.188,134,731.188,145,731.188,150.5L731.188,156" id="mermaid-1-L_Client_GW_0" class=" edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_Client_GW_0" data-points="W3sieCI6NzMxLjE4NzUsInkiOjg2fSx7IngiOjczMS4xODc1LCJ5IjoxMjN9LHsieCI6NzMxLjE4NzUsInkiOjE2MH1d" data-look="classic" marker-end="url(#mermaid-1_flowchart-v2-pointEnd)"></path><path d="M619.117,225.495L584.217,233.746C549.316,241.997,479.516,258.498,444.615,272.249C409.715,286,409.715,297,409.715,302.5L409.715,308" id="mermaid-1-L_GW_IS_0" class=" edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_GW_IS_0" data-points="W3sieCI6NjE5LjExNzE4NzUsInkiOjIyNS40OTQ3Njg5NDY2MjAxOH0seyJ4Ijo0MDkuNzE0ODQzNzUsInkiOjI3NX0seyJ4Ijo0MDkuNzE0ODQzNzUsInkiOjMxMn1d" data-look="classic" marker-end="url(#mermaid-1_flowchart-v2-pointEnd)"></path><path d="M719.593,238L717.76,244.167C715.927,250.333,712.26,262.667,710.427,283.5C708.594,304.333,708.594,333.667,708.594,363C708.594,392.333,708.594,421.667,708.594,450.858C708.594,480.049,708.594,509.099,708.594,538.148C708.594,567.197,708.594,596.247,708.594,616.271C708.594,636.296,708.594,647.296,708.594,652.796L708.594,658.296" id="mermaid-1-L_GW_PS_0" class=" edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_GW_PS_0" data-points="W3sieCI6NzE5LjU5MzMzODgxNTc4OTUsInkiOjIzOH0seyJ4Ijo3MDguNTkzNzUsInkiOjI3NX0seyJ4Ijo3MDguNTkzNzUsInkiOjM2M30seyJ4Ijo3MDguNTkzNzUsInkiOjQ1MX0seyJ4Ijo3MDguNTkzNzUsInkiOjUzOC4xNDc5MjYzMzA1NjY0fSx7IngiOjcwOC41OTM3NSwieSI6NjI1LjI5NTg1MjY2MTEzMjh9LHsieCI6NzA4LjU5Mzc1LCJ5Ijo2NjIuMjk1ODUyNjYxMTMyOH1d" data-look="classic" marker-end="url(#mermaid-1_flowchart-v2-pointEnd)"></path><path d="M279.715,405.103L256.096,412.752C232.477,420.402,185.238,435.701,161.619,450.708C138,465.716,138,480.432,138,487.79L138,495.148" id="mermaid-1-L_IS_Kafka_0" class=" edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_IS_Kafka_0" data-points="W3sieCI6Mjc5LjcxNDg0Mzc1LCJ5Ijo0MDUuMTAyOTYyOTUyMzEzOX0seyJ4IjoxMzgsInkiOjQ1MX0seyJ4IjoxMzgsInkiOjQ5OS4xNDc5MjYzMzA1NjY0fV0=" data-look="classic" marker-end="url(#mermaid-1_flowchart-v2-pointEnd)"></path><path d="M638.342,764.296L629.847,770.463C621.353,776.629,604.364,788.963,592.6,800.997C580.837,813.032,574.299,824.769,571.03,830.637L567.761,836.505" id="mermaid-1-L_PS_Redis_0" class=" edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_PS_Redis_0" data-points="W3sieCI6NjM4LjM0MTk3NDQzMTgxODIsInkiOjc2NC4yOTU4NTI2NjExMzI4fSx7IngiOjU4Ny4zNzUsInkiOjgwMS4yOTU4NTI2NjExMzI4fSx7IngiOjU2NS44MTQzNDQzMTkxMzQzLCJ5Ijo4MzkuOTk5ODU5MDYwNTA4MX1d" data-look="classic" marker-end="url(#mermaid-1_flowchart-v2-pointEnd)"></path><path d="M385.872,414L382.989,420.167C380.106,426.333,374.34,438.667,371.457,450.333C368.574,462,368.574,473,368.574,478.5L368.574,484" id="mermaid-1-L_IS_PG_0" class=" edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_IS_PG_0" data-points="W3sieCI6Mzg1Ljg3MTk4MTUzNDA5MDkzLCJ5Ijo0MTR9LHsieCI6MzY4LjU3NDIxODc1LCJ5Ijo0NTF9LHsieCI6MzY4LjU3NDIxODc1LCJ5Ijo0ODh9XQ==" data-look="classic" marker-end="url(#mermaid-1_flowchart-v2-pointEnd)"></path><path d="M138,577.148L138,585.173C138,593.197,138,609.247,138,622.771C138,636.296,138,647.296,138,652.796L138,658.296" id="mermaid-1-L_Kafka_AS_0" class=" edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_Kafka_AS_0" data-points="W3sieCI6MTM4LCJ5Ijo1NzcuMTQ3OTI2MzMwNTY2NH0seyJ4IjoxMzgsInkiOjYyNS4yOTU4NTI2NjExMzI4fSx7IngiOjEzOCwieSI6NjYyLjI5NTg1MjY2MTEzMjh9XQ==" data-look="classic" marker-end="url(#mermaid-1_flowchart-v2-pointEnd)"></path><path d="M134.274,764.296L133.823,770.463C133.373,776.629,132.471,788.963,132.021,800.629C131.57,812.296,131.57,823.296,131.57,828.796L131.57,834.296" id="mermaid-1-L_AS_AuditDB_0" class=" edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_AS_AuditDB_0" data-points="W3sieCI6MTM0LjI3MzcwMzgzNTIyNzI4LCJ5Ijo3NjQuMjk1ODUyNjYxMTMyOH0seyJ4IjoxMzEuNTcwMzEyNSwieSI6ODAxLjI5NTg1MjY2MTEzMjh9LHsieCI6MTMxLjU3MDMxMjUsInkiOjgzOC4yOTU4NTI2NjExMzI4fV0=" data-look="classic" marker-end="url(#mermaid-1_flowchart-v2-pointEnd)"></path><path d="M804.264,238L815.819,244.167C827.374,250.333,850.484,262.667,862.039,283.5C873.594,304.333,873.594,333.667,873.594,363C873.594,392.333,873.594,421.667,873.594,450.858C873.594,480.049,873.594,509.099,873.594,538.148C873.594,567.197,873.594,596.247,873.594,625.438C873.594,654.629,873.594,683.963,873.594,713.296C873.594,742.629,873.594,771.963,863.616,794.169C853.639,816.376,833.684,831.456,823.706,838.996L813.729,846.536" id="mermaid-1-L_GW_Jaeger_0" class=" edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_GW_Jaeger_0" data-points="W3sieCI6ODA0LjI2NDM5MTQ0NzM2ODQsInkiOjIzOH0seyJ4Ijo4NzMuNTkzNzUsInkiOjI3NX0seyJ4Ijo4NzMuNTkzNzUsInkiOjM2M30seyJ4Ijo4NzMuNTkzNzUsInkiOjQ1MX0seyJ4Ijo4NzMuNTkzNzUsInkiOjUzOC4xNDc5MjYzMzA1NjY0fSx7IngiOjg3My41OTM3NSwieSI6NjI1LjI5NTg1MjY2MTEzMjh9LHsieCI6ODczLjU5Mzc1LCJ5Ijo3MTMuMjk1ODUyNjYxMTMyOH0seyJ4Ijo4NzMuNTkzNzUsInkiOjgwMS4yOTU4NTI2NjExMzI4fSx7IngiOjgxMC41Mzc2MDU2NTMyODQ5LCJ5Ijo4NDguOTQ3MjU0MTgwOTA4Mn1d" data-look="classic" marker-end="url(#mermaid-1_flowchart-v2-pointEnd)"></path><path d="M442.002,414L445.906,420.167C449.81,426.333,457.618,438.667,461.522,459.358C465.426,480.049,465.426,509.099,465.426,538.148C465.426,567.197,465.426,596.247,465.426,625.438C465.426,654.629,465.426,683.963,465.426,713.296C465.426,742.629,465.426,771.963,495.046,795.374C524.667,818.786,583.907,836.275,613.528,845.02L643.148,853.765" id="mermaid-1-L_IS_Jaeger_0" class=" edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_IS_Jaeger_0" data-points="W3sieCI6NDQyLjAwMTg2NDM0NjU5MDksInkiOjQxNH0seyJ4Ijo0NjUuNDI1NzgxMjUsInkiOjQ1MX0seyJ4Ijo0NjUuNDI1NzgxMjUsInkiOjUzOC4xNDc5MjYzMzA1NjY0fSx7IngiOjQ2NS40MjU3ODEyNSwieSI6NjI1LjI5NTg1MjY2MTEzMjh9LHsieCI6NDY1LjQyNTc4MTI1LCJ5Ijo3MTMuMjk1ODUyNjYxMTMyOH0seyJ4Ijo0NjUuNDI1NzgxMjUsInkiOjgwMS4yOTU4NTI2NjExMzI4fSx7IngiOjY0Ni45ODQzNzUsInkiOjg1NC44OTc1NDY3ODMwMzg3fV0=" data-look="classic" marker-end="url(#mermaid-1_flowchart-v2-pointEnd)"></path><path d="M737.766,764.296L741.293,770.463C744.82,776.629,751.875,788.963,755.402,802.404C758.93,815.846,758.93,830.397,758.93,837.672L758.93,844.947" id="mermaid-1-L_PS_Jaeger_0" class=" edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_PS_Jaeger_0" data-points="W3sieCI6NzM3Ljc2NTcxMzc3ODQwOTEsInkiOjc2NC4yOTU4NTI2NjExMzI4fSx7IngiOjc1OC45Mjk2ODc1LCJ5Ijo4MDEuMjk1ODUyNjYxMTMyOH0seyJ4Ijo3NTguOTI5Njg3NSwieSI6ODQ4Ljk0NzI1NDE4MDkwODJ9XQ==" data-look="classic" marker-end="url(#mermaid-1_flowchart-v2-pointEnd)"></path><path d="M226.132,764.296L236.788,770.463C247.445,776.629,268.757,788.963,338.244,806.002C407.731,823.041,525.391,844.786,584.221,855.659L643.051,866.531" id="mermaid-1-L_AS_Jaeger_0" class=" edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_AS_Jaeger_0" data-points="W3sieCI6MjI2LjEzMTY1ODM4MDY4MTgsInkiOjc2NC4yOTU4NTI2NjExMzI4fSx7IngiOjI5MC4wNzAzMTI1LCJ5Ijo4MDEuMjk1ODUyNjYxMTMyOH0seyJ4Ijo2NDYuOTg0Mzc1LCJ5Ijo4NjcuMjU4MjgyNzM0NjMxM31d" data-look="classic" marker-end="url(#mermaid-1_flowchart-v2-pointEnd)"></path></g><g class="edgeLabels"><g class="edgeLabel" transform="translate(731.1875, 123)"><g class="label" data-id="L_Client_GW_0" transform="translate(-72.6328125, -12)"><foreignObject width="145.265625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel "><p>HTTPS + GraphQL</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(409.71484375, 275)"><g class="label" data-id="L_GW_IS_0" transform="translate(-21.046875, -12)"><foreignObject width="42.09375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel "><p>gRPC</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(708.59375, 451)"><g class="label" data-id="L_GW_PS_0" transform="translate(-21.046875, -12)"><foreignObject width="42.09375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel "><p>gRPC</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(138, 451)"><g class="label" data-id="L_IS_Kafka_0" transform="translate(-67.1015625, -12)"><foreignObject width="134.203125" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel "><p>Publishes events</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(587.375, 801.2958526611328)"><g class="label" data-id="L_PS_Redis_0" transform="translate(-58.8984375, -12)"><foreignObject width="117.796875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel "><p>Cache hit/miss</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(368.57421875, 451)"><g class="label" data-id="L_IS_PG_0" transform="translate(-25.2890625, -12)"><foreignObject width="50.578125" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel "><p>Writes</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(138, 625.2958526611328)"><g class="label" data-id="L_Kafka_AS_0" transform="translate(-41.671875, -12)"><foreignObject width="83.34375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel "><p>Consumes</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(131.5703125, 801.2958526611328)"><g class="label" data-id="L_AS_AuditDB_0" transform="translate(-30.6171875, -12)"><foreignObject width="61.234375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel "><p>Persists</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(873.59375, 538.1479263305664)"><g class="label" data-id="L_GW_Jaeger_0" transform="translate(-44.328125, -12)"><foreignObject width="88.65625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel "><p>OTel traces</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(465.42578125, 625.2958526611328)"><g class="label" data-id="L_IS_Jaeger_0" transform="translate(-44.328125, -12)"><foreignObject width="88.65625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel "><p>OTel traces</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(758.9296875, 801.2958526611328)"><g class="label" data-id="L_PS_Jaeger_0" transform="translate(-44.328125, -12)"><foreignObject width="88.65625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel "><p>OTel traces</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(432.20616, 827.56443)"><g class="label" data-id="L_AS_Jaeger_0" transform="translate(-44.328125, -12)"><foreignObject width="88.65625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel "><p>OTel traces</p></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default  " id="mermaid-1-flowchart-Client-0" data-look="classic" transform="translate(731.1875, 47)"><rect class="basic label-container" style="" x="-88.8984375" y="-39" width="177.796875" height="78"></rect><g class="label" style="" transform="translate(-58.8984375, -24)"><rect></rect><foreignObject width="117.796875" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel "><p>External Client<br>(Web / Mobile)</p></span></div></foreignObject></g></g><g class="node default  " id="mermaid-1-flowchart-GW-1" data-look="classic" transform="translate(731.1875, 199)"><rect class="basic label-container" style="" x="-112.0703125" y="-39" width="224.140625" height="78"></rect><g class="label" style="" transform="translate(-82.0703125, -24)"><rect></rect><foreignObject width="164.140625" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel "><p>API Gateway<br>(GraphQL — gqlgen)</p></span></div></foreignObject></g></g><g class="node default  " id="mermaid-1-flowchart-IS-2" data-look="classic" transform="translate(409.71484375, 363)"><rect class="basic label-container" style="" x="-130" y="-51" width="260" height="102"></rect><g class="label" style="" transform="translate(-100, -36)"><rect></rect><foreignObject width="200" height="72"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;"><span class="nodeLabel "><p>Identity Service<br>(User registration, JWT issuance)</p></span></div></foreignObject></g></g><g class="node default  " id="mermaid-1-flowchart-PS-3" data-look="classic" transform="translate(708.59375, 713.2958526611328)"><rect class="basic label-container" style="" x="-130" y="-51" width="260" height="102"></rect><g class="label" style="" transform="translate(-100, -36)"><rect></rect><foreignObject width="200" height="72"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;"><span class="nodeLabel "><p>Policy Service<br>(RBAC evaluation, Redis cache)</p></span></div></foreignObject></g></g><g class="node default  " id="mermaid-1-flowchart-AS-4" data-look="classic" transform="translate(138, 713.2958526611328)"><rect class="basic label-container" style="" x="-130" y="-51" width="260" height="102"></rect><g class="label" style="" transform="translate(-100, -36)"><rect></rect><foreignObject width="200" height="72"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;"><span class="nodeLabel "><p>Audit Service<br>(Kafka consumer → PostgreSQL)</p></span></div></foreignObject></g></g><g class="node default  " id="mermaid-1-flowchart-Kafka-5" data-look="classic" transform="translate(138, 538.1479263305664)"><rect class="basic label-container" style="" x="-77.6796875" y="-39" width="155.359375" height="78"></rect><g class="label" style="" transform="translate(-47.6796875, -24)"><rect></rect><foreignObject width="95.359375" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel "><p>Kafka Topic<br>auth.events</p></span></div></foreignObject></g></g><g class="node default  " id="mermaid-1-flowchart-Redis-6" data-look="classic" transform="translate(537.0390625, 887.9472541809082)"><path d="M0,12.026466009340945 a57.9375,12.026466009340945 0,0,0 115.875,0 a57.9375,12.026466009340945 0,0,0 -115.875,0 l0,75.02646600934095 a57.9375,12.026466009340945 0,0,0 115.875,0 l0,-75.02646600934095" class="basic label-container outer-path" style="" label-offset-y="12.026466009340945" transform="translate(-57.9375, -49.53969901401142)"></path><g class="label" style="" transform="translate(-50.4375, -14)"><rect></rect><foreignObject width="100.875" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel "><p>Redis<br>Policy Cache</p></span></div></foreignObject></g></g><g class="node default  " id="mermaid-1-flowchart-PG-7" data-look="classic" transform="translate(368.57421875, 538.1479263305664)"><path d="M0,12.434818118992272 a61.8515625,12.434818118992272 0,0,0 123.703125,0 a61.8515625,12.434818118992272 0,0,0 -123.703125,0 l0,75.43481811899227 a61.8515625,12.434818118992272 0,0,0 123.703125,0 l0,-75.43481811899227" class="basic label-container outer-path" style="" label-offset-y="12.434818118992272" transform="translate(-61.8515625, -50.1522271784884)"></path><g class="label" style="" transform="translate(-54.3515625, -14)"><rect></rect><foreignObject width="108.703125" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel "><p>PostgreSQL<br>Identity Store</p></span></div></foreignObject></g></g><g class="node default  " id="mermaid-1-flowchart-AuditDB-8" data-look="classic" transform="translate(131.5703125, 887.9472541809082)"><path d="M0,12.10093518219929 a58.6328125,12.10093518219929 0,0,0 117.265625,0 a58.6328125,12.10093518219929 0,0,0 -117.265625,0 l0,75.1009351821993 a58.6328125,12.10093518219929 0,0,0 117.265625,0 l0,-75.1009351821993" class="basic label-container outer-path" style="" label-offset-y="12.10093518219929" transform="translate(-58.6328125, -49.65140277329894)"></path><g class="label" style="" transform="translate(-51.1328125, -14)"><rect></rect><foreignObject width="102.265625" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel "><p>PostgreSQL<br>Audit Ledger</p></span></div></foreignObject></g></g><g class="node default  " id="mermaid-1-flowchart-Jaeger-9" data-look="classic" transform="translate(758.9296875, 887.9472541809082)"><rect class="basic label-container" style="" x="-111.9453125" y="-39" width="223.890625" height="78"></rect><g class="label" style="" transform="translate(-81.9453125, -24)"><rect></rect><foreignObject width="163.890625" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel "><p>Jaeger<br>(Distributed Tracing)</p></span></div></foreignObject></g></g></g></g></g><defs><filter id="mermaid-1-drop-shadow" height="130%" width="130%"><feDropShadow dx="4" dy="4" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter></defs><defs><filter id="mermaid-1-drop-shadow-small" height="150%" width="150%"><feDropShadow dx="2" dy="2" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter></defs><linearGradient id="mermaid-1-gradient" gradientUnits="objectBoundingBox" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="hsl(0, 0%, 83.3333333333%)" stop-opacity="1"></stop><stop offset="100%" stop-color="hsl(0, 0%, 88.9215686275%)" stop-opacity="1"></stop></linearGradient></svg></div>
+<blockquote>
+<p><strong>Design principle:</strong> The gateway is the only component that speaks to external clients. Internal services have no HTTP surface — only gRPC ports. This makes lateral movement from the external network impossible without going through the gateway's auth layer.</p>
+</blockquote>
+<hr>
+<h2 id="protocol-buffer-contracts"><a class="heading-anchor" aria-label="Copy heading link" href="#protocol-buffer-contracts" data-enhanced="true"><span class="icon icon-link"></span></a>Protocol Buffer Contracts</h2>
+<p>The schema is the single source of truth. All services generate their client stubs and server interfaces from these <code>.proto</code> files.</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">protobuf</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-protobuf"><span class="hljs-comment">// proto/identity/v1/identity.proto</span>
+syntax = <span class="hljs-string">"proto3"</span>;
+<span class="hljs-keyword">package</span> identity.v1;
+
+<span class="hljs-keyword">option</span> go_package = <span class="hljs-string">"github.com/khoahotran/aegis/gen/identity/v1"</span>;
+
+<span class="hljs-keyword">service </span><span class="hljs-title class_">IdentityService</span> {
+  <span class="hljs-comment">// Register creates a new user account with Argon2id hashed credentials.</span>
+  <span class="hljs-function"><span class="hljs-keyword">rpc</span> Register(RegisterRequest) <span class="hljs-keyword">returns</span> (RegisterResponse)</span>;
+
+  <span class="hljs-comment">// Login validates credentials and returns a signed JWT pair.</span>
+  <span class="hljs-function"><span class="hljs-keyword">rpc</span> Login(LoginRequest) <span class="hljs-keyword">returns</span> (LoginResponse)</span>;
+
+  <span class="hljs-comment">// Refresh accepts a valid refresh token and issues a new access token.</span>
+  <span class="hljs-function"><span class="hljs-keyword">rpc</span> Refresh(RefreshRequest) <span class="hljs-keyword">returns</span> (RefreshResponse)</span>;
+}
+
+<span class="hljs-keyword">message </span><span class="hljs-title class_">RegisterRequest</span> {
+  <span class="hljs-type">string</span> email    = <span class="hljs-number">1</span>;
+  <span class="hljs-type">string</span> password = <span class="hljs-number">2</span>;
+  <span class="hljs-type">string</span> username = <span class="hljs-number">3</span>;
+}
+
+<span class="hljs-keyword">message </span><span class="hljs-title class_">RegisterResponse</span> {
+  <span class="hljs-type">string</span> user_id    = <span class="hljs-number">1</span>;
+  <span class="hljs-type">string</span> created_at = <span class="hljs-number">2</span>;
+}
+
+<span class="hljs-keyword">message </span><span class="hljs-title class_">LoginRequest</span> {
+  <span class="hljs-type">string</span> email    = <span class="hljs-number">1</span>;
+  <span class="hljs-type">string</span> password = <span class="hljs-number">2</span>;
+}
+
+<span class="hljs-keyword">message </span><span class="hljs-title class_">LoginResponse</span> {
+  <span class="hljs-type">string</span> access_token  = <span class="hljs-number">1</span>;
+  <span class="hljs-type">string</span> refresh_token = <span class="hljs-number">2</span>;
+  <span class="hljs-type">int64</span>  expires_at    = <span class="hljs-number">3</span>; <span class="hljs-comment">// Unix timestamp</span>
+}
+
+<span class="hljs-keyword">message </span><span class="hljs-title class_">RefreshRequest</span> {
+  <span class="hljs-type">string</span> refresh_token = <span class="hljs-number">1</span>;
+}
+
+<span class="hljs-keyword">message </span><span class="hljs-title class_">RefreshResponse</span> {
+  <span class="hljs-type">string</span> access_token = <span class="hljs-number">1</span>;
+  <span class="hljs-type">int64</span>  expires_at   = <span class="hljs-number">2</span>;
+}
+</code></pre>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">protobuf</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-protobuf"><span class="hljs-comment">// proto/policy/v1/policy.proto</span>
+syntax = <span class="hljs-string">"proto3"</span>;
+<span class="hljs-keyword">package</span> policy.v1;
+
+<span class="hljs-keyword">service </span><span class="hljs-title class_">PolicyService</span> {
+  <span class="hljs-comment">// Evaluate checks if a subject is allowed to perform an action on a resource.</span>
+  <span class="hljs-function"><span class="hljs-keyword">rpc</span> Evaluate(EvaluateRequest) <span class="hljs-keyword">returns</span> (EvaluateResponse)</span>;
+}
+
+<span class="hljs-keyword">message </span><span class="hljs-title class_">EvaluateRequest</span> {
+  <span class="hljs-type">string</span> subject_id   = <span class="hljs-number">1</span>;
+  <span class="hljs-type">string</span> resource_id  = <span class="hljs-number">2</span>;
+  <span class="hljs-type">string</span> resource_type = <span class="hljs-number">3</span>;
+  <span class="hljs-type">string</span> action       = <span class="hljs-number">4</span>;
+}
+
+<span class="hljs-keyword">message </span><span class="hljs-title class_">EvaluateResponse</span> {
+  <span class="hljs-type">bool</span>   allowed  = <span class="hljs-number">1</span>;
+  <span class="hljs-type">string</span> rule_id  = <span class="hljs-number">2</span>; <span class="hljs-comment">// Which rule granted or denied</span>
+  <span class="hljs-type">bool</span>   cached   = <span class="hljs-number">3</span>; <span class="hljs-comment">// True if served from Redis</span>
+}
+</code></pre>
+<hr>
+<h2 id="the-interceptor-chain"><a class="heading-anchor" aria-label="Copy heading link" href="#the-interceptor-chain" data-enhanced="true"><span class="icon icon-link"></span></a>The Interceptor Chain</h2>
+<p>gRPC interceptors are middleware for RPC calls. We stack three interceptors on every service — handling authentication, tracing, and panic recovery — without touching business logic:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">go</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-go"><span class="hljs-keyword">package</span> server
+
+<span class="hljs-keyword">import</span> (
+    <span class="hljs-string">"context"</span>
+
+    <span class="hljs-string">"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"</span>
+    <span class="hljs-string">"google.golang.org/grpc"</span>
+    <span class="hljs-string">"google.golang.org/grpc/codes"</span>
+    <span class="hljs-string">"google.golang.org/grpc/metadata"</span>
+    <span class="hljs-string">"google.golang.org/grpc/status"</span>
+)
+
+<span class="hljs-comment">// NewServer builds a gRPC server with the standard interceptor stack.</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewServer</span><span class="hljs-params">(jwtSecret []<span class="hljs-type">byte</span>)</span></span> *grpc.Server {
+    <span class="hljs-keyword">return</span> grpc.NewServer(
+        <span class="hljs-comment">// 1. OpenTelemetry tracing — injects span context into every RPC</span>
+        grpc.StatsHandler(otelgrpc.NewServerHandler()),
+
+        <span class="hljs-comment">// 2. Chain of unary interceptors</span>
+        grpc.ChainUnaryInterceptor(
+            recoveryInterceptor,   <span class="hljs-comment">// catch panics; return Internal error</span>
+            authInterceptor(jwtSecret), <span class="hljs-comment">// validate JWT on protected methods</span>
+        ),
+    )
+}
+
+<span class="hljs-comment">// authInterceptor validates the Bearer token present in gRPC metadata.</span>
+<span class="hljs-comment">// It skips validation for explicitly whitelisted methods (login, register).</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">authInterceptor</span><span class="hljs-params">(jwtSecret []<span class="hljs-type">byte</span>)</span></span> grpc.UnaryServerInterceptor {
+    publicMethods := <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">bool</span>{
+        <span class="hljs-string">"/identity.v1.IdentityService/Login"</span>:    <span class="hljs-literal">true</span>,
+        <span class="hljs-string">"/identity.v1.IdentityService/Register"</span>: <span class="hljs-literal">true</span>,
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(
+        ctx context.Context,
+        req <span class="hljs-keyword">interface</span>{},
+        info *grpc.UnaryServerInfo,
+        handler grpc.UnaryHandler,
+    )</span></span> (<span class="hljs-keyword">interface</span>{}, <span class="hljs-type">error</span>) {
+        <span class="hljs-keyword">if</span> publicMethods[info.FullMethod] {
+            <span class="hljs-keyword">return</span> handler(ctx, req)
+        }
+
+        md, ok := metadata.FromIncomingContext(ctx)
+        <span class="hljs-keyword">if</span> !ok {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, status.Error(codes.Unauthenticated, <span class="hljs-string">"missing metadata"</span>)
+        }
+
+        tokens := md.Get(<span class="hljs-string">"authorization"</span>)
+        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(tokens) == <span class="hljs-number">0</span> {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, status.Error(codes.Unauthenticated, <span class="hljs-string">"missing authorization header"</span>)
+        }
+
+        claims, err := validateJWT(tokens[<span class="hljs-number">0</span>], jwtSecret)
+        <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, status.Error(codes.Unauthenticated, <span class="hljs-string">"invalid token"</span>)
+        }
+
+        <span class="hljs-comment">// Inject validated claims into context for downstream handlers</span>
+        ctx = context.WithValue(ctx, contextKeyUserID, claims.Subject)
+        <span class="hljs-keyword">return</span> handler(ctx, req)
+    }
+}
+
+<span class="hljs-comment">// recoveryInterceptor converts panics into gRPC Internal errors,</span>
+<span class="hljs-comment">// preventing the entire server from crashing on unexpected failures.</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">recoveryInterceptor</span><span class="hljs-params">(
+    ctx context.Context,
+    req <span class="hljs-keyword">interface</span>{},
+    info *grpc.UnaryServerInfo,
+    handler grpc.UnaryHandler,
+)</span></span> (resp <span class="hljs-keyword">interface</span>{}, err <span class="hljs-type">error</span>) {
+    <span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> {
+        <span class="hljs-keyword">if</span> r := <span class="hljs-built_in">recover</span>(); r != <span class="hljs-literal">nil</span> {
+            err = status.Errorf(codes.Internal, <span class="hljs-string">"internal server error: %v"</span>, r)
+        }
+    }()
+    <span class="hljs-keyword">return</span> handler(ctx, req)
+}
+</code></pre>
+<hr>
+<h2 id="opentelemetry-trace-propagation"><a class="heading-anchor" aria-label="Copy heading link" href="#opentelemetry-trace-propagation" data-enhanced="true"><span class="icon icon-link"></span></a>OpenTelemetry Trace Propagation</h2>
+<p>Every service initializes the OTel SDK at startup and exports traces to Jaeger. Trace context is automatically propagated across gRPC calls via the <code>otelgrpc</code> handler — no manual span passing required:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">go</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-go"><span class="hljs-keyword">package</span> telemetry
+
+<span class="hljs-keyword">import</span> (
+    <span class="hljs-string">"context"</span>
+
+    <span class="hljs-string">"go.opentelemetry.io/otel"</span>
+    <span class="hljs-string">"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"</span>
+    <span class="hljs-string">"go.opentelemetry.io/otel/sdk/resource"</span>
+    sdktrace <span class="hljs-string">"go.opentelemetry.io/otel/sdk/trace"</span>
+    semconv <span class="hljs-string">"go.opentelemetry.io/otel/semconv/v1.21.0"</span>
+)
+
+<span class="hljs-comment">// InitTracer bootstraps the OpenTelemetry tracer provider.</span>
+<span class="hljs-comment">// The returned shutdown function must be called on process exit.</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">InitTracer</span><span class="hljs-params">(ctx context.Context, serviceName <span class="hljs-type">string</span>)</span></span> (<span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>, <span class="hljs-type">error</span>) {
+    exporter, err := otlptracegrpc.New(ctx,
+        otlptracegrpc.WithEndpoint(<span class="hljs-string">"jaeger:4317"</span>),
+        otlptracegrpc.WithInsecure(),
+    )
+    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, err
+    }
+
+    res, err := resource.New(ctx,
+        resource.WithAttributes(
+            semconv.ServiceName(serviceName),
+            semconv.ServiceVersion(<span class="hljs-string">"1.0.0"</span>),
+        ),
+    )
+    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, err
+    }
+
+    tp := sdktrace.NewTracerProvider(
+        sdktrace.WithBatcher(exporter),
+        sdktrace.WithResource(res),
+        sdktrace.WithSampler(sdktrace.AlwaysSample()),
+    )
+
+    otel.SetTracerProvider(tp)
+
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> {
+        _ = tp.Shutdown(context.Background())
+    }, <span class="hljs-literal">nil</span>
+}
+</code></pre>
+<p>With this setup, a single <code>Login</code> mutation at the GraphQL gateway produces a distributed trace that spans:</p>
+<pre><code>GraphQL Gateway (Resolve Login mutation)
+  └── gRPC IdentityService.Login
+        └── PostgreSQL query (fetch user by email)
+        └── Argon2id verify (CPU-bound)
+        └── JWT sign
+  └── Kafka publish (auth.login.succeeded event)
+        └── AuditService consume (write to audit_log table)
+</code></pre>
+<p>This makes tracing authentication failures down to exact database query latency or Argon2id verification time trivial.</p>
+<hr>
+<h2 id="kafka-audit-log-at-least-once-delivery"><a class="heading-anchor" aria-label="Copy heading link" href="#kafka-audit-log-at-least-once-delivery" data-enhanced="true"><span class="icon icon-link"></span></a>Kafka Audit Log: At-Least-Once Delivery</h2>
+<p>Every authentication event (login, failed attempt, token refresh, permission denial) is published to a Kafka topic and consumed by the Audit Service. Because Kafka guarantees at-least-once delivery, the consumer should be idempotent to avoid duplicate audit rows on redelivery. The snippet below illustrates a standard way to do that with an <code>EventID</code>-keyed upsert — it is a reference pattern, not a description of the consumer currently committed to the Aegis repository (see the note after the code):</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">go</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-go"><span class="hljs-keyword">package</span> audit
+
+<span class="hljs-keyword">import</span> (
+    <span class="hljs-string">"context"</span>
+    <span class="hljs-string">"encoding/json"</span>
+
+    <span class="hljs-string">"github.com/segmentio/kafka-go"</span>
+    <span class="hljs-string">"go.uber.org/zap"</span>
+)
+
+<span class="hljs-keyword">type</span> AuditEvent <span class="hljs-keyword">struct</span> {
+    EventID   <span class="hljs-type">string</span> <span class="hljs-string">`json:"eventId"`</span>   <span class="hljs-comment">// Used as idempotency key</span>
+    UserID    <span class="hljs-type">string</span> <span class="hljs-string">`json:"userId"`</span>
+    EventType <span class="hljs-type">string</span> <span class="hljs-string">`json:"eventType"`</span> <span class="hljs-comment">// e.g. "auth.login.succeeded"</span>
+    IP        <span class="hljs-type">string</span> <span class="hljs-string">`json:"ip"`</span>
+    Timestamp <span class="hljs-type">int64</span>  <span class="hljs-string">`json:"timestamp"`</span>
+}
+
+<span class="hljs-keyword">type</span> Consumer <span class="hljs-keyword">struct</span> {
+    reader *kafka.Reader
+    db     AuditRepository
+    logger *zap.Logger
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c *Consumer)</span></span> Run(ctx context.Context) {
+    <span class="hljs-keyword">for</span> {
+        msg, err := c.reader.ReadMessage(ctx)
+        <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+            <span class="hljs-keyword">if</span> ctx.Err() != <span class="hljs-literal">nil</span> {
+                <span class="hljs-keyword">return</span> <span class="hljs-comment">// Context cancelled — clean shutdown</span>
+            }
+            c.logger.Error(<span class="hljs-string">"kafka read error"</span>, zap.Error(err))
+            <span class="hljs-keyword">continue</span>
+        }
+
+        <span class="hljs-keyword">var</span> event AuditEvent
+        <span class="hljs-keyword">if</span> err := json.Unmarshal(msg.Value, &amp;event); err != <span class="hljs-literal">nil</span> {
+            c.logger.Error(<span class="hljs-string">"failed to decode audit event"</span>, zap.Error(err))
+            <span class="hljs-keyword">continue</span>
+        }
+
+        <span class="hljs-comment">// This pattern uses INSERT ... ON CONFLICT DO NOTHING</span>
+        <span class="hljs-comment">// so redelivered events are silently ignored.</span>
+        <span class="hljs-keyword">if</span> err := c.db.InsertIfNotExists(ctx, event); err != <span class="hljs-literal">nil</span> {
+            c.logger.Error(<span class="hljs-string">"failed to persist audit event"</span>,
+                zap.String(<span class="hljs-string">"eventId"</span>, event.EventID),
+                zap.Error(err),
+            )
+        }
+    }
+}
+</code></pre>
+<blockquote>
+<p><strong>Current implementation vs. this snippet:</strong> the Aegis repository's actual consumer, <code>consumer.go</code> in the audit service, does not yet implement this deduplication step — it performs a plain insert with no conflict handling, and the <code>AuditLog</code> table has no <code>EventID</code> or other field to key a conflict on. The pattern above is the standard, recommended way to close that gap; it is not a description of the code currently committed.</p>
+</blockquote>
+<hr>
+<h2 id="token-bucket-rate-limiting"><a class="heading-anchor" aria-label="Copy heading link" href="#token-bucket-rate-limiting" data-enhanced="true"><span class="icon icon-link"></span></a>Token Bucket Rate Limiting</h2>
+<p>The gateway enforces per-user rate limiting using Redis. The snippet below illustrates a token-bucket pattern implemented as an atomic Lua script — each user gets 100 tokens refilled per minute, and the script-level atomicity prevents race conditions under concurrent load. This is a reference pattern, not a description of the limiter currently committed to the Aegis repository (see the note after the code):</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">go</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-go"><span class="hljs-keyword">package</span> ratelimit
+
+<span class="hljs-keyword">import</span> (
+    <span class="hljs-string">"context"</span>
+    <span class="hljs-string">"fmt"</span>
+    <span class="hljs-string">"time"</span>
+
+    <span class="hljs-string">"github.com/redis/go-redis/v9"</span>
+)
+
+<span class="hljs-keyword">const</span> (
+    bucketSize     = <span class="hljs-number">100</span>
+    refillRate     = <span class="hljs-number">100</span> <span class="hljs-comment">// tokens per minute</span>
+    refillInterval = time.Minute
+)
+
+<span class="hljs-keyword">type</span> Limiter <span class="hljs-keyword">struct</span> {
+    rdb *redis.Client
+}
+
+<span class="hljs-comment">// Allow returns true if the subject has remaining tokens.</span>
+<span class="hljs-comment">// It uses a Lua script for atomic read-modify-write.</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *Limiter)</span></span> Allow(ctx context.Context, subjectID <span class="hljs-type">string</span>) (<span class="hljs-type">bool</span>, <span class="hljs-type">error</span>) {
+    key := fmt.Sprintf(<span class="hljs-string">"ratelimit:%s"</span>, subjectID)
+    now := time.Now().UnixMilli()
+
+    <span class="hljs-comment">// Lua script: refill tokens based on elapsed time, then consume one</span>
+    script := redis.NewScript(<span class="hljs-string">`
+        local key = KEYS[1]
+        local now = tonumber(ARGV[1])
+        local bucket_size = tonumber(ARGV[2])
+        local refill_rate = tonumber(ARGV[3])
+        local refill_interval_ms = tonumber(ARGV[4])
+
+        local data = redis.call("HMGET", key, "tokens", "last_refill")
+        local tokens = tonumber(data[1]) or bucket_size
+        local last_refill = tonumber(data[2]) or now
+
+        local elapsed = now - last_refill
+        local refilled = math.floor(elapsed / refill_interval_ms) * refill_rate
+        tokens = math.min(bucket_size, tokens + refilled)
+
+        if tokens &lt; 1 then
+            return 0
+        end
+
+        tokens = tokens - 1
+        redis.call("HMSET", key, "tokens", tokens, "last_refill", now)
+        redis.call("EXPIRE", key, 300)
+        return 1
+    `</span>)
+
+    result, err := script.Run(ctx, l.rdb, []<span class="hljs-type">string</span>{key},
+        now, bucketSize, refillRate, refillInterval.Milliseconds(),
+    ).Int()
+    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>, err
+    }
+
+    <span class="hljs-keyword">return</span> result == <span class="hljs-number">1</span>, <span class="hljs-literal">nil</span>
+}
+</code></pre>
+<blockquote>
+<p><strong>Current implementation vs. this snippet:</strong> the Aegis repository's actual rate limiter, <code>ratelimit.go</code> in the shared rate-limit package, is not a token bucket — it's a simpler Redis <code>INCR</code>/<code>EXPIRE</code> fixed-window counter (100 requests/minute per IP, 1000/minute per user). Both approaches stop the same class of credential-stuffing abuse; the trade-off is precision, not correctness — a fixed window can allow a short burst right at the window boundary that a token bucket smooths out. The Lua-scripted token bucket above is the more precise pattern, not the code currently running.</p>
+</blockquote>
+<hr>
+<h2 id="performance-characteristics"><a class="heading-anchor" aria-label="Copy heading link" href="#performance-characteristics" data-enhanced="true"><span class="icon icon-link"></span></a>Performance Characteristics</h2>
+<p>These figures describe the architecture's intended latency budget — design targets and expected ranges derived from the components involved (a Redis lookup, an intentionally-tuned Argon2id cost parameter, a Kafka consumer's poll cadence), not the output of a controlled load test. No load-testing tool, request volume, hardware environment, or percentile breakdown is claimed for these numbers.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Component</th><th align="left">Metric</th><th align="left">Value</th></tr></thead><tbody><tr><td align="left"><strong>Policy evaluation (cache hit)</strong></td><td align="left">Latency</td><td align="left">&lt; 5ms (Redis)</td></tr><tr><td align="left"><strong>Policy evaluation (cache miss)</strong></td><td align="left">Latency</td><td align="left">~15ms (DB query + cache write)</td></tr><tr><td align="left"><strong>Login RPC (Argon2id verify)</strong></td><td align="left">Latency</td><td align="left">~80–120ms (intentionally slow)</td></tr><tr><td align="left"><strong>JWT validation (interceptor)</strong></td><td align="left">Overhead</td><td align="left">&lt; 1ms per call</td></tr><tr><td align="left"><strong>Audit event lag</strong></td><td align="left">Kafka consumer</td><td align="left">&lt; 200ms end-to-end</td></tr></tbody></table>
+<blockquote>
+<p>Argon2id is deliberately slow — that is the point. Slower verification directly raises the cost of an offline brute-force attack, since an attacker's guess rate is bounded by how fast they can compute the hash — and Argon2id's memory-hardness resists GPU/ASIC acceleration in a way a simple iteration-count increase does not. The exact cost advantage over any specific bcrypt configuration depends on the work factors chosen for each, so no fixed multiplier is claimed here; the goal is a verification cost that stays imperceptible to a real login while meaningfully taxing an attacker.</p>
+</blockquote>
+<a href="/portfolio/labs/go-vs-ts-concurrency" class="lab-cta">
+  View the Interactive Go vs TS Concurrency Benchmark
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+</a>
+<hr>
+<h2 id="key-takeaways"><a class="heading-anchor" aria-label="Copy heading link" href="#key-takeaways" data-enhanced="true"><span class="icon icon-link"></span></a>Key Takeaways</h2>
+<ol>
+<li><strong>Protobuf contracts catch breaking changes at compile time.</strong> This is the single most valuable property of gRPC for a security-sensitive microservice — silent schema drift cannot happen.</li>
+<li><strong>Stack interceptors, not business logic.</strong> Auth, tracing, rate limiting, and recovery belong in the interceptor chain, not inside handler functions. Handlers should only execute domain logic.</li>
+<li><strong>Propagate trace context through every hop.</strong> With OTel + <code>otelgrpc</code>, a single trace ID follows a request from GraphQL resolver through three gRPC services to the Kafka consumer — making latency investigations trivial.</li>
+<li><strong>Design rate limiting with Redis Lua scripts.</strong> Atomic read-modify-write operations on token buckets must be script-level atomic to prevent race conditions under concurrent load.</li>
+</ol></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Architecture Breakdown: CQRS for Mid-size Products</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/blog/designing-a-multi-role-hft-research-platform" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Designing a Multi-Role HFT Research Platform</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/projects/aegis" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">projects</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Aegis: High-Performance Auth &amp; Authorization Platform</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A modular, high-performance Identity and Policy microservice platform in Go, featuring sub-5ms RBAC evaluations and distributed tracing.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Apr 10, 2026</span><span>3 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/system-design/designing-a-multi-service-auth-platform" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">system design</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Designing a Multi-Service Auth Platform: The Aegis Architecture</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A deep dive into Aegis, a high-performance authorization platform using gRPC microservices, a GraphQL gateway, Kafka audit logging, and OpenTelemetry.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>5 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/research/distributed-tracing-with-opentelemetry-and-jaeger" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">research</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Distributed Tracing with OpenTelemetry and Jaeger</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A practical guide to instrumenting Go microservices with OpenTelemetry: from SDK setup to trace context propagation, sampling strategies, and reading Jaeger flame graphs.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>6 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/grpc-vs-rest-when-the-smaller-payload-loses" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">gRPC vs REST: When the Smaller Payload Loses</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A real harness measuring gRPC against REST for the same data, same server, same Go process — and REST wins throughput at every concurrency level tested for a small payload, and at half the concurrency levels tested for a 100x larger one.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 07, 2026</span><span>3 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#why-grpc-for-an-auth-platform" class="toc-link">Why gRPC for an Auth Platform?</a></li><li><a href="#architecture-overview" class="toc-link">Architecture Overview</a></li><li><a href="#protocol-buffer-contracts" class="toc-link">Protocol Buffer Contracts</a></li><li><a href="#the-interceptor-chain" class="toc-link">The Interceptor Chain</a></li><li><a href="#opentelemetry-trace-propagation" class="toc-link">OpenTelemetry Trace Propagation</a></li><li><a href="#kafka-audit-log-at-least-once-delivery" class="toc-link">Kafka Audit Log: At-Least-Once Delivery</a></li><li><a href="#token-bucket-rate-limiting" class="toc-link">Token Bucket Rate Limiting</a></li><li><a href="#performance-characteristics" class="toc-link">Performance Characteristics</a></li><li><a href="#key-takeaways" class="toc-link">Key Takeaways</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>Engineering Lessons from a Failed Rollout | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="Engineering Lessons from a Failed Rollout | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/engineering-lessons-from-a-failed-rollout.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/engineering-lessons-from-a-failed-rollout.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout"><meta name="twitter:title" content="Engineering Lessons from a Failed Rollout | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline."><link rel="canonical" href="https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Engineering Lessons from a Failed Rollout","datePublished":"2026-03-21","description":"What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.","keywords":"incident-response","articleSection":"blog","image":"https://khoahotran.github.io/portfolio/og/engineering-lessons-from-a-failed-rollout.png","url":"https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/blog/engineering-lessons-from-a-failed-rollout"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-BQ1B_Piy.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-DVNwT64z.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/katex-CMdAwrm5.js"><link rel="stylesheet" crossorigin="" href="/portfolio/assets/katex-CJ2tWXjN.css"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/blog" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to blog</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Engineering Lessons from a Failed Rollout</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Mar 21, 2026</span><span>4 min read</span></div><p class="mt-3 text-sm text-slate-600">What a painful rollback taught us about blast-radius control, feature flags, and building safety into the release pipeline.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#incident-response</span></div></header><div class="markdown-body"><h2 id="the-incident"><a class="heading-anchor" aria-label="Copy heading link" href="#the-incident" data-enhanced="true"><span class="icon icon-link"></span></a>The Incident</h2>
+<p>It started as a routine deployment. We were shipping a highly anticipated optimization to our order processing engine. The code had passed CI, staging looked clean, and all unit tests were green.</p>
+<p>The deployment strategy relied on a feature flag to toggle the new engine. However, the flag was flipped globally for 100% of our user base at 2:00 PM on a Tuesday. We lacked canary guardrails, and the blast radius was entirely uncontained.</p>
+<p>Here is the timeline of how the incident unfolded:</p>
+<pre><code>[2:00 PM] ──&gt; Feature Flag enabled 100% globally
+[2:01 PM] ──&gt; Database CPU spikes from 35% to 98%
+[2:02 PM] ──&gt; p99 API Latency climbs to 4,500ms; connection pool runs dry
+[2:03 PM] ──&gt; Clients start timeout retries, initiating a "Retry Storm"
+[2:05 PM] ──&gt; On-call engineer paged (HTTP 5xx rate &gt; 5%)
+[2:20 PM] ──&gt; Root cause identified: N+1 query issue in the new engine's item-validation loop
+[2:40 PM] ──&gt; Feature Flag disabled via dashboard after system lockups prevented access
+[2:45 PM] ──&gt; Systems stabilize; latencies return to 200ms
+</code></pre>
+<p>The new engine contained an subtle validation query bug that was hidden by our mock-heavy test suite. In production, this query fetched product specifications inside a loop, executing <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span> queries for every order with <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span> items instead of a single batched query. Under high concurrent load, this locked the database tables, dragging the entire application down.</p>
+<hr>
+<h2 id="the-impact-the-anatomy-of-a-retry-storm"><a class="heading-anchor" aria-label="Copy heading link" href="#the-impact-the-anatomy-of-a-retry-storm" data-enhanced="true"><span class="icon icon-link"></span></a>The Impact: The Anatomy of a Retry Storm</h2>
+<p>Within three minutes of the global rollout, our order write latency spiked from a median of 200ms to over 4,000ms.</p>
+<p>Because the API responses were timing out, downstream clients (both mobile apps and internal microservices) aggressively retried their requests. Because we lacked exponential backoff with jitter on our mobile apps, they retried immediately and concurrently.</p>
+<p>This retry storm amplified the load on the database by a factor of 10, creating a catastrophic cascading failure. We spent the next 45 minutes frantically fighting the fire and rolling back the deployment.</p>
+<pre><code>Client App                   API Gateway               Database
+    |                            |                         |
+    |--- POST /orders (Try 1)---&gt;|                         |
+    |                            |--- Lock &amp; Validation --&gt;|
+    |                            |    (CPU Spikes, Slow)   |
+    |                            |                         |
+    | (Wait 3s: HTTP Timeout)    |                         |
+    |                            |                         |
+    |--- POST /orders (Try 2)---&gt;|                         |
+    |--- POST /orders (Try 3)---&gt;|--- Lock Contention ----&gt;| (Crash / Stutter)
+    |                            |    (Queue Grows)        |
+    X                            X                         X
+</code></pre>
+<h2 id="the-remediation-strategy"><a class="heading-anchor" aria-label="Copy heading link" href="#the-remediation-strategy" data-enhanced="true"><span class="icon icon-link"></span></a>The Remediation Strategy</h2>
+<p>The root cause wasn't the code defect itself—defects will always slip through. The root cause was our broken release safety mechanism. We completely overhauled our release pipeline with three core patterns.</p>
+<h3 id="1-staged-rollouts-canary"><a class="heading-anchor" aria-label="Copy heading link" href="#1-staged-rollouts-canary" data-enhanced="true"><span class="icon icon-link"></span></a>1. Staged Rollouts (Canary)</h3>
+<p>Feature flags can no longer be flipped globally. They must progress through incremental user segments. Below is the code implementation of our NestJS feature flag gating middleware that uses a deterministic user hashing strategy to rollout features incrementally:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">typescript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Injectable</span>, <span class="hljs-title class_">NestMiddleware</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Request</span>, <span class="hljs-title class_">Response</span>, <span class="hljs-title class_">NextFunction</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> crypto <span class="hljs-keyword">from</span> <span class="hljs-string">'crypto'</span>;
+
+<span class="hljs-meta">@Injectable</span>()
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">StagedRolloutMiddleware</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">NestMiddleware</span> {
+  <span class="hljs-comment">// Deterministic user bucket assignment</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-title function_">getUserBucket</span>(<span class="hljs-attr">userId</span>: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">number</span> {
+    <span class="hljs-keyword">const</span> hash = crypto.<span class="hljs-title function_">createHash</span>(<span class="hljs-string">'sha256'</span>).<span class="hljs-title function_">update</span>(userId).<span class="hljs-title function_">digest</span>(<span class="hljs-string">'hex'</span>);
+    <span class="hljs-keyword">const</span> integerHash = <span class="hljs-built_in">parseInt</span>(hash.<span class="hljs-title function_">substring</span>(<span class="hljs-number">0</span>, <span class="hljs-number">8</span>), <span class="hljs-number">16</span>);
+    <span class="hljs-keyword">return</span> integerHash % <span class="hljs-number">100</span>; <span class="hljs-comment">// Returns bucket 0-99</span>
+  }
+
+  <span class="hljs-title function_">use</span>(<span class="hljs-params"><span class="hljs-attr">req</span>: <span class="hljs-title class_">Request</span>, <span class="hljs-attr">res</span>: <span class="hljs-title class_">Response</span>, <span class="hljs-attr">next</span>: <span class="hljs-title class_">NextFunction</span></span>) {
+    <span class="hljs-keyword">const</span> userId = req.<span class="hljs-property">headers</span>[<span class="hljs-string">'x-user-id'</span>] <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>;
+    <span class="hljs-keyword">if</span> (!userId) {
+      <span class="hljs-comment">// Fallback for anonymous users: disable experimental features</span>
+      req[<span class="hljs-string">'features'</span>] = { <span class="hljs-attr">newOrderEngine</span>: <span class="hljs-literal">false</span> };
+      <span class="hljs-keyword">return</span> <span class="hljs-title function_">next</span>();
+    }
+
+    <span class="hljs-keyword">const</span> bucket = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getUserBucket</span>(userId);
+    <span class="hljs-comment">// Configured rollout threshold (e.g. 5%)</span>
+    <span class="hljs-keyword">const</span> targetRolloutPercent = <span class="hljs-built_in">parseInt</span>(
+      process.<span class="hljs-property">env</span>.<span class="hljs-property">NEW_ORDER_ENGINE_PERCENT</span> || <span class="hljs-string">'0'</span>,
+      <span class="hljs-number">10</span>
+    );
+
+    req[<span class="hljs-string">'features'</span>] = {
+      <span class="hljs-attr">newOrderEngine</span>: bucket &lt; targetRolloutPercent,
+    };
+
+    <span class="hljs-title function_">next</span>();
+  }
+}
+</code></pre>
+<h3 id="2-error-budget-gates-and-slo-integration"><a class="heading-anchor" aria-label="Copy heading link" href="#2-error-budget-gates-and-slo-integration" data-enhanced="true"><span class="icon icon-link"></span></a>2. Error Budget Gates and SLO Integration</h3>
+<p>We connected our deployment runner (GitHub Actions) with Datadog. If the error budget for a service is depleted (defined as maintaining less than <code>99.9%</code> availability over a rolling 30-day window), all non-emergency deployments are hard-blocked by CI/CD.</p>
+<h3 id="3-automated-rollback-criteria-sla-driven-alerts"><a class="heading-anchor" aria-label="Copy heading link" href="#3-automated-rollback-criteria-sla-driven-alerts" data-enhanced="true"><span class="icon icon-link"></span></a>3. Automated Rollback Criteria (SLA-driven Alerts)</h3>
+<p>We wrote a cron script running on our deployment coordinator that polls Prometheus metrics during the 30-minute canary bake periods. If key performance indicators (KPIs) exceed acceptable thresholds, the system disables the feature flag automatically without human intervention.</p>
+<p>Here is the rollback script:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">javascript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-javascript"><span class="hljs-keyword">import</span> axios <span class="hljs-keyword">from</span> <span class="hljs-string">'axios'</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-variable constant_">PROMETHEUS_URL</span> = process.<span class="hljs-property">env</span>.<span class="hljs-property">PROMETHEUS_URL</span> || <span class="hljs-string">'http://prometheus:9090'</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-variable constant_">FEATURE_FLAG_API</span> = process.<span class="hljs-property">env</span>.<span class="hljs-property">FEATURE_FLAG_API</span> || <span class="hljs-string">'https://config.internal.net/flags'</span>;
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">getMetric</span>(<span class="hljs-params">query</span>) {
+  <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">get</span>(
+    <span class="hljs-string">`<span class="hljs-subst">${PROMETHEUS_URL}</span>/api/v1/query`</span>,
+    { <span class="hljs-attr">params</span>: { query } }
+  );
+  <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(response.<span class="hljs-property">data</span>.<span class="hljs-property">data</span>.<span class="hljs-property">result</span>[<span class="hljs-number">0</span>]?.<span class="hljs-property">value</span>[<span class="hljs-number">1</span>] || <span class="hljs-string">'0'</span>);
+}
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">runHealthCheck</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Starting Canary Rollout Health Check...'</span>);
+  
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-comment">// 1. Calculate HTTP 5xx error rate percentage over the last 5 minutes</span>
+    <span class="hljs-keyword">const</span> errorRate = <span class="hljs-keyword">await</span> <span class="hljs-title function_">getMetric</span>(
+      <span class="hljs-string">'sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) * 100'</span>
+    );
+
+    <span class="hljs-keyword">const</span> queryStr = <span class="hljs-string">`
+      histogram_quantile(0.99, 
+        sum(rate(http_request_duration_seconds_bucket{handler="newOrderEngine"}[5m])) by (le)
+      )
+    `</span>;
+    <span class="hljs-keyword">const</span> p99Latency = <span class="hljs-keyword">await</span> <span class="hljs-title function_">getMetric</span>(queryStr);
+
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`Canary Metrics -&gt; Error Rate: <span class="hljs-subst">${errorRate.toFixed(<span class="hljs-number">2</span>)}</span>%, p99 Latency: <span class="hljs-subst">${p99Latency.toFixed(<span class="hljs-number">2</span>)}</span>s`</span>);
+
+    <span class="hljs-comment">// Rollback Criteria Thresholds</span>
+    <span class="hljs-keyword">if</span> (errorRate &gt; <span class="hljs-number">1.0</span> || p99Latency &gt; <span class="hljs-number">1.0</span>) {
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">'Rollback thresholds breached! Disabling feature flag immediately...'</span>);
+      <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">patch</span>(<span class="hljs-string">`<span class="hljs-subst">${FEATURE_FLAG_API}</span>/new-order-engine`</span>, {
+        <span class="hljs-attr">enabled</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">rollbackReason</span>: <span class="hljs-string">`Canary alert: Error rate <span class="hljs-subst">${errorRate.toFixed(<span class="hljs-number">2</span>)}</span>% or latency <span class="hljs-subst">${p99Latency.toFixed(<span class="hljs-number">2</span>)}</span>s exceeded limits.`</span>
+      });
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Feature flag successfully disabled.'</span>);
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Canary health is within limits.'</span>);
+    }
+  } <span class="hljs-keyword">catch</span> (error) {
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">'Failed to run canary health check:'</span>, error.<span class="hljs-property">message</span>);
+  }
+}
+
+<span class="hljs-comment">// Execute health check</span>
+<span class="hljs-title function_">runHealthCheck</span>();
+</code></pre>
+<hr>
+<h2 id="release-safety-checklist"><a class="heading-anchor" aria-label="Copy heading link" href="#release-safety-checklist" data-enhanced="true"><span class="icon icon-link"></span></a>Release Safety Checklist</h2>
+<p>To prevent future outages, we established a strict checklist required for all updates touching high-throughput write endpoints:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Stage</th><th align="left">Action Item</th><th align="left">Verification Method</th></tr></thead><tbody><tr><td align="left"><strong>Development</strong></td><td align="left">Implement Jittered Exponential Backoff on clients</td><td align="left">Code Review / Unit Test validation</td></tr><tr><td align="left"><strong>CI Pipeline</strong></td><td align="left">Run N+1 query detection scripts on ORM</td><td align="left">Automated query count assertion</td></tr><tr><td align="left"><strong>Deployment</strong></td><td align="left">Limit initial canary rollout to 1% of traffic</td><td align="left">Feature Flag configuration check</td></tr><tr><td align="left"><strong>Bake Period</strong></td><td align="left">Verify SLI metrics for 15 minutes before increasing</td><td align="left">Automated Prometheus metric monitor</td></tr><tr><td align="left"><strong>Incident Response</strong></td><td align="left">Confirm out-of-band killswitch is operational</td><td align="left">Fail-safe routing verification</td></tr></tbody></table>
+<h2 id="the-core-lesson"><a class="heading-anchor" aria-label="Copy heading link" href="#the-core-lesson" data-enhanced="true"><span class="icon icon-link"></span></a>The Core Lesson</h2>
+<p>Deployment safety should be a core component of product velocity, not an afterthought delegated to a separate SRE team. A failed deployment isn't just an outage; it burns developer trust and slows down future releases. By automating safety guardrails, we empowered engineers to deploy faster with confidence.</p></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/blog/system-design-notes-idempotency" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">System Design Notes: Idempotency</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Architecture Breakdown: CQRS for Mid-size Products</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Canary Deploys and the Sample Size Nobody Checks</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A real two-proportion z-test canary analysis, run stage by stage — proving that the same real regression can go completely undetected at a small sample size and get caught at a larger one, using the exact statistic, not a story about it.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 07, 2026</span><span>3 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/system-design/system-design-trade-offs-in-practice" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">system design</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">System Design Trade-offs in Practice</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A structured framework to communicate architecture trade-offs with product, operations, and engineering teams.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Mar 21, 2026</span><span>3 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">HyperLogLog and the Question Bloom Filters Can't Answer</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#the-incident" class="toc-link">The Incident</a></li><li><a href="#the-impact-the-anatomy-of-a-retry-storm" class="toc-link">The Impact: The Anatomy of a Retry Storm</a></li><li><a href="#the-remediation-strategy" class="toc-link">The Remediation Strategy</a></li><li class="toc-sub"><a href="#1-staged-rollouts-canary" class="toc-link">1. Staged Rollouts (Canary)</a></li><li class="toc-sub"><a href="#2-error-budget-gates-and-slo-integration" class="toc-link">2. Error Budget Gates and SLO Integration</a></li><li class="toc-sub"><a href="#3-automated-rollback-criteria-sla-driven-alerts" class="toc-link">3. Automated Rollback Criteria (SLA-driven Alerts)</a></li><li><a href="#release-safety-checklist" class="toc-link">Release Safety Checklist</a></li><li><a href="#the-core-lesson" class="toc-link">The Core Lesson</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

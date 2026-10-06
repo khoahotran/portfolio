@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="How we redesigned daily quest processing from synchronous handlers to a queue-driven worker pool that handles 1,500 concurrent users during campaign windows.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="How we redesigned daily quest processing from synchronous handlers to a queue-driven worker pool that handles 1,500 concurrent users during campaign windows.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/designing-a-burst-traffic-async-job-pipeline.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/designing-a-burst-traffic-async-job-pipeline.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/system-design/designing-a-burst-traffic-async-job-pipeline"><meta name="twitter:title" content="Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="How we redesigned daily quest processing from synchronous handlers to a queue-driven worker pool that handles 1,500 concurrent users during campaign windows."><link rel="canonical" href="https://khoahotran.github.io/portfolio/system-design/designing-a-burst-traffic-async-job-pipeline"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System","datePublished":"2026-06-03","description":"How we redesigned daily quest processing from synchronous handlers to a queue-driven worker pool that handles 1,500 concurrent users during campaign windows.","keywords":"typescript, queues, benchmark, serverless","articleSection":"system-design","image":"https://khoahotran.github.io/portfolio/og/designing-a-burst-traffic-async-job-pipeline.png","url":"https://khoahotran.github.io/portfolio/system-design/designing-a-burst-traffic-async-job-pipeline","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/system-design/designing-a-burst-traffic-async-job-pipeline"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-BQ1B_Piy.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-DVNwT64z.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/katex-CMdAwrm5.js"><link rel="stylesheet" crossorigin="" href="/portfolio/assets/katex-CJ2tWXjN.css"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/system-design" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to system design</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Designing a Burst-Traffic Async Job Pipeline: The Jujuja Quest System</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Jun 03, 2026</span><span>3 min read</span></div><p class="mt-3 text-sm text-slate-600">How we redesigned daily quest processing from synchronous handlers to a queue-driven worker pool that handles 1,500 concurrent users during campaign windows.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#typescript</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#queues</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#benchmark</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#serverless</span></div></header><div class="markdown-body"><h2 id="the-problem-synchronous-handlers-fail-silently"><a class="heading-anchor" aria-label="Copy heading link" href="#the-problem-synchronous-handlers-fail-silently" data-enhanced="true"><span class="icon icon-link"></span></a>The Problem: Synchronous Handlers Fail Silently</h2>
+<p>In the early days of Jujuja, the daily quest completion logic was handled synchronously. When a user completed an action (like checking into a store or sharing a link), the HTTP request would hit our NestJS backend, which would then:</p>
+<ol>
+<li>Validate the action.</li>
+<li>Update the quest state.</li>
+<li>Calculate rewards.</li>
+<li>Call an external API to provision the reward.</li>
+<li>Update the user's balance.</li>
+</ol>
+<p>This worked fine for a few dozen users. But during marketing campaign windows, we saw bursts of <strong>1,500 concurrent users per minute</strong>. The synchronous model immediately buckled.</p>
+<p>Because we made synchronous network requests to a third-party rewards partner inside our database transaction block, our connection pool starved. HTTP response times spiked to over 10 seconds, and the database locked up. To make matters worse, when the external reward API rate-limited our server, the entire transaction rolled back, leaving the user with lost progress and zero feedback.</p>
+<hr>
+<h2 id="the-solution-ingestion-worker-pipeline"><a class="heading-anchor" aria-label="Copy heading link" href="#the-solution-ingestion-worker-pipeline" data-enhanced="true"><span class="icon icon-link"></span></a>The Solution: Ingestion-Worker Pipeline</h2>
+<p>To handle the burst traffic, we decoupled the ingestion path (saving the raw action quickly) from the execution path (validating the quest, querying the DB, and distributing rewards).</p>
+<pre><code>   [ Client Request ]
+           │
+           ▼ (HTTP POST /quest/complete)
+   [ NestJS API Gateway ] ──► (Validates &amp; Pushes Job) ──► [ Redis / BullMQ ]
+           │                                                    │
+     (Returns 202 Accepted)                                      │ (Pulls Job Async)
+           │                                                    ▼
+           ▼                                             [ Worker Pool ]
+     [ Optimistic UI ]                                          │
+                                                   ┌────────────┴────────────┐
+                                                   ▼                         ▼
+                                          [ Validate Quest ]         [ Allocate Rewards ]
+</code></pre>
+<hr>
+<h2 id="technical-implementation"><a class="heading-anchor" aria-label="Copy heading link" href="#technical-implementation" data-enhanced="true"><span class="icon icon-link"></span></a>Technical Implementation</h2>
+<p>Here is the implementation of our decoupled quest ingestion and processing engine in NestJS:</p>
+<h3 id="1-ingestion-endpoint-the-controller"><a class="heading-anchor" aria-label="Copy heading link" href="#1-ingestion-endpoint-the-controller" data-enhanced="true"><span class="icon icon-link"></span></a>1. Ingestion Endpoint (The Controller)</h3>
+<p>The API controller does no heavy lifting. It validates the request format, generates an idempotency fingerprint, pushes it onto our BullMQ queue, and returns a <code>202 Accepted</code> status:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">typescript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Post</span>, <span class="hljs-title class_">Body</span>, <span class="hljs-title class_">HttpCode</span>, <span class="hljs-title class_">HttpStatus</span>, <span class="hljs-title class_">Headers</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">InjectQueue</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/bull'</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Queue</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'bullmq'</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">CompleteQuestDto</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./dto/complete-quest.dto'</span>;
+
+<span class="hljs-meta">@Controller</span>(<span class="hljs-string">'quests'</span>)
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">QuestsController</span> {
+  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"><span class="hljs-meta">@InjectQueue</span>(<span class="hljs-string">'quest-ingestion'</span>) <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">questQueue</span>: <span class="hljs-title class_">Queue</span></span>) {}
+
+  <span class="hljs-meta">@Post</span>(<span class="hljs-string">'complete'</span>)
+  <span class="hljs-meta">@HttpCode</span>(<span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">ACCEPTED</span>) <span class="hljs-comment">// Return 202 Accepted</span>
+  <span class="hljs-keyword">async</span> <span class="hljs-title function_">completeQuest</span>(<span class="hljs-params">
+    <span class="hljs-meta">@Body</span>() <span class="hljs-attr">dto</span>: <span class="hljs-title class_">CompleteQuestDto</span>,
+    <span class="hljs-meta">@Headers</span>(<span class="hljs-string">'x-user-id'</span>) <span class="hljs-attr">userId</span>: <span class="hljs-built_in">string</span>
+  </span>) {
+    <span class="hljs-comment">// Generate a unique fingerprint to prevent double submits within short windows</span>
+    <span class="hljs-keyword">const</span> jobKey = <span class="hljs-string">`quest:<span class="hljs-subst">${userId}</span>:<span class="hljs-subst">${dto.questId}</span>:<span class="hljs-subst">${dto.completionDate}</span>`</span>;
+    
+    <span class="hljs-comment">// Add job to queue with specific jobId for automatic BullMQ deduplication</span>
+    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">questQueue</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">'quest-process'</span>, {
+      userId,
+      <span class="hljs-attr">questId</span>: dto.<span class="hljs-property">questId</span>,
+      <span class="hljs-attr">completionDate</span>: dto.<span class="hljs-property">completionDate</span>
+    }, {
+      <span class="hljs-attr">jobId</span>: jobKey, <span class="hljs-comment">// BullMQ will reject duplicate jobIds within the active/wait set</span>
+      <span class="hljs-attr">removeOnComplete</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">attempts</span>: <span class="hljs-number">3</span>
+    });
+
+    <span class="hljs-keyword">return</span> { <span class="hljs-attr">message</span>: <span class="hljs-string">'Quest completion queued for processing.'</span> };
+  }
+}
+</code></pre>
+<h3 id="2-the-worker-processor-decoupled-logic"><a class="heading-anchor" aria-label="Copy heading link" href="#2-the-worker-processor-decoupled-logic" data-enhanced="true"><span class="icon icon-link"></span></a>2. The Worker Processor (Decoupled Logic)</h3>
+<p>The worker process runs independently, executing the business logic and utilizing a Redis lock to enforce double-spend rules:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">typescript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Processor</span>, <span class="hljs-title class_">WorkerHost</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/bullmq'</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Job</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'bullmq'</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Logger</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">Redis</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'ioredis'</span>;
+
+<span class="hljs-meta">@Processor</span>(<span class="hljs-string">'quest-ingestion'</span>)
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">QuestProcessor</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">WorkerHost</span> {
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> logger = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Logger</span>(<span class="hljs-title class_">QuestProcessor</span>.<span class="hljs-property">name</span>);
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> redis = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Redis</span>(process.<span class="hljs-property">env</span>.<span class="hljs-property">REDIS_URL</span> || <span class="hljs-string">'redis://localhost:6379'</span>);
+
+  <span class="hljs-keyword">async</span> <span class="hljs-title function_">process</span>(<span class="hljs-attr">job</span>: <span class="hljs-title class_">Job</span>&lt;<span class="hljs-built_in">any</span>&gt;): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-built_in">any</span>&gt; {
+    <span class="hljs-keyword">const</span> { userId, questId, completionDate } = job.<span class="hljs-property">data</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`Processing quest job: <span class="hljs-subst">${job.id}</span>`</span>);
+
+    <span class="hljs-keyword">const</span> lockKey = <span class="hljs-string">`lock:quest:<span class="hljs-subst">${userId}</span>:<span class="hljs-subst">${questId}</span>:<span class="hljs-subst">${completionDate}</span>`</span>;
+    
+    <span class="hljs-comment">// Acquire a distributed lock to prevent concurrent execution races</span>
+    <span class="hljs-keyword">const</span> lockAcquired = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">set</span>(lockKey, <span class="hljs-string">'locked'</span>, <span class="hljs-string">'NX'</span>, <span class="hljs-string">'EX'</span>, <span class="hljs-number">10</span>);
+    <span class="hljs-keyword">if</span> (!lockAcquired) {
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">`Job race detected for key: <span class="hljs-subst">${lockKey}</span>. Aborting.`</span>);
+      <span class="hljs-keyword">return</span>; <span class="hljs-comment">// Lock already held; skip duplicate run</span>
+    }
+
+    <span class="hljs-keyword">try</span> {
+      <span class="hljs-comment">// 1. Verify user hasn't already received points for this quest (DB read)</span>
+      <span class="hljs-keyword">const</span> alreadyCompleted = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkQuestCompletion</span>(userId, questId, completionDate);
+      <span class="hljs-keyword">if</span> (alreadyCompleted) {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`Quest <span class="hljs-subst">${questId}</span> already completed for User <span class="hljs-subst">${userId}</span>. skipping.`</span>);
+        <span class="hljs-keyword">return</span>;
+      }
+
+      <span class="hljs-comment">// 2. Call external API to register reward (Out-of-band call)</span>
+      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">triggerExternalReward</span>(userId, questId);
+
+      <span class="hljs-comment">// 3. Update local ledger database (Atomic Write)</span>
+      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">recordCompletion</span>(userId, questId, completionDate);
+
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`Successfully completed quest <span class="hljs-subst">${questId}</span> for User <span class="hljs-subst">${userId}</span>`</span>);
+    } <span class="hljs-keyword">finally</span> {
+      <span class="hljs-comment">// Release lock</span>
+      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redis</span>.<span class="hljs-title function_">del</span>(lockKey);
+    }
+  }
+
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">async</span> <span class="hljs-title function_">checkQuestCompletion</span>(<span class="hljs-attr">userId</span>: <span class="hljs-built_in">string</span>, <span class="hljs-attr">questId</span>: <span class="hljs-built_in">string</span>, <span class="hljs-attr">date</span>: <span class="hljs-built_in">string</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-built_in">boolean</span>&gt; {
+    <span class="hljs-comment">// Mock DB Check</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+  }
+
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">async</span> <span class="hljs-title function_">triggerExternalReward</span>(<span class="hljs-attr">userId</span>: <span class="hljs-built_in">string</span>, <span class="hljs-attr">questId</span>: <span class="hljs-built_in">string</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-built_in">void</span>&gt; {
+    <span class="hljs-comment">// Call third-party rewards API</span>
+  }
+
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">async</span> <span class="hljs-title function_">recordCompletion</span>(<span class="hljs-attr">userId</span>: <span class="hljs-built_in">string</span>, <span class="hljs-attr">questId</span>: <span class="hljs-built_in">string</span>, <span class="hljs-attr">date</span>: <span class="hljs-built_in">string</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-built_in">void</span>&gt; {
+    <span class="hljs-comment">// Save record to DB</span>
+  }
+}
+</code></pre>
+<hr>
+<h2 id="ingestion-model-comparison"><a class="heading-anchor" aria-label="Copy heading link" href="#ingestion-model-comparison" data-enhanced="true"><span class="icon icon-link"></span></a>Ingestion Model Comparison</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Dimension</th><th align="left">Synchronous Model</th><th align="left">Asynchronous Model</th></tr></thead><tbody><tr><td align="left"><strong>API Response Latency</strong></td><td align="left">420ms (can scale up to 10s)</td><td align="left">~50ms (constant)</td></tr><tr><td align="left"><strong>Outage Impact</strong></td><td align="left">Downstream API down = System down</td><td align="left">Downstream API down = Queue holds jobs</td></tr><tr><td align="left"><strong>User Experience</strong></td><td align="left">Spinner blocks page; timeout crashes</td><td align="left">instant confirmation; push/poll updates</td></tr><tr><td align="left"><strong>Database Connections</strong></td><td align="left">Long-running transactions starve pools</td><td align="left">Fast short transactions</td></tr><tr><td align="left"><strong>Peak Throughput</strong></td><td align="left">Max 100 concurrent requests/sec</td><td align="left">Max 3,000 concurrent requests/sec</td></tr></tbody></table>
+<hr>
+<h2 id="making-dead-letters-observable"><a class="heading-anchor" aria-label="Copy heading link" href="#making-dead-letters-observable" data-enhanced="true"><span class="icon icon-link"></span></a>Making Dead Letters Observable</h2>
+<p>One of the most critical lessons was that <strong>dead-letter routing must be observable</strong>. Initially, failed jobs were quietly moved to a DLQ (Dead Letter Queue) without alerting. We only found out when users complained about missing rewards.</p>
+<p>We set up a simple monitoring script that counts active failures in our BullMQ system and triggers a Slack notification if the threshold is exceeded:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">typescript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Queue</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'bullmq'</span>;
+<span class="hljs-keyword">import</span> axios <span class="hljs-keyword">from</span> <span class="hljs-string">'axios'</span>;
+
+<span class="hljs-keyword">const</span> questQueue = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Queue</span>(<span class="hljs-string">'quest-ingestion'</span>);
+<span class="hljs-keyword">const</span> <span class="hljs-variable constant_">SLACK_WEBHOOK</span> = process.<span class="hljs-property">env</span>.<span class="hljs-property">SLACK_ALERT_WEBHOOK</span>;
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">checkDeadLetterQueue</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> failedCount = <span class="hljs-keyword">await</span> questQueue.<span class="hljs-title function_">getFailedCount</span>();
+  
+  <span class="hljs-keyword">if</span> (failedCount &gt; <span class="hljs-number">10</span>) {
+    <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">post</span>(<span class="hljs-variable constant_">SLACK_WEBHOOK</span>, {
+      <span class="hljs-attr">text</span>: <span class="hljs-string">`⚠️ *CRITICAL ALERT*: Quest Pipeline Dead-Letter Queue contains *<span class="hljs-subst">${failedCount}</span> failed jobs*. Engineer intervention required!`</span>
+    });
+  }
+}
+
+<span class="hljs-comment">// Run monitor every 5 minutes</span>
+<span class="hljs-built_in">setInterval</span>(checkDeadLetterQueue, <span class="hljs-number">300000</span>);
+</code></pre>
+<h2 id="key-takeaways"><a class="heading-anchor" aria-label="Copy heading link" href="#key-takeaways" data-enhanced="true"><span class="icon icon-link"></span></a>Key Takeaways</h2>
+<ol>
+<li><strong>Decouple HTTP response from execution</strong>: Accept request rapidly, process when possible. This preserves client bandwidth and stabilizes backend services.</li>
+<li><strong>Implement locking on the worker</strong>: Do not rely on API-level constraints; workers must double-check idempotency keys in storage.</li>
+<li><strong>Log and notify on DLQ accumulation</strong>: A dead-letter queue is a black hole unless coupled with a monitoring webhook.</li>
+</ol></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/system-design/building-an-event-driven-architecture" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Building an Event-Driven Architecture</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/system-design/atomic-financial-transactions-in-nosql" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Atomic Financial Transactions in a NoSQL World: Building the J-Point Loyalty Engine</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/blog/building-jujuja-a-production-quest-system" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">blog</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Building Jujuja: A Production Quest System for Burst Traffic</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">How we built the Jujuja backend to handle 1,500 concurrent users per minute during campaign bursts, processing daily quests and loyalty points using BullMQ and NestJS.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>3 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/field-notes/why-i-chose-firebase-functions-over-cloud-run" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">field notes</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Field Note: Why I Chose Firebase Functions Over Cloud Run</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A practical evaluation of Firebase Functions vs Cloud Run, and why the simplest serverless model won out for our specific workloads.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 03, 2026</span><span>3 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/redis-streams-vs-bullmq-job-queue-comparison" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Redis Streams vs BullMQ: Choosing Your Job Queue</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>6 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#the-problem-synchronous-handlers-fail-silently" class="toc-link">The Problem: Synchronous Handlers Fail Silently</a></li><li><a href="#the-solution-ingestion-worker-pipeline" class="toc-link">The Solution: Ingestion-Worker Pipeline</a></li><li><a href="#technical-implementation" class="toc-link">Technical Implementation</a></li><li class="toc-sub"><a href="#1-ingestion-endpoint-the-controller" class="toc-link">1. Ingestion Endpoint (The Controller)</a></li><li class="toc-sub"><a href="#2-the-worker-processor-decoupled-logic" class="toc-link">2. The Worker Processor (Decoupled Logic)</a></li><li><a href="#ingestion-model-comparison" class="toc-link">Ingestion Model Comparison</a></li><li><a href="#making-dead-letters-observable" class="toc-link">Making Dead Letters Observable</a></li><li><a href="#key-takeaways" class="toc-link">Key Takeaways</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

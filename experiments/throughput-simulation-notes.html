@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>Throughput Simulation Notes | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="Throughput Simulation Notes | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/throughput-simulation-notes.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/throughput-simulation-notes.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes"><meta name="twitter:title" content="Throughput Simulation Notes | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations."><link rel="canonical" href="https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"Throughput Simulation Notes","datePublished":"2026-03-21","description":"Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations.","keywords":"benchmark","articleSection":"experiments","image":"https://khoahotran.github.io/portfolio/og/throughput-simulation-notes.png","url":"https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/experiments/throughput-simulation-notes"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-BQ1B_Piy.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-DVNwT64z.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/katex-CMdAwrm5.js"><link rel="stylesheet" crossorigin="" href="/portfolio/assets/katex-CJ2tWXjN.css"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/experiments" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to experiments</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Throughput Simulation Notes</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Mar 21, 2026</span><span>3 min read</span></div><p class="mt-3 text-sm text-slate-600">Experiment notes on balancing worker count and tail latency under failure pressure using client-side simulations.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#benchmark</span></div></header><div class="markdown-body"><h2 id="the-problem-with-averages"><a class="heading-anchor" aria-label="Copy heading link" href="#the-problem-with-averages" data-enhanced="true"><span class="icon icon-link"></span></a>The Problem with Averages</h2>
+<p>Capacity planning is notoriously difficult. When estimating how many background workers are needed for a new pipeline, engineers typically rely on averages:</p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>Required&nbsp;Workers</mtext><mo>=</mo><mfrac><mrow><mtext>Average&nbsp;Arrival&nbsp;Rate</mtext><mo>×</mo><mtext>Average&nbsp;Processing&nbsp;Time</mtext></mrow><mtext>Capacity&nbsp;per&nbsp;Worker</mtext></mfrac></mrow><annotation encoding="application/x-tex">\text{Required Workers} = \frac{\text{Average Arrival Rate} \times \text{Average Processing Time}}{\text{Capacity per Worker}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">Required&nbsp;Workers</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.4133em;vertical-align:-0.4811em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">Capacity&nbsp;per&nbsp;Worker</span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.4461em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">Average&nbsp;Arrival&nbsp;Rate</span></span><span class="mbin mtight">×</span><span class="mord text mtight"><span class="mord mtight">Average&nbsp;Processing&nbsp;Time</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4811em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></p>
+<p>For instance, <em>"We expect 1,000 jobs per minute, each job takes 100ms on average, so we need X workers."</em></p>
+<p>The reality of production destroys averages. Networks jitter, database locks contend, and third-party APIs rate-limit. Under failure pressure, tail latency (p95 and p99) spikes, causing queues to back up rapidly. Relying on average throughput calculations almost always results in under-provisioning for peak stress, leading to cascading failures.</p>
+<hr>
+<h2 id="the-simulation-architecture"><a class="heading-anchor" aria-label="Copy heading link" href="#the-simulation-architecture" data-enhanced="true"><span class="icon icon-link"></span></a>The Simulation Architecture</h2>
+<p>To model how a queue behaves under failure pressure, we built a client-side Monte Carlo simulator. Instead of deploying expensive load testing environments, we simulated the system in code.</p>
+<pre><code>       [ Poisson Arrival Generator ]
+                     │ (Job Ingestion)
+                     ▼
+             [ Job Queue Buffer ]
+                     │
+    ┌────────────────┼────────────────┐ (Competing Consumers)
+    ▼                ▼                ▼
+[ Worker 1 ]     [ Worker 2 ]     [ Worker N ]
+    │                │                │
+    └────────────────┼────────────────┘
+                     ▼
+      [ Database / Shared Constraint ] (Contention Node)
+</code></pre>
+<p>We modeled three dynamic behaviors:</p>
+<ol>
+<li><strong>Arrival Rate</strong>: A Poisson distribution modeling random, independent arrivals centered around an average request interval.</li>
+<li><strong>Processing Time</strong>: A Lognormal distribution representing a system that is fast 90% of the time but has a long tail when processing retries or dealing with large payloads.</li>
+<li><strong>Failure Rate &amp; Backoff</strong>: Random probabilistic failures triggering exponential backoff retries.</li>
+</ol>
+<hr>
+<h2 id="technical-implementation-the-monte-carlo-simulator"><a class="heading-anchor" aria-label="Copy heading link" href="#technical-implementation-the-monte-carlo-simulator" data-enhanced="true"><span class="icon icon-link"></span></a>Technical Implementation: The Monte Carlo Simulator</h2>
+<p>Here is the complete JavaScript script we ran to simulate queue throughput under various failure scenarios:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">javascript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-javascript"><span class="hljs-comment">// Monte Carlo Queue Simulator</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">QueueSimulator</span> {
+  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">config</span>) {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">workerCount</span> = config.<span class="hljs-property">workerCount</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">arrivalRatePerSec</span> = config.<span class="hljs-property">arrivalRatePerSec</span>; <span class="hljs-comment">// Lambda in Poisson</span>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">baseProcessTimeMs</span> = config.<span class="hljs-property">baseProcessTimeMs</span>; <span class="hljs-comment">// Mu in Lognormal</span>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">failureRate</span> = config.<span class="hljs-property">failureRate</span>;             <span class="hljs-comment">// 0.0 to 1.0</span>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dbContentionFactor</span> = config.<span class="hljs-property">dbContentionFactor</span>; <span class="hljs-comment">// Slowdown multiplier per worker</span>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">simDurationSec</span> = config.<span class="hljs-property">simDurationSec</span>;
+    
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">queue</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">workers</span> = <span class="hljs-title class_">Array</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">workerCount</span>).<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>); <span class="hljs-comment">// Holds time when worker becomes free</span>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">latencies</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">failedCount</span> = <span class="hljs-number">0</span>;
+  }
+
+  <span class="hljs-comment">// Poisson distribution helper: returns number of jobs arriving in 1-second interval</span>
+  <span class="hljs-title function_">getPoissonArrivals</span>(<span class="hljs-params">lambda</span>) {
+    <span class="hljs-keyword">const</span> L = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">exp</span>(-lambda);
+    <span class="hljs-keyword">let</span> k = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">let</span> p = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">do</span> {
+      k++;
+      p *= <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>();
+    } <span class="hljs-keyword">while</span> (p &gt; L);
+    <span class="hljs-keyword">return</span> k - <span class="hljs-number">1</span>;
+  }
+
+  <span class="hljs-comment">// Lognormal helper: models heavy-tailed latency (e.g. network/DB wait)</span>
+  <span class="hljs-title function_">getLognormalLatency</span>(<span class="hljs-params">baseMs</span>) {
+    <span class="hljs-keyword">const</span> mean = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">log</span>(baseMs);
+    <span class="hljs-keyword">const</span> stdDev = <span class="hljs-number">0.5</span>; <span class="hljs-comment">// Spread factor</span>
+    <span class="hljs-keyword">const</span> u1 = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>();
+    <span class="hljs-keyword">const</span> u2 = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>();
+    <span class="hljs-keyword">const</span> randStdNormal = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(-<span class="hljs-number">2.0</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">log</span>(u1)) * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>(<span class="hljs-number">2.0</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * u2);
+    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">exp</span>(mean + stdDev * randStdNormal);
+  }
+
+  <span class="hljs-title function_">run</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">let</span> jobIndex = <span class="hljs-number">0</span>;
+    
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> second = <span class="hljs-number">0</span>; second &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">simDurationSec</span>; second++) {
+      <span class="hljs-comment">// 1. Generate arrivals for this second</span>
+      <span class="hljs-keyword">const</span> arrivals = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getPoissonArrivals</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">arrivalRatePerSec</span>);
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; arrivals; i++) {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">queue</span>.<span class="hljs-title function_">push</span>({
+          <span class="hljs-attr">id</span>: ++jobIndex,
+          <span class="hljs-attr">arrivalTime</span>: second * <span class="hljs-number">1000</span>,
+          <span class="hljs-attr">retryCount</span>: <span class="hljs-number">0</span>
+        });
+      }
+
+      <span class="hljs-comment">// 2. Process jobs using available workers</span>
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">queue</span>.<span class="hljs-title function_">sort</span>(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a.<span class="hljs-property">arrivalTime</span> - b.<span class="hljs-property">arrivalTime</span>); <span class="hljs-comment">// FIFO execution</span>
+      
+      <span class="hljs-keyword">const</span> currentTimeMs = second * <span class="hljs-number">1000</span>;
+      
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> w = <span class="hljs-number">0</span>; w &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">workerCount</span>; w++) {
+        <span class="hljs-comment">// If worker is idle and there is work in queue</span>
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">workers</span>[w] &lt;= currentTimeMs &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">queue</span>.<span class="hljs-property">length</span> &gt; <span class="hljs-number">0</span>) {
+          <span class="hljs-keyword">const</span> job = <span class="hljs-variable language_">this</span>.<span class="hljs-property">queue</span>.<span class="hljs-title function_">shift</span>();
+          
+          <span class="hljs-comment">// DB Contention scales latency linearly with the configured worker count</span>
+          <span class="hljs-keyword">const</span> contentionMultiplier = <span class="hljs-number">1</span> + (<span class="hljs-variable language_">this</span>.<span class="hljs-property">workerCount</span> * <span class="hljs-variable language_">this</span>.<span class="hljs-property">dbContentionFactor</span>);
+          <span class="hljs-keyword">let</span> processingTime = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getLognormalLatency</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">baseProcessTimeMs</span>) * contentionMultiplier;
+          
+          <span class="hljs-keyword">const</span> isFailure = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">failureRate</span>;
+          
+          <span class="hljs-keyword">if</span> (isFailure) {
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">failedCount</span>++;
+            job.<span class="hljs-property">retryCount</span>++;
+            <span class="hljs-comment">// Re-queue with exponential backoff delay</span>
+            <span class="hljs-keyword">const</span> backoffMs = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, job.<span class="hljs-property">retryCount</span>) * <span class="hljs-number">1000</span> + (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">500</span>);
+            job.<span class="hljs-property">arrivalTime</span> = currentTimeMs + processingTime + backoffMs;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">queue</span>.<span class="hljs-title function_">push</span>(job);
+            
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">workers</span>[w] = currentTimeMs + processingTime; <span class="hljs-comment">// Worker busy for partial try</span>
+          } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">const</span> queueDuration = currentTimeMs - job.<span class="hljs-property">arrivalTime</span>;
+            <span class="hljs-keyword">const</span> totalDuration = queueDuration + processingTime;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">latencies</span>.<span class="hljs-title function_">push</span>(totalDuration);
+            
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">workers</span>[w] = currentTimeMs + processingTime; <span class="hljs-comment">// Worker busy</span>
+          }
+        }
+      }
+    }
+
+    <span class="hljs-comment">// Sort latencies to compute percentiles</span>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">latencies</span>.<span class="hljs-title function_">sort</span>(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a - b);
+    <span class="hljs-keyword">const</span> p50 = <span class="hljs-variable language_">this</span>.<span class="hljs-property">latencies</span>[<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">latencies</span>.<span class="hljs-property">length</span> * <span class="hljs-number">0.5</span>)] || <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">const</span> p95 = <span class="hljs-variable language_">this</span>.<span class="hljs-property">latencies</span>[<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">latencies</span>.<span class="hljs-property">length</span> * <span class="hljs-number">0.95</span>)] || <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">totalJobsImported</span>: jobIndex,
+      <span class="hljs-attr">remainingQueue</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">queue</span>.<span class="hljs-property">length</span>,
+      <span class="hljs-attr">failedAttempts</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">failedCount</span>,
+      <span class="hljs-attr">p50LatencyMs</span>: p50,
+      <span class="hljs-attr">p95LatencyMs</span>: p95
+    };
+  }
+}
+
+<span class="hljs-comment">// Run comparison</span>
+<span class="hljs-keyword">const</span> simNormal = <span class="hljs-keyword">new</span> <span class="hljs-title class_">QueueSimulator</span>({
+  <span class="hljs-attr">workerCount</span>: <span class="hljs-number">10</span>,
+  <span class="hljs-attr">arrivalRatePerSec</span>: <span class="hljs-number">50</span>,
+  <span class="hljs-attr">baseProcessTimeMs</span>: <span class="hljs-number">150</span>,
+  <span class="hljs-attr">failureRate</span>: <span class="hljs-number">0.01</span>,
+  <span class="hljs-attr">dbContentionFactor</span>: <span class="hljs-number">0.02</span>,
+  <span class="hljs-attr">simDurationSec</span>: <span class="hljs-number">60</span>
+});
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Normal Run:'</span>, simNormal.<span class="hljs-title function_">run</span>());
+
+<span class="hljs-keyword">const</span> simDegraded = <span class="hljs-keyword">new</span> <span class="hljs-title class_">QueueSimulator</span>({
+  <span class="hljs-attr">workerCount</span>: <span class="hljs-number">20</span>, <span class="hljs-comment">// Doubled workers to fix queue</span>
+  <span class="hljs-attr">arrivalRatePerSec</span>: <span class="hljs-number">50</span>,
+  <span class="hljs-attr">baseProcessTimeMs</span>: <span class="hljs-number">150</span>,
+  <span class="hljs-attr">failureRate</span>: <span class="hljs-number">0.15</span>, <span class="hljs-comment">// High API failures</span>
+  <span class="hljs-attr">dbContentionFactor</span>: <span class="hljs-number">0.05</span>, <span class="hljs-comment">// Heavy locks</span>
+  <span class="hljs-attr">simDurationSec</span>: <span class="hljs-number">60</span>
+});
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Degraded Run:'</span>, simDegraded.<span class="hljs-title function_">run</span>());
+</code></pre>
+<hr>
+<h2 id="simulated-output-metrics"><a class="heading-anchor" aria-label="Copy heading link" href="#simulated-output-metrics" data-enhanced="true"><span class="icon icon-link"></span></a>Simulated Output Metrics</h2>
+<p>Running this model under varying configurations revealed how resource contention breaks standard linear capacity projections:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Configuration</th><th align="center">Worker Count</th><th align="center">Failure Rate</th><th align="center">Database Locks</th><th align="center">p95 Latency</th><th align="center">End Queue Size</th><th align="center">Status</th></tr></thead><tbody><tr><td align="left"><strong>A: Normal baseline</strong></td><td align="center">10</td><td align="center">1%</td><td align="center">Minimal</td><td align="center">195ms</td><td align="center">0</td><td align="center"><strong>Healthy</strong></td></tr><tr><td align="left"><strong>B: Degraded API</strong></td><td align="center">10</td><td align="center">15%</td><td align="center">Moderate</td><td align="center">4,200ms</td><td align="center">450</td><td align="center"><strong>Backlogged</strong></td></tr><tr><td align="left"><strong>C: Worker Boost</strong></td><td align="center">20</td><td align="center">15%</td><td align="center">High</td><td align="center">8,900ms</td><td align="center">820</td><td align="center"><strong>Cascading Failure</strong></td></tr><tr><td align="left"><strong>D: Backoff + Jitter</strong></td><td align="center">10</td><td align="center">15%</td><td align="center">Minimal</td><td align="center">1,800ms</td><td align="center">110</td><td align="center"><strong>Recovering</strong></td></tr></tbody></table>
+<hr>
+<h2 id="critical-insights"><a class="heading-anchor" aria-label="Copy heading link" href="#critical-insights" data-enhanced="true"><span class="icon icon-link"></span></a>Critical Insights</h2>
+<ol>
+<li><strong>Non-linear Scaling</strong>: When we injected a 15% failure rate (representing a degraded external API), doubling the worker count (from 10 to 20) did not resolve the backlog. Instead, the aggressive database lock contention multiplier was triggered, causing processing latency to double.</li>
+<li><strong>The Feedback Loop</strong>: If workers retry failing jobs synchronously, they hold database locks longer. Adding more workers simply intensifies lock competition, locking the database and worsening tail latency.</li>
+<li><strong>The Solution</strong>: Rather than scaling worker instances, the correct remedy is to implement <strong>exponential backoff with jitter</strong> to disperse request timing, combined with a <strong>circuit breaker</strong> to suspend worker ingestion until the database stabilizes.</li>
+</ol>
+<h2 id="lessons-learned"><a class="heading-anchor" aria-label="Copy heading link" href="#lessons-learned" data-enhanced="true"><span class="icon icon-link"></span></a>Lessons Learned</h2>
+<p>Simple client-side simulations are incredibly powerful tools for reasoning about distributed systems, provided their assumptions are explicit and eventually validated against production traces.</p>
+<p>Before spending weeks building autoscaling infrastructure, spend an afternoon writing a script to simulate the math. You might discover that the bottleneck isn't your worker count, but your retry strategy.</p>
+<a href="/portfolio/labs/throughput-simulation" class="lab-cta">
+  Run the Interactive Simulation
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+</a></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><div></div><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/experiments/queue-vs-pub-sub-comparison-notes" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Queue vs Pub/Sub Comparison Notes</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">HyperLogLog and the Question Bloom Filters Can't Answer</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/lsm-trees-and-the-write-youll-pay-for-later" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">LSM Trees and the Write You'll Pay for Later</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real log-structured merge tree — measure read amplification growing unbounded without compaction, then measure the real write-amplification cost of bounding it.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Raft and the Commit Rule Replica Count Alone Can't Prove</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run Raft's real election restriction and commit-index safety rule — see why a stale node can't win an election no matter how many peers are alive, and why a majority of replicas alone still can't prove a log entry is safely committed.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 09, 2026</span><span>3 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#the-problem-with-averages" class="toc-link">The Problem with Averages</a></li><li><a href="#the-simulation-architecture" class="toc-link">The Simulation Architecture</a></li><li><a href="#technical-implementation-the-monte-carlo-simulator" class="toc-link">Technical Implementation: The Monte Carlo Simulator</a></li><li><a href="#simulated-output-metrics" class="toc-link">Simulated Output Metrics</a></li><li><a href="#critical-insights" class="toc-link">Critical Insights</a></li><li><a href="#lessons-learned" class="toc-link">Lessons Learned</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

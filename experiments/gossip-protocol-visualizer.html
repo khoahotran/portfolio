@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>Gossip Protocol Visualizer: How Cluster Membership Actually Spreads | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="A real push-based epidemic broadcast, run and scrubbed round by round, showing why gossip converges in O(log n) rounds instead of O(n).">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="Gossip Protocol Visualizer: How Cluster Membership Actually Spreads | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="A real push-based epidemic broadcast, run and scrubbed round by round, showing why gossip converges in O(log n) rounds instead of O(n).">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/gossip-protocol-visualizer.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/gossip-protocol-visualizer.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer"><meta name="twitter:title" content="Gossip Protocol Visualizer: How Cluster Membership Actually Spreads | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="A real push-based epidemic broadcast, run and scrubbed round by round, showing why gossip converges in O(log n) rounds instead of O(n)."><link rel="canonical" href="https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"TechArticle","headline":"Gossip Protocol Visualizer: How Cluster Membership Actually Spreads","datePublished":"2026-08-28","description":"A real push-based epidemic broadcast, run and scrubbed round by round, showing why gossip converges in O(log n) rounds instead of O(n).","keywords":"distributed-systems, benchmark","articleSection":"experiments","image":"https://khoahotran.github.io/portfolio/og/gossip-protocol-visualizer.png","url":"https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/experiments/gossip-protocol-visualizer"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/experiments" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to experiments</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Gossip Protocol Visualizer: How Cluster Membership Actually Spreads</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Aug 28, 2026</span><span>3 min read</span></div><p class="mt-3 text-sm text-slate-600">A real push-based epidemic broadcast, run and scrubbed round by round, showing why gossip converges in O(log n) rounds instead of O(n).</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#distributed-systems</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#benchmark</span></div></header><div class="markdown-body"><p>Cluster membership — "which nodes are alive right now, and what do they know about each other" —
+doesn't scale as a central registry every node polls. Cassandra, Consul, and Serf's SWIM protocol
+all solve it the same underlying way: <strong>gossip</strong>. One node learns something, and spreads it to a
+few random peers each round, who spread it to a few more. The <a href="/portfolio/labs/gossip-protocol-visualizer">interactive lab</a>
+runs this for real — the exact push-based epidemic broadcast, not a hand-drawn diagram of the idea.</p>
+<div class="mt-8 mb-12">
+  <a href="/portfolio/labs/gossip-protocol-visualizer" class="lab-cta-inverse">
+    Try the Interactive Gossip Protocol Lab
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+  </a>
+</div>
+<h2 id="the-algorithm"><a class="heading-anchor" aria-label="Copy heading link" href="#the-algorithm" data-enhanced="true"><span class="icon icon-link"></span></a>The Algorithm</h2>
+<p>Push-based gossip, exactly as implemented (<code>src/labs/gossipProtocol.ts</code>):</p>
+<pre><code>infected = { node 0 }
+for each round, until every node is infected:
+  for each currently infected node:
+    pick `fanout` random distinct peers
+    push the message to them — they become infected
+</code></pre>
+<p>That's the whole protocol. No coordinator, no central list of who's been told — every node's
+decision is local (pick some random peers, tell them), and global convergence is an emergent
+property of enough of those local decisions happening in parallel.</p>
+<h2 id="why-olog-n-not-on"><a class="heading-anchor" aria-label="Copy heading link" href="#why-olog-n-not-on" data-enhanced="true"><span class="icon icon-link"></span></a>Why O(log n), Not O(n)</h2>
+<p>The reason this scales is the same reason an actual epidemic spreads faster than one infection at a
+time: <strong>the number of nodes that can spread the message doubles roughly every round</strong>, not
+increments by one. Round 1: 1 node tells <code>fanout</code> others. Round 2: however many got told in round 1
+<em>each</em> tell <code>fanout</code> more. The infected population grows multiplicatively, not additively, which is
+exactly the shape that produces logarithmic — not linear — convergence time.</p>
+<p>The lab's test suite asserts this as a concrete number, not just a shape: 50 nodes at fanout 3
+converge in well under 15 rounds (<code>rounds.length).toBeLessThan(15)</code> in
+<a href="https://github.com/khoahotran/portfolio/blob/main/src/labs/gossipProtocol.test.ts" target="_blank" rel="noopener noreferrer"><code>gossipProtocol.test.ts</code></a>) —
+worth checking against your own intuition for how long "50 nodes, 3 random calls each round" should
+take to reach everyone.</p>
+<h2 id="what-fanout-actually-controls"><a class="heading-anchor" aria-label="Copy heading link" href="#what-fanout-actually-controls" data-enhanced="true"><span class="icon icon-link"></span></a>What Fanout Actually Controls</h2>
+<p>Turn fanout to 0 in the lab and the message never leaves node 0 — an infected node that never
+pushes obviously can't spread anything, which sounds trivial stated directly but is easy to miss
+when tuning a real system's gossip interval and fanout together, since it's the <em>product</em> of
+"how often" and "to how many" that determines effective spread rate, not either alone.</p>
+<p>Turn fanout up toward <code>nodeCount - 1</code> and convergence collapses to a single round — every infected
+node contacts literally everyone else at once. Real systems don't run at that extreme because the
+cost isn't free: <code>fanout</code> messages per infected node per round is real network traffic, and a
+gossip protocol's actual design problem is finding the smallest fanout that still converges
+acceptably fast, not making it as large as possible.</p>
+<h2 id="what-this-deliberately-doesnt-model"><a class="heading-anchor" aria-label="Copy heading link" href="#what-this-deliberately-doesnt-model" data-enhanced="true"><span class="icon icon-link"></span></a>What This Deliberately Doesn't Model</h2>
+<p>This lab simulates message <em>spread</em>, not membership <em>health</em> — there's no failure detection, no
+node ever goes down mid-simulation, and there's no anti-entropy repair for a node that missed a
+round. Real systems (SWIM in particular) layer failure detection on top of the same gossip
+substrate — a node that doesn't respond to a few gossip rounds gets marked suspect, then dead, and
+<em>that</em> verdict gets gossiped using the identical mechanism this lab shows. The spread mechanic here
+is the real, shared foundation; the failure-detection state machine on top of it is a distinct
+piece of complexity this lab doesn't claim to cover.</p></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/experiments/rate-limiting-algorithms" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/experiments/pgbouncer-vs-direct-connection-pooling" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Connection Pooling: When PgBouncer Actually Helps</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Consistent Hashing and the Rebalancing Nobody Notices</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run the real hash-ring placement algorithm against naive modulo hashing on the same key set — see how little of the keyspace a ring actually moves when a node joins or leaves, and what happens without enough virtual nodes to spread the luck around.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 08, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Vector Clocks and the Clock Skew That Fools Last-Write-Wins</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run the real happens-before/happens-after/concurrent test on a scripted causal history, then watch a naive last-write-wins resolver flip its answer under clock skew alone — while the causal verdict never moves.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 08, 2026</span><span>4 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">HyperLogLog and the Question Bloom Filters Can't Answer</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Sep 09, 2026</span><span>4 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#the-algorithm" class="toc-link">The Algorithm</a></li><li><a href="#why-olog-n-not-on" class="toc-link">Why O(log n), Not O(n)</a></li><li><a href="#what-fanout-actually-controls" class="toc-link">What Fanout Actually Controls</a></li><li><a href="#what-this-deliberately-doesnt-model" class="toc-link">What This Deliberately Doesn't Model</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>

@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/portfolio/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+         literal first-paint value for any client that renders HTML before
+         (or without) executing JS, so it should read the same as the
+         hydrated homepage, not a separately-worded fallback. -->
+    <title>Architecture Breakdown: CQRS for Mid-size Products | Khoa Tran Engineering Portfolio</title>
+    <meta name="description" content="A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path.">
+    <meta name="keywords" content="Software Developer, Backend Engineer, NestJS, Firebase, Full-stack, Vietnam, Portfolio">
+    <meta property="og:title" content="Architecture Breakdown: CQRS for Mid-size Products | Khoa Tran Engineering Portfolio">
+    <meta property="og:description" content="A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path.">
+    <meta property="og:image" content="https://khoahotran.github.io/portfolio/og/architecture-breakdown-cqrs-for-mid-size-products.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://khoahotran.github.io/portfolio/og/architecture-breakdown-cqrs-for-mid-size-products.png">
+    <!--
+      Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
+      paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
+      logic rather than an import because any module would load too late to prevent that — the
+      canonical version is src/theme/theme.ts, and the two must stay in agreement.
+
+      Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
+      forced to light, so this script is what corrects the class per visitor.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* Storage blocked — fall back to the light default rather than failing to render. */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin="" src="/portfolio/assets/index-Cc5lJv14.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/portfolio/assets/vendor-react-DySwiC3i.js">
+    <link rel="stylesheet" crossorigin="" href="/portfolio/assets/index-BisRsaB1.css">
+  <link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/PortfolioHome-LMqmrW-f.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/content-service-D4gPce06.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/format-B7JN010p.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/TagPill-DDZ3fiMW.js"><meta property="og:type" content="article"><meta property="og:url" content="https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products"><meta name="twitter:title" content="Architecture Breakdown: CQRS for Mid-size Products | Khoa Tran Engineering Portfolio"><meta name="twitter:description" content="A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path."><link rel="canonical" href="https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://khoahotran.github.io/portfolio/feed.xml"><link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://khoahotran.github.io/portfolio/feed.json"><script type="application/ld+json" id="portfolio-jsonld">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Architecture Breakdown: CQRS for Mid-size Products","datePublished":"2026-03-21","description":"A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path.","keywords":"cqrs, architecture, system-design","articleSection":"blog","image":"https://khoahotran.github.io/portfolio/og/architecture-breakdown-cqrs-for-mid-size-products.png","url":"https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products","mainEntityOfPage":{"@type":"WebPage","@id":"https://khoahotran.github.io/portfolio/blog/architecture-breakdown-cqrs-for-mid-size-products"},"author":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"},"publisher":{"@type":"Person","name":"Trần Nguyễn Anh Khoa"}}</script><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ContentDetailPage-DI0r5FAt.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/arrow-left-L7tjByvE.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/ErrorNotice-KTGZ8i7-.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/mermaid-BYa517Of.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/markdown-4BsvNudn.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-Cc5lJv14.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-BQ1B_Piy.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/index-DVNwT64z.js"><link rel="modulepreload" as="script" crossorigin="" href="/portfolio/assets/katex-CMdAwrm5.js"><link rel="stylesheet" crossorigin="" href="/portfolio/assets/katex-CJ2tWXjN.css"></head>
+  <body>
+    <div id="root"><div class="min-h-screen bg-slate-50 text-slate-900"><a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-inverse-fg">Skip to content</a><header class="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur"><div class="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6"><a aria-label="Go to home" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700" href="/portfolio/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><div class="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary"><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/about" data-discover="true">About</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/projects" data-discover="true">Projects</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/search" data-discover="true">Search</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/graph" data-discover="true">Ecosystem</a></nav><span aria-hidden="true" class="h-4 w-px shrink-0 bg-slate-200"></span><span aria-hidden="true" class="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500">Explore</span><nav class="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore"><a aria-current="page" class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-teal-700" href="/portfolio/blog" data-discover="true">Blog</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/research" data-discover="true">Research</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/experiments" data-discover="true">Experiments</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/labs" data-discover="true">Labs</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/system-design" data-discover="true">System Design</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/field-notes" data-discover="true">Field Notes</a><a class="shrink-0 text-xs font-semibold uppercase tracking-wide transition text-slate-500 hover:text-slate-900" href="/portfolio/tags" data-discover="true">Tags</a></nav></div><button type="button" aria-label="Switch to dark theme" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon " aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></header><div id="main-content"><main class="mx-auto w-full max-w-6xl px-4 pb-12 pt-6 md:px-6 md:pt-10"><div class="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-teal-500 transition-[width]" style="width: 0%;"></div></div><div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]"><article id="article-content" class="min-w-0"><a class="btn-back mb-2" href="/portfolio/blog" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left " aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back to blog</a><header class="mb-6 border-b border-slate-200 pb-6"><h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Architecture Breakdown: CQRS for Mid-size Products</h1><div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500"><span>Mar 21, 2026</span><span>5 min read</span></div><p class="mt-3 text-sm text-slate-600">A practical guide to adopting CQRS for mid-size products: when it helps, when it hurts, and the pragmatic migration path.</p><div class="mt-4 flex flex-wrap gap-2"><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#cqrs</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#architecture</span><span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">#system-design</span></div></header><div class="markdown-body"><h2 id="the-tipping-point"><a class="heading-anchor" aria-label="Copy heading link" href="#the-tipping-point" data-enhanced="true"><span class="icon icon-link"></span></a>The Tipping Point</h2>
+<p>Every monolithic system eventually hits a breaking point where the read model and the write model start fighting for the same database resources. In our case, the read model was overloaded with complex <code>JOIN</code>s to serve various dashboards, while the write workflows became increasingly harder to evolve because every schema change threatened to break a critical read query.</p>
+<p>Our core application was built on top of a single PostgreSQL database. Under normal operations, this was highly reliable. However, as our user base scaled, two specific tables—<code>orders</code> and <code>inventory_items</code>—became hot spots for transaction lock contention.</p>
+<p>At peak times, we experienced:</p>
+<ul>
+<li><strong>Write Latency Spikes</strong>: Insert and update transactions on orders frequently ran into locks, pushing p99 write latency to over <code>3,200ms</code>.</li>
+<li><strong>Read Outages</strong>: Analytics queries and admin dashboards, which required scanning multiple tables with multiple <code>LEFT JOIN</code>s, took up to <code>8 seconds</code> to execute, starving the database connection pool.</li>
+<li><strong>Deadlocks</strong>: The combination of long-running analytics read locks and rapid transactional write locks caused intermittent deadlock exceptions, failing customer transactions.</li>
+</ul>
+<p>We needed a solution that would allow us to optimize reads for high throughput without sacrificing the strict consistency requirements of our write operations.</p>
+<h2 id="the-cqrs-approach"><a class="heading-anchor" aria-label="Copy heading link" href="#the-cqrs-approach" data-enhanced="true"><span class="icon icon-link"></span></a>The CQRS Approach</h2>
+<p>Command Query Responsibility Segregation (CQRS) is often presented as a heavyweight, enterprise-only pattern requiring message brokers, event store databases, and massive microservice environments. However, we found a pragmatic way to adopt it for our mid-size product.</p>
+<p>We didn't rewrite the entire system. Instead, we applied CQRS surgically to just <strong>two bounded contexts</strong> that were experiencing the most pain: <strong>Order Management</strong> and <strong>Inventory Tracking</strong>.</p>
+<h3 id="separation-of-concerns"><a class="heading-anchor" aria-label="Copy heading link" href="#separation-of-concerns" data-enhanced="true"><span class="icon icon-link"></span></a>Separation of Concerns</h3>
+<p>By dividing our read and write paths, we decoupled the schemas and optimized the data storage models for their specific jobs.</p>
+<pre><code>       [ Client Request ]
+         /           \
+   (Command)        (Query)
+      /               \
+[ Write API ]     [ Read API ]
+     |                 |
+[ Write DB ]      [ Read DB ] (Denormalized)
+(Normalized SQL)       ^
+     \                 /
+      [ Sync Service ] (CDC / Outbox / Event Listener)
+</code></pre>
+<ol>
+<li><strong>The Write Side (Command)</strong>: We stripped down the write models to their bare essentials, focusing entirely on enforcing business invariants. The write database became a highly optimized, normalized schema designed for quick transactional updates.</li>
+<li><strong>The Read Side (Query)</strong>: We created tailored read projections (materialized views and denormalized tables) specifically structured to answer the dashboard queries in <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> or <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>N</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mclose">)</span></span></span></span> time.</li>
+</ol>
+<hr>
+<h2 id="technical-implementation"><a class="heading-anchor" aria-label="Copy heading link" href="#technical-implementation" data-enhanced="true"><span class="icon icon-link"></span></a>Technical Implementation</h2>
+<p>To implement this separation without introducing the overhead of a separate Kafka cluster, we utilized PostgreSQL replication and a lightweight Outbox-style sync worker written in Node.js.</p>
+<h3 id="1-the-write-model-normalized-sql"><a class="heading-anchor" aria-label="Copy heading link" href="#1-the-write-model-normalized-sql" data-enhanced="true"><span class="icon icon-link"></span></a>1. The Write Model (Normalized SQL)</h3>
+<p>The write database preserves relational constraints and enforces business logic. Here is the simplified schema for the write side:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">sql</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-sql"><span class="hljs-comment">-- The Write Model: Optimized for updates and transactional integrity</span>
+<span class="hljs-keyword">CREATE TABLE</span> orders (
+    id UUID <span class="hljs-keyword">PRIMARY KEY</span>,
+    customer_id UUID <span class="hljs-keyword">NOT NULL</span>,
+    status <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT NULL</span>,
+    total_amount <span class="hljs-type">DECIMAL</span>(<span class="hljs-number">12</span>, <span class="hljs-number">2</span>) <span class="hljs-keyword">NOT NULL</span>,
+    version <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-number">1</span>,
+    created_at <span class="hljs-type">TIMESTAMP</span> <span class="hljs-keyword">WITH</span> <span class="hljs-type">TIME</span> ZONE <span class="hljs-keyword">DEFAULT</span> NOW(),
+    updated_at <span class="hljs-type">TIMESTAMP</span> <span class="hljs-keyword">WITH</span> <span class="hljs-type">TIME</span> ZONE <span class="hljs-keyword">DEFAULT</span> NOW()
+);
+
+<span class="hljs-keyword">CREATE TABLE</span> order_items (
+    id UUID <span class="hljs-keyword">PRIMARY KEY</span>,
+    order_id UUID <span class="hljs-keyword">REFERENCES</span> orders(id) <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DELETE</span> CASCADE,
+    product_id UUID <span class="hljs-keyword">NOT NULL</span>,
+    quantity <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT NULL</span>,
+    price <span class="hljs-type">DECIMAL</span>(<span class="hljs-number">12</span>, <span class="hljs-number">2</span>) <span class="hljs-keyword">NOT NULL</span>
+);
+</code></pre>
+<h3 id="2-the-read-model-denormalized-cache--search-optimized"><a class="heading-anchor" aria-label="Copy heading link" href="#2-the-read-model-denormalized-cache--search-optimized" data-enhanced="true"><span class="icon icon-link"></span></a>2. The Read Model (Denormalized Cache / Search-optimized)</h3>
+<p>The read database consists of pre-computed, flattened records. For this implementation, we stored the read model in MongoDB, which fits JSON dashboard representations perfectly, or a denormalized PostgreSQL view table indexed heavily on query parameters. Here is the target structure of our denormalized order view:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">json</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"order-uuid-12345"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"customerId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"customer-uuid-abc"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"status"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"PROCESSING"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"totalAmount"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">150.00</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"itemCount"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"productSummary"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Laptop Sleeve, USB-C Hub, Cable Organizer"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"customerName"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Jane Doe"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"customerEmail"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"jane.doe@example.com"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"createdAt"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2026-03-21T12:00:00Z"</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 id="3-the-projection-sync-worker"><a class="heading-anchor" aria-label="Copy heading link" href="#3-the-projection-sync-worker" data-enhanced="true"><span class="icon icon-link"></span></a>3. The Projection Sync Worker</h3>
+<p>We write a simple NestJS service that listens to transaction commits or outbox records and updates the read database asynchronously. Here is the implementation using a safe transactional boundary:</p>
+<pre data-enhanced="true" class="has-toolbar"><div class="code-toolbar"><span class="code-language">typescript</span><button type="button" class="code-copy-button">Copy</button></div><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Injectable</span>, <span class="hljs-title class_">Logger</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">InjectModel</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/mongoose'</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Model</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'mongoose'</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">OrderDocument</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./schemas/order-read.schema'</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">OrderEventDto</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./dto/order-event.dto'</span>;
+
+<span class="hljs-meta">@Injectable</span>()
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderProjectionWorker</span> {
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> logger = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Logger</span>(<span class="hljs-title class_">OrderProjectionWorker</span>.<span class="hljs-property">name</span>);
+
+  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">
+    <span class="hljs-meta">@InjectModel</span>(<span class="hljs-string">'OrderRead'</span>) <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">readModel</span>: <span class="hljs-title class_">Model</span>&lt;<span class="hljs-title class_">OrderDocument</span>&gt;
+  </span>) {}
+
+  <span class="hljs-keyword">async</span> <span class="hljs-title function_">handleOrderCreated</span>(<span class="hljs-attr">event</span>: <span class="hljs-title class_">OrderEventDto</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-built_in">void</span>&gt; {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`Syncing order creation: <span class="hljs-subst">${event.orderId}</span>`</span>);
+    
+    <span class="hljs-comment">// Construct the denormalized query model</span>
+    <span class="hljs-keyword">const</span> denormalizedOrder = {
+      <span class="hljs-attr">_id</span>: event.<span class="hljs-property">orderId</span>,
+      <span class="hljs-attr">customerId</span>: event.<span class="hljs-property">customerId</span>,
+      <span class="hljs-attr">status</span>: event.<span class="hljs-property">status</span>,
+      <span class="hljs-attr">totalAmount</span>: event.<span class="hljs-property">totalAmount</span>,
+      <span class="hljs-attr">itemCount</span>: event.<span class="hljs-property">items</span>.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">acc, item</span>) =&gt;</span> acc + item.<span class="hljs-property">quantity</span>, <span class="hljs-number">0</span>),
+      <span class="hljs-attr">productSummary</span>: event.<span class="hljs-property">items</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">productName</span>).<span class="hljs-title function_">join</span>(<span class="hljs-string">', '</span>),
+      <span class="hljs-attr">customerName</span>: event.<span class="hljs-property">customerName</span>,
+      <span class="hljs-attr">customerEmail</span>: event.<span class="hljs-property">customerEmail</span>,
+      <span class="hljs-attr">createdAt</span>: event.<span class="hljs-property">createdAt</span>,
+    };
+
+    <span class="hljs-comment">// Upsert into denormalized read database</span>
+    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">readModel</span>.<span class="hljs-title function_">findByIdAndUpdate</span>(
+      event.<span class="hljs-property">orderId</span>,
+      { <span class="hljs-attr">$set</span>: denormalizedOrder },
+      { <span class="hljs-attr">upsert</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">new</span>: <span class="hljs-literal">true</span> }
+    );
+  }
+
+  <span class="hljs-keyword">async</span> <span class="hljs-title function_">handleOrderStatusUpdated</span>(<span class="hljs-attr">orderId</span>: <span class="hljs-built_in">string</span>, <span class="hljs-attr">newStatus</span>: <span class="hljs-built_in">string</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-built_in">void</span>&gt; {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`Syncing status update: <span class="hljs-subst">${orderId}</span> -&gt; <span class="hljs-subst">${newStatus}</span>`</span>);
+    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">readModel</span>.<span class="hljs-title function_">findByIdAndUpdate</span>(
+      orderId,
+      { <span class="hljs-attr">$set</span>: { <span class="hljs-attr">status</span>: newStatus } }
+    );
+  }
+}
+</code></pre>
+<hr>
+<h2 id="trade-offs-and-operational-reality"><a class="heading-anchor" aria-label="Copy heading link" href="#trade-offs-and-operational-reality" data-enhanced="true"><span class="icon icon-link"></span></a>Trade-offs and Operational Reality</h2>
+<p>The benefits were immediate: we achieved significantly clearer domain models and orders of magnitude faster read latencies. However, CQRS introduces undeniable complexity.</p>
+<h3 id="architectural-trade-off-matrix"><a class="heading-anchor" aria-label="Copy heading link" href="#architectural-trade-off-matrix" data-enhanced="true"><span class="icon icon-link"></span></a>Architectural Trade-off Matrix</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Feature</th><th align="left">Unified Model</th><th align="left">CQRS (Segregated Path)</th></tr></thead><tbody><tr><td align="left"><strong>Write Throughput</strong></td><td align="left">Moderate (Contention bound)</td><td align="left">High (Normalized, lock-free tables)</td></tr><tr><td align="left"><strong>Read Latency</strong></td><td align="left">Slows down as joins increase</td><td align="left">Constant <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> or <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>N</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mclose">)</span></span></span></span></td></tr><tr><td align="left"><strong>Data Consistency</strong></td><td align="left">Strong (ACID)</td><td align="left">Eventual Consistency</td></tr><tr><td align="left"><strong>Development Speed</strong></td><td align="left">Fast initially (single model)</td><td align="left">Slow initially (two models to write)</td></tr><tr><td align="left"><strong>Infrastructure Cost</strong></td><td align="left">Low (Single DB server)</td><td align="left">Moderate (Requires Sync Worker + Read Store)</td></tr></tbody></table>
+<h3 id="1-managing-eventual-consistency"><a class="heading-anchor" aria-label="Copy heading link" href="#1-managing-eventual-consistency" data-enhanced="true"><span class="icon icon-link"></span></a>1. Managing Eventual Consistency</h3>
+<p>Because the read projections are updated asynchronously, a client query executed immediately after a write command might return stale data. We resolved this through:</p>
+<ul>
+<li><strong>Optimistic UI Updates</strong>: The frontend immediately renders the transition locally, pretending the database write is complete.</li>
+<li><strong>WebSocket Push Notifications</strong>: The sync worker emits an event via WebSockets when the projection completes, forcing the client to reload.</li>
+<li><strong>Version Headers</strong>: Including the entity version in API responses so the client can retry the read if the returned version is less than the write version.</li>
+</ul>
+<h3 id="2-monitoring-projection-lag"><a class="heading-anchor" aria-label="Copy heading link" href="#2-monitoring-projection-lag" data-enhanced="true"><span class="icon icon-link"></span></a>2. Monitoring Projection Lag</h3>
+<p>We quickly realized that if the projection worker went down, we had no way of knowing our dashboards were serving stale data. We built an operational dashboard tracking <strong>Projection Lag</strong> (the delta between the event timestamp in the write database and the update timestamp in the read database). If the lag exceeds 5 seconds, an alert is triggered in our SRE system.</p>
+<hr>
+<h2 id="the-core-lesson"><a class="heading-anchor" aria-label="Copy heading link" href="#the-core-lesson" data-enhanced="true"><span class="icon icon-link"></span></a>The Core Lesson</h2>
+<p>Adopt CQRS surgically, not as a default architecture slogan. It is a powerful pattern for resolving read/write contention, but its complexity tax should only be paid when the pain of a unified model outweighs the cost of maintaining two separate data pipelines.</p>
+<p>For mid-size products, start with shared databases using separate schemas or tables for read views before introducing separate database engines. Keep your system as simple as possible for as long as possible.</p></div><nav class="mt-10 grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2" aria-label="Article navigation"><a class="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500" href="/portfolio/blog/engineering-lessons-from-a-failed-rollout" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">Engineering Lessons from a Failed Rollout</div></a><a class="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500" href="/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture" data-discover="true"><div class="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div><div class="text-sm font-semibold text-slate-900 group-hover:text-teal-700">gRPC Service Mesh in Go: Designing the Aegis Auth Platform</div></a></nav><div class="mt-16 border-t border-slate-200 pt-8"><h2 class="mb-6 text-sm font-bold uppercase tracking-wider text-slate-900">Read Next</h2><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/research/event-sourcing-vs-crud-when-to-choose-each" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">research</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Event Sourcing vs CRUD: When to Choose Each</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">A decision framework for choosing between Event Sourcing and traditional CRUD, based on building both a CRUD loyalty API and a full event-sourced core banking system.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>5 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/system-design/designing-a-global-api-gateway" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">system design</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Designing a Global API Gateway: Edge Routing Beyond a Single Aegis Instance</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">Aegis's GraphQL gateway solves API shape for one instance. This is the layer above it a real deployment would need once there's more than one — and why that's a different problem, not a bigger version of the same one.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Aug 28, 2026</span><span>5 min read</span></div></a><a class="group flex flex-col justify-between rounded-xl border border-slate-200 bg-surface p-5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg" href="/portfolio/experiments/event-sourcing-replay" data-discover="true"><div><div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-teal-700">experiments</div><h3 class="line-clamp-2 font-bold text-slate-900 transition-colors group-hover:text-teal-700">Interactive Event Sourcing Replay</h3><p class="mt-2 line-clamp-2 text-xs text-slate-500">An interactive visualization of how application state is derived from an immutable, append-only event log.</p></div><div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-[10px] font-medium text-slate-500"><span>Jun 28, 2026</span><span>1 min read</span></div></a></div></div></article><aside class="hidden md:block"><div class="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4"><h2 class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">On this page</h2><ul class="toc-rail space-y-0.5 text-[0.85rem] leading-snug"><li><a href="#the-tipping-point" class="toc-link">The Tipping Point</a></li><li><a href="#the-cqrs-approach" class="toc-link">The CQRS Approach</a></li><li class="toc-sub"><a href="#separation-of-concerns" class="toc-link">Separation of Concerns</a></li><li><a href="#technical-implementation" class="toc-link">Technical Implementation</a></li><li class="toc-sub"><a href="#1-the-write-model-normalized-sql" class="toc-link">1. The Write Model (Normalized SQL)</a></li><li class="toc-sub"><a href="#2-the-read-model-denormalized-cache--search-optimized" class="toc-link">2. The Read Model (Denormalized Cache / Search-optimized)</a></li><li class="toc-sub"><a href="#3-the-projection-sync-worker" class="toc-link">3. The Projection Sync Worker</a></li><li><a href="#trade-offs-and-operational-reality" class="toc-link">Trade-offs and Operational Reality</a></li><li class="toc-sub"><a href="#architectural-trade-off-matrix" class="toc-link">Architectural Trade-off Matrix</a></li><li class="toc-sub"><a href="#1-managing-eventual-consistency" class="toc-link">1. Managing Eventual Consistency</a></li><li class="toc-sub"><a href="#2-monitoring-projection-lag" class="toc-link">2. Monitoring Projection Lag</a></li><li><a href="#the-core-lesson" class="toc-link">The Core Lesson</a></li></ul></div></aside></div></main></div><footer class="border-t border-slate-100 bg-surface px-4 py-8 text-center md:px-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">© 2026 Trần Nguyễn Anh Khoa</p><p class="mt-2 text-[10px] uppercase tracking-tighter text-slate-500">HO CHI MINH CITY</p></footer></div></div>
+    <!--
+      Companion to public/404.html: restores the real path (encoded as
+      ?redirect=) via history.replaceState before React Router mounts, so a
+      hard refresh or shared link on GitHub Pages lands on the right route
+      instead of the home page.
+    -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          var base = '/portfolio/';
+          history.replaceState(null, '', base + redirect);
+        }
+      })();
+    </script>
+  
+
+</body></html>
