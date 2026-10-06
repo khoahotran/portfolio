@@ -157,7 +157,7 @@ function RetryStrategyVisualizerPage() {
               );
             })}
             
-            <div className="absolute top-[42%] left-[2%] text-[10px] font-bold uppercase tracking-widest text-slate-500">First Request</div>
+            <div className="absolute top-[42%] left-[2%] text-[10px] font-bold uppercase tracking-widest text-slate-600">First Request</div>
           </div>
         </section>
       </div>

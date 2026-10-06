@@ -56,7 +56,7 @@ function Timeline({ mode, requests, processingTicks, ttlTicks, maxTick }: {
           const widthPct = Math.max(1.5, ((result.resolvedTick - result.arrivalTick) / maxTick) * 100);
           return (
             <div key={i} className="flex items-center gap-2">
-              <span className="w-16 shrink-0 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">req {i + 1}</span>
+              <span className="w-16 shrink-0 text-right text-[10px] font-bold uppercase tracking-widest text-slate-600">req {i + 1}</span>
               <div className="relative h-5 flex-1 rounded bg-slate-100">
                 <div
                   className={`absolute h-5 rounded ${OUTCOME_STYLE[result.outcome].bg}`}

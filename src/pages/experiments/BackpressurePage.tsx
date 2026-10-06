@@ -145,11 +145,11 @@ function BackpressurePage() {
           <div className="grid grid-cols-2 gap-2 pt-4 border-t border-slate-100 text-center">
             <div>
               <div className="text-lg font-bold text-rose-700">{result.totalDropped}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total dropped</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Total dropped</div>
             </div>
             <div>
               <div className="text-lg font-bold text-slate-900">{result.totalProcessed}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total processed</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Total processed</div>
             </div>
           </div>
         </section>

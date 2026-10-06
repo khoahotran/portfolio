@@ -85,20 +85,20 @@ function CrdtPage() {
             <div className="min-w-0 md:col-span-8 space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="rounded-2xl border border-teal-200 bg-teal-50 p-5">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">G-Counter (real merge)</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">G-Counter (real merge)</p>
                   <div className="mt-2 flex items-center gap-2 text-2xl font-bold text-teal-800">
                     <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
                     {counterResult.gCounterTotal}
                   </div>
-                  <p className="mt-2 text-xs text-slate-500">Sum of every slot — always equals the true total.</p>
+                  <p className="mt-2 text-xs text-slate-600">Sum of every slot — always equals the true total.</p>
                 </div>
                 <div className={`rounded-2xl border p-5 ${counterResult.lwwLostUpdates > 0 ? 'border-rose-200 bg-rose-50' : 'border-slate-200 bg-slate-50'}`}>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Naive LWW register</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Naive LWW register</p>
                   <div className={`mt-2 flex items-center gap-2 text-2xl font-bold ${counterResult.lwwLostUpdates > 0 ? 'text-rose-800' : 'text-slate-700'}`}>
                     {counterResult.lwwLostUpdates > 0 ? <AlertTriangle className="w-5 h-5 shrink-0" aria-hidden="true" /> : <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />}
                     {counterResult.lwwTotal}
                   </div>
-                  <p className="mt-2 text-xs text-slate-500">
+                  <p className="mt-2 text-xs text-slate-600">
                     {counterResult.lwwLostUpdates > 0
                       ? `${counterResult.lwwLostUpdates} real increment${counterResult.lwwLostUpdates === 1 ? '' : 's'} silently discarded.`
                       : 'Nothing lost this time — the winning write happens to hold every real increment.'}
@@ -126,20 +126,20 @@ function CrdtPage() {
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className={`rounded-2xl border p-5 ${setResult.orSetHasElement ? 'border-teal-200 bg-teal-50' : 'border-rose-200 bg-rose-50'}`}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">OR-Set (real merge)</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">OR-Set (real merge)</p>
                 <div className={`mt-2 flex items-center gap-2 text-lg font-bold ${setResult.orSetHasElement ? 'text-teal-800' : 'text-rose-800'}`}>
                   {setResult.orSetHasElement ? <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" /> : <XCircle className="w-5 h-5 shrink-0" aria-hidden="true" />}
                   "x" is {setResult.orSetHasElement ? 'present' : 'absent'}
                 </div>
-                <p className="mt-2 text-xs text-slate-500">The re-add's fresh tag was never tombstoned — it survives.</p>
+                <p className="mt-2 text-xs text-slate-600">The re-add's fresh tag was never tombstoned — it survives.</p>
               </div>
               <div className={`rounded-2xl border p-5 ${setResult.twoPhaseSetHasElement ? 'border-teal-200 bg-teal-50' : 'border-rose-200 bg-rose-50'}`}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Naive 2P-Set</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Naive 2P-Set</p>
                 <div className={`mt-2 flex items-center gap-2 text-lg font-bold ${setResult.twoPhaseSetHasElement ? 'text-teal-800' : 'text-rose-800'}`}>
                   {setResult.twoPhaseSetHasElement ? <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" /> : <XCircle className="w-5 h-5 shrink-0" aria-hidden="true" />}
                   "x" is {setResult.twoPhaseSetHasElement ? 'present' : 'absent'}
                 </div>
-                <p className="mt-2 text-xs text-slate-500">
+                <p className="mt-2 text-xs text-slate-600">
                   {setResult.twoPhaseSetHasElement ? '' : "\"x\" was removed once, by value alone — permanently, even after the real re-add."}
                 </p>
               </div>

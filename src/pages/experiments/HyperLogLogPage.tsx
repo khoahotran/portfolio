@@ -139,22 +139,22 @@ function HyperLogLogPage() {
                 </p>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="rounded-2xl border border-rose-200 bg-rose-50 p-5">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Raw formula (no correction)</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Raw formula (no correction)</p>
                     <div className="mt-2 flex items-center gap-2 text-2xl font-bold text-rose-800">
                       <AlertTriangle className="w-5 h-5 shrink-0" aria-hidden="true" />
                       {smallRangeDemo.raw.toFixed(0)}
                     </div>
-                    <p className="mt-2 text-xs text-slate-500">
+                    <p className="mt-2 text-xs text-slate-600">
                       {(smallRangeDemo.raw / Math.max(smallRangeDemo.n, 1)).toFixed(1)}× the true count of {smallRangeDemo.n}.
                     </p>
                   </div>
                   <div className="rounded-2xl border border-teal-200 bg-teal-50 p-5">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Corrected (linear counting)</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Corrected (linear counting)</p>
                     <div className="mt-2 flex items-center gap-2 text-2xl font-bold text-teal-800">
                       <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
                       {smallRangeDemo.corrected.toFixed(0)}
                     </div>
-                    <p className="mt-2 text-xs text-slate-500">Close to the true count of {smallRangeDemo.n}.</p>
+                    <p className="mt-2 text-xs text-slate-600">Close to the true count of {smallRangeDemo.n}.</p>
                   </div>
                 </div>
               </div>
@@ -196,15 +196,15 @@ function HyperLogLogPage() {
               <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">A alone</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">A alone</p>
                     <div className="mt-2 text-xl font-bold text-slate-700">{mergeResult.estimateA.toFixed(0)}</div>
                   </div>
                   <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">B alone</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">B alone</p>
                     <div className="mt-2 text-xl font-bold text-slate-700">{mergeResult.estimateB.toFixed(0)}</div>
                   </div>
                   <div className={`rounded-2xl border p-4 ${Math.abs(mergeResult.naiveSum - mergeResult.trueUnion) > mergeResult.trueUnion * 0.15 ? 'border-rose-200 bg-rose-50' : 'border-slate-200 bg-slate-50'}`}>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Naive sum (A + B)</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Naive sum (A + B)</p>
                     <div className={`mt-2 flex items-center gap-1.5 text-xl font-bold ${Math.abs(mergeResult.naiveSum - mergeResult.trueUnion) > mergeResult.trueUnion * 0.15 ? 'text-rose-800' : 'text-slate-700'}`}>
                       {Math.abs(mergeResult.naiveSum - mergeResult.trueUnion) > mergeResult.trueUnion * 0.15 && <AlertTriangle className="w-4 h-4 shrink-0" aria-hidden="true" />}
                       {mergeResult.naiveSum.toFixed(0)}

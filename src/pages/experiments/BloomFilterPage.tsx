@@ -93,17 +93,17 @@ function BloomFilterPage() {
             </h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Theoretical formula</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Theoretical formula</p>
                 <div className="mt-2 text-2xl font-bold text-slate-800">{(trial.theoreticalFalsePositiveRate * 100).toFixed(2)}%</div>
-                <p className="mt-2 text-xs text-slate-500 font-mono">(1 - e^(-kn/m))^k</p>
+                <p className="mt-2 text-xs text-slate-600 font-mono">(1 - e^(-kn/m))^k</p>
               </div>
               <div className={`rounded-2xl border p-5 ${trial.measuredFalsePositiveRate > 0.5 ? 'border-rose-200 bg-rose-50' : 'border-teal-200 bg-teal-50'}`}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Measured (real test)</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Measured (real test)</p>
                 <div className={`mt-2 flex items-center gap-2 text-2xl font-bold ${trial.measuredFalsePositiveRate > 0.5 ? 'text-rose-800' : 'text-teal-800'}`}>
                   {trial.measuredFalsePositiveRate > 0.5 && <AlertTriangle className="w-5 h-5 shrink-0" aria-hidden="true" />}
                   {(trial.measuredFalsePositiveRate * 100).toFixed(2)}%
                 </div>
-                <p className="mt-2 text-xs text-slate-500">
+                <p className="mt-2 text-xs text-slate-600">
                   {trial.falsePositiveCount.toLocaleString()} of {trial.testedCount.toLocaleString()} genuinely-new items wrongly flagged.
                 </p>
               </div>

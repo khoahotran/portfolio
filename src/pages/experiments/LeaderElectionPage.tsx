@@ -139,13 +139,13 @@ function LeaderElectionPage() {
               <div className="text-lg font-bold text-teal-700">
                 {result.leaderId ?? (initiatorId === null ? '—' : '…')}
               </div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
                 {currentStep >= result.steps.length ? 'Leader' : 'Electing'}
               </div>
             </div>
             <div>
               <div className="text-lg font-bold text-slate-900">{totalMessages}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total messages</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Total messages</div>
             </div>
           </div>
 

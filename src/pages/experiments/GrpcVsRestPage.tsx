@@ -132,11 +132,11 @@ function GrpcVsRestPage() {
             <div className="grid grid-cols-2 gap-2 pt-4 border-t border-slate-100 text-center">
               <div>
                 <div className="text-lg font-bold text-teal-700">{Math.round(currentData.grpcBytes).toLocaleString()}</div>
-                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">gRPC bytes/resp</div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">gRPC bytes/resp</div>
               </div>
               <div>
                 <div className="text-lg font-bold text-rose-700">{Math.round(currentData.restBytes).toLocaleString()}</div>
-                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">REST bytes/resp</div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">REST bytes/resp</div>
               </div>
             </div>
 

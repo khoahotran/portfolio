@@ -184,15 +184,15 @@ function RateLimitingAlgorithmsPage() {
           <div className="grid grid-cols-3 gap-2 pt-4 border-t border-slate-100 text-center">
             <div>
               <div className="text-lg font-bold text-teal-700">{stats.allowed}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Allowed</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Allowed</div>
             </div>
             <div>
               <div className="text-lg font-bold text-rose-600">{stats.rejected}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Rejected</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Rejected</div>
             </div>
             <div>
               <div className="text-lg font-bold text-slate-900">{stats.rate.toFixed(0)}%</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Admit rate</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Admit rate</div>
             </div>
           </div>
         </section>

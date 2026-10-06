@@ -7,7 +7,7 @@ import type { ClockAction, ClockComparison, ClockEvent, VectorClock } from '../.
 import { useSeo } from '../../seo/useSeo';
 
 const NODE_IDS = ['A', 'B', 'C'];
-const NODE_COLOR: Record<string, string> = { A: 'text-teal-700', B: 'text-sky-700', C: 'text-violet-700' };
+const NODE_COLOR: Record<string, string> = { A: 'text-teal-700', B: 'text-sky-700', C: 'text-indigo-700' };
 
 // A fixed, real scenario: A and B each write independently before any message connects them; A's
 // update reaches B and visibly informs B's next write; C's write stays isolated the whole time,
@@ -128,19 +128,19 @@ function VectorClocksPage() {
         <section className="min-w-0 md:col-span-8 space-y-6">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className={`rounded-2xl border p-5 ${COMPARISON_STYLE[comparison].surface}`}>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Real causal verdict</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Real causal verdict</p>
               <div className={`mt-2 flex items-center gap-2 text-sm font-bold ${COMPARISON_STYLE[comparison].accent}`}>
                 <ComparisonIcon className="w-4 h-4 shrink-0" aria-hidden="true" />
                 {COMPARISON_STYLE[comparison].label}
               </div>
-              <p className="mt-2 text-xs text-slate-500">Depends only on the two events' vector clocks — immune to clock skew.</p>
+              <p className="mt-2 text-xs text-slate-600">Depends only on the two events' vector clocks — immune to clock skew.</p>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Naive last-write-wins</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Naive last-write-wins</p>
               <div className={`mt-2 text-sm font-bold ${NODE_COLOR[winner.nodeId]}`}>
                 #{winner.id} [{winner.nodeId}] wins
               </div>
-              <p className="mt-2 text-xs text-slate-500">Picked purely by physical timestamp — always produces a winner, even here.</p>
+              <p className="mt-2 text-xs text-slate-600">Picked purely by physical timestamp — always produces a winner, even here.</p>
             </div>
           </div>
 
@@ -167,7 +167,7 @@ function VectorClocksPage() {
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <span>
-                        <span className="font-mono text-slate-400">#{event.id}</span>{' '}
+                        <span className="font-mono text-slate-600">#{event.id}</span>{' '}
                         <span className={`font-bold ${NODE_COLOR[event.nodeId]}`}>[{event.nodeId}]</span>{' '}
                         <span className="text-slate-700">{event.label}</span>
                       </span>

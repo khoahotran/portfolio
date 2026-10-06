@@ -101,7 +101,7 @@ function ConsistentHashingPage() {
                 type="button"
                 onClick={() => setChangeType('add')}
                 className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-xs font-bold transition-colors ${
-                  changeType === 'add' ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  changeType === 'add' ? 'bg-accent text-accent-fg' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
                 <Plus size={14} aria-hidden="true" /> Add a node
@@ -110,7 +110,7 @@ function ConsistentHashingPage() {
                 type="button"
                 onClick={() => setChangeType('remove')}
                 className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-xs font-bold transition-colors ${
-                  changeType === 'remove' ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  changeType === 'remove' ? 'bg-accent text-accent-fg' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
                 <Minus size={14} aria-hidden="true" /> Remove a node
@@ -142,7 +142,7 @@ function ConsistentHashingPage() {
               })}
             </svg>
           </div>
-          <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">
+          <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-600">
             Every dot = one virtual node's ring position
           </p>
         </section>

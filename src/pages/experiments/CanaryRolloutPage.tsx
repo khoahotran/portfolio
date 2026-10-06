@@ -107,7 +107,7 @@ function CanaryRolloutPage() {
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-bold text-slate-800">Stage {stageNum} — {traffic}% traffic</span>
                     {!reached ? (
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Not reached</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Not reached</span>
                     ) : (
                       <span className={`flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest ${stage!.decision === 'rollback' ? 'text-rose-700' : 'text-teal-700'}`}>
                         {stage!.decision === 'rollback' ? <AlertTriangle size={11} aria-hidden="true" /> : <CheckCircle2 size={11} aria-hidden="true" />}

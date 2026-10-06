@@ -119,11 +119,11 @@ function GossipProtocolVisualizerPage() {
           <div className="grid grid-cols-2 gap-2 pt-4 border-t border-slate-100 text-center">
             <div>
               <div className="text-lg font-bold text-teal-700">{infectedIds.size}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Reached</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Reached</div>
             </div>
             <div>
               <div className="text-lg font-bold text-slate-900">{coveragePercent.toFixed(0)}%</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Coverage</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Coverage</div>
             </div>
           </div>
 

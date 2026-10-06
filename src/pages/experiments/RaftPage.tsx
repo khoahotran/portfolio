@@ -133,7 +133,7 @@ function RaftPage() {
                     return (
                       <div key={id} className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-xs">
                         <span className="font-mono text-slate-600">{id} (log length {peerLogLengths[id]})</span>
-                        <span className={`font-bold ${down ? 'text-slate-400' : granted ? 'text-teal-700' : 'text-rose-700'}`}>
+                        <span className={`font-bold ${down ? 'text-slate-600' : granted ? 'text-teal-700' : 'text-rose-700'}`}>
                           {down ? 'unreachable' : granted ? 'vote granted' : 'vote refused — more up-to-date'}
                         </span>
                       </div>

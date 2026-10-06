@@ -62,7 +62,7 @@ function MerkleTreePage() {
                 type="button"
                 onClick={() => setPresetIndex(i)}
                 className={`w-full rounded-md px-3 py-2 text-left text-xs font-bold transition-colors ${
-                  presetIndex === i ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  presetIndex === i ? 'bg-accent text-accent-fg' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
                 {preset.label}

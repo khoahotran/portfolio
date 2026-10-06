@@ -153,7 +153,7 @@ function FailureInjectionDemoPage() {
 
             <div className="mt-12 bg-surface rounded-xl border border-slate-100 p-4 shadow-sm flex gap-4 text-center divide-x divide-slate-100">
               <div className="flex-1">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Requests Sent</div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600 mb-1">Requests Sent</div>
                 <div className="text-xl font-bold text-slate-700">{simulation.breakerOpen ? 0 : requestCount}</div>
               </div>
               <div className="flex-1">

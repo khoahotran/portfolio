@@ -132,15 +132,15 @@ function LsmTreePage() {
             </p>
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Sorted runs on disk</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Sorted runs on disk</p>
                 <div className="mt-2 text-2xl font-bold text-slate-700">{result.finalRunCount}</div>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Avg. runs per lookup</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Avg. runs per lookup</p>
                 <div className="mt-2 text-2xl font-bold text-slate-700">{result.avgReadAmplification.toFixed(2)}</div>
               </div>
               <div className={`rounded-2xl border p-4 ${result.writeAmp > 1 ? 'border-rose-200 bg-rose-50' : 'border-slate-200 bg-slate-50'}`}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Write amplification</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Write amplification</p>
                 <div className={`mt-2 text-2xl font-bold ${result.writeAmp > 1 ? 'text-rose-800' : 'text-slate-700'}`}>{result.writeAmp.toFixed(2)}×</div>
               </div>
             </div>

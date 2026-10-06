@@ -156,19 +156,19 @@ function RedlockPage() {
                 <div className="text-lg font-bold text-slate-900">
                   {acquisition.acquiredCount} / {nodeCount}
                 </div>
-                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
                   Nodes acquired (need {acquisition.quorum})
                 </div>
               </div>
               <div>
                 <div className="text-lg font-bold text-slate-900">{acquisition.elapsedMs}ms</div>
-                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Time to acquire</div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Time to acquire</div>
               </div>
               <div>
                 <div className={`text-lg font-bold ${acquisition.remainingValidityMs > 0 ? 'text-teal-700' : 'text-rose-700'}`}>
                   {acquisition.remainingValidityMs}ms
                 </div>
-                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Validity remaining</div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Validity remaining</div>
               </div>
             </div>
 
