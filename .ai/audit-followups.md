@@ -318,7 +318,8 @@ correctly rejected three fake ones that only *looked* similar.
 
 ### 9. Gates only verify a page's default state on load
 
-**Status:** Open (2026-10-07)
+**Status:** ✅ CLOSED (2026-10-07) — `scripts/check-interactions.mjs`, wired into CI. The gap is
+narrowed, not eliminated; see the resolution at the end of this item for what is still uncovered.
 
 Three separate defects shipped or nearly shipped during Phase 8 and the boot-flash work. All three
 passed every gate. They share one root cause, which is the point of this item: **`check:contrast`
@@ -367,16 +368,60 @@ Acceptance criteria if picked up:
 
 ---
 
+**Resolution.** Added `scripts/check-interactions.mjs` (`npm run check:interactions`), running in CI
+after the contrast check. It takes the middle option this item proposed — a small set of probes on
+the highest-risk surfaces — and deliberately not the per-route click matrix, for the reason given
+above.
+
+Three probes:
+
+- **graph** — every SVG anchor's href is checked for a doubled base prefix, and one node is actually
+  clicked and required to land on its own route with content rather than the 404 page;
+- **labs** — for all 29 labs, every slider is driven to both ends, every button clicked, every select
+  option selected, asserting no console/page error and no horizontal overflow after each;
+- **nav-strip** — at 360px the strip must overflow, must not surrender layout height to a visible
+  scrollbar, and must carry exactly the right `data-scroll-start` / `data-scroll-end` pair at the
+  left edge, the right edge and mid-scroll.
+
+Against the acceptance criteria:
+
+- *exercises post-interaction state* — yes, all three probes do;
+- *would have caught `wireGraphLinks`* — **verified, not assumed.** The bug was reintroduced into
+  `KnowledgeGraphPage.tsx`, the site rebuilt with prerender, and the gate run: it exited 1 on both
+  independent assertions (four doubled hrefs, plus the clicked node rendering the 404 page). The
+  source was then restored and rebuilt. Writing this down because the claim "this would have been
+  caught" is worthless unproven, and item 9 exists precisely because a gate that looks green
+  without looking at anything is the failure mode.
+- *runtime* — one browser context reused across all probes, ~3 min, well under the existing checks.
+
+Writing the gate found three faults in the gate itself on its first run, all of the same shape —
+not looking hard enough. `button[type="button"]` missed every control on `SagaStateMachinePage` and
+`EventSourcingReplayPage`, which do not set the type; holding Playwright locator handles across a
+re-render made `/labs/redlock` time out; and `<select>` was not covered at all, which on the Saga
+and 2PC labs is the control that selects the entire simulated outcome. The "no controls found"
+assertion is what surfaced the first of these, which is why it is kept as a hard failure rather
+than a skip.
+
+**Still uncovered, consciously.** Hover and focus-visible contrast — bullet one of this item's
+three instances — is *not* addressed. `check:contrast` still measures resting colours only. The CDP
+approach sketched above remains the right fix and remains unimplemented. Articles and list pages get
+no interaction coverage either; the judgement is that their interactive surface is links, and links
+are what the graph probe already exercises the risky version of.
+
+---
+
 ## Mental notes for future AI sessions
 
 1. **`min-w-0`** — pay special attention with Grid/Flex + code/tag/badge/URL/dynamic content (see item 5 above). This bug class caused two real production overflow bugs in one audit pass; it's cheap to prevent and easy to reintroduce.
 2. **`rehype-raw`** — acceptable today because content is author-controlled; if a CMS or user-generated content is introduced later, re-evaluate XSS/sanitization (see item 3 above) before shipping.
 3. **Markdown chunk ~159 KB gzip** — acceptable today because it's lazy-loaded per article; if content volume grows substantially, re-measure and consider build-time Markdown rendering (see item 7 above).
 
-4. **Gates measure first paint, not interaction** — a green `check:contrast` / `check:responsive`
-   run says the page renders correctly on load, and says nothing about hover, focus, clicks, or
-   slider extremes. Do not report it as "the site works" (see item 9 above). Three real defects
-   passed both gates for exactly this reason.
+4. **Gates measure first paint; `check:interactions` covers part of the rest** — `check:contrast`
+   and `check:responsive` say the page renders correctly on load and nothing more.
+   `check:interactions` adds graph clicks, lab control extremes and nav-strip scroll edges (item 9).
+   **Hover and focus-visible contrast are still unmeasured by anything.** Do not report a green run
+   as "the site works"; three real defects passed both original gates for exactly this reason.
 
 No large UI refactor is needed right now. The audit passed; items 1-8 above are backlog/follow-up,
-not existing bugs. Item 9 documents a real coverage gap rather than a specific broken thing.
+not existing bugs. Item 9 is closed by `check:interactions`, but only partly — hover/focus contrast
+is still unmeasured, which is written up in that item rather than quietly dropped.

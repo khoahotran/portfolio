@@ -66,6 +66,14 @@ jobs:
       - name: Contrast check
         run: npm run check:contrast
 
+      # The states you only reach by clicking, dragging or scrolling. The two gates above both
+      # navigate, wait for load, and measure — neither interacts, so anything that only breaks
+      # after an interaction passed both. See .ai/audit-followups.md item 9: wireGraphLinks once
+      # made every knowledge-graph node 404 on click and both gates stayed green. This step was
+      # verified by reintroducing that exact bug, rebuilding, and confirming it fails.
+      - name: Interaction check
+        run: npm run check:interactions
+
       # Only a fully green job produces the artifact the deploy job consumes, and only for a push
       # to main — a PR build has nothing to deploy. Keeping the upload last means every gate above
       # has already passed by the time this runs, so there is no window where a half-checked build

@@ -15,6 +15,7 @@
     "deploy": "gh-pages -d dist",
     "prerender": "node scripts/prerender.mjs",
     "check:contrast": "node scripts/check-contrast.mjs",
+    "check:interactions": "node scripts/check-interactions.mjs",
     "test": "vitest run"
   },
   "dependencies": {
