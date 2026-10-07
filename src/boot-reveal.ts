@@ -21,6 +21,11 @@
  * React's animations to finish before dropping the overlay did not fix it either. Hiding instead of
  * bridging has no such seam — there is only ever one tree on screen.
  *
+ * The curtain also lifts without React, on a failed script, an uncaught error or a rejected
+ * dynamic import (see the boot script in index.html) — keyed on those rather than on a timer,
+ * because a timer cannot distinguish a dead boot from a slow one, and lifting mid-boot puts the
+ * flash straight back.
+ *
  * What this costs and what it does not. Readers lose nothing they had before prerendering: the
  * page is blank for the same window the old SPA was. Crawlers lose nothing at all — the markup is
  * still in the HTML, and `#root` is only hidden once JS has actually started, so a crawler that

@@ -57,11 +57,37 @@
            the class would be serialized into the output and ship content that is display:none. */
         if (!window.__PRERENDER__) {
           document.documentElement.classList.add('js-booting');
-          /* Backstop: a crash between here and React's first commit must not leave a blank page
-             forever. Worst case the reader gets the prerendered page, which is the right content. */
-          setTimeout(function () {
+
+          var lift = function () {
             document.documentElement.classList.remove('js-booting');
-          }, 4000);
+          };
+
+          /* A crash between here and React's first commit must not leave a blank page forever, so
+             the curtain needs a way up that does not depend on React. Keyed on real failure, not
+             on a stopwatch: a stopwatch cannot tell "dead" from "slow", and firing it mid-boot on
+             a slow connection reintroduces exactly the flash the curtain exists to prevent — a
+             4s timer did, on throttled mobile where booting can take longer than that.
+
+             Capture phase, because resource errors do not bubble. Only a failed <script> counts:
+             an image or stylesheet that 404s does not stop React from mounting, and lifting on
+             one would put the flash back for a page with a single broken image. A runtime error
+             (target is window, not an element) does count. unhandledrejection covers a dynamic
+             import that fails to resolve. */
+          window.addEventListener(
+            'error',
+            function (event) {
+              var target = event.target;
+              var isResource = target && target !== window && target.tagName;
+              if (!isResource || target.tagName === 'SCRIPT') lift();
+            },
+            true
+          );
+          window.addEventListener('unhandledrejection', lift);
+
+          /* Last resort, for a failure that signals nothing at all. Deliberately long: every
+             failure worth catching fires one of the listeners above within milliseconds, so this
+             only has to beat "blank forever", not "blank for a while". */
+          setTimeout(lift, 15000);
         }
       })();
     </script>
