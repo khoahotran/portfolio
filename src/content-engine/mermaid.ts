@@ -93,6 +93,9 @@ export async function renderMermaidInto(
     if (isStale()) {
       return;
     }
+    // Not user input: `alreadyRendered` is SVG that mermaid itself produced during prerender
+    // and that capturePrerenderedDiagrams() read back out of our own served DOM. The same
+    // markup is already in the document before this line runs — this only moves it.
     container.innerHTML = alreadyRendered;
     container.classList.add('mermaid-rendered');
     applyDiagramLabel(container);
