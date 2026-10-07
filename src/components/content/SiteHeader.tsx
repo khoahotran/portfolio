@@ -1,4 +1,5 @@
 import { Home, Moon, Sun } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTheme } from '../../theme/useTheme';
 
@@ -7,8 +8,48 @@ const navClass = ({ isActive }: { isActive: boolean }) =>
     isActive ? 'text-teal-700' : 'text-slate-500 hover:text-slate-900'
   }`;
 
+/**
+ * Tracks whether the nav strip has content scrolled out of view on either side.
+ *
+ * The strip scrolls horizontally on narrow screens, and its native scrollbar sat on top of the
+ * link row — covering the labels it was meant to help reach. Hiding the bar alone would leave no
+ * hint that there is more to the left or right, so the edges get a fade instead, and the fade has
+ * to follow the scroll position: a permanent one would dim the first and last link on wide screens
+ * where the strip fits and nothing scrolls at all.
+ */
+function useScrollEdges() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [edges, setEdges] = useState({ start: false, end: false });
+
+  const measure = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    // 1px of slack: fractional scroll offsets otherwise leave the end fade stuck on at the far end.
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    setEdges({ start: el.scrollLeft > 1, end: el.scrollLeft < maxScroll - 1 });
+  }, []);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    measure();
+    el.addEventListener('scroll', measure, { passive: true });
+    // Width changes without a scroll event — viewport resize, or a font finishing loading and
+    // reflowing the labels — can start or stop the overflow on their own.
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => {
+      el.removeEventListener('scroll', measure);
+      observer.disconnect();
+    };
+  }, [measure]);
+
+  return { ref, edges };
+}
+
 function SiteHeader() {
   const { theme, toggle } = useTheme();
+  const { ref: navStripRef, edges } = useScrollEdges();
 
   return (
     <header className="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur">
@@ -28,7 +69,12 @@ function SiteHeader() {
             one flat wall of equally-weighted links, and reordered so Projects and Search, the
             two destinations most load-bearing for a first-time technical reader, land inside
             the visible window on the narrowest tested viewports (320-390px) without scrolling. */}
-        <div className="flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5">
+        <div
+          ref={navStripRef}
+          data-scroll-start={edges.start || undefined}
+          data-scroll-end={edges.end || undefined}
+          className="nav-strip flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"
+        >
           <nav className="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary">
             <NavLink to="/about" className={navClass}>
               About

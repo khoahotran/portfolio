@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { renderMermaidInto } from '../../content-engine/mermaid';
 import { scrollToHash } from './scrollToHash';
@@ -278,7 +278,12 @@ function MarkdownContent({ html }: Props) {
     return () => container.removeEventListener('click', onClick);
   }, [html, navigate]);
 
-  useEffect(() => {
+  // useLayoutEffect, not useEffect: a diagram whose SVG was already produced by prerendering is
+  // restored synchronously (see content-engine/mermaid-prerendered.ts), and useEffect runs *after*
+  // the browser paints — which showed the article, then slotted every diagram in 184ms later and
+  // pushed the page down. Running before paint puts them in the same first frame as the text. The
+  // uncached path is unaffected: it is async either way, so this only moves when its promise starts.
+  useLayoutEffect(() => {
     const container = containerRef.current;
     if (!container) {
       return;
