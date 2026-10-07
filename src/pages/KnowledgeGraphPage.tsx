@@ -58,12 +58,22 @@ function wireGraphLinks(container: HTMLElement, navigate: NavigateFunction) {
   const base = import.meta.env.BASE_URL;
 
   container.querySelectorAll<SVGAElement>('a').forEach((anchor) => {
-    const appPath = anchor.getAttributeNS(XLINK, 'href') ?? anchor.getAttribute('href');
+    const element = anchor as unknown as HTMLElement;
+    // data-app-path, when already present, is the app path from a previous pass — prefer it over
+    // the href, which that pass has already prefixed with BASE_URL. Reading the href again would
+    // prefix a prefixed value: with base "/portfolio/", "/projects/aegis" becomes
+    // "/portfolio/portfolio/projects/aegis" and the node stops resolving to a route.
+    //
+    // This is reachable now that a prerendered graph is restored from its serialized SVG rather
+    // than re-rendered (src/content-engine/mermaid-prerendered.ts) — that markup already carries
+    // both attributes, so onRendered runs over links this function has effectively seen before.
+    const appPath =
+      element.dataset.appPath ?? anchor.getAttributeNS(XLINK, 'href') ?? anchor.getAttribute('href');
     if (!appPath || !appPath.startsWith('/')) {
       return;
     }
 
-    (anchor as unknown as HTMLElement).dataset.appPath = appPath;
+    element.dataset.appPath = appPath;
     anchor.setAttributeNS(XLINK, 'xlink:href', `${base}${appPath.slice(1)}`);
   });
 

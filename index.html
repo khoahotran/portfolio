@@ -48,6 +48,21 @@
         } catch (e) {
           /* Storage blocked — fall back to the light default rather than failing to render. */
         }
+
+        /* Boot curtain (src/boot-reveal.ts). Hides #root so the prerendered page is never painted
+           and then deleted by React's createRoot, which would show real content and take it away
+           again behind a Suspense spinner. Added from script, not from the stylesheet, so that a
+           crawler that does not execute JS — or a reader whose JS failed — still gets the fully
+           rendered markup. Skipped during prerendering (scripts/prerender.mjs sets the flag), or
+           the class would be serialized into the output and ship content that is display:none. */
+        if (!window.__PRERENDER__) {
+          document.documentElement.classList.add('js-booting');
+          /* Backstop: a crash between here and React's first commit must not leave a blank page
+             forever. Worst case the reader gets the prerendered page, which is the right content. */
+          setTimeout(function () {
+            document.documentElement.classList.remove('js-booting');
+          }, 4000);
+        }
       })();
     </script>
   </head>

@@ -797,6 +797,67 @@ body {
 
 /* ── Mermaid diagram container ─────────────────────────────────────────── */
 
+/* Header nav strip — see useScrollEdges() in SiteHeader.tsx.
+ *
+ * The strip scrolls horizontally on narrow screens. Its native scrollbar rendered on top of the
+ * link row and covered the labels, so it is hidden and replaced by a fade at whichever edge
+ * actually has content scrolled out of view. The data-scroll-* attributes are set from the real
+ * scrollLeft, so on a wide screen where everything fits neither fade appears and no link is dimmed.
+ *
+ * Hiding a scrollbar removes a visible affordance, so the fade has to carry that job on its own —
+ * and the strip stays a real scroll container, so wheel, trackpad, touch, and keyboard (the links
+ * are focusable, and focus scrolls them into view) all still work. */
+.nav-strip {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* legacy Edge */
+  --nav-fade: 1.75rem;
+}
+
+.nav-strip::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.nav-strip[data-scroll-end] {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--nav-fade)), transparent 100%);
+  mask-image: linear-gradient(to right, #000 calc(100% - var(--nav-fade)), transparent 100%);
+}
+
+.nav-strip[data-scroll-start] {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--nav-fade));
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--nav-fade));
+}
+
+.nav-strip[data-scroll-start][data-scroll-end] {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--nav-fade),
+    #000 calc(100% - var(--nav-fade)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--nav-fade),
+    #000 calc(100% - var(--nav-fade)),
+    transparent 100%
+  );
+}
+
+/* Boot curtain — see src/boot-reveal.ts.
+ *
+ * The prerendered page sits in #root for crawlers, but React discards it on mount and every route
+ * is lazy(), so painting it would show real content that then vanishes behind a spinner. Hiding
+ * #root until React commits means the reader sees one transition (blank, then content), the same
+ * as this site did before prerendering existed.
+ *
+ * Gated on a class the boot script adds, never on the stylesheet alone: if JS is disabled, failed,
+ * or the visitor is a crawler that does not run scripts, the class is never added and the
+ * prerendered markup stays fully visible. */
+.js-booting #root {
+  display: none;
+}
+
 .mermaid-diagram {
   margin: 1.5rem 0;
   padding: 1.25rem;

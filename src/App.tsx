@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingState from './components/LoadingState';
@@ -7,6 +7,7 @@ import SiteHeader from './components/content/SiteHeader';
 import { labs } from './labs/registry';
 import NotFoundPage from './pages/NotFoundPage';
 import RouteVitalsTracker from './performance/RouteVitalsTracker';
+import { revealApp } from './boot-reveal';
 
 const PortfolioHome = lazy(() => import('./pages/PortfolioHome'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
@@ -23,6 +24,25 @@ function LoadingFallback() {
 }
 
 /**
+ * Reveals `#root` once React has real content to show.
+ *
+ * Rendered inside <Suspense>, so its effect cannot run while the boundary is showing the
+ * fallback — React does not commit effects in a suspended subtree. That makes "the route chunk
+ * resolved" the signal, with no path matching or timeout to keep in sync. See src/boot-reveal.ts
+ * for why #root starts hidden at all.
+ */
+function BootReveal() {
+  useEffect(() => {
+    // Next frame, so React has committed and laid out before anything becomes visible — the
+    // entrance animation then starts from a painted frame rather than mid-flight.
+    const id = requestAnimationFrame(revealApp);
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  return null;
+}
+
+/**
  * Routes live in their own component so ErrorBoundary can be keyed on the
  * current path via useLocation() (which requires Router context, so it
  * can't be called from App itself, above <BrowserRouter>). Keying by
@@ -35,6 +55,7 @@ function AppRoutes() {
   return (
     <ErrorBoundary key={location.pathname}>
       <Suspense fallback={<LoadingFallback />}>
+        <BootReveal />
         <Routes>
           <Route path="/" element={<PortfolioHome />} />
           <Route path="/about" element={<AboutPage />} />
