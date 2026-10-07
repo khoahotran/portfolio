@@ -314,10 +314,69 @@ correctly rejected three fake ones that only *looked* similar.
 
 ---
 
+## P2 — Should Fix (continued)
+
+### 9. Gates only verify a page's default state on load
+
+**Status:** Open (2026-10-07)
+
+Three separate defects shipped or nearly shipped during Phase 8 and the boot-flash work. All three
+passed every gate. They share one root cause, which is the point of this item: **`check:contrast`
+and `check:responsive` both navigate to a route, wait for load, and measure the page as it first
+renders.** Neither hovers, focuses, clicks, toggles, or drags anything. Any defect that only exists
+after an interaction is invisible to both.
+
+The three instances:
+
+1. **Interaction-state contrast.** `check:contrast` measures resting colours only. Hover, focus,
+   `aria-selected` and active states are never sampled, so a failing combination in any of them is
+   unreported. (This is separate from the Phase 8 process failure where `check:contrast` simply was
+   not run at all for ten labs — that one was fixed by running it; this one survives running it.)
+
+2. **Interactive lab states.** Every lab is a simulator whose whole purpose is the states you reach
+   by moving a slider or flipping a toggle. The gates only ever see the initial `useState` values.
+   A lab that renders correctly at defaults and breaks at one slider extreme passes cleanly.
+
+3. **Post-click navigation.** `wireGraphLinks` in `KnowledgeGraphPage.tsx` was made non-idempotent
+   by the mermaid-reuse change: the prerendered SVG already carries the base-prefixed `href`, so
+   re-prefixing produced `/portfolio/portfolio/...` and every graph node 404'd on click. **Both
+   gates passed with this bug in the code**, because they load the graph page and never click a
+   node. It was caught by review, not by automation.
+
+What this costs: the gates give real and well-earned confidence about first paint across 139 routes
+x 7 viewports x 2 themes, and that confidence then gets silently generalised to "the site works."
+It does not cover the interactive surface, which on a portfolio built around interactive labs is a
+large share of what the site *is*.
+
+Do not fix this by bolting interaction scripting onto the existing gates indiscriminately — a
+per-route click matrix would be slow and brittle for little return on static pages. Worth evaluating
+instead:
+
+- a small set of interaction smoke checks on the highest-risk surfaces only (graph node click,
+  one slider at each extreme per lab, nav strip scrolled to both edges);
+- extending `check:contrast` to force `:hover`/`:focus-visible` states via CDP rather than
+  navigating, which is cheap because the page is already loaded;
+- accepting the gap explicitly for the rest, and relying on review — which is what actually caught
+  instance 3.
+
+Acceptance criteria if picked up:
+
+- at least one gate exercises a state that is only reachable after a user interaction;
+- the `wireGraphLinks` regression specifically would have been caught;
+- gate runtime does not grow so much that it stops being run.
+
+---
+
 ## Mental notes for future AI sessions
 
 1. **`min-w-0`** — pay special attention with Grid/Flex + code/tag/badge/URL/dynamic content (see item 5 above). This bug class caused two real production overflow bugs in one audit pass; it's cheap to prevent and easy to reintroduce.
 2. **`rehype-raw`** — acceptable today because content is author-controlled; if a CMS or user-generated content is introduced later, re-evaluate XSS/sanitization (see item 3 above) before shipping.
 3. **Markdown chunk ~159 KB gzip** — acceptable today because it's lazy-loaded per article; if content volume grows substantially, re-measure and consider build-time Markdown rendering (see item 7 above).
 
-No large UI refactor is needed right now. The audit passed; the items above are backlog/follow-up, not existing bugs.
+4. **Gates measure first paint, not interaction** — a green `check:contrast` / `check:responsive`
+   run says the page renders correctly on load, and says nothing about hover, focus, clicks, or
+   slider extremes. Do not report it as "the site works" (see item 9 above). Three real defects
+   passed both gates for exactly this reason.
+
+No large UI refactor is needed right now. The audit passed; items 1-8 above are backlog/follow-up,
+not existing bugs. Item 9 documents a real coverage gap rather than a specific broken thing.
