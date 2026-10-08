@@ -22,6 +22,12 @@ jobs:
 
       - run: npm run lint
 
+      # Source-only, runs in milliseconds, so it sits with lint rather than with the browser gates.
+      # A ratchet: it holds the line at the legacy display sizes that existed when the type scale
+      # landed and fails on any new one. See scripts/check-type-scale.mjs for why it is enforced
+      # from day one rather than after the migration finishes.
+      - run: npm run check:type-scale
+
       # Pure-logic unit tests: lab registry / lab-ids.json parity, slugify parity between the app
       # and the build script, and the frontmatter + reading-time helpers. Runs before the build
       # because a slugify divergence would otherwise produce a green build full of unreachable

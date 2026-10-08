@@ -18,7 +18,7 @@ interface Props {
  * exact duplicate of *this* shape appears.
  */
 function TagPill({ children }: Props) {
-  return <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600">{children}</span>;
+  return <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-micro text-slate-600">{children}</span>;
 }
 
 export default TagPill;

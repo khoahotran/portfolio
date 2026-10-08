@@ -5,7 +5,7 @@ export default function Education() {
   return (
     <section id="education" className="py-24 px-6 bg-surface">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-sm uppercase tracking-widest text-teal-700 mb-12 font-medium italic">
+        <h2 className="text-meta uppercase tracking-widest text-teal-700 mb-12 font-medium italic">
           {educationData.title}
         </h2>
         <div className="space-y-8">
@@ -27,11 +27,11 @@ export default function Education() {
                       <p className="text-slate-500 font-medium">
                         {edu.institution}
                       </p>
-                      <p className="text-xs text-slate-500 mt-1 uppercase tracking-wider">
+                      <p className="text-micro text-slate-500 mt-1 uppercase tracking-wider">
                         {edu.location}
                       </p>
                     </div>
-                    <span className="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-full mt-3 md:mt-0 uppercase tracking-widest">
+                    <span className="text-micro font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-full mt-3 md:mt-0 uppercase tracking-widest">
                       {edu.period}
                     </span>
                   </div>
@@ -39,7 +39,7 @@ export default function Education() {
                     {edu.highlights.map((highlight, i) => (
                       <li key={i} className="flex items-start gap-3">
                         <span className="text-teal-700 font-bold">•</span>
-                        <span className="text-sm leading-relaxed">{highlight}</span>
+                        <span className="text-meta leading-relaxed">{highlight}</span>
                       </li>
                     ))}
                   </ul>

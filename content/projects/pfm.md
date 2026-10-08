@@ -188,4 +188,4 @@ yet merged. Several specified stories — password reset, role management, invit
 exist only in the SRS so far. That gap between "specified" and "shipped" is tracked in the open, not
 smoothed over.
 
-<a href="/graph" class="inline-block mt-8 text-sm text-slate-500 hover:text-slate-700 hover:underline transition-colors">See how this project connects to the rest of the ecosystem &rarr;</a>
+<a href="/graph" class="inline-block mt-8 text-meta text-slate-500 hover:text-slate-700 hover:underline transition-colors">See how this project connects to the rest of the ecosystem &rarr;</a>

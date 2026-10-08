@@ -80,9 +80,9 @@ function RedisVsBullMQPage() {
       <div className="mt-10 grid gap-8 md:grid-cols-12">
         <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
           <div className="space-y-6">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Parameters</h2>
+            <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Parameters</h2>
 
-            <div className="block text-sm font-semibold text-slate-700">
+            <div className="block text-meta font-semibold text-slate-700">
               Payload Size
               <div className="mt-3 flex gap-2" role="group" aria-label="Payload size">
                 {['1KB', '10KB', '100KB'].map(size => (
@@ -91,7 +91,7 @@ function RedisVsBullMQPage() {
                     type="button"
                     aria-pressed={payloadSize === size}
                     onClick={() => setPayloadSize(size as '1KB' | '10KB' | '100KB')}
-                    className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-colors ${payloadSize === size ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
+                    className={`flex-1 py-2 text-micro font-bold rounded-lg border transition-colors ${payloadSize === size ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
                   >
                     {size}
                   </button>
@@ -99,7 +99,7 @@ function RedisVsBullMQPage() {
               </div>
             </div>
 
-            <div className="block text-sm font-semibold text-slate-700">
+            <div className="block text-meta font-semibold text-slate-700">
               Consumer Workers
               <div className="mt-3 flex gap-2" role="group" aria-label="Consumer workers">
                 {[1, 5].map(w => (
@@ -108,7 +108,7 @@ function RedisVsBullMQPage() {
                     type="button"
                     aria-pressed={workers === w}
                     onClick={() => setWorkers(w as 1 | 5)}
-                    className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-colors ${workers === w ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
+                    className={`flex-1 py-2 text-micro font-bold rounded-lg border transition-colors ${workers === w ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
                   >
                     {w} Worker{w > 1 ? 's' : ''}
                   </button>
@@ -116,7 +116,7 @@ function RedisVsBullMQPage() {
               </div>
             </div>
 
-            <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-xs flex gap-3 leading-relaxed mt-8">
+            <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-micro flex gap-3 leading-relaxed mt-8">
               <Info className="w-5 h-5 shrink-0 text-sky-600" />
               <p>BullMQ relies on Lua scripts for atomic operations, adding overhead per job. Raw Redis Streams via Go (`XADD` / `XREADGROUP`) bypasses this logic for sheer speed. These numbers come from <code>benchmarks/redis-vs-bullmq/</code> in the repository &mdash; a runnable Docker Compose harness, not a fixed dataset.</p>
             </div>
@@ -124,7 +124,7 @@ function RedisVsBullMQPage() {
         </section>
 
         <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-8 shadow-sm flex flex-col">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2">
+          <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2">
             <BarChart3 className="w-4 h-4" /> Benchmark Results
           </h2>
 
@@ -136,26 +136,26 @@ function RedisVsBullMQPage() {
               <div className="flex items-end justify-center gap-6 h-64 border-b border-slate-200 pb-2 relative">
                 {/* Redis Bar */}
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-teal-700">{Math.round(currentData.redisThroughput).toLocaleString()}</div>
+                  <div className="text-micro font-bold text-teal-700">{Math.round(currentData.redisThroughput).toLocaleString()}</div>
                   {/* Fixed-height track: `height: N%` only resolves against a definite-height
                       ancestor, and this column (child of an `items-end`, not `stretch`, row) is
                       otherwise auto-height — without this wrapper the bar silently renders 0px. */}
                   <div className="flex h-48 w-full items-end">
                     <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.redisThroughput / MAX_THROUGHPUT) * 100}%` }} />
                   </div>
-                  <div className="text-xs font-semibold text-slate-500 mt-2">Redis+Go</div>
+                  <div className="text-micro font-semibold text-slate-500 mt-2">Redis+Go</div>
                 </div>
 
                 {/* BullMQ Bar */}
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-rose-700">{Math.round(currentData.bullmqThroughput).toLocaleString()}</div>
+                  <div className="text-micro font-bold text-rose-700">{Math.round(currentData.bullmqThroughput).toLocaleString()}</div>
                   <div className="flex h-48 w-full items-end">
                     <div className="w-full bg-rose-400 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.bullmqThroughput / MAX_THROUGHPUT) * 100}%` }} />
                   </div>
-                  <div className="text-xs font-semibold text-slate-500 mt-2">BullMQ+TS</div>
+                  <div className="text-micro font-semibold text-slate-500 mt-2">BullMQ+TS</div>
                 </div>
               </div>
-              <p className="text-center text-xs text-slate-500 mt-4 font-mono">Higher is better &uarr;</p>
+              <p className="text-center text-micro text-slate-500 mt-4 font-mono">Higher is better &uarr;</p>
             </div>
 
             {/* Latency Chart */}
@@ -164,23 +164,23 @@ function RedisVsBullMQPage() {
               <div className="flex items-end justify-center gap-6 h-64 border-b border-slate-200 pb-2 relative">
                 {/* Redis Bar */}
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-teal-700">{currentData.redisLatency.toFixed(1)}ms</div>
+                  <div className="text-micro font-bold text-teal-700">{currentData.redisLatency.toFixed(1)}ms</div>
                   <div className="flex h-48 w-full items-end">
                     <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.redisLatency / MAX_LATENCY) * 100}%` }} />
                   </div>
-                  <div className="text-xs font-semibold text-slate-500 mt-2">Redis+Go</div>
+                  <div className="text-micro font-semibold text-slate-500 mt-2">Redis+Go</div>
                 </div>
 
                 {/* BullMQ Bar */}
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-rose-700">{currentData.bullmqLatency.toFixed(1)}ms</div>
+                  <div className="text-micro font-bold text-rose-700">{currentData.bullmqLatency.toFixed(1)}ms</div>
                   <div className="flex h-48 w-full items-end">
                     <div className="w-full bg-rose-400 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.bullmqLatency / MAX_LATENCY) * 100}%` }} />
                   </div>
-                  <div className="text-xs font-semibold text-slate-500 mt-2">BullMQ+TS</div>
+                  <div className="text-micro font-semibold text-slate-500 mt-2">BullMQ+TS</div>
                 </div>
               </div>
-              <p className="text-center text-xs text-slate-500 mt-4 font-mono">Lower is better &darr;</p>
+              <p className="text-center text-micro text-slate-500 mt-4 font-mono">Lower is better &darr;</p>
             </div>
 
           </div>

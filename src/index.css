@@ -1,3 +1,20 @@
+/* Self-hosted variable fonts. Imported here rather than linked from a CDN in index.html so the
+ * boot path owns no third-party request: the inline boot script in index.html hides #root until
+ * React commits, and a blocking stylesheet from another origin would sit in front of that with a
+ * failure mode nothing in this repo controls.
+ *
+ * All three ship a `vietnamese` subset, which is a hard requirement rather than a nicety — the
+ * largest piece of type on the site is "Tr\u1ea7n Nguy\u1ec5n Anh Khoa", and a face without those glyphs
+ * either drops the diacritics or stacks them wrong. Verified present in node_modules before
+ * choosing these packages. Browsers fetch only the subsets a page actually uses, via unicode-range.
+ *
+ * `font-display: swap` is what the packages already set: text paints immediately in the fallback
+ * and reflows once the face arrives. scripts/check-responsive.mjs already observes that reflow (see
+ * its ResizeObserver note), so it is a known, handled behaviour rather than a new one. */
+@import '@fontsource-variable/inter/index.css';
+@import '@fontsource-variable/inter-tight/index.css';
+@import '@fontsource-variable/jetbrains-mono/index.css';
+
 /* ── Design tokens ────────────────────────────────────────────────────────────
  *
  * The Tailwind palettes in tailwind.config.js resolve to these variables, so every existing
@@ -254,7 +271,42 @@ html {
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  @apply bg-slate-50 text-slate-900 antialiased font-sans;
+}
+
+/* Tabular figures, opt-in per element rather than on `body`.
+   Setting `font-variant-numeric: tabular-nums` globally looked right until it was rendered: in
+   Inter the `tnum` feature also widens U+002D to a digit cell, so ordinary prose came out as
+   "high - performance" and "event - driven". The need is real but narrow — a lab re-rendering a
+   metric on every slider step jitters sideways with proportional digits — so it belongs on the
+   number, not on the document. `text-rendering: optimizeLegibility` went with it: Inter kerns
+   correctly without it, and it buys nothing here but layout cost. */
+.tabular-figures {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Headings take the display face. Applied here rather than per component because 43 files set
+   heading classes by hand, and `font-display` on each of them is the kind of per-call-site repeat
+   this token layer exists to end. A component that genuinely wants body type on a heading can
+   still say `font-sans`. */
+h1,
+h2,
+h3 {
+  @apply font-display;
+}
+
+/* Honour the OS-level setting. Nothing in src/ checked this before, while `animate-fade-in` was
+   applied to nearly every <main> — so a reader who had asked their system for less motion still
+   got the full set. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @layer utilities {
@@ -361,7 +413,7 @@ body {
 }
 
 /* ── Back-navigation links (ArticleHeader, LabBackLink) ──────────────────
-   Previously a bare inline `text-xs` link — a ~24px-tall tap target next to
+   Previously a bare inline `text-micro` link — a ~24px-tall tap target next to
    the site's main content, easy to miss or mis-tap on mobile (WCAG 2.5.5
    recommends 44x44px). One shared rule so every "back" link updates
    together instead of drifting per-component. The negative margin keeps the
@@ -751,7 +803,7 @@ body {
 }
 
 /* ── Table of contents (TableOfContents.tsx) ─────────────────────────────
-   Was flat text-sm links with only a color/weight change on the active item —
+   Was flat text-meta links with only a color/weight change on the active item —
    hard to scan and gave depth-2 vs depth-3 headings no visible rank. A
    continuous left rail plus a solid active segment reads as a position
    marker; sub-headings get extra indent and a lighter, smaller face so the

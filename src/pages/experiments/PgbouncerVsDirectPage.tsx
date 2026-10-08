@@ -88,9 +88,9 @@ function PgbouncerVsDirectPage() {
       <div className="mt-10 grid gap-8 md:grid-cols-12">
         <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
           <div className="space-y-6">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Parameters</h2>
+            <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Parameters</h2>
 
-            <div className="block text-sm font-semibold text-slate-700">
+            <div className="block text-meta font-semibold text-slate-700">
               Connection Lifecycle
               <div className="mt-3 flex gap-2" role="group" aria-label="Connection lifecycle">
                 {(['churn', 'persistent'] as const).map((m) => (
@@ -99,7 +99,7 @@ function PgbouncerVsDirectPage() {
                     type="button"
                     aria-pressed={mode === m}
                     onClick={() => setMode(m)}
-                    className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-colors capitalize ${mode === m ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
+                    className={`flex-1 py-2 text-micro font-bold rounded-lg border transition-colors capitalize ${mode === m ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
                   >
                     {m}
                   </button>
@@ -107,7 +107,7 @@ function PgbouncerVsDirectPage() {
               </div>
             </div>
 
-            <div className="block text-sm font-semibold text-slate-700">
+            <div className="block text-meta font-semibold text-slate-700">
               Concurrent Clients
               <div className="mt-3 flex gap-2" role="group" aria-label="Concurrent clients">
                 {CLIENT_COUNTS.map((c) => (
@@ -116,7 +116,7 @@ function PgbouncerVsDirectPage() {
                     type="button"
                     aria-pressed={clients === c}
                     onClick={() => setClients(c)}
-                    className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-colors ${clients === c ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
+                    className={`flex-1 py-2 text-micro font-bold rounded-lg border transition-colors ${clients === c ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
                   >
                     {c}
                   </button>
@@ -124,7 +124,7 @@ function PgbouncerVsDirectPage() {
               </div>
             </div>
 
-            <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-xs flex gap-3 leading-relaxed mt-8">
+            <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-micro flex gap-3 leading-relaxed mt-8">
               <Info className="w-5 h-5 shrink-0 text-sky-600" />
               <p>
                 {mode === 'churn'
@@ -138,7 +138,7 @@ function PgbouncerVsDirectPage() {
         </section>
 
         <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-8 shadow-sm flex flex-col">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2">
+          <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2">
             <BarChart3 className="w-4 h-4" /> Benchmark Results
           </h2>
 
@@ -147,7 +147,7 @@ function PgbouncerVsDirectPage() {
               <h3 className="text-center font-bold text-slate-800 mb-6">Throughput (queries/sec)</h3>
               <div className="flex items-end justify-center gap-6 h-64 border-b border-slate-200 pb-2 relative">
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-teal-700">{Math.round(currentData.directThroughput).toLocaleString()}</div>
+                  <div className="text-micro font-bold text-teal-700">{Math.round(currentData.directThroughput).toLocaleString()}</div>
                   {/* Fixed-height track: `height: N%` only resolves against a definite-height
                       ancestor, and this column (child of an `items-end`, not `stretch`, row) is
                       otherwise auto-height — without this wrapper the bar silently renders 0px. */}
@@ -157,49 +157,49 @@ function PgbouncerVsDirectPage() {
                       style={{ height: `${(currentData.directThroughput / maxThroughput) * 100}%` }}
                     />
                   </div>
-                  <div className="text-xs font-semibold text-slate-500 mt-2">Direct</div>
+                  <div className="text-micro font-semibold text-slate-500 mt-2">Direct</div>
                 </div>
 
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-rose-700">{Math.round(currentData.pgbouncerThroughput).toLocaleString()}</div>
+                  <div className="text-micro font-bold text-rose-700">{Math.round(currentData.pgbouncerThroughput).toLocaleString()}</div>
                   <div className="flex h-48 w-full items-end">
                     <div
                       className="w-full bg-rose-400 rounded-t-sm transition-all duration-500"
                       style={{ height: `${(currentData.pgbouncerThroughput / maxThroughput) * 100}%` }}
                     />
                   </div>
-                  <div className="text-xs font-semibold text-slate-500 mt-2">PgBouncer</div>
+                  <div className="text-micro font-semibold text-slate-500 mt-2">PgBouncer</div>
                 </div>
               </div>
-              <p className="text-center text-xs text-slate-500 mt-4 font-mono">Higher is better &uarr;</p>
+              <p className="text-center text-micro text-slate-500 mt-4 font-mono">Higher is better &uarr;</p>
             </div>
 
             <div>
               <h3 className="text-center font-bold text-slate-800 mb-6">Avg Latency (ms)</h3>
               <div className="flex items-end justify-center gap-6 h-64 border-b border-slate-200 pb-2 relative">
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-teal-700">{currentData.directLatency.toFixed(1)}ms</div>
+                  <div className="text-micro font-bold text-teal-700">{currentData.directLatency.toFixed(1)}ms</div>
                   <div className="flex h-48 w-full items-end">
                     <div
                       className="w-full bg-teal-500 rounded-t-sm transition-all duration-500"
                       style={{ height: `${(currentData.directLatency / maxLatency) * 100}%` }}
                     />
                   </div>
-                  <div className="text-xs font-semibold text-slate-500 mt-2">Direct</div>
+                  <div className="text-micro font-semibold text-slate-500 mt-2">Direct</div>
                 </div>
 
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-rose-700">{currentData.pgbouncerLatency.toFixed(1)}ms</div>
+                  <div className="text-micro font-bold text-rose-700">{currentData.pgbouncerLatency.toFixed(1)}ms</div>
                   <div className="flex h-48 w-full items-end">
                     <div
                       className="w-full bg-rose-400 rounded-t-sm transition-all duration-500"
                       style={{ height: `${(currentData.pgbouncerLatency / maxLatency) * 100}%` }}
                     />
                   </div>
-                  <div className="text-xs font-semibold text-slate-500 mt-2">PgBouncer</div>
+                  <div className="text-micro font-semibold text-slate-500 mt-2">PgBouncer</div>
                 </div>
               </div>
-              <p className="text-center text-xs text-slate-500 mt-4 font-mono">Lower is better &darr;</p>
+              <p className="text-center text-micro text-slate-500 mt-4 font-mono">Lower is better &darr;</p>
             </div>
           </div>
         </section>

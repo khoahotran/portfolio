@@ -62,7 +62,7 @@ function QueueVsPubSubPage() {
       <div className="mt-10 grid gap-8 md:grid-cols-12">
         <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
           <div className="space-y-4">
-            <label className="block text-sm font-semibold text-slate-700">
+            <label className="block text-meta font-semibold text-slate-700">
               <div className="flex justify-between">
                 <span>Message Rate</span>
                 <span className="text-teal-700">{messageRate} msg/s</span>
@@ -78,7 +78,7 @@ function QueueVsPubSubPage() {
               />
             </label>
 
-            <label className="block text-sm font-semibold text-slate-700 pt-2">
+            <label className="block text-meta font-semibold text-slate-700 pt-2">
               <div className="flex justify-between">
                 <span className="text-sky-700">Queue Consumers</span>
                 <span className="text-sky-700">{consumers}</span>
@@ -93,7 +93,7 @@ function QueueVsPubSubPage() {
               />
             </label>
 
-            <label className="block text-sm font-semibold text-slate-700 pt-2">
+            <label className="block text-meta font-semibold text-slate-700 pt-2">
               <div className="flex justify-between">
                 <span className="text-indigo-700">Pub/Sub Subscribers</span>
                 <span className="text-indigo-700">{subscribers}</span>
@@ -114,7 +114,7 @@ function QueueVsPubSubPage() {
           
           {/* Work Queue Animation */}
           <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm flex flex-col relative overflow-hidden">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-sky-700 mb-6">Work Queue (1-to-1)</h2>
+            <h2 className="text-micro font-bold uppercase tracking-widest text-sky-700 mb-6">Work Queue (1-to-1)</h2>
             <div className="flex-1 relative flex flex-col justify-center min-h-[250px]">
               
               <div className="flex items-center justify-between h-full px-2">
@@ -149,7 +149,7 @@ function QueueVsPubSubPage() {
                 </div>
               </div>
               
-              <div className="mt-8 flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500">
+              <div className="mt-8 flex justify-between text-nano font-bold uppercase tracking-wider text-slate-500">
                 <span>Latency: <span className="text-slate-700">{metrics.queueLatency}ms</span></span>
                 <span>Success: <span className="text-sky-700">{metrics.queueDelivery.toFixed(2)}%</span></span>
               </div>
@@ -158,7 +158,7 @@ function QueueVsPubSubPage() {
 
           {/* Pub/Sub Animation */}
           <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm flex flex-col relative overflow-hidden">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-indigo-700 mb-6">Pub/Sub (1-to-N)</h2>
+            <h2 className="text-micro font-bold uppercase tracking-widest text-indigo-700 mb-6">Pub/Sub (1-to-N)</h2>
             <div className="flex-1 relative flex flex-col justify-center min-h-[250px]">
               
               <div className="flex items-center justify-between h-full px-2">
@@ -169,7 +169,7 @@ function QueueVsPubSubPage() {
                 
                 {/* The Topic (Broker) */}
                 <div className="flex-1 h-2 bg-indigo-200 mx-4 relative flex flex-col justify-center">
-                  <div className="absolute left-1/2 -translate-x-1/2 -top-6 px-2 py-1 bg-indigo-100 text-indigo-700 text-[10px] rounded font-bold uppercase">Topic</div>
+                  <div className="absolute left-1/2 -translate-x-1/2 -top-6 px-2 py-1 bg-indigo-100 text-indigo-700 text-nano rounded font-bold uppercase">Topic</div>
                   <div className="absolute w-full flex items-center">
                     {/* Broadcast waves */}
                     <div className="absolute h-[1px] bg-indigo-400 w-full animate-pulse opacity-50" />
@@ -196,7 +196,7 @@ function QueueVsPubSubPage() {
                 </div>
               </div>
               
-              <div className="mt-8 flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500">
+              <div className="mt-8 flex justify-between text-nano font-bold uppercase tracking-wider text-slate-500">
                 <span>Latency: <span className="text-slate-700">{metrics.pubSubLatency}ms</span></span>
                 <span>Success: <span className="text-indigo-700">{metrics.pubSubDelivery.toFixed(2)}%</span></span>
               </div>

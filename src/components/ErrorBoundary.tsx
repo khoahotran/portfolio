@@ -44,7 +44,7 @@ class ErrorBoundary extends Component<Props, State> {
     return (
       <main className="mx-auto flex max-w-2xl flex-col items-center gap-4 px-4 py-24 text-center">
         <h1 className="text-2xl font-bold text-slate-900">Something went wrong</h1>
-        <p className="text-sm text-slate-600">
+        <p className="text-meta text-slate-600">
           {this.state.isChunkLoadError
             ? 'A newer version of this site was deployed while you were browsing. Reloading will fetch the latest version.'
             : 'This page hit an unexpected error. Reloading usually fixes it.'}
@@ -52,7 +52,7 @@ class ErrorBoundary extends Component<Props, State> {
         <button
           type="button"
           onClick={this.handleReload}
-          className="rounded-full bg-inverse px-6 py-2.5 text-sm font-semibold text-inverse-fg transition hover:bg-inverse/90"
+          className="rounded-full bg-inverse px-6 py-2.5 text-meta font-semibold text-inverse-fg transition hover:bg-inverse/90"
         >
           Reload page
         </button>

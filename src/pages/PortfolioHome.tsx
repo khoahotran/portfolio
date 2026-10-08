@@ -137,7 +137,7 @@ function PortfolioHome() {
       <section id="engineering-lab" className="py-24 px-6 bg-slate-50 border-t border-slate-100">
         <div className="max-w-5xl mx-auto text-center font-light">
           {/* Decorative kicker, not a heading — see the matching note in About.tsx. */}
-          <p className="text-sm uppercase tracking-widest text-teal-700 mb-6 font-medium italic">
+          <p className="text-meta uppercase tracking-widest text-teal-700 mb-6 font-medium italic">
             / Engineering Lab
           </p>
           <h2 className="text-4xl md:text-5xl text-slate-900 font-bold mb-8">
@@ -148,7 +148,7 @@ function PortfolioHome() {
           </p>
           {/* Counts are fetched/static (see the useEffect above), not hardcoded. */}
           {counts !== null && (
-            <p className="mb-10 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm font-medium text-slate-500">
+            <p className="mb-10 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-meta font-medium text-slate-500">
               <span>
                 <span className="font-bold text-slate-900">{counts.total}</span> write-ups
               </span>
@@ -209,7 +209,7 @@ function PortfolioHome() {
       {latest !== null && latest.length > 0 && (
         <section className="border-t border-slate-100 bg-surface px-6 py-16">
           <div className="mx-auto max-w-5xl">
-            <p className="mb-8 text-sm font-medium uppercase tracking-widest text-teal-700">
+            <p className="mb-8 text-meta font-medium uppercase tracking-widest text-teal-700">
               / Recently Published
             </p>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -219,10 +219,10 @@ function PortfolioHome() {
                   to={`${routeForCollection(item.collection)}/${item.slug}`}
                   className="group flex flex-col rounded-xl border border-slate-200 bg-surface p-4 transition hover:-translate-y-0.5 hover:border-teal-400"
                 >
-                  <span className="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                  <span className="mb-2 text-nano font-bold uppercase tracking-widest text-slate-500">
                     {collectionLabel(item.collection)} &middot; {formatDate(item.date)}
                   </span>
-                  <span className="text-sm font-semibold text-slate-900 group-hover:text-teal-700">
+                  <span className="text-meta font-semibold text-slate-900 group-hover:text-teal-700">
                     {item.title}
                   </span>
                 </Link>

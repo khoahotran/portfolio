@@ -64,7 +64,7 @@ function CacheFreshnessPage() {
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
         <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>TTL</span>
               <span className="text-teal-700">{ttlTicks} ticks</span>
@@ -72,7 +72,7 @@ function CacheFreshnessPage() {
             <input type="range" min={2} max={20} value={ttlTicks} onChange={(e) => setTtlTicks(Number(e.target.value))} className="mt-3 w-full accent-teal-600" />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Grace window (SWR / SIE)</span>
               <span className="text-teal-700">{graceWindowTicks} ticks</span>
@@ -80,7 +80,7 @@ function CacheFreshnessPage() {
             <input type="range" min={0} max={20} value={graceWindowTicks} onChange={(e) => setGraceWindowTicks(Number(e.target.value))} className="mt-3 w-full accent-teal-600" />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Origin content changes every</span>
               <span className="text-teal-700">{originUpdateIntervalTicks} ticks</span>
@@ -88,7 +88,7 @@ function CacheFreshnessPage() {
             <input type="range" min={2} max={30} value={originUpdateIntervalTicks} onChange={(e) => setOriginUpdateIntervalTicks(Number(e.target.value))} className="mt-3 w-full accent-teal-600" />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Outage starts at</span>
               <span className="text-teal-700">tick {outageStart}</span>
@@ -96,7 +96,7 @@ function CacheFreshnessPage() {
             <input type="range" min={0} max={TICK_COUNT - 1} value={outageStart} onChange={(e) => setOutageStart(Number(e.target.value))} className="mt-3 w-full accent-rose-500" />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Outage duration</span>
               <span className="text-teal-700">{outageDuration === 0 ? 'none' : `${outageDuration} ticks`}</span>
@@ -104,7 +104,7 @@ function CacheFreshnessPage() {
             <input type="range" min={0} max={30} value={outageDuration} onChange={(e) => setOutageDuration(Number(e.target.value))} className="mt-3 w-full accent-rose-500" />
           </label>
 
-          <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-xs flex gap-3 leading-relaxed">
+          <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-micro flex gap-3 leading-relaxed">
             <Info className="w-5 h-5 shrink-0 text-sky-600" />
             <p>
               All three policies share the same origin update schedule and outage window — the only
@@ -118,15 +118,15 @@ function CacheFreshnessPage() {
           {results.map((result) => (
             <div key={result.policy} className="rounded-2xl border border-slate-200 bg-surface p-5 shadow-sm">
               <div className="flex items-center justify-between mb-2">
-                <h2 className="text-sm font-bold text-slate-800">{POLICY_LABEL[result.policy]}</h2>
-                <div className="flex gap-4 text-xs">
+                <h2 className="text-meta font-bold text-slate-800">{POLICY_LABEL[result.policy]}</h2>
+                <div className="flex gap-4 text-micro">
                   <span className="font-bold text-teal-700">{result.freshServedCount} fresh</span>
                   <span className="font-bold text-amber-700">{result.staleServedCount} stale</span>
                   <span className="font-bold text-rose-700">{result.errorCount} errors</span>
                   <span className="font-bold text-slate-600">{result.avgLatencyMs.toFixed(1)}ms avg</span>
                 </div>
               </div>
-              <p className="text-xs text-slate-500 mb-3">{POLICY_BLURB[result.policy]}</p>
+              <p className="text-micro text-slate-500 mb-3">{POLICY_BLURB[result.policy]}</p>
 
               <div className="flex gap-[1px]" role="img" aria-label={`${POLICY_LABEL[result.policy]} request timeline`}>
                 {result.requests.map((r) => (
@@ -139,7 +139,7 @@ function CacheFreshnessPage() {
               </div>
 
               {result.errorCount > 0 && (
-                <p className="mt-2 flex items-center gap-1.5 text-[11px] font-semibold text-rose-700">
+                <p className="mt-2 flex items-center gap-1.5 text-nano font-semibold text-rose-700">
                   <AlertTriangle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   {result.errorCount} of {result.totalRequests} requests got nothing to serve at all.
                 </p>
@@ -147,7 +147,7 @@ function CacheFreshnessPage() {
             </div>
           ))}
 
-          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 pt-2">
+          <div className="flex flex-wrap items-center gap-4 text-micro text-slate-600 pt-2">
             <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-teal-500" aria-hidden="true" />Fresh</span>
             <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-amber-400" aria-hidden="true" />Stale (served anyway)</span>
             <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-rose-600" aria-hidden="true" />Error (nothing served)</span>

@@ -8,7 +8,7 @@ export default function About() {
             Previously an <h2>, which inverted the semantic hierarchy: a screen
             reader would announce this 12px label before the visually-dominant
             headline, which is the section's actual heading. */}
-        <p className="text-sm uppercase tracking-widest text-teal-700 mb-12 font-medium italic">
+        <p className="text-meta uppercase tracking-widest text-teal-700 mb-12 font-medium italic">
           {aboutData.title}
         </p>
 
@@ -24,8 +24,8 @@ export default function About() {
           </div>
           
           <div className="bg-surface p-8 rounded-2xl shadow-sm border border-slate-100">
-            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-4">Values</p>
-            <ul className="space-y-3 text-slate-700 text-sm">
+            <p className="text-nano uppercase tracking-widest text-slate-500 font-bold mb-4">Values</p>
+            <ul className="space-y-3 text-slate-700 text-meta">
               {aboutData.values.map((value, index) => (
                 <li key={index} className="flex items-start gap-2">
                   <span className="text-teal-700 font-bold">0{index + 1}</span>

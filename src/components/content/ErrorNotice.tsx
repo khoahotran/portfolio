@@ -12,11 +12,11 @@ interface Props {
 function ErrorNotice({ message, onRetry }: Props) {
   return (
     <div className="rounded-xl border border-dashed border-rose-300 bg-rose-50 p-8 text-center">
-      <p className="text-sm text-rose-700">{message}</p>
+      <p className="text-meta text-rose-700">{message}</p>
       <button
         type="button"
         onClick={onRetry}
-        className="mt-4 rounded-full border border-rose-300 bg-surface px-4 py-1.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-100"
+        className="mt-4 rounded-full border border-rose-300 bg-surface px-4 py-1.5 text-micro font-semibold text-rose-700 transition hover:bg-rose-100"
       >
         Try again
       </button>

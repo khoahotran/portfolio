@@ -57,30 +57,30 @@ function TwoPhaseCommitVsSagaPage() {
 
       <div className="mt-8 space-y-10">
         <section>
-          <h2 className="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-500">
+          <h2 className="mb-4 flex items-center gap-2 text-meta font-bold uppercase tracking-widest text-slate-500">
             <Lock className="w-4 h-4" aria-hidden="true" /> Two-Phase Commit — Blocking on a Lost Coordinator
           </h2>
           <div className="grid gap-6 md:grid-cols-12">
             <div className="min-w-0 md:col-span-4 space-y-4 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-              <p className="text-xs text-slate-500">Toggle each participant's prepare-phase vote.</p>
+              <p className="text-micro text-slate-500">Toggle each participant's prepare-phase vote.</p>
               {PARTICIPANT_IDS.map((id) => (
-                <div key={id} className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-xs">
+                <div key={id} className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-micro">
                   <span className="font-mono text-slate-600">{id}</span>
                   <button
                     type="button"
                     onClick={() => toggleVote(id)}
-                    className={`rounded px-2 py-0.5 text-[10px] font-bold ${votes[id] === 'yes' ? 'bg-teal-50 text-teal-700' : 'bg-rose-50 text-rose-700'}`}
+                    className={`rounded px-2 py-0.5 text-nano font-bold ${votes[id] === 'yes' ? 'bg-teal-50 text-teal-700' : 'bg-rose-50 text-rose-700'}`}
                   >
                     voted {votes[id]}
                   </button>
                 </div>
               ))}
-              <label className="flex items-center justify-between border-t border-slate-100 pt-3 text-xs font-semibold text-slate-600">
+              <label className="flex items-center justify-between border-t border-slate-100 pt-3 text-micro font-semibold text-slate-600">
                 <span>Coordinator crashes before broadcasting the decision</span>
                 <button
                   type="button"
                   onClick={() => setCoordinatorCrashes((v) => !v)}
-                  className={`ml-2 shrink-0 rounded px-2 py-0.5 text-[10px] font-bold ${coordinatorCrashes ? 'bg-rose-50 text-rose-700' : 'bg-teal-50 text-teal-700'}`}
+                  className={`ml-2 shrink-0 rounded px-2 py-0.5 text-nano font-bold ${coordinatorCrashes ? 'bg-rose-50 text-rose-700' : 'bg-teal-50 text-teal-700'}`}
                 >
                   {coordinatorCrashes ? 'crashes' : 'survives'}
                 </button>
@@ -89,7 +89,7 @@ function TwoPhaseCommitVsSagaPage() {
 
             <div className="min-w-0 md:col-span-8 space-y-4">
               <div
-                className={`flex items-center gap-3 rounded-xl border p-4 text-sm font-semibold ${
+                className={`flex items-center gap-3 rounded-xl border p-4 text-meta font-semibold ${
                   twoPc.blockedParticipants.length > 0 ? 'border-amber-200 bg-amber-50 text-amber-800' : 'border-teal-200 bg-teal-50 text-teal-800'
                 }`}
               >
@@ -102,12 +102,12 @@ function TwoPhaseCommitVsSagaPage() {
                 </p>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-                <p className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-500">Per-participant state</p>
+                <p className="mb-3 text-micro font-bold uppercase tracking-widest text-slate-500">Per-participant state</p>
                 <div className="space-y-2">
                   {PARTICIPANT_IDS.map((id) => {
                     const blocked = twoPc.blockedParticipants.includes(id);
                     return (
-                      <div key={id} className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-xs">
+                      <div key={id} className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-micro">
                         <span className="font-mono text-slate-600">{id} (voted {votes[id]})</span>
                         <span className={`font-bold ${blocked ? 'text-amber-700' : votes[id] === 'no' ? 'text-slate-500' : 'text-teal-700'}`}>
                           {votes[id] === 'no' ? 'aborted locally' : blocked ? 'blocked, holding locks' : `resolved: ${twoPc.decision}`}
@@ -122,18 +122,18 @@ function TwoPhaseCommitVsSagaPage() {
         </section>
 
         <section>
-          <h2 className="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-500">
+          <h2 className="mb-4 flex items-center gap-2 text-meta font-bold uppercase tracking-widest text-slate-500">
             <Undo2 className="w-4 h-4" aria-hidden="true" /> Saga — No Blocking, No Atomicity
           </h2>
           <div className="grid gap-6 md:grid-cols-12">
             <div className="min-w-0 md:col-span-4 space-y-4 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-              <p className="text-xs text-slate-500">Pick which step fails, and whether unwinding it also fails.</p>
-              <label className="block text-xs font-semibold text-slate-600">
+              <p className="text-micro text-slate-500">Pick which step fails, and whether unwinding it also fails.</p>
+              <label className="block text-micro font-semibold text-slate-600">
                 <span>Step that fails</span>
                 <select
                   value={failStep ?? ''}
                   onChange={(e) => setFailStep(e.target.value || null)}
-                  className="mt-1.5 w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs"
+                  className="mt-1.5 w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-micro"
                 >
                   <option value="">none — every step succeeds</option>
                   {SAGA_STEP_IDS.map((id) => (
@@ -141,12 +141,12 @@ function TwoPhaseCommitVsSagaPage() {
                   ))}
                 </select>
               </label>
-              <label className="block text-xs font-semibold text-slate-600">
+              <label className="block text-micro font-semibold text-slate-600">
                 <span>Compensation that itself fails</span>
                 <select
                   value={compensationFailsFor ?? ''}
                   onChange={(e) => setCompensationFailsFor(e.target.value || null)}
-                  className="mt-1.5 w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs"
+                  className="mt-1.5 w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-micro"
                 >
                   <option value="">none — every compensation succeeds</option>
                   {SAGA_STEP_IDS.filter((id) => id !== failStep).map((id) => (
@@ -158,7 +158,7 @@ function TwoPhaseCommitVsSagaPage() {
 
             <div className="min-w-0 md:col-span-8 space-y-4">
               <div
-                className={`flex items-center gap-3 rounded-xl border p-4 text-sm font-semibold ${
+                className={`flex items-center gap-3 rounded-xl border p-4 text-meta font-semibold ${
                   saga.compensationsFailed.length > 0
                     ? 'border-rose-200 bg-rose-50 text-rose-800'
                     : saga.failedAtStep
@@ -176,10 +176,10 @@ function TwoPhaseCommitVsSagaPage() {
                 </p>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-                <p className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-500">Step-by-step outcome</p>
+                <p className="mb-3 text-micro font-bold uppercase tracking-widest text-slate-500">Step-by-step outcome</p>
                 <div className="space-y-2">
                   {saga.steps.map((s) => (
-                    <div key={s.id} className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-xs">
+                    <div key={s.id} className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-micro">
                       <span className="font-mono text-slate-600">{s.id}</span>
                       <span
                         className={`font-bold ${

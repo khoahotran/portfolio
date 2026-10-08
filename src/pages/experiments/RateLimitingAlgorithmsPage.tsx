@@ -106,7 +106,7 @@ function RateLimitingAlgorithmsPage() {
             type="button"
             aria-pressed={algorithm === id}
             onClick={() => selectAlgorithm(id)}
-            className={`rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`rounded-lg px-4 py-2 text-micro font-bold uppercase tracking-wider transition-all ${
               algorithm === id ? 'bg-accent text-accent-fg shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
             }`}
           >
@@ -117,7 +117,7 @@ function RateLimitingAlgorithmsPage() {
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
         <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Sustained rate</span>
               <span className="text-teal-700">{sustainedRate} req/s</span>
@@ -133,7 +133,7 @@ function RateLimitingAlgorithmsPage() {
             />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Burst size (at t={BURST_AT_SECOND}s)</span>
               <span className="text-teal-700">{burstSize}</span>
@@ -148,7 +148,7 @@ function RateLimitingAlgorithmsPage() {
             />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700 pt-2 border-t border-slate-100">
+          <label className="block text-meta font-semibold text-slate-700 pt-2 border-t border-slate-100">
             <div className="flex justify-between">
               <span>{algorithm === 'fixed-window' ? 'Limit per window' : 'Capacity'}</span>
               <span className="text-teal-700">{capacity}</span>
@@ -163,7 +163,7 @@ function RateLimitingAlgorithmsPage() {
             />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>{config.paramLabel}</span>
               <span className="text-teal-700">
@@ -184,21 +184,21 @@ function RateLimitingAlgorithmsPage() {
           <div className="grid grid-cols-3 gap-2 pt-4 border-t border-slate-100 text-center">
             <div>
               <div className="text-lg font-bold text-teal-700">{stats.allowed}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Allowed</div>
+              <div className="text-nano font-bold uppercase tracking-widest text-slate-600">Allowed</div>
             </div>
             <div>
               <div className="text-lg font-bold text-rose-600">{stats.rejected}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Rejected</div>
+              <div className="text-nano font-bold uppercase tracking-widest text-slate-600">Rejected</div>
             </div>
             <div>
               <div className="text-lg font-bold text-slate-900">{stats.rate.toFixed(0)}%</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Admit rate</div>
+              <div className="text-nano font-bold uppercase tracking-widest text-slate-600">Admit rate</div>
             </div>
           </div>
         </section>
 
         <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-4">
+          <p className="text-micro font-bold uppercase tracking-widest text-slate-500 mb-4">
             {stats.total} requests over {DURATION_SECONDS}s
           </p>
 
@@ -246,7 +246,7 @@ function RateLimitingAlgorithmsPage() {
             </svg>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+          <div className="mt-4 flex flex-wrap items-center gap-4 text-micro text-slate-600">
             <span className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-teal-600" aria-hidden="true" />
               Allowed

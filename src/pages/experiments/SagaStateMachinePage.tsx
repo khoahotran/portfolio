@@ -106,10 +106,10 @@ function SagaStateMachinePage() {
           <StatusIcon status={status} />
         </div>
         <h3 className="font-bold text-slate-800 mt-2">{title}</h3>
-        <p className="text-xs text-slate-500 mt-2">{desc}</p>
+        <p className="text-micro text-slate-500 mt-2">{desc}</p>
 
         {/* Status text badge */}
-        <div className="mt-4 text-[10px] uppercase font-bold tracking-widest px-2 py-1 rounded bg-white bg-opacity-60 text-panel">
+        <div className="mt-4 text-nano uppercase font-bold tracking-widest px-2 py-1 rounded bg-white bg-opacity-60 text-panel">
           {status}
         </div>
       </div>
@@ -127,14 +127,14 @@ function SagaStateMachinePage() {
       <div className="mt-10 grid gap-8 md:grid-cols-12">
         <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
           <div className="space-y-4">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-4">Configuration</h2>
+            <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 mb-4">Configuration</h2>
 
-            <label className="block text-sm font-semibold text-slate-700 pt-2">
+            <label className="block text-meta font-semibold text-slate-700 pt-2">
               Inject Failure At
               <select
                 value={shouldFailAt}
                 onChange={(e) => setShouldFailAt(e.target.value as 'none' | 'payment' | 'inventory')}
-                className="mt-2 w-full p-2 border border-slate-200 rounded-lg text-sm bg-slate-50"
+                className="mt-2 w-full p-2 border border-slate-200 rounded-lg text-meta bg-slate-50"
               >
                 <option value="none">No Failure (Happy Path)</option>
                 <option value="payment">Payment Service</option>
@@ -161,7 +161,7 @@ function SagaStateMachinePage() {
 
             {(state.overall === 'success' || state.overall === 'failed' || state.overall === 'stopped') && (
               <div
-                className={`mt-4 p-4 rounded-xl text-center text-sm font-bold ${
+                className={`mt-4 p-4 rounded-xl text-center text-meta font-bold ${
                   state.overall === 'success'
                     ? 'bg-emerald-100 text-emerald-800'
                     : state.overall === 'stopped'
@@ -229,7 +229,7 @@ function SagaStateMachinePage() {
             </div>
           </div>
 
-          <div className="mt-12 bg-slate-50 p-6 rounded-xl border border-slate-100 text-sm text-slate-600">
+          <div className="mt-12 bg-slate-50 p-6 rounded-xl border border-slate-100 text-meta text-slate-600">
             <h4 className="font-bold text-slate-800 mb-2">How it works:</h4>
             <p>Unlike a monolithic database transaction (ACID), microservices cannot lock rows across different databases.</p>
             <p className="mt-2">The <strong>Saga Pattern</strong> splits a distributed transaction into local transactions. If a downstream service fails (e.g. Out of Stock), the orchestrator automatically fires <em>Compensating Transactions</em> upstream (e.g. Refund Credit Card, Cancel Order) to restore system consistency.</p>

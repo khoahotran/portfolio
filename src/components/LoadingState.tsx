@@ -17,7 +17,7 @@ interface Props {
 function LoadingState({ label = 'Loading…', className = '' }: Props) {
   return (
     <div
-      className={`flex items-center justify-center gap-2 py-16 text-sm text-slate-500 ${className}`}
+      className={`flex items-center justify-center gap-2 py-16 text-meta text-slate-500 ${className}`}
       role="status"
       aria-live="polite"
     >

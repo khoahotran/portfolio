@@ -69,7 +69,7 @@ function SeriesNav({ series, seriesOrder, slug }: Props) {
 
   return (
     <div className="mt-4">
-      <span className="inline-block rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
+      <span className="inline-block rounded-full bg-slate-100 px-3 py-1 text-micro font-bold text-slate-700">
         Part {position} of {items.length} in {series}
       </span>
       {(previous || next) && (
@@ -79,10 +79,10 @@ function SeriesNav({ series, seriesOrder, slug }: Props) {
               to={`${routeForCollection(previous.collection)}/${previous.slug}`}
               className="group rounded-xl border border-slate-200 bg-surface p-3 transition-colors hover:border-teal-500"
             >
-              <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              <div className="mb-1 text-nano font-bold uppercase tracking-widest text-slate-500">
                 Previous in series
               </div>
-              <div className="text-sm font-semibold text-slate-900 group-hover:text-teal-700">
+              <div className="text-meta font-semibold text-slate-900 group-hover:text-teal-700">
                 {previous.title}
               </div>
             </Link>
@@ -94,10 +94,10 @@ function SeriesNav({ series, seriesOrder, slug }: Props) {
               to={`${routeForCollection(next.collection)}/${next.slug}`}
               className="group rounded-xl border border-slate-200 bg-surface p-3 text-right transition-colors hover:border-teal-500"
             >
-              <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              <div className="mb-1 text-nano font-bold uppercase tracking-widest text-slate-500">
                 Next in series
               </div>
-              <div className="text-sm font-semibold text-slate-900 group-hover:text-teal-700">{next.title}</div>
+              <div className="text-meta font-semibold text-slate-900 group-hover:text-teal-700">{next.title}</div>
             </Link>
           ) : (
             <div />

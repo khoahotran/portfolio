@@ -92,18 +92,18 @@ function EventSourcingReplayPage() {
         {/* Left Col: Event Store Log */}
         <section className="min-w-0 md:col-span-6 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm flex flex-col max-h-[600px]">
           <div className="flex flex-wrap justify-between items-center gap-2 mb-4">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Append-Only Event Log</h2>
+            <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500">Append-Only Event Log</h2>
             <div className="flex gap-2">
               <button 
                 onClick={() => setIsPlaying(!isPlaying)} 
                 disabled={currentVersion >= SAMPLE_EVENTS.length}
-                className="flex items-center gap-1 bg-teal-50 text-teal-700 hover:bg-teal-100 px-3 py-1.5 rounded-md text-xs font-bold transition-colors disabled:opacity-50"
+                className="flex items-center gap-1 bg-teal-50 text-teal-700 hover:bg-teal-100 px-3 py-1.5 rounded-md text-micro font-bold transition-colors disabled:opacity-50"
               >
                 <Play className="w-3 h-3" /> {isPlaying ? 'Playing...' : 'Play Replay'}
               </button>
               <button 
                 onClick={() => { setIsPlaying(false); setCurrentVersion(0); }} 
-                className="flex items-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200 px-3 py-1.5 rounded-md text-xs font-bold transition-colors"
+                className="flex items-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200 px-3 py-1.5 rounded-md text-micro font-bold transition-colors"
               >
                 <RotateCcw className="w-3 h-3" /> Reset
               </button>
@@ -124,9 +124,9 @@ function EventSourcingReplayPage() {
                   <div className="flex-1">
                     <div className="flex justify-between items-baseline">
                       <span className="font-bold text-slate-800">{evt.type}</span>
-                      <span className="text-[10px] font-mono text-slate-500">v{evt.version}</span>
+                      <span className="text-nano font-mono text-slate-500">v{evt.version}</span>
                     </div>
-                    <div className="text-xs text-slate-500 font-mono mt-1">
+                    <div className="text-micro text-slate-500 font-mono mt-1">
                       {JSON.stringify(evt.payload)}
                     </div>
                   </div>
@@ -138,7 +138,7 @@ function EventSourcingReplayPage() {
 
         {/* Right Col: Current Projection */}
         <section className="min-w-0 md:col-span-6 rounded-2xl border border-slate-200 bg-surface p-8 shadow-sm flex flex-col bg-gradient-to-br from-white to-slate-50">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8">Read Projection (Current State)</h2>
+          <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 mb-8">Read Projection (Current State)</h2>
           
           <div className="flex-1 flex flex-col justify-center">
             
@@ -148,12 +148,12 @@ function EventSourcingReplayPage() {
               
               <div className="flex justify-between items-end mb-8">
                 <div>
-                  <div className="text-xs text-code-muted uppercase tracking-widest mb-1">Account Owner</div>
+                  <div className="text-micro text-code-muted uppercase tracking-widest mb-1">Account Owner</div>
                   <div className="text-2xl font-bold">{projection.owner}</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-[10px] text-code-muted uppercase tracking-widest mb-1">Status</div>
-                  <div className={`text-xs font-bold px-2 py-1 rounded inline-block ${
+                  <div className="text-nano text-code-muted uppercase tracking-widest mb-1">Status</div>
+                  <div className={`text-micro font-bold px-2 py-1 rounded inline-block ${
                     projection.status === 'ACTIVE' ? 'bg-emerald-500/20 text-emerald-300' :
                     projection.status === 'FROZEN' ? 'bg-rose-500/20 text-rose-300' :
                     'bg-code-chrome text-code-muted'
@@ -164,7 +164,7 @@ function EventSourcingReplayPage() {
               </div>
 
               <div>
-                <div className="text-xs text-code-muted uppercase tracking-widest mb-1">Current Balance</div>
+                <div className="text-micro text-code-muted uppercase tracking-widest mb-1">Current Balance</div>
                 <div className="text-5xl font-light font-mono flex items-baseline gap-2 transition-all duration-300">
                   <span className="text-3xl text-slate-500">$</span>
                   {projection.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
@@ -172,7 +172,7 @@ function EventSourcingReplayPage() {
               </div>
             </div>
 
-            <div className="mt-8 bg-surface p-6 rounded-xl border border-slate-100 text-sm text-slate-600 shadow-sm">
+            <div className="mt-8 bg-surface p-6 rounded-xl border border-slate-100 text-meta text-slate-600 shadow-sm">
               <h3 className="font-bold text-slate-800 mb-2">Why Event Sourcing?</h3>
               <ul className="list-disc list-inside space-y-2">
                 <li><strong>Auditability:</strong> You never lose history. You can see exactly <em>how</em> a balance reached $500.</li>

@@ -69,11 +69,11 @@ function VectorClocksPage() {
       <div className="mt-8 grid gap-8 md:grid-cols-12">
         <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
           <div>
-            <p className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-slate-700">
+            <p className="mb-2 flex items-center gap-1.5 text-meta font-semibold text-slate-700">
               <Shuffle className="w-4 h-4" aria-hidden="true" /> Simulated clock skew
             </p>
             {NODE_IDS.map((id) => (
-              <label key={id} className="mt-3 block text-xs font-semibold text-slate-600">
+              <label key={id} className="mt-3 block text-micro font-semibold text-slate-600">
                 <div className="flex justify-between">
                   <span className={NODE_COLOR[id]}>Node {id}</span>
                   <span className="text-slate-500">{skew[id] >= 0 ? '+' : ''}{skew[id]}ms</span>
@@ -92,24 +92,24 @@ function VectorClocksPage() {
           </div>
 
           <div className="border-t border-slate-100 pt-4">
-            <label className="block text-sm font-semibold text-slate-700">
+            <label className="block text-meta font-semibold text-slate-700">
               Event A
               <select
                 value={eventAId}
                 onChange={(e) => setEventAId(Number(e.target.value))}
-                className="mt-1.5 w-full rounded-md border border-slate-200 bg-surface px-2 py-1.5 text-xs"
+                className="mt-1.5 w-full rounded-md border border-slate-200 bg-surface px-2 py-1.5 text-micro"
               >
                 {events.map((e) => (
                   <option key={e.id} value={e.id}>#{e.id} [{e.nodeId}] {e.label}</option>
                 ))}
               </select>
             </label>
-            <label className="mt-3 block text-sm font-semibold text-slate-700">
+            <label className="mt-3 block text-meta font-semibold text-slate-700">
               Event B
               <select
                 value={eventBId}
                 onChange={(e) => setEventBId(Number(e.target.value))}
-                className="mt-1.5 w-full rounded-md border border-slate-200 bg-surface px-2 py-1.5 text-xs"
+                className="mt-1.5 w-full rounded-md border border-slate-200 bg-surface px-2 py-1.5 text-micro"
               >
                 {events.map((e) => (
                   <option key={e.id} value={e.id}>#{e.id} [{e.nodeId}] {e.label}</option>
@@ -118,7 +118,7 @@ function VectorClocksPage() {
             </label>
           </div>
 
-          <p className="text-xs text-slate-500">
+          <p className="text-micro text-slate-500">
             The default pair (C's write, B's write informed by A) never exchanged a message with
             each other in this script — try dragging their clock skew apart and see the naive
             winner flip while the causal verdict underneath never does.
@@ -128,24 +128,24 @@ function VectorClocksPage() {
         <section className="min-w-0 md:col-span-8 space-y-6">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className={`rounded-2xl border p-5 ${COMPARISON_STYLE[comparison].surface}`}>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Real causal verdict</p>
-              <div className={`mt-2 flex items-center gap-2 text-sm font-bold ${COMPARISON_STYLE[comparison].accent}`}>
+              <p className="text-nano font-bold uppercase tracking-widest text-slate-600">Real causal verdict</p>
+              <div className={`mt-2 flex items-center gap-2 text-meta font-bold ${COMPARISON_STYLE[comparison].accent}`}>
                 <ComparisonIcon className="w-4 h-4 shrink-0" aria-hidden="true" />
                 {COMPARISON_STYLE[comparison].label}
               </div>
-              <p className="mt-2 text-xs text-slate-600">Depends only on the two events' vector clocks — immune to clock skew.</p>
+              <p className="mt-2 text-micro text-slate-600">Depends only on the two events' vector clocks — immune to clock skew.</p>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Naive last-write-wins</p>
-              <div className={`mt-2 text-sm font-bold ${NODE_COLOR[winner.nodeId]}`}>
+              <p className="text-nano font-bold uppercase tracking-widest text-slate-600">Naive last-write-wins</p>
+              <div className={`mt-2 text-meta font-bold ${NODE_COLOR[winner.nodeId]}`}>
                 #{winner.id} [{winner.nodeId}] wins
               </div>
-              <p className="mt-2 text-xs text-slate-600">Picked purely by physical timestamp — always produces a winner, even here.</p>
+              <p className="mt-2 text-micro text-slate-600">Picked purely by physical timestamp — always produces a winner, even here.</p>
             </div>
           </div>
 
           {comparison === 'concurrent' && (
-            <p className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-800">
+            <p className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-micro text-amber-800">
               These two events are provably concurrent — neither could have influenced the other —
               yet last-write-wins still confidently names a winner. Drag the skew sliders for{' '}
               {eventA.nodeId} and {eventB.nodeId} in opposite directions: the naive winner flips,
@@ -154,14 +154,14 @@ function VectorClocksPage() {
           )}
 
           <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-            <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-slate-500">Full Event Log</h2>
+            <h2 className="mb-4 text-meta font-bold uppercase tracking-widest text-slate-500">Full Event Log</h2>
             <div className="space-y-2">
               {events.map((event: ClockEvent) => {
                 const isSelected = event.id === eventAId || event.id === eventBId;
                 return (
                   <div
                     key={event.id}
-                    className={`rounded-lg border px-3 py-2 text-xs ${
+                    className={`rounded-lg border px-3 py-2 text-micro ${
                       isSelected ? 'border-teal-300 bg-teal-50' : 'border-slate-100 bg-slate-50'
                     }`}
                   >

@@ -47,7 +47,7 @@ function BloomFilterPage() {
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
         <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Items inserted</span>
               <span className="text-teal-700">{insertedCount.toLocaleString()}</span>
@@ -63,13 +63,13 @@ function BloomFilterPage() {
             />
           </label>
 
-          <p className="text-xs text-slate-500">
+          <p className="text-micro text-slate-500">
             Designed capacity is {DESIGNED_CAPACITY} items — you're at{' '}
             <span className="font-bold text-slate-700">{overloadFactor.toFixed(1)}×</span> that.
             {overloadFactor > 1.5 && ' Past design capacity, the false-positive rate stops being a small cost and becomes the dominant one.'}
           </p>
 
-          <div className="space-y-1.5 border-t border-slate-100 pt-4 text-xs text-slate-600">
+          <div className="space-y-1.5 border-t border-slate-100 pt-4 text-micro text-slate-600">
             <div className="flex justify-between"><span>Bit array size (m)</span><span className="font-mono">{BIT_ARRAY_SIZE}</span></div>
             <div className="flex justify-between"><span>Hash functions (k)</span><span className="font-mono">{k}</span></div>
             <div className="flex justify-between"><span>Bits set</span><span className="font-mono">{trial.bitsSet} / {BIT_ARRAY_SIZE}</span></div>
@@ -78,7 +78,7 @@ function BloomFilterPage() {
         </section>
 
         <section className="min-w-0 md:col-span-8 space-y-6">
-          <div className="flex items-center gap-3 rounded-xl border border-teal-200 bg-teal-50 p-4 text-sm font-semibold text-teal-800">
+          <div className="flex items-center gap-3 rounded-xl border border-teal-200 bg-teal-50 p-4 text-meta font-semibold text-teal-800">
             <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
             <p>
               Every one of the {insertedCount.toLocaleString()} inserted items still tests as
@@ -88,27 +88,27 @@ function BloomFilterPage() {
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-            <h2 className="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-500">
+            <h2 className="mb-4 flex items-center gap-2 text-meta font-bold uppercase tracking-widest text-slate-500">
               <Gauge className="w-4 h-4" aria-hidden="true" /> False-Positive Rate
             </h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Theoretical formula</p>
+                <p className="text-nano font-bold uppercase tracking-widest text-slate-600">Theoretical formula</p>
                 <div className="mt-2 text-2xl font-bold text-slate-800">{(trial.theoreticalFalsePositiveRate * 100).toFixed(2)}%</div>
-                <p className="mt-2 text-xs text-slate-600 font-mono">(1 - e^(-kn/m))^k</p>
+                <p className="mt-2 text-micro text-slate-600 font-mono">(1 - e^(-kn/m))^k</p>
               </div>
               <div className={`rounded-2xl border p-5 ${trial.measuredFalsePositiveRate > 0.5 ? 'border-rose-200 bg-rose-50' : 'border-teal-200 bg-teal-50'}`}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Measured (real test)</p>
+                <p className="text-nano font-bold uppercase tracking-widest text-slate-600">Measured (real test)</p>
                 <div className={`mt-2 flex items-center gap-2 text-2xl font-bold ${trial.measuredFalsePositiveRate > 0.5 ? 'text-rose-800' : 'text-teal-800'}`}>
                   {trial.measuredFalsePositiveRate > 0.5 && <AlertTriangle className="w-5 h-5 shrink-0" aria-hidden="true" />}
                   {(trial.measuredFalsePositiveRate * 100).toFixed(2)}%
                 </div>
-                <p className="mt-2 text-xs text-slate-600">
+                <p className="mt-2 text-micro text-slate-600">
                   {trial.falsePositiveCount.toLocaleString()} of {trial.testedCount.toLocaleString()} genuinely-new items wrongly flagged.
                 </p>
               </div>
             </div>
-            <p className="mt-4 text-xs text-slate-500">
+            <p className="mt-4 text-micro text-slate-500">
               The two numbers track each other closely at any fill level — this is a real hash-based
               structure being measured, not a formula asserted separately from an implementation.
               Drag the slider from {DESIGNED_CAPACITY} up to {DESIGNED_CAPACITY * 6} and watch both

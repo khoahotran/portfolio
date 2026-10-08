@@ -106,4 +106,4 @@ C4Container
 **Future Evolution:**
 I plan to migrate the API Gateway from a custom Go GraphQL server to an Apollo Federation setup to allow downstream services to seamlessly extend the GraphQL schema.
 
-<a href="/graph" class="inline-block mt-8 text-sm text-slate-500 hover:text-slate-700 hover:underline transition-colors">See how this project connects to the rest of the ecosystem &rarr;</a>
+<a href="/graph" class="inline-block mt-8 text-meta text-slate-500 hover:text-slate-700 hover:underline transition-colors">See how this project connects to the rest of the ecosystem &rarr;</a>

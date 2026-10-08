@@ -201,12 +201,12 @@ graph TD
             onRendered={(container) => wireGraphLinks(container, navigate)}
           />
         </div>
-        <p className="mt-4 text-center text-xs text-slate-500">
+        <p className="mt-4 text-center text-micro text-slate-500">
           Dark nodes link to their project page.
         </p>
       </section>
 
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto text-sm">
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto text-meta">
         <div className="flex items-center gap-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
           {/* bg-panel, not bg-slate-900: this swatch has to keep matching the Mermaid node it
               describes, and Mermaid node colours come from a static classDef in the diagram source
@@ -225,7 +225,7 @@ graph TD
       </div>
 
       <section className="mt-16 max-w-4xl mx-auto">
-        <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 mb-6 text-center">
+        <h2 className="text-meta font-bold uppercase tracking-wider text-slate-900 mb-6 text-center">
           Recommended Reading Paths
         </h2>
         <div className="grid gap-6 md:grid-cols-2">
@@ -234,12 +234,12 @@ graph TD
               <h3 className="mb-4 font-bold text-slate-900">{path.title}</h3>
               <ol className="space-y-3">
                 {path.steps.map((step, i) => (
-                  <li key={step.to} className="flex items-start gap-3 text-sm">
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-slate-600">
+                  <li key={step.to} className="flex items-start gap-3 text-meta">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-nano font-bold text-slate-600">
                       {i + 1}
                     </span>
                     <Link to={step.to} className="min-w-0 flex-1 group">
-                      <span className="mr-1.5 text-[10px] font-bold uppercase tracking-widest text-teal-700">
+                      <span className="mr-1.5 text-nano font-bold uppercase tracking-widest text-teal-700">
                         {step.kind}
                       </span>
                       <span className="text-slate-700 group-hover:text-teal-700 group-hover:underline">

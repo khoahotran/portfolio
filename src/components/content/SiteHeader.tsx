@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { useTheme } from '../../theme/useTheme';
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
-  `shrink-0 text-xs font-semibold uppercase tracking-wide transition ${
+  `shrink-0 text-micro font-semibold uppercase tracking-wide transition ${
     isActive ? 'text-teal-700' : 'text-slate-500 hover:text-slate-900'
   }`;
 
@@ -96,7 +96,7 @@ function SiteHeader() {
               avoid announcing "Explore" twice back to back. */}
           <span
             aria-hidden="true"
-            className="shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-500"
+            className="shrink-0 text-nano font-bold uppercase tracking-widest text-slate-500"
           >
             Explore
           </span>

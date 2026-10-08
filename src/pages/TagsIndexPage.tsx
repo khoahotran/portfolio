@@ -72,7 +72,7 @@ function TagsIndexPage() {
       </Link>
       <section className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Tags</h1>
-        <p className="mt-3 max-w-2xl text-sm text-slate-600">
+        <p className="mt-3 max-w-2xl text-meta text-slate-600">
           Every write-up, browsable by topic across every collection &mdash; not scoped to one section
           the way each collection page&rsquo;s own tag filter is.
         </p>
@@ -91,12 +91,12 @@ function TagsIndexPage() {
             <Link
               key={tag}
               to={`/tags/${tag}`}
-              className="group inline-flex items-center gap-2 rounded-full border border-slate-200 bg-surface px-4 py-2 text-sm transition hover:-translate-y-0.5 hover:border-teal-400"
+              className="group inline-flex items-center gap-2 rounded-full border border-slate-200 bg-surface px-4 py-2 text-meta transition hover:-translate-y-0.5 hover:border-teal-400"
             >
               <span className="font-semibold text-slate-800 group-hover:text-teal-700">#{tag}</span>
               {/* text-slate-600, not -500: the same bg-slate-100 pairing measured 4.34:1 (needs 4.5)
                   elsewhere on the site and was fixed then — see .ai/decision-log.md Decision 9. */}
-              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-600">{count}</span>
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-micro font-bold text-slate-600">{count}</span>
             </Link>
           ))}
         </section>

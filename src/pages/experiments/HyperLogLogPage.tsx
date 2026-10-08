@@ -70,12 +70,12 @@ function HyperLogLogPage() {
 
       <div className="mt-8 space-y-10">
         <section>
-          <h2 className="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-500">
+          <h2 className="mb-4 flex items-center gap-2 text-meta font-bold uppercase tracking-widest text-slate-500">
             <Ruler className="w-4 h-4" aria-hidden="true" /> Estimate vs. True Count
           </h2>
           <div className="grid gap-6 md:grid-cols-12">
             <div className="min-w-0 md:col-span-4 space-y-4 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-              <label className="block text-xs font-semibold text-slate-600">
+              <label className="block text-micro font-semibold text-slate-600">
                 <div className="flex justify-between">
                   <span>True cardinality</span>
                   <span>{trueCardinality.toLocaleString()}</span>
@@ -90,7 +90,7 @@ function HyperLogLogPage() {
                   className="mt-1.5 w-full accent-teal-600"
                 />
               </label>
-              <label className="block text-xs font-semibold text-slate-600">
+              <label className="block text-micro font-semibold text-slate-600">
                 <div className="flex justify-between">
                   <span>Precision (registers = 2^p)</span>
                   <span>p={precision} (m={registerCount.toLocaleString()})</span>
@@ -104,7 +104,7 @@ function HyperLogLogPage() {
                   className="mt-1.5 w-full accent-teal-600"
                 />
               </label>
-              <div className="space-y-1.5 border-t border-slate-100 pt-4 text-xs text-slate-600">
+              <div className="space-y-1.5 border-t border-slate-100 pt-4 text-micro text-slate-600">
                 <div className="flex justify-between"><span>Registers (m)</span><span className="font-mono">{registerCount.toLocaleString()}</span></div>
                 <div className="flex justify-between"><span>Memory (1 byte/register)</span><span className="font-mono">{registerCount.toLocaleString()} B</span></div>
                 <div className="flex justify-between"><span>Theoretical std. error</span><span className="font-mono">{(standardError * 100).toFixed(2)}%</span></div>
@@ -113,7 +113,7 @@ function HyperLogLogPage() {
 
             <div className="min-w-0 md:col-span-8 space-y-4">
               <div
-                className={`flex items-center gap-3 rounded-xl border p-4 text-sm font-semibold ${
+                className={`flex items-center gap-3 rounded-xl border p-4 text-meta font-semibold ${
                   trial.relativeError > standardError * 4 ? 'border-amber-200 bg-amber-50 text-amber-800' : 'border-teal-200 bg-teal-50 text-teal-800'
                 }`}
               >
@@ -129,32 +129,32 @@ function HyperLogLogPage() {
               </div>
 
               <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-                <p className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-500">
+                <p className="mb-3 text-micro font-bold uppercase tracking-widest text-slate-500">
                   The correction that matters below ~{(2.5 * registerCount).toLocaleString()} true items
                 </p>
-                <p className="mb-4 text-xs text-slate-500">
+                <p className="mb-4 text-micro text-slate-500">
                   Fixed demo at {smallRangeDemo.n} true items, same {registerCount.toLocaleString()}-register
                   sketch: most registers are still untouched zeros at this low a count, which the raw
                   harmonic-mean formula doesn't account for on its own.
                 </p>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="rounded-2xl border border-rose-200 bg-rose-50 p-5">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Raw formula (no correction)</p>
+                    <p className="text-nano font-bold uppercase tracking-widest text-slate-600">Raw formula (no correction)</p>
                     <div className="mt-2 flex items-center gap-2 text-2xl font-bold text-rose-800">
                       <AlertTriangle className="w-5 h-5 shrink-0" aria-hidden="true" />
                       {smallRangeDemo.raw.toFixed(0)}
                     </div>
-                    <p className="mt-2 text-xs text-slate-600">
+                    <p className="mt-2 text-micro text-slate-600">
                       {(smallRangeDemo.raw / Math.max(smallRangeDemo.n, 1)).toFixed(1)}× the true count of {smallRangeDemo.n}.
                     </p>
                   </div>
                   <div className="rounded-2xl border border-teal-200 bg-teal-50 p-5">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Corrected (linear counting)</p>
+                    <p className="text-nano font-bold uppercase tracking-widest text-slate-600">Corrected (linear counting)</p>
                     <div className="mt-2 flex items-center gap-2 text-2xl font-bold text-teal-800">
                       <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
                       {smallRangeDemo.corrected.toFixed(0)}
                     </div>
-                    <p className="mt-2 text-xs text-slate-600">Close to the true count of {smallRangeDemo.n}.</p>
+                    <p className="mt-2 text-micro text-slate-600">Close to the true count of {smallRangeDemo.n}.</p>
                   </div>
                 </div>
               </div>
@@ -163,28 +163,28 @@ function HyperLogLogPage() {
         </section>
 
         <section>
-          <h2 className="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-500">
+          <h2 className="mb-4 flex items-center gap-2 text-meta font-bold uppercase tracking-widest text-slate-500">
             <GitMerge className="w-4 h-4" aria-hidden="true" /> Merging Two Sketches Without Ever Combining Raw Data
           </h2>
           <div className="grid gap-6 md:grid-cols-12">
             <div className="min-w-0 md:col-span-4 space-y-4 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-              <p className="text-xs text-slate-500">Two independent sketches (say, two shards each tracking their own users), with a real overlap between them.</p>
-              <label className="block text-xs font-semibold text-slate-600">
+              <p className="text-micro text-slate-500">Two independent sketches (say, two shards each tracking their own users), with a real overlap between them.</p>
+              <label className="block text-micro font-semibold text-slate-600">
                 <div className="flex justify-between"><span>Sketch A size</span><span>{sizeA.toLocaleString()}</span></div>
                 <input type="range" min={100} max={5000} step={100} value={sizeA} onChange={(e) => setSizeA(Number(e.target.value))} className="mt-1.5 w-full accent-teal-600" />
               </label>
-              <label className="block text-xs font-semibold text-slate-600">
+              <label className="block text-micro font-semibold text-slate-600">
                 <div className="flex justify-between"><span>Sketch B size</span><span>{sizeB.toLocaleString()}</span></div>
                 <input type="range" min={100} max={5000} step={100} value={sizeB} onChange={(e) => setSizeB(Number(e.target.value))} className="mt-1.5 w-full accent-teal-600" />
               </label>
-              <label className="block text-xs font-semibold text-slate-600">
+              <label className="block text-micro font-semibold text-slate-600">
                 <div className="flex justify-between"><span>Overlap between them</span><span>{mergeResult.clampedOverlap.toLocaleString()}</span></div>
                 <input type="range" min={0} max={Math.min(sizeA, sizeB)} step={50} value={overlap} onChange={(e) => setOverlap(Number(e.target.value))} className="mt-1.5 w-full accent-teal-600" />
               </label>
             </div>
 
             <div className="min-w-0 md:col-span-8 space-y-4">
-              <div className="flex items-center gap-3 rounded-xl border border-teal-200 bg-teal-50 p-4 text-sm font-semibold text-teal-800">
+              <div className="flex items-center gap-3 rounded-xl border border-teal-200 bg-teal-50 p-4 text-meta font-semibold text-teal-800">
                 <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
                 <p>
                   True union: {mergeResult.trueUnion.toLocaleString()}. Merged sketch estimates{' '}
@@ -196,22 +196,22 @@ function HyperLogLogPage() {
               <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">A alone</p>
+                    <p className="text-nano font-bold uppercase tracking-widest text-slate-600">A alone</p>
                     <div className="mt-2 text-xl font-bold text-slate-700">{mergeResult.estimateA.toFixed(0)}</div>
                   </div>
                   <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">B alone</p>
+                    <p className="text-nano font-bold uppercase tracking-widest text-slate-600">B alone</p>
                     <div className="mt-2 text-xl font-bold text-slate-700">{mergeResult.estimateB.toFixed(0)}</div>
                   </div>
                   <div className={`rounded-2xl border p-4 ${Math.abs(mergeResult.naiveSum - mergeResult.trueUnion) > mergeResult.trueUnion * 0.15 ? 'border-rose-200 bg-rose-50' : 'border-slate-200 bg-slate-50'}`}>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Naive sum (A + B)</p>
+                    <p className="text-nano font-bold uppercase tracking-widest text-slate-600">Naive sum (A + B)</p>
                     <div className={`mt-2 flex items-center gap-1.5 text-xl font-bold ${Math.abs(mergeResult.naiveSum - mergeResult.trueUnion) > mergeResult.trueUnion * 0.15 ? 'text-rose-800' : 'text-slate-700'}`}>
                       {Math.abs(mergeResult.naiveSum - mergeResult.trueUnion) > mergeResult.trueUnion * 0.15 && <AlertTriangle className="w-4 h-4 shrink-0" aria-hidden="true" />}
                       {mergeResult.naiveSum.toFixed(0)}
                     </div>
                   </div>
                 </div>
-                <p className="mt-4 text-xs text-slate-500">
+                <p className="mt-4 text-micro text-slate-500">
                   Drag overlap up toward A's or B's full size — the naive sum keeps climbing (it
                   double-counts every shared user) while the merged estimate keeps tracking the real
                   union, because it never counted anyone twice in the first place.

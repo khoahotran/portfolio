@@ -103,11 +103,11 @@ export default function ProvenanceNote({ labId }: { labId: string }) {
   return (
     <section
       aria-label="Data provenance"
-      className={`mt-6 flex min-w-0 gap-3 rounded-xl border p-4 text-sm leading-relaxed ${style.surface}`}
+      className={`mt-6 flex min-w-0 gap-3 rounded-xl border p-4 text-meta leading-relaxed ${style.surface}`}
     >
       <Icon className={`mt-0.5 h-5 w-5 shrink-0 ${style.accent}`} aria-hidden="true" />
       <div className="min-w-0">
-        <p className={`mb-1 text-[11px] font-bold uppercase tracking-widest ${style.accent}`}>
+        <p className={`mb-1 text-nano font-bold uppercase tracking-widest ${style.accent}`}>
           {PROVENANCE_LABEL[provenance.kind]}
         </p>
         <Body provenance={provenance} />

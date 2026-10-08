@@ -38,7 +38,7 @@ function CanaryRolloutPage() {
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
         <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Canary error rate</span>
               <span className="text-teal-700">{canaryRatePercent}%</span>
@@ -46,7 +46,7 @@ function CanaryRolloutPage() {
             <input type="range" min={0} max={15} step={0.5} value={canaryRatePercent} onChange={(e) => setCanaryRatePercent(Number(e.target.value))} className="mt-3 w-full accent-teal-600" />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Baseline error rate</span>
               <span className="text-teal-700">{baselineRatePercent}%</span>
@@ -54,7 +54,7 @@ function CanaryRolloutPage() {
             <input type="range" min={0} max={10} step={0.5} value={baselineRatePercent} onChange={(e) => setBaselineRatePercent(Number(e.target.value))} className="mt-3 w-full accent-teal-600" />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Requests sampled per stage</span>
               <span className="text-teal-700">{bakeRequests}</span>
@@ -62,7 +62,7 @@ function CanaryRolloutPage() {
             <input type="range" min={10} max={5000} step={10} value={bakeRequests} onChange={(e) => setBakeRequests(Number(e.target.value))} className="mt-3 w-full accent-teal-600" />
           </label>
 
-          <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-xs flex gap-3 leading-relaxed mt-8">
+          <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-micro flex gap-3 leading-relaxed mt-8">
             <Info className="w-5 h-5 shrink-0 text-sky-600" />
             <p>
               The canary and baseline error rates are the true, fixed rates each stage samples from —
@@ -73,7 +73,7 @@ function CanaryRolloutPage() {
           </div>
 
           <div
-            className={`flex items-center gap-3 rounded-xl border p-4 text-sm font-bold mt-4 ${
+            className={`flex items-center gap-3 rounded-xl border p-4 text-meta font-bold mt-4 ${
               result.finalStatus === 'fully-promoted' ? 'border-teal-200 bg-teal-50 text-teal-800' : 'border-rose-200 bg-rose-50 text-rose-800'
             }`}
           >
@@ -83,7 +83,7 @@ function CanaryRolloutPage() {
         </section>
 
         <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-6 flex items-center gap-2">
+          <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 mb-6 flex items-center gap-2">
             <GitBranch className="w-4 h-4" /> Traffic Stages
           </h2>
 
@@ -105,11 +105,11 @@ function CanaryRolloutPage() {
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-bold text-slate-800">Stage {stageNum} — {traffic}% traffic</span>
+                    <span className="text-meta font-bold text-slate-800">Stage {stageNum} — {traffic}% traffic</span>
                     {!reached ? (
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Not reached</span>
+                      <span className="text-nano font-bold uppercase tracking-widest text-slate-600">Not reached</span>
                     ) : (
-                      <span className={`flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest ${stage!.decision === 'rollback' ? 'text-rose-700' : 'text-teal-700'}`}>
+                      <span className={`flex items-center gap-1 text-nano font-bold uppercase tracking-widest ${stage!.decision === 'rollback' ? 'text-rose-700' : 'text-teal-700'}`}>
                         {stage!.decision === 'rollback' ? <AlertTriangle size={11} aria-hidden="true" /> : <CheckCircle2 size={11} aria-hidden="true" />}
                         {stage!.decision}
                       </span>
@@ -117,7 +117,7 @@ function CanaryRolloutPage() {
                   </div>
 
                   {reached && (
-                    <div className="grid grid-cols-3 gap-3 text-center text-xs">
+                    <div className="grid grid-cols-3 gap-3 text-center text-micro">
                       <div>
                         <div className="font-bold text-slate-900">{(stage!.canaryErrorRate * 100).toFixed(2)}%</div>
                         <div className="text-slate-500">canary ({stage!.canaryErrors}/{stage!.bakeRequests})</div>

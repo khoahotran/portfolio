@@ -66,12 +66,12 @@ function RaftPage() {
 
       <div className="mt-8 space-y-10">
         <section>
-          <h2 className="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-500">
+          <h2 className="mb-4 flex items-center gap-2 text-meta font-bold uppercase tracking-widest text-slate-500">
             <Vote className="w-4 h-4" aria-hidden="true" /> Stage 1 — Election Restriction
           </h2>
           <div className="grid gap-6 md:grid-cols-12">
             <div className="min-w-0 md:col-span-4 space-y-4 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-              <label className="block text-xs font-semibold text-slate-600">
+              <label className="block text-micro font-semibold text-slate-600">
                 <div className="flex justify-between">
                   <span className="font-bold text-teal-700">Candidate's log length</span>
                   <span>{candidateLogLength}</span>
@@ -86,13 +86,13 @@ function RaftPage() {
                 />
               </label>
               {PEER_IDS.map((id) => (
-                <label key={id} className={`block text-xs font-semibold ${downPeers.has(id) ? 'text-slate-300' : 'text-slate-600'}`}>
+                <label key={id} className={`block text-micro font-semibold ${downPeers.has(id) ? 'text-slate-300' : 'text-slate-600'}`}>
                   <div className="flex justify-between">
                     <span>{id} log length</span>
                     <button
                       type="button"
                       onClick={() => togglePeerDown(id)}
-                      className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${downPeers.has(id) ? 'bg-slate-200 text-slate-500' : 'bg-teal-50 text-teal-700'}`}
+                      className={`rounded px-1.5 py-0.5 text-nano font-bold ${downPeers.has(id) ? 'bg-slate-200 text-slate-500' : 'bg-teal-50 text-teal-700'}`}
                     >
                       {downPeers.has(id) ? 'down' : 'alive'}
                     </button>
@@ -112,7 +112,7 @@ function RaftPage() {
 
             <div className="min-w-0 md:col-span-8 space-y-4">
               <div
-                className={`flex items-center gap-3 rounded-xl border p-4 text-sm font-semibold ${
+                className={`flex items-center gap-3 rounded-xl border p-4 text-meta font-semibold ${
                   election.elected ? 'border-teal-200 bg-teal-50 text-teal-800' : 'border-rose-200 bg-rose-50 text-rose-800'
                 }`}
               >
@@ -125,13 +125,13 @@ function RaftPage() {
                 </p>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-                <p className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-500">Vote per peer</p>
+                <p className="mb-3 text-micro font-bold uppercase tracking-widest text-slate-500">Vote per peer</p>
                 <div className="space-y-2">
                   {PEER_IDS.map((id) => {
                     const granted = election.votesGranted.includes(id);
                     const down = downPeers.has(id);
                     return (
-                      <div key={id} className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-xs">
+                      <div key={id} className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-micro">
                         <span className="font-mono text-slate-600">{id} (log length {peerLogLengths[id]})</span>
                         <span className={`font-bold ${down ? 'text-slate-600' : granted ? 'text-teal-700' : 'text-rose-700'}`}>
                           {down ? 'unreachable' : granted ? 'vote granted' : 'vote refused — more up-to-date'}
@@ -146,17 +146,17 @@ function RaftPage() {
         </section>
 
         <section>
-          <h2 className="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-500">
+          <h2 className="mb-4 flex items-center gap-2 text-meta font-bold uppercase tracking-widest text-slate-500">
             <ShieldCheck className="w-4 h-4" aria-hidden="true" /> Stage 2 — Commit-Index Safety
           </h2>
           <div className="grid gap-6 md:grid-cols-12">
             <div className="min-w-0 md:col-span-4 space-y-4 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-              <p className="text-xs text-slate-500">
+              <p className="text-micro text-slate-500">
                 The leader's log is fixed: index 1 from an old term ({OLD_TERM}), index 2 from the
                 current term ({CURRENT_TERM}). Drag each follower's replication progress.
               </p>
               {matchIndexes.map((value, i) => (
-                <label key={i} className="block text-xs font-semibold text-slate-600">
+                <label key={i} className="block text-micro font-semibold text-slate-600">
                   <div className="flex justify-between">
                     <span>Follower {i + 1}</span>
                     <span>{value === 0 ? 'nothing' : `index ${value}`}</span>
@@ -177,7 +177,7 @@ function RaftPage() {
 
             <div className="min-w-0 md:col-span-8 space-y-4">
               <div
-                className={`flex items-center gap-3 rounded-xl border p-4 text-sm font-semibold ${
+                className={`flex items-center gap-3 rounded-xl border p-4 text-meta font-semibold ${
                   commit.wouldBeUnsafeWithoutTermCheck
                     ? 'border-amber-200 bg-amber-50 text-amber-800'
                     : commit.newCommitIndex > 0
@@ -193,18 +193,18 @@ function RaftPage() {
                 </p>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-                <p className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-500">Leader's log</p>
+                <p className="mb-3 text-micro font-bold uppercase tracking-widest text-slate-500">Leader's log</p>
                 <div className="flex gap-2">
-                  <div className={`flex-1 rounded-lg border p-3 text-center text-xs font-bold ${commit.newCommitIndex >= 1 ? 'border-teal-300 bg-teal-50 text-teal-800' : 'border-slate-200 bg-slate-50 text-slate-500'}`}>
+                  <div className={`flex-1 rounded-lg border p-3 text-center text-micro font-bold ${commit.newCommitIndex >= 1 ? 'border-teal-300 bg-teal-50 text-teal-800' : 'border-slate-200 bg-slate-50 text-slate-500'}`}>
                     Index 1 — term {OLD_TERM}
                     <div className="mt-1 font-normal">{commit.newCommitIndex >= 1 ? 'committed' : 'not yet committed'}</div>
                   </div>
-                  <div className={`flex-1 rounded-lg border p-3 text-center text-xs font-bold ${commit.newCommitIndex >= 2 ? 'border-teal-300 bg-teal-50 text-teal-800' : 'border-slate-200 bg-slate-50 text-slate-500'}`}>
+                  <div className={`flex-1 rounded-lg border p-3 text-center text-micro font-bold ${commit.newCommitIndex >= 2 ? 'border-teal-300 bg-teal-50 text-teal-800' : 'border-slate-200 bg-slate-50 text-slate-500'}`}>
                     Index 2 — term {CURRENT_TERM}
                     <div className="mt-1 font-normal">{commit.newCommitIndex >= 2 ? 'committed' : 'not yet committed'}</div>
                   </div>
                 </div>
-                <p className="mt-4 text-xs text-slate-500">
+                <p className="mt-4 text-micro text-slate-500">
                   Try: all four followers at "index 1" only. A majority (4/5, leader included) has
                   the old-term entry — yet nothing commits. Now move any two followers to "index 2":
                   the current-term entry reaches a majority, and both indexes commit together.
