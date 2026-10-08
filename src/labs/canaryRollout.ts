@@ -1,16 +1,16 @@
 /**
- * Canary rollout analysis — the actual decision procedure a canary deployment system runs at each
+ * Canary rollout analysis - the actual decision procedure a canary deployment system runs at each
  * traffic stage, not a diagram of "shift traffic gradually and watch for errors." A real canary
  * error rate that's numerically higher than baseline is not, by itself, evidence of a regression:
  * with few enough requests, a real regression can look identical to noise, and with enough
  * requests, a trivial, practically meaningless difference can look "significant." This is why real
- * systems (Kayenta, Flagger) run a statistical test rather than a raw threshold comparison — this
+ * systems (Kayenta, Flagger) run a statistical test rather than a raw threshold comparison - this
  * lab runs the same class of test: a two-proportion z-test, one-tailed (a canary that's
  * significantly *better* than baseline is not a regression and should not roll back).
  *
  * Deterministic by design, like every other lab here: error *counts* per stage are computed as
  * `round(rate * sampleSize)` from the given error rates, not drawn from a random-number generator.
- * The thing being tested is the statistical decision procedure itself, not a random walk — the same
+ * The thing being tested is the statistical decision procedure itself, not a random walk - the same
  * choice `attemptRedlockAcquisition` makes by computing real quorum arithmetic instead of simulating
  * network jitter.
  */
@@ -39,11 +39,11 @@ export interface CanaryRolloutResult {
 
 /**
  * One-tailed two-proportion z-test: is the canary's error rate significantly *higher* than the
- * baseline's, given how many requests each was observed over? Returns the signed z-score — the test
+ * baseline's, given how many requests each was observed over? Returns the signed z-score - the test
  * calling this decides the significance threshold, this function only computes the statistic.
  *
  * Returns 0 when both proportions are identical or when the pooled variance is 0 (both samples
- * clean, or both samples entirely errors) — there is no evidence of a *difference* to test for in
+ * clean, or both samples entirely errors) - there is no evidence of a *difference* to test for in
  * either case, so "no evidence" is the correct answer, not a division-by-zero NaN.
  */
 export function twoProportionZScore(
@@ -66,7 +66,7 @@ export function twoProportionZScore(
 /**
  * Runs a full canary rollout through `trafficStages` (e.g. [5, 25, 50, 100]), halting at the first
  * stage whose z-test finds the canary significantly worse than baseline. `canaryErrorRate` and
- * `baselineErrorRate` are the *true* underlying rates (0-1) each stage samples from — fixed for the
+ * `baselineErrorRate` are the *true* underlying rates (0-1) each stage samples from - fixed for the
  * whole rollout, since a canary's actual code doesn't change rate between stages, only how much
  * traffic it's exposed to.
  */

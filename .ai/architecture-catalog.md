@@ -35,7 +35,7 @@ This catalog documents the primary architectural patterns utilized and reference
 ## Server Actions as a BFF Boundary
 **Description:** Every client-to-API mutation runs through a server-side Server Action rather than
 the browser calling the API directly. The Server Action reads the actor's session and forwards it as
-a bearer token — no credential the API accepts is ever shipped to the browser.
+a bearer token - no credential the API accepts is ever shipped to the browser.
 **Trade-offs:** Removes an entire class of credential-leak and CSRF concern on the browser-to-API
 hop, since it becomes server-to-server. Costs an extra network hop per mutation and ties the pattern
 to a framework feature (Server Actions) still stabilizing across the ecosystem.

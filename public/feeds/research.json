@@ -25,7 +25,7 @@
       "id": "https://khoahotran.github.io/portfolio/research/database-indexing-btree-vs-brin-for-time-series",
       "url": "https://khoahotran.github.io/portfolio/research/database-indexing-btree-vs-brin-for-time-series",
       "title": "Database Indexing for Time-Series: B-Tree vs BRIN in PostgreSQL",
-      "summary": "Why a Block Range Index, not the default B-Tree, is the right structure for naturally time-ordered data — and why QuantAlpha's tick-ingestion pipeline hasn't needed it yet.",
+      "summary": "Why a Block Range Index, not the default B-Tree, is the right structure for naturally time-ordered data - and why QuantAlpha's tick-ingestion pipeline hasn't needed it yet.",
       "date_published": "2026-08-28T00:00:00.000Z",
       "tags": [
         "postgresql",

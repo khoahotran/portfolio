@@ -19,7 +19,7 @@ const ALL_COLLECTIONS: ContentCollection[] = [
 
 /**
  * ignoreLocation (see the Fuse config below) fixes recall but on its own
- * regresses ranking for exact project/article names — e.g. "Aegis" no longer
+ * regresses ranking for exact project/article names - e.g. "Aegis" no longer
  * surfaces the Aegis project page first, because a blog post that merely
  * mentions Aegis several times can out-score it under Fuse's own similarity
  * metric. This re-sorts an exact or prefix title match to the front before
@@ -60,7 +60,7 @@ function SearchPage() {
 
   useSeo({
     title: 'Search Engineering Articles',
-    // Was undercounting scope (named only 3 of 6 searchable collections) —
+    // Was undercounting scope (named only 3 of 6 searchable collections) -
     // aligned with the visible subhead just below, which already lists all 6.
     description: 'Search across projects, blog posts, research, system design, experiments, and field notes.',
     // Internal search-result pages are a standard noindex candidate (no
@@ -104,7 +104,7 @@ function SearchPage() {
         includeScore: true,
         // Fuse's default `location: 0, distance: 100` means a match past roughly
         // the first ~34 characters of a field scores above any reasonable
-        // threshold and gets discarded — measured: "Argon2id" (in 5 articles),
+        // threshold and gets discarded - measured: "Argon2id" (in 5 articles),
         // "rate limiting" (in 4), and "core banking" (in 6, only 1 returned) all
         // undercounted results because of this. ignoreLocation removes that
         // position penalty; the threshold is tightened from 0.34 to compensate
@@ -112,7 +112,7 @@ function SearchPage() {
         //
         // 0.25 alone let a short acronym (<=4 chars) match on a single edit against
         // almost anything: "BRIN" (in 1 article) returned 32/33; "RBAC" (in 3) returned
-        // 32/33. Tightened to 0.20 — verified against a 24-query battery (exact/partial
+        // 32/33. Tightened to 0.20 - verified against a 24-query battery (exact/partial
         // titles, tech names, project names, tags, rare keywords, multi-word, case
         // variants, no-result queries): every previously-correct top hit is unchanged,
         // and BRIN/RBAC/saga/CQRS all drop back down to their real counts.
@@ -147,7 +147,7 @@ function SearchPage() {
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-10 md:px-6">
       <h1 className="text-3xl font-bold tracking-tight text-slate-900">Search Articles</h1>
-      <p className="mt-2 text-sm text-slate-600">Search across projects, blog posts, research, system design, experiments, and field notes.</p>
+      <p className="mt-2 text-meta text-slate-600">Search across projects, blog posts, research, system design, experiments, and field notes.</p>
 
       <label className="mt-6 block">
         <span className="sr-only">Search query</span>
@@ -160,7 +160,7 @@ function SearchPage() {
             setParams(next);
           }}
           placeholder="Search architecture, retries, event-driven..."
-          className="w-full rounded-xl border border-slate-300 bg-surface px-4 py-3 text-sm text-slate-900 outline-none ring-teal-500 transition focus:ring"
+          className="w-full rounded-xl border border-slate-300 bg-surface px-4 py-3 text-meta text-slate-900 outline-none ring-teal-500 transition focus:ring"
         />
       </label>
 
@@ -168,7 +168,7 @@ function SearchPage() {
         <button
           type="button"
           aria-pressed={!selectedCollection}
-          className={`rounded-full border px-3 py-1 text-xs font-semibold ${!selectedCollection ? 'border-accent bg-accent text-accent-fg' : 'border-slate-300 text-slate-700'}`}
+          className={`rounded-full border px-3 py-1 text-micro font-semibold ${!selectedCollection ? 'border-accent bg-accent text-accent-fg' : 'border-slate-300 text-slate-700'}`}
           onClick={() => setParams(query ? { q: query } : {})}
         >
           All
@@ -178,7 +178,7 @@ function SearchPage() {
             key={collection}
             type="button"
             aria-pressed={selectedCollection === collection}
-            className={`rounded-full border px-3 py-1 text-xs font-semibold capitalize ${selectedCollection === collection ? 'border-accent bg-accent text-accent-fg' : 'border-slate-300 text-slate-700'}`}
+            className={`rounded-full border px-3 py-1 text-micro font-semibold capitalize ${selectedCollection === collection ? 'border-accent bg-accent text-accent-fg' : 'border-slate-300 text-slate-700'}`}
             onClick={() => setParams(query ? { q: query, collection } : { collection })}
           >
             {collectionLabel(collection)}
@@ -195,7 +195,7 @@ function SearchPage() {
           />
         )}
         {!loading && !error && matched.length > 0 && (
-          <p className="text-xs text-slate-500">
+          <p className="text-micro text-slate-500">
             {results.length < matched.length
               ? `Showing ${results.length} of ${matched.length} results`
               : `${matched.length} result${matched.length === 1 ? '' : 's'}`}
@@ -205,18 +205,18 @@ function SearchPage() {
           !error &&
           results.map((item) => (
             <article key={`${item.collection}-${item.slug}`} className="rounded-xl border border-slate-200 bg-surface p-4">
-              <p className="text-[11px] uppercase tracking-wide text-slate-500">{item.collection}</p>
+              <p className="text-nano uppercase tracking-wide text-slate-500">{item.collection}</p>
               <h2 className="mt-1 text-lg font-semibold text-slate-900">
                 <Link to={`${routeForCollection(item.collection)}/${item.slug}`} className="hover:text-teal-700">
                   {item.title}
                 </Link>
               </h2>
-              <p className="mt-2 text-sm text-slate-600">{item.summary}</p>
+              <p className="mt-2 text-meta text-slate-600">{item.summary}</p>
             </article>
           ))}
 
         {!loading && !error && results.length === 0 && (
-          <p className="text-sm text-slate-500">No articles matched your query.</p>
+          <p className="text-meta text-slate-500">No articles matched your query.</p>
         )}
       </section>
     </main>

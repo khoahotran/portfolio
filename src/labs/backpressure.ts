@@ -1,26 +1,26 @@
 /**
- * Backpressure — what a bounded queue between a producer and a slower consumer actually does when
+ * Backpressure - what a bounded queue between a producer and a slower consumer actually does when
  * it fills up. Four real policies, not four names for the same arithmetic: `drop-new` and
  * `drop-old` produce numerically identical queue-depth and drop-count series under sustained
  * overload, which is exactly why this simulation tracks individual item identities (an
- * `arrivedTick` per item) instead of just counts — it's the only way to make the actual difference
+ * `arrivedTick` per item) instead of just counts - it's the only way to make the actual difference
  * between them (which items survive) a testable, visible fact rather than an assertion.
  *
- * - `block` — the producer is slowed to match the consumer. Nothing is ever lost; the unadmitted
+ * - `block` - the producer is slowed to match the consumer. Nothing is ever lost; the unadmitted
  *   work piles up in the producer's own outbound buffer (`pendingBacklog` below) instead, which is
  *   what "backpressure" literally means: push the slowdown backward through the pipeline instead of
  *   dropping data or crashing. The real cost is that backlog growing without bound if the mismatch
- *   never resolves — this policy doesn't fix a sustained rate mismatch, it just relocates the queue.
- * - `drop-new` (tail drop) — the queue never evicts what it already holds; incoming items that
+ *   never resolves - this policy doesn't fix a sustained rate mismatch, it just relocates the queue.
+ * - `drop-new` (tail drop) - the queue never evicts what it already holds; incoming items that
  *   don't fit are discarded on arrival. FIFO order of admitted items is preserved. Every item this
- *   drops has `arrivedTick` equal to the tick it was dropped in — it can only ever reject its own
+ *   drops has `arrivedTick` equal to the tick it was dropped in - it can only ever reject its own
  *   newest arrivals, never something already resident.
- * - `drop-old` (drop head) — the queue always admits new arrivals, evicting its oldest resident
- *   items to make room instead. Every item this drops has `arrivedTick` *before* the current tick —
+ * - `drop-old` (drop head) - the queue always admits new arrivals, evicting its oldest resident
+ *   items to make room instead. Every item this drops has `arrivedTick` *before* the current tick -
  *   it can only ever evict something that was already sitting there. Right for "only the latest
  *   value matters" workloads (sensor telemetry, live position updates); wrong for anything where
  *   an old, unprocessed item still has to be processed eventually.
- * - `circuit-breaker` — load shedding driven by occupancy, not per-item choice. Once queue
+ * - `circuit-breaker` - load shedding driven by occupancy, not per-item choice. Once queue
  *   occupancy crosses `openThreshold`, the circuit opens and rejects *everything* for
  *   `cooldownTicks`, giving the consumer a clear runway to drain. It then allows exactly one
  *   half-open probe tick at a reduced `probeRate`; if occupancy stays under threshold through that
@@ -38,11 +38,11 @@ export interface QueueItem {
 
 export interface TickResult {
   tick: number;
-  /** Items the producer generated this tick (nominal rate — not yet admission-filtered). */
+  /** Items the producer generated this tick (nominal rate - not yet admission-filtered). */
   arrived: number;
   /** Items actually pushed into the bounded queue this tick. */
   accepted: number;
-  /** Items rejected or evicted this tick — the items themselves, so a caller can inspect arrivedTick. */
+  /** Items rejected or evicted this tick - the items themselves, so a caller can inspect arrivedTick. */
   dropped: QueueItem[];
   /** Items dequeued (processed) this tick. */
   processed: number;
@@ -143,7 +143,7 @@ export function simulateBackpressure(
       }
 
       case 'circuit-breaker': {
-        // Decided entirely from the state this tick *entered* with — never mutate `circuitState`
+        // Decided entirely from the state this tick *entered* with - never mutate `circuitState`
         // until after this tick's admission is settled, so the tick that's recorded as 'open' is
         // the same tick that actually rejected everything, not the tick that merely triggered the
         // transition (which admitted normally right up until the trip).

@@ -19,7 +19,7 @@ describe('simulateBackpressure', () => {
 
   describe('drop-new (tail drop)', () => {
     it('only ever drops items that arrived in the same tick they were dropped', () => {
-      // Sustained overload: 10 arrive/tick, only 2 processed/tick, capacity 5 — saturates fast.
+      // Sustained overload: 10 arrive/tick, only 2 processed/tick, capacity 5 - saturates fast.
       const result = simulateBackpressure('drop-new', 10, 2, 5, 8);
       const saturatedTicks = result.ticks.filter((t) => t.dropped.length > 0);
       expect(saturatedTicks.length).toBeGreaterThan(0);
@@ -38,7 +38,7 @@ describe('simulateBackpressure', () => {
     it('only ever drops items that were already resident before the current tick', () => {
       // Producer rate (2) must stay under capacity (4) here, or a single tick's own arrivals could
       // overflow capacity by themselves and force evicting some of that same tick's own items too
-      // — this scenario builds overflow gradually across ticks instead, so every eviction is
+      // - this scenario builds overflow gradually across ticks instead, so every eviction is
       // guaranteed to come from what was already resident.
       const result = simulateBackpressure('drop-old', 2, 1, 4, 12);
       const saturatedTicks = result.ticks.filter((t) => t.dropped.length > 0);
@@ -53,12 +53,12 @@ describe('simulateBackpressure', () => {
       expect(result.maxQueueDepth).toBeLessThanOrEqual(5);
     });
 
-    it('produces the same drop *count* as drop-new under identical load — the difference is which items, not how many', () => {
+    it('produces the same drop *count* as drop-new under identical load - the difference is which items, not how many', () => {
       const dropNew = simulateBackpressure('drop-new', 10, 2, 5, 10);
       const dropOld = simulateBackpressure('drop-old', 10, 2, 5, 10);
       expect(dropOld.totalDropped).toBe(dropNew.totalDropped);
       // But the identity of what's dropped is opposite: drop-new sheds this tick's newest,
-      // drop-old sheds whatever's oldest — already proven per-tick above.
+      // drop-old sheds whatever's oldest - already proven per-tick above.
     });
   });
 
@@ -71,7 +71,7 @@ describe('simulateBackpressure', () => {
     it('grows an unbounded backlog instead of dropping, under sustained overload', () => {
       const result = simulateBackpressure('block', 10, 2, 5, 10);
       const backlogs = result.ticks.map((t) => t.pendingBacklog);
-      // Monotonically non-decreasing once the queue itself is saturated — the mismatch has to go
+      // Monotonically non-decreasing once the queue itself is saturated - the mismatch has to go
       // somewhere, and block relocates it to the producer's own buffer instead of discarding it.
       const lastFew = backlogs.slice(-3);
       expect(lastFew[2]).toBeGreaterThanOrEqual(lastFew[0]);
@@ -128,7 +128,7 @@ describe('simulateBackpressure', () => {
     });
   });
 
-  it('is fully deterministic — no randomness, same inputs produce the same series', () => {
+  it('is fully deterministic - no randomness, same inputs produce the same series', () => {
     const a = simulateBackpressure('drop-old', 7, 3, 6, 15);
     const b = simulateBackpressure('drop-old', 7, 3, 6, 15);
     expect(a).toEqual(b);

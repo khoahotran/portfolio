@@ -1,7 +1,7 @@
 // Single source of truth for the site's public identity.
 //
-// Before this file, `siteUrl` was hardcoded in four places — scripts/build-search-index.mjs,
-// index.html (og:image and twitter:image), and public/robots.txt — which made moving the site
+// Before this file, `siteUrl` was hardcoded in four places - scripts/build-search-index.mjs,
+// index.html (og:image and twitter:image), and public/robots.txt - which made moving the site
 // a find-and-replace across unrelated files with no way to verify all copies were updated.
 // Every Node-side build script now reads from here instead.
 //

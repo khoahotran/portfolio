@@ -3,14 +3,14 @@ import labIds from './lab-ids.json';
 import { labs, getLabById } from './registry';
 
 /**
- * `src/labs/lab-ids.json` is the manifest the Node build scripts read — `build-search-index.mjs`
+ * `src/labs/lab-ids.json` is the manifest the Node build scripts read - `build-search-index.mjs`
  * for the sitemap, `prerender.mjs` for the routes to snapshot, `check-responsive.mjs` for the
  * routes to sweep. `registry.ts` owns the definitions (title, description, lazy component), which
  * can't live in JSON.
  *
  * That split is only safe if the two agree, and nothing at runtime checks it: a lab missing from
  * the JSON would still render, but would silently vanish from the sitemap and ship without
- * prerendered metadata — exactly the class of invisible regression this phase existed to fix. The
+ * prerendered metadata - exactly the class of invisible regression this phase existed to fix. The
  * check lives here rather than in the app so it costs the browser nothing.
  */
 describe('lab registry / manifest parity', () => {

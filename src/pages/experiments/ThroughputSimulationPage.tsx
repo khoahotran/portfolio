@@ -11,7 +11,7 @@ function ThroughputSimulationPage() {
   const [failureRate, setFailureRate] = useState(2);
   const [ticks, setTicks] = useState(0);
   // The jitter ticker previously ran forever with no way to freeze the
-  // animation — every parameter was live, but the chart itself was
+  // animation - every parameter was live, but the chart itself was
   // "watch only". Pausing stops just the decorative noise; the sliders
   // above still recompute the chart instantly either way.
   const [isPaused, setIsPaused] = useState(false);
@@ -61,9 +61,9 @@ function ThroughputSimulationPage() {
       <ProvenanceNote labId="throughput-simulation" />
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div className="space-y-4">
-            <label className="block text-sm font-semibold text-slate-700">
+            <label className="block text-meta font-semibold text-slate-700">
               <div className="flex justify-between">
                 <span>Concurrency (Workers)</span>
                 <span className="text-teal-700">{workers}</span>
@@ -78,7 +78,7 @@ function ThroughputSimulationPage() {
               />
             </label>
 
-            <label className="block text-sm font-semibold text-slate-700 pt-2">
+            <label className="block text-meta font-semibold text-slate-700 pt-2">
               <div className="flex justify-between">
                 <span>Processing Latency</span>
                 <span className="text-teal-700">{processingMs} ms</span>
@@ -94,7 +94,7 @@ function ThroughputSimulationPage() {
               />
             </label>
 
-            <label className="block text-sm font-semibold text-slate-700 pt-2">
+            <label className="block text-meta font-semibold text-slate-700 pt-2">
               <div className="flex justify-between">
                 <span>Failure Rate</span>
                 <span className="text-teal-700">{failureRate}%</span>
@@ -111,9 +111,9 @@ function ThroughputSimulationPage() {
           </div>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm flex flex-col">
+        <section className="min-w-0 md:col-span-8 rounded-card border border-slate-200 bg-surface p-6 shadow-raised flex flex-col">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">Live simulation</h2>
+            <h2 className="text-micro font-bold uppercase tracking-widest text-slate-500">Live simulation</h2>
             <button
               type="button"
               onClick={() => setIsPaused((paused) => !paused)}
@@ -126,16 +126,16 @@ function ThroughputSimulationPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-              <div className="text-xs uppercase tracking-widest text-slate-500 font-semibold mb-1">Max Capacity</div>
-              <div className="text-2xl font-bold text-slate-900">{result.capacityPerSecond.toFixed(1)} <span className="text-sm font-normal text-slate-500">req/s</span></div>
+              <div className="text-micro uppercase tracking-widest text-slate-500 font-semibold mb-1">Max Capacity</div>
+              <div className="text-2xl font-bold text-slate-900">{result.capacityPerSecond.toFixed(1)} <span className="text-meta font-normal text-slate-500">req/s</span></div>
             </div>
             <div className="bg-teal-50 p-4 rounded-xl border border-teal-100">
-              <div className="text-xs uppercase tracking-widest text-teal-700 font-semibold mb-1">Effective</div>
-              <div className="text-2xl font-bold text-teal-700">{result.effectiveThroughput.toFixed(1)} <span className="text-sm font-normal text-teal-700">req/s</span></div>
+              <div className="text-micro uppercase tracking-widest text-teal-700 font-semibold mb-1">Effective</div>
+              <div className="text-2xl font-bold text-teal-700">{result.effectiveThroughput.toFixed(1)} <span className="text-meta font-normal text-teal-700">req/s</span></div>
             </div>
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-              <div className="text-xs uppercase tracking-widest text-slate-500 font-semibold mb-1">P95 Latency</div>
-              <div className="text-2xl font-bold text-slate-900">{result.p95Latency.toFixed(0)} <span className="text-sm font-normal text-slate-500">ms</span></div>
+              <div className="text-micro uppercase tracking-widest text-slate-500 font-semibold mb-1">P95 Latency</div>
+              <div className="text-2xl font-bold text-slate-900">{result.p95Latency.toFixed(0)} <span className="text-meta font-normal text-slate-500">ms</span></div>
             </div>
           </div>
           
@@ -176,7 +176,7 @@ function ThroughputSimulationPage() {
             </svg>
             
             {/* Legend */}
-            <div className="absolute top-2 right-2 flex gap-4 text-xs font-medium">
+            <div className="absolute top-2 right-2 flex gap-4 text-micro font-medium">
               <div className="flex items-center gap-1.5 text-slate-500">
                 <div className="w-3 border-t-[1.5px] border-dashed border-slate-400"></div> Raw Capacity
               </div>

@@ -17,7 +17,7 @@ const POLICY_LABEL: Record<BackpressurePolicy, string> = {
 
 const POLICY_BLURB: Record<BackpressurePolicy, string> = {
   block:
-    "Producer is throttled to match the consumer. Nothing is ever lost — the excess piles up in the producer's own backlog instead, unbounded if the mismatch never resolves.",
+    "Producer is throttled to match the consumer. Nothing is ever lost - the excess piles up in the producer's own backlog instead, unbounded if the mismatch never resolves.",
   'drop-new':
     'The queue keeps what it already holds; incoming items that overflow capacity are discarded on arrival. FIFO order of admitted items is preserved.',
   'drop-old':
@@ -35,7 +35,7 @@ const CIRCUIT_COLOR: Record<CircuitState, string> = {
 function BackpressurePage() {
   useSeo({
     title: 'Backpressure Strategies Visualizer',
-    description: 'Run four real backpressure policies against the same producer/consumer overload — block, drop-new, drop-old, and circuit breaker.',
+    description: 'Run four real backpressure policies against the same producer/consumer overload - block, drop-new, drop-old, and circuit breaker.',
   });
 
   const [policy, setPolicy] = useState<BackpressurePolicy>('drop-new');
@@ -62,16 +62,16 @@ function BackpressurePage() {
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Backpressure Strategies</h1>
       <p className="mt-2 text-slate-600">
         Four real policies for a bounded queue between a producer and a slower consumer, run against
-        the same overload. Drop-new and drop-old drop the same <em>number</em> of items — watch which
+        the same overload. Drop-new and drop-old drop the same <em>number</em> of items - watch which
         ones.
       </p>
 
       <ProvenanceNote labId="backpressure" />
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div>
-            <p className="text-sm font-semibold text-slate-700 mb-2">Policy</p>
+            <p className="text-meta font-semibold text-slate-700 mb-2">Policy</p>
             <div className="grid grid-cols-2 gap-2" role="group" aria-label="Backpressure policy">
               {(Object.keys(POLICY_LABEL) as BackpressurePolicy[]).map((p) => (
                 <button
@@ -79,7 +79,7 @@ function BackpressurePage() {
                   type="button"
                   aria-pressed={policy === p}
                   onClick={() => setPolicy(p)}
-                  className={`py-2 text-xs font-bold rounded-lg border transition-colors ${policy === p ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
+                  className={`py-2 text-micro font-bold rounded-lg border transition-colors ${policy === p ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
                 >
                   {POLICY_LABEL[p]}
                 </button>
@@ -87,7 +87,7 @@ function BackpressurePage() {
             </div>
           </div>
 
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Producer rate</span>
               <span className="text-teal-700">{producerRate}/tick</span>
@@ -95,7 +95,7 @@ function BackpressurePage() {
             <input type="range" min={1} max={12} value={producerRate} onChange={(e) => setProducerRate(Number(e.target.value))} className="mt-3 w-full accent-teal-600" />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Consumer rate</span>
               <span className="text-teal-700">{consumerRate}/tick</span>
@@ -103,7 +103,7 @@ function BackpressurePage() {
             <input type="range" min={1} max={12} value={consumerRate} onChange={(e) => setConsumerRate(Number(e.target.value))} className="mt-3 w-full accent-teal-600" />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Queue capacity</span>
               <span className="text-teal-700">{capacity}</span>
@@ -113,21 +113,21 @@ function BackpressurePage() {
 
           {policy === 'circuit-breaker' && (
             <div className="space-y-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
-              <label className="block text-xs font-semibold text-amber-800">
+              <label className="block text-micro font-semibold text-amber-800">
                 <div className="flex justify-between">
                   <span>Open threshold</span>
                   <span>{Math.round(openThreshold * 100)}%</span>
                 </div>
                 <input type="range" min={0.5} max={1} step={0.05} value={openThreshold} onChange={(e) => setOpenThreshold(Number(e.target.value))} className="mt-2 w-full accent-amber-600" />
               </label>
-              <label className="block text-xs font-semibold text-amber-800">
+              <label className="block text-micro font-semibold text-amber-800">
                 <div className="flex justify-between">
                   <span>Cooldown</span>
                   <span>{cooldownTicks} ticks</span>
                 </div>
                 <input type="range" min={1} max={6} value={cooldownTicks} onChange={(e) => setCooldownTicks(Number(e.target.value))} className="mt-2 w-full accent-amber-600" />
               </label>
-              <label className="block text-xs font-semibold text-amber-800">
+              <label className="block text-micro font-semibold text-amber-800">
                 <div className="flex justify-between">
                   <span>Probe rate</span>
                   <span>{probeRate}/tick</span>
@@ -137,7 +137,7 @@ function BackpressurePage() {
             </div>
           )}
 
-          <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-xs flex gap-3 leading-relaxed">
+          <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-micro flex gap-3 leading-relaxed">
             <Info className="w-5 h-5 shrink-0 text-sky-600" />
             <p>{POLICY_BLURB[policy]}</p>
           </div>
@@ -145,20 +145,20 @@ function BackpressurePage() {
           <div className="grid grid-cols-2 gap-2 pt-4 border-t border-slate-100 text-center">
             <div>
               <div className="text-lg font-bold text-rose-700">{result.totalDropped}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Total dropped</div>
+              <div className="text-nano font-bold uppercase tracking-widest text-slate-600">Total dropped</div>
             </div>
             <div>
               <div className="text-lg font-bold text-slate-900">{result.totalProcessed}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Total processed</div>
+              <div className="text-nano font-bold uppercase tracking-widest text-slate-600">Total processed</div>
             </div>
           </div>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-1">
+        <section className="min-w-0 md:col-span-8 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
+          <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 mb-1">
             Queue depth over {TICK_COUNT} ticks
           </h2>
-          <p className="text-xs text-slate-500 mb-4">
+          <p className="text-micro text-slate-500 mb-4">
             {policy === 'circuit-breaker'
               ? 'Bar colour is the circuit state that tick actually ran under: teal closed, amber half-open probe, rose fully open.'
               : 'Bar height is queue depth relative to capacity. A red marker means this tick dropped at least one item.'}
@@ -184,7 +184,7 @@ function BackpressurePage() {
 
           {policy === 'block' && (
             <>
-              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 mt-6 mb-2">Producer backlog (never dropped, just delayed)</h3>
+              <h3 className="text-micro font-bold uppercase tracking-widest text-slate-500 mt-6 mb-2">Producer backlog (never dropped, just delayed)</h3>
               <div className="flex items-end gap-1 h-16">
                 {result.ticks.map((t) => (
                   <div key={t.tick} className="flex-1 flex h-full w-full items-end">
@@ -197,9 +197,9 @@ function BackpressurePage() {
                 ))}
               </div>
               {result.maxPendingBacklog > capacity * 3 && (
-                <p className="mt-3 flex items-start gap-2 text-xs font-semibold text-amber-700">
+                <p className="mt-3 flex items-start gap-2 text-micro font-semibold text-amber-700">
                   <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
-                  Backlog reached {result.maxPendingBacklog} — {result.maxPendingBacklog}x the queue's own capacity
+                  Backlog reached {result.maxPendingBacklog} - {result.maxPendingBacklog}x the queue's own capacity
                   of {capacity}. Blocking doesn't fix a sustained rate mismatch, it just relocates where the
                   unprocessed work piles up.
                 </p>
@@ -207,7 +207,7 @@ function BackpressurePage() {
             </>
           )}
 
-          <div className="mt-6 flex flex-wrap items-center gap-4 text-xs text-slate-600 pt-4 border-t border-slate-100">
+          <div className="mt-6 flex flex-wrap items-center gap-4 text-micro text-slate-600 pt-4 border-t border-slate-100">
             {policy === 'circuit-breaker' ? (
               <>
                 <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-teal-600" aria-hidden="true" />Closed</span>

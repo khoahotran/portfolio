@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { simulateSaga, simulateTwoPhaseCommit } from './twoPhaseCommitVsSaga';
 import type { ParticipantVote, SagaStepDefinition } from './twoPhaseCommitVsSaga';
 
-describe('simulateTwoPhaseCommit — atomicity bought with blocking', () => {
+describe('simulateTwoPhaseCommit - atomicity bought with blocking', () => {
   it('all-yes votes commit, and a surviving coordinator broadcasts the decision to everyone', () => {
     const votes: ParticipantVote[] = [
       { id: 'p1', vote: 'yes' },
@@ -25,7 +25,7 @@ describe('simulateTwoPhaseCommit — atomicity bought with blocking', () => {
     expect(result.decision).toBe('abort');
   });
 
-  it('a no-voter is never blocked by a coordinator crash — it never entered the prepared state', () => {
+  it('a no-voter is never blocked by a coordinator crash - it never entered the prepared state', () => {
     const votes: ParticipantVote[] = [
       { id: 'p1', vote: 'yes' },
       { id: 'p2', vote: 'no' },
@@ -35,7 +35,7 @@ describe('simulateTwoPhaseCommit — atomicity bought with blocking', () => {
   });
 
   it('the real finding: a coordinator crash after all-yes votes blocks every yes-voter indefinitely, regardless of how many there are', () => {
-    // Unlike Raft's commit rule, there is no quorum here for participants to fall back on — 2PC
+    // Unlike Raft's commit rule, there is no quorum here for participants to fall back on - 2PC
     // has exactly one coordinator, and its decision is the only thing that can unblock anyone.
     const votes: ParticipantVote[] = [
       { id: 'p1', vote: 'yes' },
@@ -59,7 +59,7 @@ describe('simulateTwoPhaseCommit — atomicity bought with blocking', () => {
   });
 });
 
-describe('simulateSaga — liveness bought with no atomicity guarantee', () => {
+describe('simulateSaga - liveness bought with no atomicity guarantee', () => {
   function step(id: string, succeeds: boolean, compensationSucceeds = true): SagaStepDefinition {
     return { id, succeeds, compensationSucceeds };
   }
@@ -74,7 +74,7 @@ describe('simulateSaga — liveness bought with no atomicity guarantee', () => {
   it('a mid-saga failure runs compensations for every earlier committed step, in reverse order', () => {
     const result = simulateSaga([step('reserve-inventory', true), step('charge-card', true), step('ship-order', false)]);
     expect(result.failedAtStep).toBe('ship-order');
-    // ship-order itself never committed, so it is not compensated — only what came before it is.
+    // ship-order itself never committed, so it is not compensated - only what came before it is.
     expect(result.compensationsAttempted).toEqual(['charge-card', 'reserve-inventory']);
     expect(result.steps.map((s) => s.phase)).toEqual(['compensated', 'compensated', 'failed']);
     expect(result.fullyCompensated).toBe(true);
@@ -86,14 +86,14 @@ describe('simulateSaga — liveness bought with no atomicity guarantee', () => {
   });
 
   it('never blocks: unlike 2PC, every committed step is real and visible the instant it happens, not held pending a decision', () => {
-    // There is no equivalent of simulateTwoPhaseCommit's blockedParticipants here at all — the
+    // There is no equivalent of simulateTwoPhaseCommit's blockedParticipants here at all - the
     // saga's result type has no field for it, because nothing in this model ever waits on anyone.
     const result = simulateSaga([step('reserve-inventory', true), step('charge-card', false)]);
     expect(result).not.toHaveProperty('blockedParticipants');
   });
 
   it('the real finding: a compensation that itself fails leaves the saga with no way back to a consistent state', () => {
-    // charge-card fails, triggering compensation of reserve-inventory — but that compensation
+    // charge-card fails, triggering compensation of reserve-inventory - but that compensation
     // itself fails (the classic case: the reservation already expired and was reused elsewhere).
     // A saga has no equivalent of 2PC's "still holding the lock" fallback; the side effect from
     // reserve-inventory's original commit is just... still out there, uncompensated.
@@ -103,7 +103,7 @@ describe('simulateSaga — liveness bought with no atomicity guarantee', () => {
     expect(result.steps.find((s) => s.id === 'reserve-inventory')?.phase).toBe('compensation-failed');
   });
 
-  it('a failed compensation stops the unwind there — earlier steps are not compensated out of order', () => {
+  it('a failed compensation stops the unwind there - earlier steps are not compensated out of order', () => {
     const result = simulateSaga([step('reserve-inventory', true), step('charge-card', true, false), step('ship-order', false)]);
     // ship-order fails; charge-card's compensation fails; reserve-inventory's compensation is
     // never even attempted, because unwinding past a failed compensation would compensate steps

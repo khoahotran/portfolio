@@ -1,10 +1,10 @@
 // BullMQ harness for the redis-vs-bullmq benchmark lab (/labs/redis-vs-bullmq).
 //
-// Same methodology as the Go Redis Streams harness (../go/main.go), on purpose — the two must be
+// Same methodology as the Go Redis Streams harness (../go/main.go), on purpose - the two must be
 // directly comparable: enqueue `jobs` jobs first (each carrying a payload of exactly `payload`
 // bytes and an enqueue timestamp), only start the `workers` concurrent Worker instances once
 // enqueueing is done, and measure drain-from-backlog throughput and per-job latency. No artificial
-// processing delay in the job handler — this measures BullMQ's own queueing/dispatch overhead, the
+// processing delay in the job handler - this measures BullMQ's own queueing/dispatch overhead, the
 // same thing the Go harness isolates.
 //
 // Usage: node harness.js --payload 1024 --workers 5 --jobs 3000 --redis-host redis --redis-port 6379
@@ -51,7 +51,7 @@ async function main() {
 
   process.stderr.write(`[bullmq] enqueueing ${jobs} jobs (${payload} bytes each)...\n`);
   const enqueueStart = performance.now();
-  // bulkAdd is the fair comparison to the Go harness's tight XADD loop — both are the queue
+  // bulkAdd is the fair comparison to the Go harness's tight XADD loop - both are the queue
   // client's own fastest path for enqueueing many jobs, not an artificially slow one-by-one call.
   const bulk = Array.from({ length: jobs }, () => ({
     name: 'bench-job',

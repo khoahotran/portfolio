@@ -5,14 +5,14 @@
 - `npm run dev`
 - `npm run lint`
 - `npm run typecheck`
-- `npm run preview` — serve the production build locally at the real `/portfolio/` base path
-- `npm run check:responsive` — browser regression check (overflow + console/page errors) across every route and 7 viewport widths; requires `npm run preview` (or `dev`) running first
+- `npm run preview` - serve the production build locally at the real `/portfolio/` base path
+- `npm run check:responsive` - browser regression check (overflow + console/page errors) across every route and 7 viewport widths; requires `npm run preview` (or `dev`) running first
 
 ## Build pipeline
 
 - `npm run build:search-index`: generate
-  - `public/content-index.json` — lean index (no article body text), fetched by every list page, detail page, and related-articles lookup
-  - `public/search-index.json` — full index (includes searchable body text, with code/Mermaid/HTML stripped), fetched only by `/search`
+  - `public/content-index.json` - lean index (no article body text), fetched by every list page, detail page, and related-articles lookup
+  - `public/search-index.json` - full index (includes searchable body text, with code/Mermaid/HTML stripped), fetched only by `/search`
   - `public/sitemap.xml`, `public/robots.txt`
   - `public/feed.xml`, `public/feed.json`
   - `public/feeds/*.xml` and `public/feeds/*.json` by collection
@@ -25,14 +25,14 @@
   Fails the build if any route is missing its own metadata. Requires Chromium
   (`npx playwright install chromium`). See `.ai/decision-log.md` Decision 6.
 - `npm run build`: index generation, then Vite build, then prerender
-- `npm run predeploy` (runs before `npm run deploy`): typecheck, then lint, then build — a type or lint error blocks deploy
+- `npm run predeploy` (runs before `npm run deploy`): typecheck, then lint, then build - a type or lint error blocks deploy
 
 ## Deployment
 
 Pushing to `main` deploys. `.github/workflows/ci.yml` runs every gate (typecheck, lint, tests,
 build + prerender, responsive, contrast) and only then, on a push to `main`, publishes the built
 `dist/` to the `gh-pages` branch that GitHub Pages serves. "Live" therefore means "passed every
-gate on main" — see `.ai/decision-log.md` Decision 23.
+gate on main" - see `.ai/decision-log.md` Decision 23.
 
 `npm run deploy` (`gh-pages -d dist`) still exists for an emergency manual publish from a laptop,
 but it bypasses every check and leaves no record on `main`. Prefer merging to `main`.
@@ -41,10 +41,10 @@ but it bypasses every check and leaves no record on `main`. Prefer merging to `m
 
 - `content/blog`
 - `content/research`
-- `content/experiments` — pairs with an interactive lab at `/labs/<id>` (see `src/labs/registry.ts`)
+- `content/experiments` - pairs with an interactive lab at `/labs/<id>` (see `src/labs/registry.ts`)
 - `content/system-design`
 - `content/field-notes`
-- `content/projects` — flagship project case studies, listed at `/projects`
+- `content/projects` - flagship project case studies, listed at `/projects`
 
 See `content/README.md` for the frontmatter schema.
 
@@ -53,7 +53,7 @@ See `content/README.md` for the frontmatter schema.
 Nine interactive React demos under `src/pages/experiments/`, routed at `/labs/<id>` via the single
 source of truth in `src/labs/registry.ts`. Old `/experiments/<id>` URLs redirect to `/labs/<id>`
 except where the id collides with an article slug (see the registry's `collidesWithArticleSlug`
-comment) — those keep `/experiments/<slug>` resolving to the article instead.
+comment) - those keep `/experiments/<slug>` resolving to the article instead.
 
 ## Web vitals
 

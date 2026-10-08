@@ -59,13 +59,13 @@ stateDiagram-v2
     COMPENSATION_FAILED --> [*]: Manual Intervention Required
 ```
 
-> **Key insight:** `COMPENSATION_FAILED` is a terminal state that requires human intervention. A Saga that cannot compensate must be surfaced immediately — it represents real financial inconsistency.
+> **Key insight:** `COMPENSATION_FAILED` is a terminal state that requires human intervention. A Saga that cannot compensate must be surfaced immediately - it represents real financial inconsistency.
 
 ---
 
 ## Technical Implementation
 
-Here is a reference implementation of that orchestrator design — see the note after this section for how it compares to what's currently committed in the Core Banking repository.
+Here is a reference implementation of that orchestrator design - see the note after this section for how it compares to what's currently committed in the Core Banking repository.
 
 ### 1. The Saga Document (Firestore State Machine)
 
@@ -107,7 +107,7 @@ type TransferSaga struct {
 
 ### 2. The Saga Orchestrator
 
-The orchestrator coordinates each step. It reads the current saga state, executes the next command, and transitions state — all within Firestore transactions to prevent double-execution:
+The orchestrator coordinates each step. It reads the current saga state, executes the next command, and transitions state - all within Firestore transactions to prevent double-execution:
 
 ```go
 package saga
@@ -130,7 +130,7 @@ type Orchestrator struct {
 }
 
 // Execute drives the saga forward from its current state.
-// It is safe to call multiple times — it is fully idempotent.
+// It is safe to call multiple times - it is fully idempotent.
 func (o *Orchestrator) Execute(ctx context.Context, sagaID string) error {
     sagaRef := o.db.Collection("transfer_sagas").Doc(sagaID)
 
@@ -154,7 +154,7 @@ func (o *Orchestrator) Execute(ctx context.Context, sagaID string) error {
         case StatusCrediting:
             return o.checkCreditOutcome(ctx, tx, sagaRef, &saga)
         case StatusComplete, StatusFailed, StatusCompensationFailed:
-            return nil // Terminal states — no action required
+            return nil // Terminal states - no action required
         default:
             return fmt.Errorf("unknown saga status: %s", saga.Status)
         }
@@ -193,7 +193,7 @@ func (o *Orchestrator) stepDebit(
 
 ### 3. Compensation: Reversing a Debit
 
-When the credit step fails after a successful debit, we must reverse the debit. This is the compensation transaction — it is also idempotent, guarded by the `debitEventId`:
+When the credit step fails after a successful debit, we must reverse the debit. This is the compensation transaction - it is also idempotent, guarded by the `debitEventId`:
 
 ```go
 func (o *Orchestrator) compensate(
@@ -212,7 +212,7 @@ func (o *Orchestrator) compensate(
     // account aggregate can verify this is a reversal, not a duplicate credit.
     err := o.account.Credit(ctx, saga.SourceAccountID, saga.Amount, "REVERSAL:"+saga.DebitEventID)
     if err != nil {
-        o.logger.Error("saga: COMPENSATION FAILED — manual intervention required",
+        o.logger.Error("saga: COMPENSATION FAILED - manual intervention required",
             zap.String("sagaId", saga.ID),
             zap.Error(err),
         )
@@ -246,7 +246,7 @@ import (
 )
 
 // SagaWorker polls Firestore for non-terminal sagas and drives them forward.
-// This design means the system self-heals after any crash — sagas simply
+// This design means the system self-heals after any crash - sagas simply
 // resume from their last durable state on the next poll cycle.
 type SagaWorker struct {
     db           *firestore.Client
@@ -298,7 +298,7 @@ func (w *SagaWorker) processActiveSagas(ctx context.Context) {
 }
 ```
 
-> **Current implementation vs. this design:** the Core Banking repository's actual Saga logic, `saga_manager.go` in the application layer, is not the centralized orchestrator shown above. There is no `TransferSaga` document, no `Orchestrator.Execute()`, and no persisted state machine with the states listed here. The real `SagaManager` is choreography-style — it reacts to domain events published by the account aggregates themselves and issues compensating commands directly, tracking only a simple last-processed-event checkpoint for crash recovery, not a per-transfer state document. The orchestrator above remains the target design and the reasoning for why it would be preferable (see the trade-off table below); it is not a description of what's currently running.
+> **Current implementation vs. this design:** the Core Banking repository's actual Saga logic, `saga_manager.go` in the application layer, is not the centralized orchestrator shown above. There is no `TransferSaga` document, no `Orchestrator.Execute()`, and no persisted state machine with the states listed here. The real `SagaManager` is choreography-style - it reacts to domain events published by the account aggregates themselves and issues compensating commands directly, tracking only a simple last-processed-event checkpoint for crash recovery, not a per-transfer state document. The orchestrator above remains the target design and the reasoning for why it would be preferable (see the trade-off table below); it is not a description of what's currently running.
 
 ---
 
@@ -310,9 +310,9 @@ func (w *SagaWorker) processActiveSagas(ctx context.Context) {
 | **Process crash during debit** | `DEBITING` | Worker polls debit event store to check outcome | ✅ Idempotent debit via saga ID |
 | **Debit succeeds, credit fails** | `CREDITING` → `COMPENSATING` | Orchestrator issues reversal credit to source | ✅ Balance restored |
 | **Compensation also fails** | `COMPENSATION_FAILED` | Alert fires; DBA manually inspects ledger | ⚠️ Manual intervention |
-| **Duplicate saga submission** | `COMPLETE` (already) | Orchestrator returns early — no re-execution | ✅ Idempotency key guards |
+| **Duplicate saga submission** | `COMPLETE` (already) | Orchestrator returns early - no re-execution | ✅ Idempotency key guards |
 
-> **On the "Designed Data Safety" column:** these outcomes describe the recovery behavior the state machine and idempotency keys above are *designed* to guarantee. They are not backed by a dedicated reconciliation script, chaos test, or audit procedure for this project — read each ✅ as "the code is designed to ensure this," not "this has been empirically verified in production."
+> **On the "Designed Data Safety" column:** these outcomes describe the recovery behavior the state machine and idempotency keys above are *designed* to guarantee. They are not backed by a dedicated reconciliation script, chaos test, or audit procedure for this project - read each ✅ as "the code is designed to ensure this," not "this has been empirically verified in production."
 
 ---
 
@@ -322,7 +322,7 @@ func (w *SagaWorker) processActiveSagas(ctx context.Context) {
 |:---|:---|:---|
 | **Observability** | Requires correlating events across multiple streams | Single saga document holds complete history |
 | **Coupling** | Services are coupled to each other's events | Services are coupled only to the orchestrator |
-| **Debugging** | Hard — you must reconstruct saga from distributed logs | Easy — one Firestore document, one state |
+| **Debugging** | Hard - you must reconstruct saga from distributed logs | Easy - one Firestore document, one state |
 | **Adding a step** | Requires updating multiple event consumers | Requires updating orchestrator only |
 | **Failure isolation** | A consumer bug silently skips steps | Orchestrator explicitly gates each transition |
 
@@ -332,7 +332,7 @@ For financial systems where **auditability and debuggability** are non-negotiabl
 
 ## Key Takeaways
 
-1. **Sagas make cross-aggregate consistency explicit.** Rather than pretending atomicity exists, they model the failure modes directly in the state machine — making compensation a first-class citizen.
+1. **Sagas make cross-aggregate consistency explicit.** Rather than pretending atomicity exists, they model the failure modes directly in the state machine - making compensation a first-class citizen.
 2. **The worker polling loop is your crash-recovery mechanism.** Any saga in a non-terminal state is automatically resumed on the next poll cycle, regardless of why the process exited.
 3. **`COMPENSATION_FAILED` must alert immediately.** This is not a recoverable state. It means real money is in an inconsistent position and requires a human to inspect the ledger.
 4. **Idempotency is the bedrock.** Every command sent by the orchestrator must carry a deterministic idempotency key (the `sagaId` or a derived token) so retries are safe.

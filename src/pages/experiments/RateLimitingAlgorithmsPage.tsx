@@ -13,7 +13,7 @@ import { useSeo } from '../../seo/useSeo';
 type Algorithm = 'token-bucket' | 'leaky-bucket' | 'fixed-window';
 
 // Each algorithm's second parameter means something different (a rate for the two bucket
-// algorithms, a window duration for Fixed Window) — this config drives the slider's label, unit,
+// algorithms, a window duration for Fixed Window) - this config drives the slider's label, unit,
 // and range per algorithm, and its own default, rather than forcing one shared slider to mean
 // three different things depending on which tab is active.
 const ALGORITHM_CONFIG: Record<
@@ -35,7 +35,7 @@ function runAlgorithm(algorithm: Algorithm, arrivals: number[], capacity: number
     case 'leaky-bucket':
       return simulateLeakyBucket(arrivals, capacity, param);
     case 'fixed-window':
-      // `param` is the window size here; `capacity` doubles as the per-window limit — see the
+      // `param` is the window size here; `capacity` doubles as the per-window limit - see the
       // maxState comment below for why that reuse keeps the visualization's normalization uniform
       // across all three algorithms instead of needing a fourth, algorithm-specific axis.
       return simulateFixedWindow(arrivals, param, capacity);
@@ -45,7 +45,7 @@ function runAlgorithm(algorithm: Algorithm, arrivals: number[], capacity: number
 function RateLimitingAlgorithmsPage() {
   useSeo({
     title: 'Rate Limiting Algorithms',
-    description: 'Token Bucket vs Leaky Bucket vs Fixed Window Counter — the real algorithms, run on a shared burst scenario.',
+    description: 'Token Bucket vs Leaky Bucket vs Fixed Window Counter - the real algorithms, run on a shared burst scenario.',
   });
 
   const [algorithm, setAlgorithm] = useState<Algorithm>('token-bucket');
@@ -81,9 +81,9 @@ function RateLimitingAlgorithmsPage() {
     };
   }, [steps]);
 
-  // Every algorithm's `state` is normalized against `capacity` — the bucket's own ceiling for
+  // Every algorithm's `state` is normalized against `capacity` - the bucket's own ceiling for
   // Token/Leaky Bucket, and the per-window limit (reused as `capacity`, see runAlgorithm) for
-  // Fixed Window — so the state chart's y-axis means "how full is the thing that gates
+  // Fixed Window - so the state chart's y-axis means "how full is the thing that gates
   // admission" consistently across all three tabs, not three differently-scaled charts.
   const maxState = Math.max(1, capacity);
 
@@ -93,7 +93,7 @@ function RateLimitingAlgorithmsPage() {
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Rate Limiting Algorithms</h1>
       <p className="mt-2 text-slate-600">
         Token Bucket, Leaky Bucket, and Fixed Window Counter, run for real against the same burst
-        scenario &mdash; a sustained rate plus one burst injected at t={BURST_AT_SECOND}s &mdash; so
+        scenario - a sustained rate plus one burst injected at t={BURST_AT_SECOND}s - so
         the different admission decisions come from the algorithms, not from different inputs.
       </p>
 
@@ -106,7 +106,7 @@ function RateLimitingAlgorithmsPage() {
             type="button"
             aria-pressed={algorithm === id}
             onClick={() => selectAlgorithm(id)}
-            className={`rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`rounded-lg px-4 py-2 text-micro font-bold uppercase tracking-wider transition-all ${
               algorithm === id ? 'bg-accent text-accent-fg shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
             }`}
           >
@@ -116,8 +116,8 @@ function RateLimitingAlgorithmsPage() {
       </div>
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-          <label className="block text-sm font-semibold text-slate-700">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Sustained rate</span>
               <span className="text-teal-700">{sustainedRate} req/s</span>
@@ -133,7 +133,7 @@ function RateLimitingAlgorithmsPage() {
             />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Burst size (at t={BURST_AT_SECOND}s)</span>
               <span className="text-teal-700">{burstSize}</span>
@@ -148,7 +148,7 @@ function RateLimitingAlgorithmsPage() {
             />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700 pt-2 border-t border-slate-100">
+          <label className="block text-meta font-semibold text-slate-700 pt-2 border-t border-slate-100">
             <div className="flex justify-between">
               <span>{algorithm === 'fixed-window' ? 'Limit per window' : 'Capacity'}</span>
               <span className="text-teal-700">{capacity}</span>
@@ -163,7 +163,7 @@ function RateLimitingAlgorithmsPage() {
             />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>{config.paramLabel}</span>
               <span className="text-teal-700">
@@ -184,27 +184,27 @@ function RateLimitingAlgorithmsPage() {
           <div className="grid grid-cols-3 gap-2 pt-4 border-t border-slate-100 text-center">
             <div>
               <div className="text-lg font-bold text-teal-700">{stats.allowed}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Allowed</div>
+              <div className="text-nano font-bold uppercase tracking-widest text-slate-600">Allowed</div>
             </div>
             <div>
               <div className="text-lg font-bold text-rose-600">{stats.rejected}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Rejected</div>
+              <div className="text-nano font-bold uppercase tracking-widest text-slate-600">Rejected</div>
             </div>
             <div>
               <div className="text-lg font-bold text-slate-900">{stats.rate.toFixed(0)}%</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Admit rate</div>
+              <div className="text-nano font-bold uppercase tracking-widest text-slate-600">Admit rate</div>
             </div>
           </div>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-4">
+        <section className="min-w-0 md:col-span-8 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
+          <p className="text-micro font-bold uppercase tracking-widest text-slate-500 mb-4">
             {stats.total} requests over {DURATION_SECONDS}s
           </p>
 
           <div className="relative w-full min-h-[220px] bg-slate-50 rounded-xl border border-slate-100 overflow-hidden p-4">
             <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-              {/* Window boundary guides — only meaningful for Fixed Window, but shown for all three
+              {/* Window boundary guides - only meaningful for Fixed Window, but shown for all three
                   so switching tabs doesn't jump the reader's sense of the timeline's scale. */}
               {algorithm === 'fixed-window' &&
                 Array.from({ length: Math.floor(DURATION_SECONDS / param) + 1 }, (_, i) => i * param).map((boundary) => (
@@ -220,7 +220,7 @@ function RateLimitingAlgorithmsPage() {
                   />
                 ))}
 
-              {/* State area — how full the bucket/window is at each arrival, normalized to maxState. */}
+              {/* State area - how full the bucket/window is at each arrival, normalized to maxState. */}
               <polyline
                 points={steps
                   .map((s) => `${5 + (s.t / DURATION_SECONDS) * 90},${85 - (s.state / maxState) * 70}`)
@@ -246,7 +246,7 @@ function RateLimitingAlgorithmsPage() {
             </svg>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+          <div className="mt-4 flex flex-wrap items-center gap-4 text-micro text-slate-600">
             <span className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-teal-600" aria-hidden="true" />
               Allowed

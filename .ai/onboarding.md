@@ -4,7 +4,7 @@ Welcome. You are operating within the **Khoa Tran Engineering Portfolio** reposi
 
 This repository is an evidence-first engineering showcase covering Distributed Systems, Core Banking
 architectures, and High-Frequency Trading (HFT) research. Its argument is the depth of the reasoning and the
-reproducibility of the evidence — not a claimed seniority level. Read `.ai/portfolio-context.md` for the
+reproducibility of the evidence - not a claimed seniority level. Read `.ai/portfolio-context.md` for the
 author's actual career stage before writing any copy.
 
 ## Mandatory First Step

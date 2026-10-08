@@ -56,7 +56,7 @@ describe('attemptRedlockAcquisition', () => {
     expect(downAttempt.acquired).toBe(false);
   });
 
-  it('is fully deterministic — same inputs, same result', () => {
+  it('is fully deterministic - same inputs, same result', () => {
     const a = attemptRedlockAcquisition(5, new Set([3]), [5, 5, 5, 5, 5], 1000, 50);
     const b = attemptRedlockAcquisition(5, new Set([3]), [5, 5, 5, 5, 5], 1000, 50);
     expect(a).toEqual(b);
@@ -75,9 +75,9 @@ describe('simulatePauseAfterAcquire', () => {
     expect(result.secondClientCanAcquire).toBe(false);
   });
 
-  it('reports the vulnerability once the pause reaches the remaining validity — the boundary is inclusive', () => {
+  it('reports the vulnerability once the pause reaches the remaining validity - the boundary is inclusive', () => {
     // A pause exactly equal to the remaining validity is treated as expiring the lock, not
-    // surviving it — TTL expiry is a "this instant or later" condition on the real storage node,
+    // surviving it - TTL expiry is a "this instant or later" condition on the real storage node,
     // not a strict "later than" one.
     const atBoundary = simulatePauseAfterAcquire(500, 500);
     expect(atBoundary.lockExpiredDuringPause).toBe(true);
@@ -86,7 +86,7 @@ describe('simulatePauseAfterAcquire', () => {
     expect(pastBoundary.lockExpiredDuringPause).toBe(true);
   });
 
-  it('ties secondClientCanAcquire to lockExpiredDuringPause exactly — that equality is the finding', () => {
+  it('ties secondClientCanAcquire to lockExpiredDuringPause exactly - that equality is the finding', () => {
     // Nothing about client A "still running" keeps the key held; the storage nodes only know the
     // TTL. This is Kleppmann's core point rendered as a testable equality rather than prose.
     const short = simulatePauseAfterAcquire(300, 100);

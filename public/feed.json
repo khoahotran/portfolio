@@ -11,7 +11,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer",
       "url": "https://khoahotran.github.io/portfolio/experiments/hyperloglog-and-the-question-bloom-filters-cant-answer",
       "title": "HyperLogLog and the Question Bloom Filters Can't Answer",
-      "summary": "Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.",
+      "summary": "Run a real HyperLogLog sketch - measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.",
       "date_published": "2026-09-09T00:00:00.000Z",
       "tags": [
         "distributed-systems",
@@ -24,7 +24,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/lsm-trees-and-the-write-youll-pay-for-later",
       "url": "https://khoahotran.github.io/portfolio/experiments/lsm-trees-and-the-write-youll-pay-for-later",
       "title": "LSM Trees and the Write You'll Pay for Later",
-      "summary": "Run a real log-structured merge tree — measure read amplification growing unbounded without compaction, then measure the real write-amplification cost of bounding it.",
+      "summary": "Run a real log-structured merge tree - measure read amplification growing unbounded without compaction, then measure the real write-amplification cost of bounding it.",
       "date_published": "2026-09-09T00:00:00.000Z",
       "tags": [
         "distributed-systems",
@@ -38,7 +38,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove",
       "url": "https://khoahotran.github.io/portfolio/experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove",
       "title": "Raft and the Commit Rule Replica Count Alone Can't Prove",
-      "summary": "Run Raft's real election restriction and commit-index safety rule — see why a stale node can't win an election no matter how many peers are alive, and why a majority of replicas alone still can't prove a log entry is safely committed.",
+      "summary": "Run Raft's real election restriction and commit-index safety rule - see why a stale node can't win an election no matter how many peers are alive, and why a majority of replicas alone still can't prove a log entry is safely committed.",
       "date_published": "2026-09-09T00:00:00.000Z",
       "tags": [
         "distributed-systems",
@@ -51,7 +51,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs",
       "url": "https://khoahotran.github.io/portfolio/experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs",
       "title": "Two-Phase Commit vs. Saga: What Atomicity Actually Costs",
-      "summary": "Run the real 2PC blocking failure and the real Saga compensation-failure gap on the same kind of transaction — see exactly what atomicity costs, and exactly what giving it up costs instead.",
+      "summary": "Run the real 2PC blocking failure and the real Saga compensation-failure gap on the same kind of transaction - see exactly what atomicity costs, and exactly what giving it up costs instead.",
       "date_published": "2026-09-09T00:00:00.000Z",
       "tags": [
         "distributed-systems",
@@ -65,7 +65,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming",
       "url": "https://khoahotran.github.io/portfolio/experiments/bloom-filters-and-the-capacity-you-cant-see-coming",
       "title": "Bloom Filters and the Capacity You Can't See Coming",
-      "summary": "Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real, not just in a formula.",
+      "summary": "Run a real bit-array Bloom filter - measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real, not just in a formula.",
       "date_published": "2026-09-08T00:00:00.000Z",
       "tags": [
         "distributed-systems",
@@ -78,7 +78,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices",
       "url": "https://khoahotran.github.io/portfolio/experiments/consistent-hashing-and-the-rebalancing-nobody-notices",
       "title": "Consistent Hashing and the Rebalancing Nobody Notices",
-      "summary": "Run the real hash-ring placement algorithm against naive modulo hashing on the same key set — see how little of the keyspace a ring actually moves when a node joins or leaves, and what happens without enough virtual nodes to spread the luck around.",
+      "summary": "Run the real hash-ring placement algorithm against naive modulo hashing on the same key set - see how little of the keyspace a ring actually moves when a node joins or leaves, and what happens without enough virtual nodes to spread the luck around.",
       "date_published": "2026-09-08T00:00:00.000Z",
       "tags": [
         "distributed-systems",
@@ -91,7 +91,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/crdts-what-to-do-once-you-know-two-writes-are-concurrent",
       "url": "https://khoahotran.github.io/portfolio/experiments/crdts-what-to-do-once-you-know-two-writes-are-concurrent",
       "title": "CRDTs: What to Do Once You Know Two Writes Are Concurrent",
-      "summary": "Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set — see exactly which concurrent updates the naive designs silently lose, and why detecting concurrency is only half the problem.",
+      "summary": "Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set - see exactly which concurrent updates the naive designs silently lose, and why detecting concurrency is only half the problem.",
       "date_published": "2026-09-08T00:00:00.000Z",
       "tags": [
         "distributed-systems",
@@ -104,7 +104,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/merkle-trees-and-the-diff-nobody-has-to-compute",
       "url": "https://khoahotran.github.io/portfolio/experiments/merkle-trees-and-the-diff-nobody-has-to-compute",
       "title": "Merkle Trees and the Diff Nobody Has to Compute",
-      "summary": "Run a real Merkle-tree targeted diff against a naive full scan on the same two datasets — see the O(1) proof of full equality, the near-O(log n) cost of a sparse diff, and the honest case where the targeted walk actually loses.",
+      "summary": "Run a real Merkle-tree targeted diff against a naive full scan on the same two datasets - see the O(1) proof of full equality, the near-O(log n) cost of a sparse diff, and the honest case where the targeted walk actually loses.",
       "date_published": "2026-09-08T00:00:00.000Z",
       "tags": [
         "distributed-systems",
@@ -117,7 +117,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins",
       "url": "https://khoahotran.github.io/portfolio/experiments/vector-clocks-and-the-clock-skew-that-fools-last-write-wins",
       "title": "Vector Clocks and the Clock Skew That Fools Last-Write-Wins",
-      "summary": "Run the real happens-before/happens-after/concurrent test on a scripted causal history, then watch a naive last-write-wins resolver flip its answer under clock skew alone — while the causal verdict never moves.",
+      "summary": "Run the real happens-before/happens-after/concurrent test on a scripted causal history, then watch a naive last-write-wins resolver flip its answer under clock skew alone - while the causal verdict never moves.",
       "date_published": "2026-09-08T00:00:00.000Z",
       "tags": [
         "distributed-systems",
@@ -130,7 +130,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/backpressure-four-policies-one-overload",
       "url": "https://khoahotran.github.io/portfolio/experiments/backpressure-four-policies-one-overload",
       "title": "Backpressure: Four Policies, One Overload",
-      "summary": "Block, drop-new, drop-old, and circuit breaker, run against the same producer that outruns its consumer — including proof that drop-new and drop-old discard the same number of items, but never the same ones.",
+      "summary": "Block, drop-new, drop-old, and circuit breaker, run against the same producer that outruns its consumer - including proof that drop-new and drop-old discard the same number of items, but never the same ones.",
       "date_published": "2026-09-07T00:00:00.000Z",
       "tags": [
         "distributed-systems",
@@ -143,7 +143,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/cache-freshness-what-stale-while-revalidate-actually-buys-you",
       "url": "https://khoahotran.github.io/portfolio/experiments/cache-freshness-what-stale-while-revalidate-actually-buys-you",
       "title": "Cache Freshness: What Stale-While-Revalidate Actually Buys You",
-      "summary": "Three real cache-freshness policies run against the same origin outage — TTL-blocking errors, stale-while-revalidate never blocks at all, and stale-if-error sits in between, paying for a synchronous origin attempt even when it ends up serving the same stale content SWR would have served for free.",
+      "summary": "Three real cache-freshness policies run against the same origin outage - TTL-blocking errors, stale-while-revalidate never blocks at all, and stale-if-error sits in between, paying for a synchronous origin attempt even when it ends up serving the same stale content SWR would have served for free.",
       "date_published": "2026-09-07T00:00:00.000Z",
       "tags": [
         "system-design",
@@ -156,7 +156,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks",
       "url": "https://khoahotran.github.io/portfolio/experiments/canary-deploys-and-the-sample-size-nobody-checks",
       "title": "Canary Deploys and the Sample Size Nobody Checks",
-      "summary": "A real two-proportion z-test canary analysis, run stage by stage — proving that the same real regression can go completely undetected at a small sample size and get caught at a larger one, using the exact statistic, not a story about it.",
+      "summary": "A real two-proportion z-test canary analysis, run stage by stage - proving that the same real regression can go completely undetected at a small sample size and get caught at a larger one, using the exact statistic, not a story about it.",
       "date_published": "2026-09-07T00:00:00.000Z",
       "tags": [
         "incident-response",
@@ -169,7 +169,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it",
       "url": "https://khoahotran.github.io/portfolio/experiments/distributed-locks-redlock-and-the-pause-that-breaks-it",
       "title": "Distributed Locks: Redlock and the Pause That Breaks It",
-      "summary": "Run the real Redlock quorum algorithm against nodes you crash yourself, then simulate the exact pause Martin Kleppmann's 2016 critique is about — and see why Antirez's own rebuttal doesn't actually disagree with it.",
+      "summary": "Run the real Redlock quorum algorithm against nodes you crash yourself, then simulate the exact pause Martin Kleppmann's 2016 critique is about - and see why Antirez's own rebuttal doesn't actually disagree with it.",
       "date_published": "2026-09-07T00:00:00.000Z",
       "tags": [
         "distributed-systems",
@@ -182,7 +182,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/grpc-vs-rest-when-the-smaller-payload-loses",
       "url": "https://khoahotran.github.io/portfolio/experiments/grpc-vs-rest-when-the-smaller-payload-loses",
       "title": "gRPC vs REST: When the Smaller Payload Loses",
-      "summary": "A real harness measuring gRPC against REST for the same data, same server, same Go process — and REST wins throughput at every concurrency level tested for a small payload, and at half the concurrency levels tested for a 100x larger one.",
+      "summary": "A real harness measuring gRPC against REST for the same data, same server, same Go process - and REST wins throughput at every concurrency level tested for a small payload, and at half the concurrency levels tested for a 100x larger one.",
       "date_published": "2026-09-07T00:00:00.000Z",
       "tags": [
         "grpc",
@@ -195,7 +195,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/leader-election-bully-algorithm",
       "url": "https://khoahotran.github.io/portfolio/experiments/leader-election-bully-algorithm",
       "title": "Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It",
-      "summary": "Crash the leader and watch the real Bully algorithm elect a new one, message by message — including the O(n^2) worst case the protocol is criticized for.",
+      "summary": "Crash the leader and watch the real Bully algorithm elect a new one, message by message - including the O(n^2) worst case the protocol is criticized for.",
       "date_published": "2026-09-07T00:00:00.000Z",
       "tags": [
         "distributed-systems",
@@ -207,7 +207,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/pgbouncer-vs-direct-connection-pooling",
       "url": "https://khoahotran.github.io/portfolio/experiments/pgbouncer-vs-direct-connection-pooling",
       "title": "Connection Pooling: When PgBouncer Actually Helps",
-      "summary": "A real harness measuring PgBouncer against direct Postgres across two connection lifecycles — the advantage widens under one and reverses under the other, so 'add a pooler' isn't a universal answer.",
+      "summary": "A real harness measuring PgBouncer against direct Postgres across two connection lifecycles - the advantage widens under one and reverses under the other, so 'add a pooler' isn't a universal answer.",
       "date_published": "2026-09-07T00:00:00.000Z",
       "tags": [
         "postgresql",
@@ -220,7 +220,7 @@
       "id": "https://khoahotran.github.io/portfolio/field-notes/what-git-log-proves-about-spec-driven-development",
       "url": "https://khoahotran.github.io/portfolio/field-notes/what-git-log-proves-about-spec-driven-development",
       "title": "Field Note: What My Own Git Log Proves About Spec-Driven Development",
-      "summary": "PFM's governance docs claim every business rule traces from spec to test to code. A plain git log, not the docs, is what actually proves it — and it also shows two honest cases of deliberately not fixing something.",
+      "summary": "PFM's governance docs claim every business rule traces from spec to test to code. A plain git log, not the docs, is what actually proves it - and it also shows two honest cases of deliberately not fixing something.",
       "date_published": "2026-09-07T00:00:00.000Z",
       "tags": [
         "spec-driven-development",
@@ -259,7 +259,7 @@
       "id": "https://khoahotran.github.io/portfolio/research/database-indexing-btree-vs-brin-for-time-series",
       "url": "https://khoahotran.github.io/portfolio/research/database-indexing-btree-vs-brin-for-time-series",
       "title": "Database Indexing for Time-Series: B-Tree vs BRIN in PostgreSQL",
-      "summary": "Why a Block Range Index, not the default B-Tree, is the right structure for naturally time-ordered data — and why QuantAlpha's tick-ingestion pipeline hasn't needed it yet.",
+      "summary": "Why a Block Range Index, not the default B-Tree, is the right structure for naturally time-ordered data - and why QuantAlpha's tick-ingestion pipeline hasn't needed it yet.",
       "date_published": "2026-08-28T00:00:00.000Z",
       "tags": [
         "postgresql",
@@ -284,7 +284,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms",
       "url": "https://khoahotran.github.io/portfolio/experiments/rate-limiting-algorithms",
       "title": "Rate Limiting Algorithms: Token Bucket vs Leaky Bucket vs Fixed Window",
-      "summary": "Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently — not just what it's named.",
+      "summary": "Three rate limiting algorithms, run for real against the same burst scenario, to show what each one actually does differently - not just what it's named.",
       "date_published": "2026-08-28T00:00:00.000Z",
       "tags": [
         "api-design",
@@ -297,7 +297,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/websockets-vs-sse",
       "url": "https://khoahotran.github.io/portfolio/experiments/websockets-vs-sse",
       "title": "WebSockets vs Server-Sent Events: What Holding 5,000 Connections Open Actually Costs",
-      "summary": "A real harness measuring server memory for thousands of concurrent WebSocket vs SSE connections — written before the article, per the lesson from three prior benchmark rewrites.",
+      "summary": "A real harness measuring server memory for thousands of concurrent WebSocket vs SSE connections - written before the article, per the lesson from three prior benchmark rewrites.",
       "date_published": "2026-08-28T00:00:00.000Z",
       "tags": [
         "go",
@@ -310,7 +310,7 @@
       "id": "https://khoahotran.github.io/portfolio/system-design/designing-a-global-api-gateway",
       "url": "https://khoahotran.github.io/portfolio/system-design/designing-a-global-api-gateway",
       "title": "Designing a Global API Gateway: Edge Routing Beyond a Single Aegis Instance",
-      "summary": "Aegis's GraphQL gateway solves API shape for one instance. This is the layer above it a real deployment would need once there's more than one — and why that's a different problem, not a bigger version of the same one.",
+      "summary": "Aegis's GraphQL gateway solves API shape for one instance. This is the layer above it a real deployment would need once there's more than one - and why that's a different problem, not a bigger version of the same one.",
       "date_published": "2026-08-28T00:00:00.000Z",
       "tags": [
         "system-design",
@@ -352,7 +352,7 @@
       "id": "https://khoahotran.github.io/portfolio/field-notes/a-diagram-that-wouldnt-render",
       "url": "https://khoahotran.github.io/portfolio/field-notes/a-diagram-that-wouldnt-render",
       "title": "Field Note: A Diagram That Wouldn't Render",
-      "summary": "A sequence diagram in a new case study failed to parse. The cause wasn't the character I suspected first — and the fix I tried second broke the same way for a different reason.",
+      "summary": "A sequence diagram in a new case study failed to parse. The cause wasn't the character I suspected first - and the fix I tried second broke the same way for a different reason.",
       "date_published": "2026-08-27T00:00:00.000Z",
       "tags": [
         "frontend-architecture",
@@ -364,7 +364,7 @@
       "id": "https://khoahotran.github.io/portfolio/field-notes/measuring-contrast-instead-of-guessing",
       "url": "https://khoahotran.github.io/portfolio/field-notes/measuring-contrast-instead-of-guessing",
       "title": "Field Note: Measuring Contrast Instead of Guessing at It",
-      "summary": "A prior audit flagged 44 text-slate-400 occurrences as 'potentially borderline' and correctly refused to fix them blind. Building a real contrast checker turned that judgment call into a number — and found two unrelated bugs on the way.",
+      "summary": "A prior audit flagged 44 text-slate-400 occurrences as 'potentially borderline' and correctly refused to fix them blind. Building a real contrast checker turned that judgment call into a number - and found two unrelated bugs on the way.",
       "date_published": "2026-08-27T00:00:00.000Z",
       "tags": [
         "accessibility",
@@ -423,7 +423,7 @@
       "id": "https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture",
       "url": "https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture",
       "title": "gRPC Service Mesh in Go: Designing the Aegis Auth Platform",
-      "summary": "A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.",
+      "summary": "A walkthrough of Aegis - a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.",
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "go",
@@ -539,7 +539,7 @@
       "id": "https://khoahotran.github.io/portfolio/experiments/redis-streams-vs-bullmq-job-queue-comparison",
       "url": "https://khoahotran.github.io/portfolio/experiments/redis-streams-vs-bullmq-job-queue-comparison",
       "title": "Redis Streams vs BullMQ: Choosing Your Job Queue",
-      "summary": "A practical comparison of Redis Streams and BullMQ based on using both in production — covering delivery semantics, consumer group models, and failure handling patterns.",
+      "summary": "A practical comparison of Redis Streams and BullMQ based on using both in production - covering delivery semantics, consumer group models, and failure handling patterns.",
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "benchmark",
@@ -613,7 +613,7 @@
       "id": "https://khoahotran.github.io/portfolio/field-notes/go-vs-typescript-for-backend-services",
       "url": "https://khoahotran.github.io/portfolio/field-notes/go-vs-typescript-for-backend-services",
       "title": "Field Note: Go vs TypeScript for Backend Services",
-      "summary": "A working engineer's honest comparison of Go and TypeScript for backend services, based on using both in production — and a framework for choosing between them.",
+      "summary": "A working engineer's honest comparison of Go and TypeScript for backend services, based on using both in production - and a framework for choosing between them.",
       "date_published": "2026-06-28T00:00:00.000Z",
       "tags": [
         "go",

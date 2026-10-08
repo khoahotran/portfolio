@@ -3,10 +3,10 @@ import { collectionLabel, routeForCollection } from './format';
 import type { ContentCollection } from './types';
 
 /**
- * `routeForCollection` used to be duplicated (and once inconsistent — a `system-design`-only
+ * `routeForCollection` used to be duplicated (and once inconsistent - a `system-design`-only
  * special case in SearchPage.tsx) across three call sites before being consolidated here (see the
  * file's own header comment). Nothing asserted the consolidated mapping is actually complete and
- * correct until now — this exists so a typo'd or missing collection in `routeByCollection` fails a
+ * correct until now - this exists so a typo'd or missing collection in `routeByCollection` fails a
  * test instead of silently 404ing a whole collection's list page.
  */
 describe('routeForCollection', () => {

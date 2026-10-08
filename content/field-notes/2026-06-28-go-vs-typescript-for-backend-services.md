@@ -3,10 +3,10 @@ title: "Field Note: Go vs TypeScript for Backend Services"
 date: "2026-06-28"
 tags: ["go", "typescript", "architecture", "benchmark", "trade-offs"]
 related: ["experiments/go-vs-ts-concurrency"]
-summary: "A working engineer's honest comparison of Go and TypeScript for backend services, based on using both in production — and a framework for choosing between them."
+summary: "A working engineer's honest comparison of Go and TypeScript for backend services, based on using both in production - and a framework for choosing between them."
 ---
 
-I have built production backend services in both Go and TypeScript. Not as academic exercises — as systems that serve real users, handle real money, and wake me up at night when they break.
+I have built production backend services in both Go and TypeScript. Not as academic exercises - as systems that serve real users, handle real money, and wake me up at night when they break.
 
 This is not a language war post. It is a decision framework: here is what I have learned about when each language genuinely wins, and when reaching for one over the other would be a mistake.
 
@@ -24,7 +24,7 @@ To anchor this in reality:
 | **SeensioGO** | TypeScript (NestJS) | Firebase Functions, Firestore SDK, team velocity |
 | **Jujuja** | TypeScript (NestJS) | Same Firebase stack, rapid iteration needed |
 | **QuantAlpha Lab API** | Go | Low-latency, concurrent order processing |
-| **QuantAlpha ML Worker** | Python | scikit-learn ecosystem — no contest there |
+| **QuantAlpha ML Worker** | Python | scikit-learn ecosystem - no contest there |
 
 The pattern emerges quickly: Go for systems that need to run a long time and handle concurrent load; TypeScript for Firebase-first projects where tight SDK integration and rapid feature delivery matter more.
 
@@ -38,7 +38,7 @@ In Go, spawning 10,000 concurrent operations is idiomatic:
 
 ```go
 // Processing 10,000 account events concurrently in the Core Banking system.
-// Each goroutine is ~2KB of stack — the runtime grows it as needed.
+// Each goroutine is ~2KB of stack - the runtime grows it as needed.
 func processBatch(ctx context.Context, events []AccountEvent) error {
     g, ctx := errgroup.WithContext(ctx)
     g.SetLimit(50) // Cap concurrency at 50 to avoid DB contention
@@ -75,7 +75,7 @@ async function hashPassword(password: string): Promise<string> {
 
 Go's scheduler handles this transparently. TypeScript requires explicit architectural intervention.
 
-**Winner for concurrency: Go** — by a significant margin.
+**Winner for concurrency: Go** - by a significant margin.
 
 ---
 
@@ -114,7 +114,7 @@ export const getStoreSummary = onRequest(
 
 Deploying that is `firebase deploy`. There is no Docker image to build, no Kubernetes manifest to write, no IAM role to configure. For a small team shipping features fast, this is transformative.
 
-**Winner for Firebase ecosystem: TypeScript** — not even close.
+**Winner for Firebase ecosystem: TypeScript** - not even close.
 
 ---
 
@@ -208,7 +208,7 @@ Rather than memorizing language features, I apply four questions:
 |:---|:---|:---|
 | Firebase Firestore + Auth triggers | Go | SDK is second-class; missing trigger framework |
 | gRPC microservice with OTel | TypeScript | Go's tooling is dramatically more mature |
-| scikit-learn ML pipeline | Either — use Python | No real ML ecosystem in Go or TS |
+| scikit-learn ML pipeline | Either - use Python | No real ML ecosystem in Go or TS |
 | CPU-bound hash verification | TypeScript | Blocks event loop; needs worker_threads workaround |
 | Rapid admin dashboard CRUD API | Go | Too much ceremony for straightforward CRUD |
 
@@ -217,6 +217,6 @@ Rather than memorizing language features, I apply four questions:
 ## Key Takeaways
 
 1. **Go wins on concurrency, deployment, and gRPC ecosystems.** For any service that needs to handle sustained load or run as a daemon, Go's goroutine model and static binary are decisive advantages.
-2. **TypeScript wins on Firebase and developer velocity.** When your infrastructure is Firebase Functions + Firestore, the TypeScript SDK is the canonical implementation — fighting it with Go costs significant development time.
+2. **TypeScript wins on Firebase and developer velocity.** When your infrastructure is Firebase Functions + Firestore, the TypeScript SDK is the canonical implementation - fighting it with Go costs significant development time.
 3. **The stack should follow the deployment model.** Firebase Functions → TypeScript. Self-hosted gRPC → Go. The wrong language in the wrong deployment context creates more friction than any performance concern.
 4. **Neither is universally better.** The most valuable skill is recognizing which constraints dominate a given project and choosing accordingly, not defending a language preference.

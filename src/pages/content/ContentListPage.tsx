@@ -24,7 +24,7 @@ const ContentCard = memo(function ContentCard({
 }) {
   return (
     <article className="rounded-2xl border border-slate-200 bg-surface p-5 transition hover:-translate-y-0.5 hover:border-teal-400">
-      <div className="mb-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+      <div className="mb-2 flex flex-wrap items-center gap-2 text-micro text-slate-500">
         <span>{formatDate(item.date)}</span>
         <span>{item.readingText}</span>
       </div>
@@ -33,7 +33,7 @@ const ContentCard = memo(function ContentCard({
           {item.title}
         </Link>
       </h2>
-      <p className="mt-2 text-sm text-slate-600">{item.summary}</p>
+      <p className="mt-2 text-meta text-slate-600">{item.summary}</p>
       {item.tags.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
           {item.tags.map((tag) => (
@@ -112,7 +112,7 @@ function ContentListPage({ collection, title, description }: Props) {
       </Link>
       <section className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">{title}</h1>
-        <p className="mt-3 max-w-2xl text-sm text-slate-600">{description}</p>
+        <p className="mt-3 max-w-2xl text-meta text-slate-600">{description}</p>
       </section>
 
       <section className="mb-6">
@@ -132,7 +132,7 @@ function ContentListPage({ collection, title, description }: Props) {
               setSearchParams(next);
             }}
             placeholder="Search within this collection"
-            className="w-full rounded-xl border border-slate-300 bg-surface px-4 py-2.5 text-sm text-slate-900 outline-none ring-teal-500 focus:ring"
+            className="w-full rounded-xl border border-slate-300 bg-surface px-4 py-2.5 text-meta text-slate-900 outline-none ring-teal-500 focus:ring"
           />
         </label>
       </section>
@@ -140,7 +140,7 @@ function ContentListPage({ collection, title, description }: Props) {
       <section className="mb-8 flex flex-wrap gap-2">
         <button
           type="button"
-          className={`rounded-full border px-3 py-1 text-xs font-semibold ${!selectedTag ? 'border-accent bg-accent text-accent-fg' : 'border-slate-300 text-slate-700'
+          className={`rounded-full border px-3 py-1 text-micro font-semibold ${!selectedTag ? 'border-accent bg-accent text-accent-fg' : 'border-slate-300 text-slate-700'
             }`}
           onClick={() => setSearchParams(keyword ? { q: keyword } : {})}
         >
@@ -150,7 +150,7 @@ function ContentListPage({ collection, title, description }: Props) {
           <button
             key={tag}
             type="button"
-            className={`rounded-full border px-3 py-1 text-xs font-semibold ${selectedTag === tag ? 'border-accent bg-accent text-accent-fg' : 'border-slate-300 text-slate-700'
+            className={`rounded-full border px-3 py-1 text-micro font-semibold ${selectedTag === tag ? 'border-accent bg-accent text-accent-fg' : 'border-slate-300 text-slate-700'
               }`}
             onClick={() => setSearchParams(keyword ? { tag, q: keyword } : { tag })}
           >
@@ -171,7 +171,7 @@ function ContentListPage({ collection, title, description }: Props) {
           !error &&
           filteredItems.map((item) => <ContentCard key={item.slug} item={item} collection={collection} />)}
         {!loading && !error && filteredItems.length === 0 && (
-          <p className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
+          <p className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-meta text-slate-500">
             No article matched this filter.
           </p>
         )}

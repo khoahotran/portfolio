@@ -1,5 +1,5 @@
 /**
- * A real push-based epidemic (gossip) broadcast simulation — not a modelled convergence curve.
+ * A real push-based epidemic (gossip) broadcast simulation - not a modelled convergence curve.
  * One node starts holding a piece of information; each round, every node that already has it
  * pushes to `fanout` distinct, randomly chosen peers, and any peer that doesn't have it yet
  * becomes infected. This is the same "rumor mongering" protocol underlying real cluster membership
@@ -36,7 +36,7 @@ function pickRandomPeers(selfId: number, nodeCount: number, fanout: number, rng:
   }
 
   // `Math.max(0, fanout)` guards a negative fanout: `Array.slice(0, -1)` means "everything except
-  // the last element", not "nothing" — without this clamp, a negative fanout would gossip to
+  // the last element", not "nothing" - without this clamp, a negative fanout would gossip to
   // almost every peer instead of behaving like the no-op `fanout=0` already correctly does.
   // Unreachable via the shipped lab (its slider's min is 0), but this function is exported and
   // tested independently of that UI constraint.
@@ -47,7 +47,7 @@ function pickRandomPeers(selfId: number, nodeCount: number, fanout: number, rng:
  * Simulates push-based gossip starting from node 0, for up to `maxRounds` rounds or until every
  * node has the message, whichever comes first. Stops early (before `maxRounds`) if a round produces
  * no new infections, which happens when `fanout` is 0 or every infected node's random peers all
- * already have the message — continuing to "simulate" rounds that provably cannot change anything
+ * already have the message - continuing to "simulate" rounds that provably cannot change anything
  * would just be padding, not more information.
  */
 export function simulateGossip(

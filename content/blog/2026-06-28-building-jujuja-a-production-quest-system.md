@@ -41,9 +41,9 @@ flowchart TB
     Worker -->|4. Send OTP| Twilio
     Worker -->|5. Index Data| Algolia
 
-    classDef core fill:#f0fdf4,stroke:#86efac,stroke-width:2px;
-    classDef storage fill:#eff6ff,stroke:#93c5fd,stroke-width:2px;
-    classDef external fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px;
+    classDef core stroke-width:2px;
+    classDef storage stroke-width:2px;
+    classDef external stroke-width:2px;
     
     class API,Worker core;
     class Queue,DB storage;

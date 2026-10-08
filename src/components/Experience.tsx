@@ -5,7 +5,7 @@ export default function Experience() {
   return (
     <section id="experience" className="py-24 px-6 bg-surface">
       <div className="max-w-5xl mx-auto">
-        <h2 className="text-sm uppercase tracking-widest text-teal-700 mb-12 font-medium italic">
+        <h2 className="text-meta uppercase tracking-widest text-teal-700 mb-12 font-medium italic">
           / Experience
         </h2>
         <div className="space-y-12">
@@ -27,7 +27,7 @@ export default function Experience() {
                     <span>{exp.location}</span>
                   </div>
                 </div>
-                <span className="text-sm font-mono text-slate-500">
+                <span className="text-meta font-mono text-slate-500">
                   {exp.period}
                 </span>
               </div>
@@ -43,7 +43,7 @@ export default function Experience() {
                 {exp.impact.map((metric, i) => (
                   <span
                     key={i}
-                    className="text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-sm bg-slate-50 text-slate-600 border border-slate-100"
+                    className="text-nano uppercase tracking-wider font-bold px-3 py-1 rounded-sm bg-slate-50 text-slate-600 border border-slate-100"
                   >
                     {metric}
                   </span>

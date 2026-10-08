@@ -16,7 +16,7 @@ function nodePosition(index: number, total: number): { x: number; y: number } {
 function GossipProtocolVisualizerPage() {
   useSeo({
     title: 'Gossip Protocol Visualizer',
-    description: 'A real push-based epidemic broadcast simulation — watch a message spread node by node.',
+    description: 'A real push-based epidemic broadcast simulation - watch a message spread node by node.',
   });
 
   const [nodeCount, setNodeCount] = useState(24);
@@ -26,10 +26,10 @@ function GossipProtocolVisualizerPage() {
   const [isPlaying, setIsPlaying] = useState(false);
 
   // Math.random() runs inside this useMemo, so a new random simulation is only drawn when one of
-  // the actual inputs changes — nodeCount, fanout, or an explicit "Reshuffle" click — not on every
+  // the actual inputs changes - nodeCount, fanout, or an explicit "Reshuffle" click - not on every
   // render, the same pattern RetryStrategyVisualizerPage uses for its jitter.
   const rounds = useMemo(() => {
-    // Not read for its value — `void`-ing it is what tells useMemo (and exhaustive-deps) that
+    // Not read for its value - `void`-ing it is what tells useMemo (and exhaustive-deps) that
     // bumping reshuffleToken via the "Reshuffle peers" button should force a fresh Math.random()
     // draw below, the same way changing nodeCount or fanout does.
     void reshuffleToken;
@@ -52,7 +52,7 @@ function GossipProtocolVisualizerPage() {
     return () => clearTimeout(timer);
   }, [isPlaying, currentRound, rounds.length]);
 
-  // Cumulative set of infected node ids as of `currentRound` — node 0 is always patient zero.
+  // Cumulative set of infected node ids as of `currentRound` - node 0 is always patient zero.
   const infectedIds = useMemo(() => {
     const ids = new Set<number>([0]);
     for (let i = 0; i < currentRound; i += 1) {
@@ -76,8 +76,8 @@ function GossipProtocolVisualizerPage() {
       <ProvenanceNote labId="gossip-protocol-visualizer" />
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-          <label className="block text-sm font-semibold text-slate-700">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Nodes</span>
               <span className="text-teal-700">{nodeCount}</span>
@@ -92,7 +92,7 @@ function GossipProtocolVisualizerPage() {
             />
           </label>
 
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Fanout</span>
               <span className="text-teal-700">{fanout}</span>
@@ -110,7 +110,7 @@ function GossipProtocolVisualizerPage() {
           <button
             type="button"
             onClick={() => setReshuffleToken((t) => t + 1)}
-            className="flex w-full items-center justify-center gap-1.5 rounded-md bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600 transition-colors hover:bg-slate-200"
+            className="flex w-full items-center justify-center gap-1.5 rounded-md bg-slate-100 px-3 py-2 text-micro font-bold text-slate-600 transition-colors hover:bg-slate-200"
           >
             <Shuffle size={14} aria-hidden="true" />
             Reshuffle peers
@@ -119,26 +119,26 @@ function GossipProtocolVisualizerPage() {
           <div className="grid grid-cols-2 gap-2 pt-4 border-t border-slate-100 text-center">
             <div>
               <div className="text-lg font-bold text-teal-700">{infectedIds.size}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Reached</div>
+              <div className="text-nano font-bold uppercase tracking-widest text-slate-600">Reached</div>
             </div>
             <div>
               <div className="text-lg font-bold text-slate-900">{coveragePercent.toFixed(0)}%</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Coverage</div>
+              <div className="text-nano font-bold uppercase tracking-widest text-slate-600">Coverage</div>
             </div>
           </div>
 
-          <p className="pt-2 text-xs text-slate-500">
+          <p className="pt-2 text-micro text-slate-500">
             {converged
-              ? `Fully converged in ${rounds.length} round${rounds.length === 1 ? '' : 's'} — O(log n) spread, not linear.`
+              ? `Fully converged in ${rounds.length} round${rounds.length === 1 ? '' : 's'} - O(log n) spread, not linear.`
               : fanout === 0
-                ? 'Fanout is 0 — patient zero never pushes, so the message never leaves node 0.'
+                ? 'Fanout is 0 - patient zero never pushes, so the message never leaves node 0.'
                 : `Did not reach full coverage within ${MAX_ROUNDS} rounds at this fanout.`}
           </p>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-8 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div className="flex items-center justify-between mb-4">
-            <p className="text-xs font-bold uppercase tracking-widest text-slate-500">
+            <p className="text-micro font-bold uppercase tracking-widest text-slate-500">
               Round {currentRound} of {rounds.length}
             </p>
             <div className="flex gap-2">
@@ -146,7 +146,7 @@ function GossipProtocolVisualizerPage() {
                 type="button"
                 onClick={() => setIsPlaying((p) => !p)}
                 disabled={rounds.length === 0}
-                className="flex items-center gap-1 rounded-md bg-teal-50 px-3 py-1.5 text-xs font-bold text-teal-700 transition-colors hover:bg-teal-100 disabled:opacity-50"
+                className="flex items-center gap-1 rounded-md bg-teal-50 px-3 py-1.5 text-micro font-bold text-teal-700 transition-colors hover:bg-teal-100 disabled:opacity-50"
               >
                 {isPlaying ? <Pause size={12} aria-hidden="true" /> : <Play size={12} aria-hidden="true" />}
                 {isPlaying ? 'Pause' : 'Play'}
@@ -157,7 +157,7 @@ function GossipProtocolVisualizerPage() {
                   setIsPlaying(false);
                   setCurrentRound(0);
                 }}
-                className="flex items-center gap-1 rounded-md bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600 transition-colors hover:bg-slate-200"
+                className="flex items-center gap-1 rounded-md bg-slate-100 px-3 py-1.5 text-micro font-bold text-slate-600 transition-colors hover:bg-slate-200"
               >
                 <RotateCcw size={12} aria-hidden="true" />
                 Reset
@@ -201,7 +201,7 @@ function GossipProtocolVisualizerPage() {
             </svg>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+          <div className="mt-4 flex flex-wrap items-center gap-4 text-micro text-slate-600">
             <span className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-teal-600" aria-hidden="true" />
               Has the message

@@ -9,8 +9,8 @@ import type { ContentIndexItem } from '../content-engine/types';
 import { useSeo } from '../seo/useSeo';
 
 /**
- * `/tags/:tag` — every article carrying this tag, across all six collections. The cross-collection
- * span is the entire point (see TagsIndexPage's doc comment) — each card therefore shows its
+ * `/tags/:tag` - every article carrying this tag, across all six collections. The cross-collection
+ * span is the entire point (see TagsIndexPage's doc comment) - each card therefore shows its
  * collection as a badge, which `ContentListPage`'s single-collection cards don't need to.
  */
 function TagDetailPage() {
@@ -57,7 +57,7 @@ function TagDetailPage() {
       </Link>
       <section className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">#{tag}</h1>
-        <p className="mt-3 max-w-2xl text-sm text-slate-600">
+        <p className="mt-3 max-w-2xl text-meta text-slate-600">
           {loading ? 'Loading…' : `${matches.length} write-up${matches.length === 1 ? '' : 's'} tagged "${tag}", across every collection.`}
         </p>
       </section>
@@ -76,7 +76,7 @@ function TagDetailPage() {
               key={`${item.collection}/${item.slug}`}
               className="min-w-0 rounded-2xl border border-slate-200 bg-surface p-5 transition hover:-translate-y-0.5 hover:border-teal-400"
             >
-              <div className="mb-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+              <div className="mb-2 flex flex-wrap items-center gap-2 text-micro text-slate-500">
                 <span className="rounded-full bg-slate-100 px-2 py-0.5 font-semibold uppercase tracking-wide text-slate-600">
                   {collectionLabel(item.collection)}
                 </span>
@@ -88,11 +88,11 @@ function TagDetailPage() {
                   {item.title}
                 </Link>
               </h2>
-              <p className="mt-2 text-sm text-slate-600">{item.summary}</p>
+              <p className="mt-2 text-meta text-slate-600">{item.summary}</p>
             </article>
           ))}
           {matches.length === 0 && (
-            <p className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
+            <p className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-meta text-slate-500">
               Nothing tagged &ldquo;{tag}&rdquo; yet.
             </p>
           )}

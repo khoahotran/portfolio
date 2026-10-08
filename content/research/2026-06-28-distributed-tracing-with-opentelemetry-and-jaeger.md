@@ -10,7 +10,7 @@ summary: "A practical guide to instrumenting Go microservices with OpenTelemetry
 
 In a monolith, a slow API call is diagnosed with a single profiler. In a distributed system, that same slow call might traverse a GraphQL gateway, two gRPC services, a Redis lookup, and a Kafka publish before returning. The slowness could live anywhere in that chain.
 
-Without distributed tracing, debugging means correlating fragmented logs across multiple services using a shared request ID — an error-prone, slow process that falls apart under high load when log volumes spike.
+Without distributed tracing, debugging means correlating fragmented logs across multiple services using a shared request ID - an error-prone, slow process that falls apart under high load when log volumes spike.
 
 **Distributed tracing solves this** by propagating a single trace context from the moment a request enters the system through every hop until the final response. Every service adds its own span to the trace, and the tracing backend assembles them into a complete flamegraph of the request lifecycle.
 
@@ -129,12 +129,12 @@ OTel separates instrumentation into two tiers:
 For gRPC calls, the `otelgrpc` package instruments every RPC automatically. Install it once on the server and client:
 
 ```go
-// Server side — intercepts all incoming RPCs
+// Server side - intercepts all incoming RPCs
 grpc.NewServer(
     grpc.StatsHandler(otelgrpc.NewServerHandler()),
 )
 
-// Client side — propagates trace context on all outgoing RPCs
+// Client side - propagates trace context on all outgoing RPCs
 conn, err := grpc.Dial(address,
     grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
 )
@@ -144,7 +144,7 @@ With this in place, every gRPC call between the gateway and the Identity Service
 
 ### Manual (Custom Span) Instrumentation
 
-For business-level operations — like measuring how long Argon2id hashing takes — we create spans explicitly:
+For business-level operations - like measuring how long Argon2id hashing takes - we create spans explicitly:
 
 ```go
 package identity
@@ -233,13 +233,13 @@ func Extract(ctx context.Context, msg kafka.Message) context.Context {
 }
 ```
 
-With `Extract` called at the start of every Kafka consumer loop, the Audit Service's spans appear as children of the Identity Service's publish span — giving us a single trace that spans the entire auth event lifecycle.
+With `Extract` called at the start of every Kafka consumer loop, the Audit Service's spans appear as children of the Identity Service's publish span - giving us a single trace that spans the entire auth event lifecycle.
 
 ---
 
 ## Sampling Strategies
 
-Sampling 100% of traces is fine in development but unsustainable at production scale. The pattern below is the recommended way to configure sampling per environment — it is a target design, not a description of what the Aegis repository currently runs (see the note after the code):
+Sampling 100% of traces is fine in development but unsustainable at production scale. The pattern below is the recommended way to configure sampling per environment - it is a target design, not a description of what the Aegis repository currently runs (see the note after the code):
 
 ```go
 func getSampler(env string) sdktrace.Sampler {
@@ -260,9 +260,9 @@ func getSampler(env string) sdktrace.Sampler {
 }
 ```
 
-> **Critical rule:** Always use `ParentBased` in production. If the gateway samples a trace (5% chance), all downstream services must also sample it — otherwise the trace is incomplete. `ParentBased` ensures child services respect the parent's sampling decision.
+> **Critical rule:** Always use `ParentBased` in production. If the gateway samples a trace (5% chance), all downstream services must also sample it - otherwise the trace is incomplete. `ParentBased` ensures child services respect the parent's sampling decision.
 >
-> **Current Aegis implementation:** the tracer, `tracer.go` in the shared observability package, currently calls `AlwaysSample()` unconditionally, with no environment-based branching yet. The general OTel setup — OTLP exporter, resource attributes, `TraceContext`/`Baggage` propagation — is real and matches the rest of this article; the per-environment sampling strategy above is the recommended target, not what's currently wired in.
+> **Current Aegis implementation:** the tracer, `tracer.go` in the shared observability package, currently calls `AlwaysSample()` unconditionally, with no environment-based branching yet. The general OTel setup - OTLP exporter, resource attributes, `TraceContext`/`Baggage` propagation - is real and matches the rest of this article; the per-environment sampling strategy above is the recommended target, not what's currently wired in.
 
 ---
 
@@ -286,16 +286,16 @@ Key patterns to watch for:
 | Observation | Diagnosis |
 |:---|:---|
 | Long gap between parent span start and first child span | Network latency or connection pool wait |
-| Multiple identical DB query spans | N+1 query — batch the reads |
+| Multiple identical DB query spans | N+1 query - batch the reads |
 | `argon2id.verify` > 200ms | Argon2id parameters too aggressive; reduce iterations |
 | Kafka publish span > 100ms | Broker lag or producer batch timeout |
-| Missing child spans for a service | Context propagation broken — check header injection |
+| Missing child spans for a service | Context propagation broken - check header injection |
 
 ---
 
 ## Key Takeaways
 
-1. **Initialize before accepting traffic.** The OTel `TracerProvider` must be set globally before the gRPC or HTTP server binds — otherwise early requests produce unconnected traces.
+1. **Initialize before accepting traffic.** The OTel `TracerProvider` must be set globally before the gRPC or HTTP server binds - otherwise early requests produce unconnected traces.
 2. **Use `ParentBased` sampling in production.** Child services must respect the parent's sampling decision, or traces will be incomplete fragments.
-3. **Inject context into Kafka headers explicitly.** Unlike gRPC, Kafka has no automatic propagation — you must implement the `TextMapCarrier` adapter for message headers.
+3. **Inject context into Kafka headers explicitly.** Unlike gRPC, Kafka has no automatic propagation - you must implement the `TextMapCarrier` adapter for message headers.
 4. **Manual spans are the most valuable.** Auto-instrumentation gives you RPC latencies; manual spans reveal *why* something is slow inside a handler (hash verification, cache miss logic, etc.).

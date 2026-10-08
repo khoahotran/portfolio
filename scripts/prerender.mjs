@@ -2,7 +2,7 @@
 //
 // WHY THIS EXISTS
 // This is a client-rendered SPA on GitHub Pages, so before this script every deep link was
-// served by public/404.html — verified against production on 2026-08-26:
+// served by public/404.html - verified against production on 2026-08-26:
 //
 //   $ curl -sI .../portfolio/blog/grpc-service-mesh-in-go-aegis-architecture
 //   HTTP/2 404
@@ -14,11 +14,11 @@
 // dead weight: social crawlers don't run JavaScript, so sharing an article anywhere produced
 // a blank, title-less card, and the site was effectively one indexable page.
 //
-// APPROACH — snapshot, not SSR
+// APPROACH - snapshot, not SSR
 // Load each route in headless Chromium and serialize the rendered DOM. The alternative,
 // react-dom/server, would need StaticRouter, an SSR-safe replacement for useSeo's imperative
 // document.head mutation, Node-side handling of content-index.ts's runtime fetch(), and a
-// browser shim for mermaid — i.e. rewriting the content engine, which .ai/decision-log.md
+// browser shim for mermaid - i.e. rewriting the content engine, which .ai/decision-log.md
 // Decision 1 and the constitution both require an explicit ADR for. Snapshotting gets the
 // full SEO and social benefit with no change to the app.
 //
@@ -26,7 +26,7 @@
 // time the page settles, per-route metadata comes out right for free. Each snapshot still
 // ships the original module scripts, so the page boots and behaves as a normal SPA after
 // first paint. React 18's createRoot discards the pre-rendered children rather than
-// hydrating them — that is intended: the markup is byte-identical, and MarkdownContent's
+// hydrating them - that is intended: the markup is byte-identical, and MarkdownContent's
 // DOM-mutation passes (copy buttons, figures, status marks) would mismatch under
 // hydrateRoot. See the plan's Batch 2 notes.
 //
@@ -44,7 +44,7 @@ import { labIds, readArticleRoutes, readTagRoutes, staticRoutes } from './lib/si
 
 // Snapshots are taken with the colour scheme forced to light so the serialized <html> never
 // carries a `dark` class. The theme is a per-visitor preference, and the inline bootstrap in
-// index.html applies it before first paint — baking the build machine's preference into 54 static
+// index.html applies it before first paint - baking the build machine's preference into 54 static
 // files would serve every visitor whichever theme the CI runner happened to have.
 const distDir = path.join(process.cwd(), 'dist');
 const CONCURRENCY = 4;
@@ -92,7 +92,7 @@ async function startServer() {
     }
     const relative = pathname.slice(basePath.length);
 
-    // Resolve inside dist/ only — refuse anything that escapes via `..`.
+    // Resolve inside dist/ only - refuse anything that escapes via `..`.
     const candidate = path.resolve(distDir, relative);
     if (candidate !== distDir && !candidate.startsWith(distDir + path.sep)) {
       res.writeHead(403).end();
@@ -137,7 +137,7 @@ function outputPathFor(route) {
  *
  * Three separate conditions, because each one has bitten a different route shape:
  *  - #root has real children (the app mounted at all);
- *  - no LoadingState is on screen (role="status" — article pages fetch the index, then the
+ *  - no LoadingState is on screen (role="status" - article pages fetch the index, then the
  *    raw markdown, then dynamically import the markdown compiler);
  *  - every .mermaid-diagram has reached .mermaid-rendered (mermaid renders async well after
  *    mount, and an unrendered diagram serializes as an empty skeleton box).
@@ -146,13 +146,13 @@ function outputPathFor(route) {
  * Drops the `modulepreload` hints Vite emits for the mermaid chunks.
  *
  * Every diagram on a prerendered page already ships as finished SVG, and the client reuses that
- * markup rather than rendering it again (src/content-engine/mermaid-prerendered.ts) — so on a
+ * markup rather than rendering it again (src/content-engine/mermaid-prerendered.ts) - so on a
  * first visit mermaid is never imported, yet the preload hint fetched all 634 KB of it anyway.
  *
  * Removing a hint cannot break anything: the dynamic `import()` in content-engine/mermaid.ts still
  * loads the chunk the moment something actually needs it, which now only happens on a client-side
  * navigation to a page whose diagrams were not part of the initial HTML. That path pays the
- * download it would otherwise have had warm — a worthwhile trade against charging every first-time
+ * download it would otherwise have had warm - a worthwhile trade against charging every first-time
  * reader for a library they do not need.
  */
 function dropMermaidPreload(html) {
@@ -203,7 +203,7 @@ function validate(route, html, shellTitle) {
 /**
  * The old /experiments/<labId> paths, which App.tsx serves as client-side <Navigate>
  * redirects. A <Navigate> snapshot would be the lab page's markup living at the article's
- * URL, so these get a real redirect document instead — canonical plus meta refresh, which
+ * URL, so these get a real redirect document instead - canonical plus meta refresh, which
  * non-JS clients and crawlers both understand.
  *
  * Which ids redirect is derived, not duplicated: registry.ts flags an id
@@ -241,7 +241,7 @@ function redirectHtml({ from, to }) {
 }
 
 /**
- * Every absolute URL in a snapshot is built at runtime from window.location.origin —
+ * Every absolute URL in a snapshot is built at runtime from window.location.origin -
  * useSeo does it for canonical/og:url/og:image/twitter:image and the two feed links, and
  * ContentDetailPage does it again independently for the JSON-LD url/@id. Serialized as-is,
  * that would ship `http://127.0.0.1:<port>/...` inside every deployed page: canonical tags
@@ -267,7 +267,7 @@ async function renderRoute(page, serverOrigin, route) {
     const serialized = await page.evaluate(() => document.documentElement.outerHTML);
     const html = dropMermaidPreload(rewriteOrigin(`<!doctype html>\n${serialized}`, serverOrigin));
 
-    // Checks for the exact server origin (scheme + IP + port), not the bare "127.0.0.1" substring —
+    // Checks for the exact server origin (scheme + IP + port), not the bare "127.0.0.1" substring -
     // an article can legitimately mention that IP in its own prose (see
     // content/blog/2026-08-27-the-spa-google-never-saw.md, which explains this very mechanism) without
     // that being a real leak. Only the literal, port-qualified origin the rewrite operates on proves one.
@@ -275,7 +275,7 @@ async function renderRoute(page, serverOrigin, route) {
       throw new Error(`snapshot still contains the local server origin (${serverOrigin}) after rewrite`);
     }
     if (/<html[^>]*\bclass="[^"]*\bdark\b/.test(html)) {
-      throw new Error('snapshot baked in the dark theme — see the colorScheme note above');
+      throw new Error('snapshot baked in the dark theme - see the colorScheme note above');
     }
 
     return { html, consoleErrors };
@@ -288,7 +288,7 @@ async function main() {
   const articleRoutes = readArticleRoutes('prerender');
   if (articleRoutes.length === 0) {
     throw new Error(
-      'No article routes found. public/content-index.json is missing or empty — run ' +
+      'No article routes found. public/content-index.json is missing or empty - run ' +
         '`npm run build:search-index` before prerendering.'
     );
   }
@@ -316,7 +316,7 @@ async function main() {
     // The prerendered-snapshot bridge (src/prerender-snapshot.ts) is a client-only device. It must
     // not run here: this script's SPA fallback serves an already-prerendered dist/index.html, so
     // later routes would load a DOM that already has content, build an overlay around a copy of
-    // it, and serialize that copy into the output — 2 MB of duplicated, aria-hidden markup, and
+    // it, and serialize that copy into the output - 2 MB of duplicated, aria-hidden markup, and
     // selectors like the mermaid-rendered wait matching the copy instead of the live tree.
     await page.addInitScript(() => {
       window.__PRERENDER__ = true;
@@ -329,7 +329,7 @@ async function main() {
           const problems = validate(route, html, shellTitle);
           if (consoleErrors.length > 0) problems.push(`console error: ${consoleErrors[0]}`);
           if (problems.length > 0) {
-            failures.push(`${route} — ${problems.join('; ')}`);
+            failures.push(`${route} - ${problems.join('; ')}`);
             continue;
           }
           const out = outputPathFor(route);
@@ -337,7 +337,7 @@ async function main() {
           await writeFile(out, html, 'utf8');
           written.push({ route, bytes: Buffer.byteLength(html) });
         } catch (error) {
-          failures.push(`${route} — ${error.message}`);
+          failures.push(`${route} - ${error.message}`);
         }
       }
     } finally {
@@ -357,7 +357,7 @@ async function main() {
     // The prerendered-snapshot bridge (src/prerender-snapshot.ts) is a client-only device. It must
     // not run here: this script's SPA fallback serves an already-prerendered dist/index.html, so
     // later routes would load a DOM that already has content, build an overlay around a copy of
-    // it, and serialize that copy into the output — 2 MB of duplicated, aria-hidden markup, and
+    // it, and serialize that copy into the output - 2 MB of duplicated, aria-hidden markup, and
     // selectors like the mermaid-rendered wait matching the copy instead of the live tree.
     await page.addInitScript(() => {
       window.__PRERENDER__ = true;
@@ -381,7 +381,7 @@ async function main() {
   await new Promise((resolve) => server.close(resolve));
 
   if (failures.length > 0) {
-    console.error(`\n[prerender] FAILED — ${failures.length} route(s):`);
+    console.error(`\n[prerender] FAILED - ${failures.length} route(s):`);
     for (const failure of failures) console.error(`  ${failure}`);
     process.exit(1);
   }
@@ -389,7 +389,7 @@ async function main() {
   const total = written.reduce((sum, w) => sum + w.bytes, 0);
   const largest = [...written].sort((a, b) => b.bytes - a.bytes).slice(0, 3);
   console.log(
-    `[prerender] PASS — ${written.length} pages + ${redirects.length} redirects, ` +
+    `[prerender] PASS - ${written.length} pages + ${redirects.length} redirects, ` +
       `${(total / 1024 / 1024).toFixed(2)} MB total`
   );
   console.log(

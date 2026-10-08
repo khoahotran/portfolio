@@ -2,7 +2,7 @@
 // across every route and the seven audited viewport widths.
 //
 // Why this exists: the production UI/UX audit found two real mobile-overflow bugs
-// (missing `min-w-0` on a Grid/Flex item with unwrappable content — see
+// (missing `min-w-0` on a Grid/Flex item with unwrappable content - see
 // .ai/audit-followups.md item 5) that were invisible from source review and only
 // surfaced by measuring `scrollWidth` in a real browser. This script keeps that
 // measurement repeatable instead of one-off.
@@ -12,7 +12,7 @@
 //   npm run check:responsive -- --base=http://localhost:5173  # e.g. against `npm run dev`
 //
 // Requires `npm run build` to have produced dist/ and a preview/dev server already
-// running — this script does not start one itself, to keep it usable against either
+// running - this script does not start one itself, to keep it usable against either
 // `vite preview` (production build) or `vite dev` (fast iteration).
 
 import { chromium } from 'playwright';
@@ -31,7 +31,7 @@ const VIEWPORTS = [
 
 // Routes this check adds on top of the shared `staticRoutes` list: /search renders nothing
 // until a query is typed (so it's excluded from the sitemap and prerender), and the bogus
-// path exercises the 404 page. Everything else — pages, collection lists, the nine labs —
+// path exercises the 404 page. Everything else - pages, collection lists, the nine labs -
 // comes from scripts/lib/site-routes.mjs so this file can't drift from what actually ships.
 const EXTRA_ROUTES = ['/search', '/this-route-does-not-exist'];
 
@@ -50,12 +50,12 @@ function parseArgs() {
 
 /**
  * Mermaid renders asynchronously after route mount (dynamic import + mermaid.render()),
- * so a diagram that's still loading at the moment of this check is not yet a failure —
+ * so a diagram that's still loading at the moment of this check is not yet a failure -
  * this waits (bounded) for every `.mermaid-diagram` on the page to finish, then asserts
  * each one actually produced a non-empty SVG rather than an error box. Catches the class
  * of bug console-error detection alone missed: a diagram that renders "successfully" as
  * an empty or error SVG without ever calling console.error. Runs once per route (at the
- * widest viewport only — Mermaid's own output doesn't change across breakpoints), not
+ * widest viewport only - Mermaid's own output doesn't change across breakpoints), not
  * once per viewport, so this doesn't multiply the route's wall-clock cost by 7.
  */
 async function checkMermaid(page) {
@@ -101,8 +101,8 @@ async function checkMermaid(page) {
 
 /**
  * Chromium reports a dropped connection as a console error (net::ERR_NETWORK_CHANGED,
- * ERR_NETWORK_IO_SUSPENDED, ERR_CONNECTION_RESET) and — when the dropped request happened to be
- * a lazy route chunk — as a downstream "Failed to fetch dynamically imported module" plus the
+ * ERR_NETWORK_IO_SUSPENDED, ERR_CONNECTION_RESET) and - when the dropped request happened to be
+ * a lazy route chunk - as a downstream "Failed to fetch dynamically imported module" plus the
  * React render error that follows it. None of that is a property of the page: on WSL, and on any
  * runner whose network interface flaps, it lands on different routes and viewports run to run
  * (observed: 17 failures on one run, 14 on the next, overlapping on none of the same routes).
@@ -118,7 +118,7 @@ async function checkMermaid(page) {
  * network error sitting right next to it. Requiring every failure to be network-shaped left those
  * routes failing for a reason that had nothing to do with their diagrams.
  *
- * The pattern list itself lives in `./lib/transient-errors.mjs`, shared with check-contrast.mjs —
+ * The pattern list itself lives in `./lib/transient-errors.mjs`, shared with check-contrast.mjs -
  * see that module's own comment for why (2026-09-07: check-contrast had no retry/failure handling
  * of this kind at all, which let a fully unreachable preview server print a false "PASS").
  */
@@ -140,7 +140,7 @@ async function checkRouteWithRetry(browser, base, path) {
 
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt += 1) {
     if (failures.length === 0 || !failures.some(isTransientFailure)) break;
-    console.warn(`[check-responsive] transient network error on ${path} — retry ${attempt}/${MAX_RETRIES}`);
+    console.warn(`[check-responsive] transient network error on ${path} - retry ${attempt}/${MAX_RETRIES}`);
     failures = await checkRoute(browser, base, path);
   }
 
@@ -154,7 +154,7 @@ async function checkRouteWithRetry(browser, base, path) {
  * viewport rather than a second full sweep: horizontal overflow is a function of layout, not
  * colour, so re-measuring it at all seven widths in dark would double the runtime to re-verify
  * something theme-independent. What dark mode genuinely needs covering is that the page still
- * renders without console errors and that Mermaid still produces real SVGs — and the Mermaid check
+ * renders without console errors and that Mermaid still produces real SVGs - and the Mermaid check
  * only runs at the widest viewport anyway.
  *
  * `colorScheme` is how the theme is selected, deliberately: the inline bootstrap in index.html
@@ -189,6 +189,12 @@ async function checkRoute(browser, base, path) {
 
     try {
       await page.goto(`${base}${path}`, { waitUntil: 'networkidle', timeout: 20000 });
+      // Webfonts first, then settle. The site self-hosts Inter with `font-display: swap`, so a
+      // page paints in the fallback face and reflows when the woff2 lands. Measuring layout in
+      // that window reports whichever face happened to be active, which made this check
+      // intermittently fail on a route whose real scrollWidth was fine - a flake introduced by
+      // the font change, not by the page. `document.fonts.ready` is the defined signal for it.
+      await page.evaluate(() => document.fonts.ready);
       await page.waitForTimeout(300); // let mermaid/highlight/rAF settle
     } catch (error) {
       failures.push({ viewport: vp.name, kind: 'navigation', detail: error.message });
@@ -215,7 +221,7 @@ async function checkRoute(browser, base, path) {
       failures.push({ viewport: vp.name, kind: 'page-error', detail: pageErrors.join(' | ') });
     }
 
-    // Widest viewport only — see checkMermaid's doc comment. Matched on width rather than name
+    // Widest viewport only - see checkMermaid's doc comment. Matched on width rather than name
     // because the dark pass suffixes its name (see passes()), and Mermaid rendering is exactly
     // what the dark pass is there to verify.
     if (vp.width === VIEWPORTS[VIEWPORTS.length - 1].width) {
@@ -287,7 +293,7 @@ async function main() {
   }
 
   console.log(
-    `[check-responsive] PASS — 0 failures across ${routes.length} routes x ${VIEWPORTS.length} viewports ` +
+    `[check-responsive] PASS - 0 failures across ${routes.length} routes x ${VIEWPORTS.length} viewports ` +
       `plus the dark pass.`
   );
 }

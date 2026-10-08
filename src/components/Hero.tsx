@@ -1,77 +1,96 @@
-import { ChevronDown, Github, Linkedin, Mail } from 'lucide-react';
+import { ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ButtonAnchor, ButtonLink } from './ui/Button';
+import { proofPoints } from '../data/expertise';
 import { heroData } from '../data/portfolioData';
 
+/**
+ * Hero and the proof strip under it - tiers 1 and 2 of the homepage.
+ *
+ * It no longer fills the viewport. `min-h-screen` meant the first screen carried a name, a generic
+ * tagline and two buttons, and pushed every piece of evidence below the fold; a reader who did not
+ * scroll learned nothing that distinguishes this person from any other backend engineer. At ~72vh
+ * the proof strip breaks the fold, so the first thing visible after the name is a measured number
+ * attached to the system it came from.
+ *
+ * The tagline is still the old copy. It is weak - it describes a stack, not a value - but rewriting
+ * it is a content decision, and content comes after the UI architecture settles. The structure
+ * around it is built so better copy drops straight in.
+ */
 export default function Hero() {
-  const scrollToContent = () => {
-    const aboutSection = document.getElementById('about');
-    aboutSection?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
-    <section className="min-h-screen flex items-center justify-center bg-surface text-slate-900 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(20,184,166,0.05),transparent_25%),radial-gradient(circle_at_80%_80%,rgba(14,165,233,0.05),transparent_25%)]" />
-      <div className="relative text-center px-6 max-w-5xl mx-auto space-y-10">
-        <div className="space-y-4 animate-fade-in">
-          <p className="text-sm uppercase tracking-[0.35em] text-teal-700 font-medium">{heroData.role}</p>
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-slate-900">
-            {heroData.name}
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-600 font-light max-w-3xl mx-auto">
-            {heroData.tagline}
-          </p>
-          <p className="text-sm text-slate-500">{heroData.location}</p>
-          <div className="flex items-center justify-center gap-6 pt-4 text-slate-500">
-            <a href={`mailto:${heroData.email}`} aria-label="Email" className="hover:text-teal-700 transition-colors"><Mail size={24} /></a>
-            <a href={heroData.github} aria-label="GitHub Profile" target="_blank" rel="noopener noreferrer" className="hover:text-teal-700 transition-colors"><Github size={24} /></a>
-            <a href={heroData.linkedin} aria-label="LinkedIn Profile" target="_blank" rel="noopener noreferrer" className="hover:text-teal-700 transition-colors"><Linkedin size={24} /></a>
-          </div>
-        </div>
+    <section className="relative overflow-hidden border-b border-slate-100 bg-surface">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(20,184,166,0.06),transparent_30%),radial-gradient(circle_at_85%_0%,rgba(14,165,233,0.05),transparent_35%)]" />
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-left">
-          {heroData.stats.map((stat, index) => (
-            <div
-              key={index}
-              className="rounded-2xl border border-slate-100 bg-slate-50/50 px-4 py-3 backdrop-blur-sm"
-            >
-              {stat.route ? (
-                // `block` preserves the same layout the replaced <p> had (an <a> is
-                // inline by default) — added only to avoid a layout shift, per the
-                // instruction to change styling only where strictly required to make
-                // the label clickable. No other visual change from the plain-text label.
-                <Link to={stat.route} className="block text-xs uppercase tracking-wide text-slate-500">
-                  {stat.label}
-                </Link>
-              ) : (
-                <p className="text-xs uppercase tracking-wide text-slate-500">{stat.label}</p>
-              )}
-              <p className="text-2xl font-semibold text-slate-900">{stat.value}</p>
-            </div>
-          ))}
-        </div>
+      <div className="relative mx-auto flex min-h-[72vh] max-w-5xl flex-col justify-center px-4 py-band-standard md:px-6">
+        <p className="text-micro font-semibold uppercase tracking-[0.25em] text-teal-700">
+          {heroData.role}
+        </p>
+        <h1 className="mt-4 text-d1 font-bold text-slate-900">{heroData.name}</h1>
+        <p className="mt-5 max-w-2xl text-lead text-slate-600">{heroData.tagline}</p>
 
-        <div className="flex flex-wrap items-center justify-center gap-4">
-          <a
-            href="#projects"
-            className="px-8 py-3 rounded-full bg-inverse text-inverse-fg font-semibold shadow-lg shadow-slate-200 hover:bg-inverse/90 transition-all hover:-translate-y-0.5"
-          >
-            View Projects
-          </a>
-          <a
-            href="#contact"
-            className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-700 transition-colors"
-          >
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <ButtonLink to="/projects">
+            See the work <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </ButtonLink>
+          <ButtonAnchor href="#contact" variant="secondary">
             Get in touch
-          </a>
+          </ButtonAnchor>
+          <span className="ml-1 flex items-center gap-4 text-slate-500">
+            <a href={`mailto:${heroData.email}`} aria-label="Email" className="transition-colors hover:text-teal-700">
+              <Mail size={20} />
+            </a>
+            <a
+              href={heroData.github}
+              aria-label="GitHub profile"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-teal-700"
+            >
+              <Github size={20} />
+            </a>
+            <a
+              href={heroData.linkedin}
+              aria-label="LinkedIn profile"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-teal-700"
+            >
+              <Linkedin size={20} />
+            </a>
+          </span>
         </div>
 
-        <button
-          onClick={scrollToContent}
-          className="animate-bounce-slow mt-8 text-slate-500 hover:text-teal-700 transition-colors"
-          aria-label="Scroll to content"
-        >
-          <ChevronDown size={32} />
-        </button>
+        {/* Tier 2 - the proof strip. Inside the hero on purpose: it has to break the fold, and a
+            separate band below would put it back under it on a laptop. */}
+        <div className="mt-14 grid gap-px overflow-hidden rounded-card border border-slate-200 bg-slate-200 sm:grid-cols-3">
+          {proofPoints.map((point) => {
+            const body = (
+              <>
+                <div className="text-d3 font-bold tabular-figures text-slate-900">{point.value}</div>
+                <div className="mt-1 text-meta font-medium text-slate-700">{point.label}</div>
+                <div className="mt-1 text-micro text-slate-500">{point.source}</div>
+              </>
+            );
+            return point.to ? (
+              <Link
+                key={point.label}
+                to={point.to}
+                className="group bg-surface p-5 transition-colors hover:bg-slate-50"
+              >
+                {body}
+                <span className="mt-2 inline-flex items-center gap-1 text-micro font-semibold text-teal-700">
+                  How it was measured
+                  <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                </span>
+              </Link>
+            ) : (
+              <div key={point.label} className="bg-surface p-5">
+                {body}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

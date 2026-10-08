@@ -1,11 +1,11 @@
 // Node.js harness for the go-vs-ts-concurrency benchmark lab (/labs/go-vs-ts-concurrency).
 //
 // Mirrors ../go/main.go exactly: N concurrent workers, each a mock 50ms network request (a
-// setTimeout, not a real network call), driven by Promise.all over N async functions — matching
+// setTimeout, not a real network call), driven by Promise.all over N async functions - matching
 // the methodology already stated in content/experiments/go-vs-ts-concurrency.md ("Node.js
 // Implementation: Uses Promise.all() over an array of asynchronous functions").
 //
-// Peak memory is read from /proc/self/status VmHWM, the OS's own peak-RSS accounting — the same
+// Peak memory is read from /proc/self/status VmHWM, the OS's own peak-RSS accounting - the same
 // source the Go harness uses, so the two are compared on identical footing rather than Go using an
 // OS-level peak and Node using a periodically-sampled process.memoryUsage().rss, which could miss
 // the actual peak between samples.

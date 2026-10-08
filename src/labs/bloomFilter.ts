@@ -1,23 +1,23 @@
 /**
- * Bloom filters — a probabilistic set-membership structure (Bloom, 1970) traded off deliberately:
+ * Bloom filters - a probabilistic set-membership structure (Bloom, 1970) traded off deliberately:
  * a fixed-size bit array can answer "have I seen this before?" for an unbounded number of items,
  * in O(k) time and O(m) space regardless of how many items are inserted, at the cost of sometimes
- * answering "maybe" when the real answer is "no." It never does the reverse — an item that was
+ * answering "maybe" when the real answer is "no." It never does the reverse - an item that was
  * actually inserted is *never* reported absent. That asymmetry (perfect recall, imperfect
  * precision) is the entire design, and this lab makes both halves measurable rather than assumed:
  * the "never a false negative" half as a hard guarantee tested directly, and the "sometimes a
- * false positive" half as a real, measured rate that tracks a closed-form formula — closely within
+ * false positive" half as a real, measured rate that tracks a closed-form formula - closely within
  * the filter's designed capacity, and badly once it's overloaded past that capacity.
  *
  * Real implementation (`src/labs/bloomFilter.ts`), not a formula described in prose: a plain
  * boolean bit array, and the standard Kirsch-Mitzenmacher optimization for deriving k independent
- * hash functions from exactly two real hash computations — `h_i(x) = h1(x) + i*h2(x) mod m` — so a
+ * hash functions from exactly two real hash computations - `h_i(x) = h1(x) + i*h2(x) mod m` - so a
  * filter with, say, 12 hash functions still only computes 2 real hashes per operation, the actual
  * technique real Bloom filter implementations use rather than genuinely running k separate hash
  * algorithms.
  */
 
-/** FNV-1a, 32-bit, plus a MurmurHash3-style finalizer — same technique as `consistentHashing.ts`'s
+/** FNV-1a, 32-bit, plus a MurmurHash3-style finalizer - same technique as `consistentHashing.ts`'s
  * `hashString`, reimplemented locally (each lab module stays self-contained) with a distinct seed
  * so `hash1` and `hash2` genuinely diverge rather than being the same function twice. */
 function hashWithSeed(input: string, seed: number): number {
@@ -42,7 +42,7 @@ function hash2(input: string): number {
   return hashWithSeed(input, 0x1000193);
 }
 
-/** The k bit positions `item` maps to, via `h1(x) + i*h2(x) mod m` for i in [0, k) — the
+/** The k bit positions `item` maps to, via `h1(x) + i*h2(x) mod m` for i in [0, k) - the
  * Kirsch-Mitzenmacher construction. Deterministic: the same item always yields the same positions. */
 function bitPositions(item: string, k: number, m: number): number[] {
   const h1 = hash1(item);
@@ -76,7 +76,7 @@ export function addToBloomFilter(state: BloomFilterState, item: string): BloomFi
   return { ...state, bits, insertedCount: state.insertedCount + 1 };
 }
 
-/** True means "maybe present" (could be a false positive); false means "definitely absent" — the
+/** True means "maybe present" (could be a false positive); false means "definitely absent" - the
  * one answer a Bloom filter is never wrong about. */
 export function mightContain(state: BloomFilterState, item: string): boolean {
   return bitPositions(item, state.k, state.m).every((pos) => state.bits[pos]);
@@ -110,7 +110,7 @@ export interface BloomFilterTrial {
   measuredFalsePositiveRate: number;
   falsePositiveCount: number;
   testedCount: number;
-  /** Must always be 0 — the hard guarantee. A nonzero value here would mean the implementation is
+  /** Must always be 0 - the hard guarantee. A nonzero value here would mean the implementation is
    * actually broken, not just imprecise. */
   falseNegativeCount: number;
 }
@@ -118,8 +118,8 @@ export interface BloomFilterTrial {
 /**
  * Inserts every item in `insertedItems`, then checks two things for real: every inserted item
  * really does test as present (the false-negative guarantee), and how many of
- * `testItemsNotInserted` — filtered down to only those genuinely never inserted, so a caller
- * accidentally including a duplicate can't inflate the false-positive count — wrongly test as
+ * `testItemsNotInserted` - filtered down to only those genuinely never inserted, so a caller
+ * accidentally including a duplicate can't inflate the false-positive count - wrongly test as
  * present (the measured false-positive rate, compared directly against the closed-form estimate
  * for the identical m/k/n).
  */

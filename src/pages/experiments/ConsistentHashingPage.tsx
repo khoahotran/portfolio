@@ -11,7 +11,7 @@ import {
 import { useSeo } from '../../seo/useSeo';
 
 /** Fixed, not a slider: the key-set size isn't the thing being varied here, and the finding is
- * only legible once it's large enough to average out per-key hashing noise — the same reasoning
+ * only legible once it's large enough to average out per-key hashing noise - the same reasoning
  * as Redlock's fixed acquire timeout. */
 const KEY_COUNT = 5000;
 /** Fixed at 5 base nodes: enough to make "one node added/removed" a real minority-of-the-fleet
@@ -33,7 +33,7 @@ function ConsistentHashingPage() {
   useSeo({
     title: 'Consistent Hashing Visualizer',
     description:
-      'Run the real hash-ring key-placement algorithm and compare it against naive modulo hashing — see exactly how much of the keyspace each scheme reshuffles when a node joins or leaves.',
+      'Run the real hash-ring key-placement algorithm and compare it against naive modulo hashing - see exactly how much of the keyspace each scheme reshuffles when a node joins or leaves.',
   });
 
   const [virtualNodesPerNode, setVirtualNodesPerNode] = useState(10);
@@ -70,7 +70,7 @@ function ConsistentHashingPage() {
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Consistent Hashing</h1>
       <p className="mt-2 text-slate-600">
         The real hash-ring placement algorithm, run against the same key set as naive modulo
-        hashing — see how little of the keyspace the ring actually moves when a node joins or
+        hashing - see how little of the keyspace the ring actually moves when a node joins or
         leaves, and what happens to load balance when there aren't enough virtual nodes to spread
         the luck around.
       </p>
@@ -78,8 +78,8 @@ function ConsistentHashingPage() {
       <ProvenanceNote labId="consistent-hashing" />
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-          <label className="block text-sm font-semibold text-slate-700">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Virtual nodes per physical node</span>
               <span className="text-teal-700">{virtualNodesPerNode}</span>
@@ -95,12 +95,12 @@ function ConsistentHashingPage() {
           </label>
 
           <div>
-            <p className="mb-2 text-sm font-semibold text-slate-700">Simulate a node-count change</p>
+            <p className="mb-2 text-meta font-semibold text-slate-700">Simulate a node-count change</p>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setChangeType('add')}
-                className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-xs font-bold transition-colors ${
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-micro font-bold transition-colors ${
                   changeType === 'add' ? 'bg-accent text-accent-fg' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
@@ -109,7 +109,7 @@ function ConsistentHashingPage() {
               <button
                 type="button"
                 onClick={() => setChangeType('remove')}
-                className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-xs font-bold transition-colors ${
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-micro font-bold transition-colors ${
                   changeType === 'remove' ? 'bg-accent text-accent-fg' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
@@ -118,8 +118,8 @@ function ConsistentHashingPage() {
             </div>
           </div>
 
-          <p className="text-xs text-slate-500">
-            Fixed at {NODE_COUNT} base nodes and {KEY_COUNT.toLocaleString()} keys — large enough
+          <p className="text-micro text-slate-500">
+            Fixed at {NODE_COUNT} base nodes and {KEY_COUNT.toLocaleString()} keys - large enough
             that per-key hashing noise averages out and the comparison reflects the schemes
             themselves, not the sample.
           </p>
@@ -142,17 +142,17 @@ function ConsistentHashingPage() {
               })}
             </svg>
           </div>
-          <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-600">
+          <p className="text-center text-nano font-bold uppercase tracking-widest text-slate-600">
             Every dot = one virtual node's ring position
           </p>
         </section>
 
         <section className="min-w-0 md:col-span-8 space-y-6">
-          <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
+          <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
+            <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
               <ArrowRightLeft className="w-4 h-4" /> Naive Modulo vs Consistent Hashing
             </h2>
-            <p className="mb-4 text-sm text-slate-600">
+            <p className="mb-4 text-meta text-slate-600">
               {changeType === 'add'
                 ? `Simulating: ${nodeIds.length} nodes → ${afterNodeIds.length} nodes (one joins).`
                 : `Simulating: ${nodeIds.length} nodes → ${afterNodeIds.length} nodes (one leaves).`}
@@ -160,7 +160,7 @@ function ConsistentHashingPage() {
 
             <div className="space-y-4">
               <div>
-                <div className="mb-1 flex justify-between text-xs font-semibold text-slate-600">
+                <div className="mb-1 flex justify-between text-micro font-semibold text-slate-600">
                   <span>Naive modulo (hash(key) % nodeCount)</span>
                   <span className="text-rose-700">{(change.naive.remappedFraction * 100).toFixed(1)}% remapped</span>
                 </div>
@@ -172,7 +172,7 @@ function ConsistentHashingPage() {
                 </div>
               </div>
               <div>
-                <div className="mb-1 flex justify-between text-xs font-semibold text-slate-600">
+                <div className="mb-1 flex justify-between text-micro font-semibold text-slate-600">
                   <span>Consistent hashing (ring lookup)</span>
                   <span className="text-teal-700">
                     {(change.consistentHashing.remappedFraction * 100).toFixed(1)}% remapped
@@ -187,17 +187,17 @@ function ConsistentHashingPage() {
               </div>
             </div>
 
-            <p className="mt-4 text-xs text-slate-500">
+            <p className="mt-4 text-micro text-slate-500">
               {change.naive.remappedKeys.toLocaleString()} of {change.naive.totalKeys.toLocaleString()}{' '}
               keys changed owner under naive modulo; only{' '}
               {change.consistentHashing.remappedKeys.toLocaleString()} changed owner on the ring for
-              the identical node-count change — both counted against the same key set, so this is a
+              the identical node-count change - both counted against the same key set, so this is a
               direct comparison, not two separate claims.
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
+          <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
+            <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
               <Gauge className="w-4 h-4" /> Load Distribution at {virtualNodesPerNode} Virtual Node
               {virtualNodesPerNode === 1 ? '' : 's'}/Node
             </h2>
@@ -205,25 +205,25 @@ function ConsistentHashingPage() {
             <div className="space-y-2">
               {nodeIds.map((id, i) => (
                 <div key={id} className="flex items-center gap-3">
-                  <span className="w-16 shrink-0 text-xs font-semibold text-slate-600">{id}</span>
+                  <span className="w-16 shrink-0 text-micro font-semibold text-slate-600">{id}</span>
                   <div className="h-3 flex-1 rounded-full bg-slate-100">
                     <div
                       className="h-3 rounded-full transition-all"
                       style={{ width: `${(counts[i] / maxCount) * 100}%`, backgroundColor: NODE_COLORS[i % NODE_COLORS.length] }}
                     />
                   </div>
-                  <span className="w-14 shrink-0 text-right text-xs text-slate-500">{counts[i].toLocaleString()}</span>
+                  <span className="w-14 shrink-0 text-right text-micro text-slate-500">{counts[i].toLocaleString()}</span>
                 </div>
               ))}
             </div>
 
-            <p className="mt-4 text-xs text-slate-500">
+            <p className="mt-4 text-micro text-slate-500">
               Coefficient of variation: <span className="font-bold text-slate-700">{imbalance.toFixed(3)}</span> (0 =
               perfectly even).{' '}
               {virtualNodesPerNode <= 2
-                ? 'At this few virtual nodes per physical node, a handful of hashed positions simply don’t land evenly by chance — drag the slider up to see it settle.'
+                ? 'At this few virtual nodes per physical node, a handful of hashed positions simply don’t land evenly by chance - drag the slider up to see it settle.'
                 : virtualNodesPerNode <= 15
-                  ? 'Better, but still visibly uneven — more virtual nodes keep smoothing this out.'
+                  ? 'Better, but still visibly uneven - more virtual nodes keep smoothing this out.'
                   : 'Comfortably balanced: enough virtual nodes per node that the luck of any one position averages out.'}
             </p>
           </div>

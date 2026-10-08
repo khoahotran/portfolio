@@ -1,11 +1,11 @@
-# Audit Follow-ups — UI/UX, Accessibility, Performance & Reliability
+# Audit Follow-ups - UI/UX, Accessibility, Performance & Reliability
 
 > Source: Production UI/UX, Accessibility & Performance Audit (2026-08-12)
 > Status: Audit passed. No P0/P1 issues outstanding.
 >
 > These items are intentionally deferred. Do not implement automatically unless explicitly requested.
 
-## P2 — Should Fix
+## P2 - Should Fix
 
 ### 1. Fix reading-time calculation
 
@@ -36,7 +36,7 @@ Acceptance criteria:
 
 ---
 
-**Resolution.** The computed value already satisfied every acceptance criterion above — `estimateReading()`
+**Resolution.** The computed value already satisfied every acceptance criterion above - `estimateReading()`
 in `scripts/lib/content.mjs` counts prose at 220 wpm and charges a flat ~20s per code block and ~30s
 per Mermaid diagram, excluding inline code, raw HTML, table rows and LaTeX. That is what the UI has
 been showing.
@@ -53,7 +53,7 @@ generated index, and from the authoring templates in `content/README.md`,
 
 ### 2. Review borderline text contrast
 
-**Status:** ✅ CLOSED (2026-08-26) — resolved by measurement, see `.ai/decision-log.md` Decision 9.
+**Status:** ✅ CLOSED (2026-08-26) - resolved by measurement, see `.ai/decision-log.md` Decision 9.
 
 Approximately 44 `text-slate-400` occurrences were identified as potentially borderline for WCAG contrast.
 
@@ -80,8 +80,8 @@ Do not perform a blind global replacement.
 text node on every route in both themes and fails CI below WCAG AA, so this stopped being a
 judgement call. What the measurement showed:
 
-- Every flagged `text-slate-400` node carried real information — section labels, the footer
-  copyright, employment dates — not decoration. So the classification this item asked for came out
+- Every flagged `text-slate-400` node carried real information - section labels, the footer
+  copyright, employment dates - not decoration. So the classification this item asked for came out
   one-sided, and all 33 moved to `slate-500`.
 - **Except inside `bg-panel`**, where that same bump made things *worse*: `slate-500` measures
   3.75:1 on the dark panel while `slate-400` was around 6:1. Those use the panel's own muted token
@@ -91,7 +91,7 @@ judgement call. What the measurement showed:
 - The bigger finding was that `text-slate-400` was not the worst offender. `text-teal-600` failed at
   3.58:1 across 53 routes, and white-on-`teal-600` buttons at 3.74:1. Both are fixed.
 
-Two defects surfaced that no other check would have caught — see `.ai/decision-log.md` Decision 10.
+Two defects surfaced that no other check would have caught - see `.ai/decision-log.md` Decision 10.
 The corpus now measures clean in both themes.
 
 ### 3. Evaluate Markdown HTML sanitization
@@ -122,7 +122,7 @@ Do not add sanitization blindly if it would break intentional HTML-based content
 
 ### 4. Add automated responsive regression checks
 
-**Status:** ✅ CLOSED — `scripts/check-responsive.mjs` covers all 54 routes x 7 viewports, plus a
+**Status:** ✅ CLOSED - `scripts/check-responsive.mjs` covers all 54 routes x 7 viewports, plus a
 dark-theme pass at the widest viewport (added 2026-08-26).
 
 The current audit verified 0/70 route × viewport combinations with horizontal overflow, but only 10 representative routes were tested manually.
@@ -157,7 +157,7 @@ page errors = 0
 
 This is particularly important because `min-w-0` issues can easily reappear when adding new Grid/Flex components.
 
-## P2 — Engineering Convention
+## P2 - Engineering Convention
 
 ### 5. Treat `min-w-0` as a default consideration for Grid/Flex children
 
@@ -195,7 +195,7 @@ for Grid/Flex children that contain:
 
 Do not blindly add `min-w-0` everywhere. Apply it where content may exceed the available width.
 
-## Future — Browser Validation
+## Future - Browser Validation
 
 ### 6. WebKit / Safari validation
 
@@ -218,11 +218,11 @@ Future validation should include:
 
 Do not claim Safari compatibility until it has been tested.
 
-## Future — Architecture
+## Future - Architecture
 
 ### 7. Evaluate build-time Markdown rendering
 
-**Status:** Architecture backlog — NOT urgent
+**Status:** Architecture backlog - NOT urgent
 
 Current article rendering requires the Markdown processing pipeline in the browser.
 
@@ -264,19 +264,19 @@ Potential costs:
 Do not implement unless article count, performance measurements, or deployment requirements justify it.
 
 **Re-measured 2026-08-28 (Phase 6), corpus now 45 articles (was 33 at the original measurement):**
-521 KB raw / 159.4 KB gzip — a 2.4% increase in raw size against a 36% increase in article count.
+521 KB raw / 159.4 KB gzip - a 2.4% increase in raw size against a 36% increase in article count.
 This confirms this chunk is dominated by the markdown/unified/remark/rehype *library* cost, which is
-paid once regardless of corpus size, not a per-article cost that scales with content volume — the
+paid once regardless of corpus size, not a per-article cost that scales with content volume - the
 trigger this item names ("article count... justify it") was based on an assumption that doesn't
 hold. The real trigger, if this is ever revisited, is a *library* change (e.g. adding a new rehype
 plugin), not corpus growth. Still not urgent; noted so a future pass doesn't re-measure expecting
 growth to have moved this and act on a false read.
 
-## Future — Design System
+## Future - Design System
 
 ### 8. Evaluate repeated Card / Badge components
 
-**Status:** Partially closed (2026-08-28, Phase 6) — one real match found and extracted; the rest
+**Status:** Partially closed (2026-08-28, Phase 6) - one real match found and extracted; the rest
 correctly left alone.
 
 Repeated patterns exist across:
@@ -300,25 +300,25 @@ Avoid premature design-system abstraction.
 ---
 
 **Resolution.** Grepped for the exact tag/badge `className` string rather than eyeballing "looks
-similar" — found `rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600` byte-identical
+similar" - found `rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600` byte-identical
 (not just visually close) in three places: `ContentListPage.tsx`'s and `ArticleHeader.tsx`'s tag
 pills, and `Projects.tsx`'s tech-stack badge. That crosses this item's own 3+/genuinely-shared bar
-cleanly — extracted as `src/components/TagPill.tsx`.
+cleanly - extracted as `src/components/TagPill.tsx`.
 
 Three *other* rounded-pill badges (the `/tags` count badge, `TagDetailPage`'s collection label,
 `SeriesNav`'s "Part N of M") were deliberately left as their own one-off spans: each carries a
 different padding/weight/casing treatment, so folding them into `TagPill` would need a handful of
-variant props to reproduce three barely-related shapes — the "increases complexity" case this item
+variant props to reproduce three barely-related shapes - the "increases complexity" case this item
 explicitly says not to force. This is the item working as designed: it found one real extraction and
 correctly rejected three fake ones that only *looked* similar.
 
 ---
 
-## P2 — Should Fix (continued)
+## P2 - Should Fix (continued)
 
 ### 9. Gates only verify a page's default state on load
 
-**Status:** ✅ CLOSED (2026-10-07) — `scripts/check-interactions.mjs`, wired into CI. The gap is
+**Status:** ✅ CLOSED (2026-10-07) - `scripts/check-interactions.mjs`, wired into CI. The gap is
 narrowed, not eliminated; see the resolution at the end of this item for what is still uncovered.
 
 Three separate defects shipped or nearly shipped during Phase 8 and the boot-flash work. All three
@@ -332,7 +332,7 @@ The three instances:
 1. **Interaction-state contrast.** `check:contrast` measures resting colours only. Hover, focus,
    `aria-selected` and active states are never sampled, so a failing combination in any of them is
    unreported. (This is separate from the Phase 8 process failure where `check:contrast` simply was
-   not run at all for ten labs — that one was fixed by running it; this one survives running it.)
+   not run at all for ten labs - that one was fixed by running it; this one survives running it.)
 
 2. **Interactive lab states.** Every lab is a simulator whose whole purpose is the states you reach
    by moving a slider or flipping a toggle. The gates only ever see the initial `useState` values.
@@ -349,7 +349,7 @@ x 7 viewports x 2 themes, and that confidence then gets silently generalised to 
 It does not cover the interactive surface, which on a portfolio built around interactive labs is a
 large share of what the site *is*.
 
-Do not fix this by bolting interaction scripting onto the existing gates indiscriminately — a
+Do not fix this by bolting interaction scripting onto the existing gates indiscriminately - a
 per-route click matrix would be slow and brittle for little return on static pages. Worth evaluating
 instead:
 
@@ -357,7 +357,7 @@ instead:
   one slider at each extreme per lab, nav strip scrolled to both edges);
 - extending `check:contrast` to force `:hover`/`:focus-visible` states via CDP rather than
   navigating, which is cheap because the page is already loaded;
-- accepting the gap explicitly for the rest, and relying on review — which is what actually caught
+- accepting the gap explicitly for the rest, and relying on review - which is what actually caught
   instance 3.
 
 Acceptance criteria if picked up:
@@ -369,32 +369,32 @@ Acceptance criteria if picked up:
 ---
 
 **Resolution.** Added `scripts/check-interactions.mjs` (`npm run check:interactions`), running in CI
-after the contrast check. It takes the middle option this item proposed — a small set of probes on
-the highest-risk surfaces — and deliberately not the per-route click matrix, for the reason given
+after the contrast check. It takes the middle option this item proposed - a small set of probes on
+the highest-risk surfaces - and deliberately not the per-route click matrix, for the reason given
 above.
 
 Three probes:
 
-- **graph** — every SVG anchor's href is checked for a doubled base prefix, and one node is actually
+- **graph** - every SVG anchor's href is checked for a doubled base prefix, and one node is actually
   clicked and required to land on its own route with content rather than the 404 page;
-- **labs** — for all 29 labs, every slider is driven to both ends, every button clicked, every select
+- **labs** - for all 29 labs, every slider is driven to both ends, every button clicked, every select
   option selected, asserting no console/page error and no horizontal overflow after each;
-- **nav-strip** — at 360px the strip must overflow, must not surrender layout height to a visible
+- **nav-strip** - at 360px the strip must overflow, must not surrender layout height to a visible
   scrollbar, and must carry exactly the right `data-scroll-start` / `data-scroll-end` pair at the
   left edge, the right edge and mid-scroll.
 
 Against the acceptance criteria:
 
-- *exercises post-interaction state* — yes, all three probes do;
-- *would have caught `wireGraphLinks`* — **verified, not assumed.** The bug was reintroduced into
+- *exercises post-interaction state* - yes, all three probes do;
+- *would have caught `wireGraphLinks`* - **verified, not assumed.** The bug was reintroduced into
   `KnowledgeGraphPage.tsx`, the site rebuilt with prerender, and the gate run: it exited 1 on both
   independent assertions (four doubled hrefs, plus the clicked node rendering the 404 page). The
   source was then restored and rebuilt. Writing this down because the claim "this would have been
   caught" is worthless unproven, and item 9 exists precisely because a gate that looks green
   without looking at anything is the failure mode.
-- *runtime* — one browser context reused across all probes, ~3 min, well under the existing checks.
+- *runtime* - one browser context reused across all probes, ~3 min, well under the existing checks.
 
-Writing the gate found three faults in the gate itself on its first run, all of the same shape —
+Writing the gate found three faults in the gate itself on its first run, all of the same shape -
 not looking hard enough. `button[type="button"]` missed every control on `SagaStateMachinePage` and
 `EventSourcingReplayPage`, which do not set the type; holding Playwright locator handles across a
 re-render made `/labs/redlock` time out; and `<select>` was not covered at all, which on the Saga
@@ -402,8 +402,8 @@ and 2PC labs is the control that selects the entire simulated outcome. The "no c
 assertion is what surfaced the first of these, which is why it is kept as a hard failure rather
 than a skip.
 
-**Still uncovered, consciously.** Hover and focus-visible contrast — bullet one of this item's
-three instances — is *not* addressed. `check:contrast` still measures resting colours only. The CDP
+**Still uncovered, consciously.** Hover and focus-visible contrast - bullet one of this item's
+three instances - is *not* addressed. `check:contrast` still measures resting colours only. The CDP
 approach sketched above remains the right fix and remains unimplemented. Articles and list pages get
 no interaction coverage either; the judgement is that their interactive surface is links, and links
 are what the graph probe already exercises the risky version of.
@@ -412,16 +412,16 @@ are what the graph probe already exercises the risky version of.
 
 ## Mental notes for future AI sessions
 
-1. **`min-w-0`** — pay special attention with Grid/Flex + code/tag/badge/URL/dynamic content (see item 5 above). This bug class caused two real production overflow bugs in one audit pass; it's cheap to prevent and easy to reintroduce.
-2. **`rehype-raw`** — acceptable today because content is author-controlled; if a CMS or user-generated content is introduced later, re-evaluate XSS/sanitization (see item 3 above) before shipping.
-3. **Markdown chunk ~159 KB gzip** — acceptable today because it's lazy-loaded per article; if content volume grows substantially, re-measure and consider build-time Markdown rendering (see item 7 above).
+1. **`min-w-0`** - pay special attention with Grid/Flex + code/tag/badge/URL/dynamic content (see item 5 above). This bug class caused two real production overflow bugs in one audit pass; it's cheap to prevent and easy to reintroduce.
+2. **`rehype-raw`** - acceptable today because content is author-controlled; if a CMS or user-generated content is introduced later, re-evaluate XSS/sanitization (see item 3 above) before shipping.
+3. **Markdown chunk ~159 KB gzip** - acceptable today because it's lazy-loaded per article; if content volume grows substantially, re-measure and consider build-time Markdown rendering (see item 7 above).
 
-4. **Gates measure first paint; `check:interactions` covers part of the rest** — `check:contrast`
+4. **Gates measure first paint; `check:interactions` covers part of the rest** - `check:contrast`
    and `check:responsive` say the page renders correctly on load and nothing more.
    `check:interactions` adds graph clicks, lab control extremes and nav-strip scroll edges (item 9).
    **Hover and focus-visible contrast are still unmeasured by anything.** Do not report a green run
    as "the site works"; three real defects passed both original gates for exactly this reason.
 
 No large UI refactor is needed right now. The audit passed; items 1-8 above are backlog/follow-up,
-not existing bugs. Item 9 is closed by `check:interactions`, but only partly — hover/focus contrast
+not existing bugs. Item 9 is closed by `check:interactions`, but only partly - hover/focus contrast
 is still unmeasured, which is written up in that item rather than quietly dropped.

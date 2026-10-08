@@ -68,8 +68,8 @@ describe('compareClocks', () => {
     expect(compareClocks({ a: 2, b: 1 }, { a: 1, b: 0 })).toBe('after');
   });
 
-  it('neither dominating is concurrent — this is the whole point of the algorithm', () => {
-    // a leads on node "a", b leads on node "b" — neither observed the other.
+  it('neither dominating is concurrent - this is the whole point of the algorithm', () => {
+    // a leads on node "a", b leads on node "b" - neither observed the other.
     expect(compareClocks({ a: 2, b: 0 }, { a: 0, b: 2 })).toBe('concurrent');
   });
 
@@ -78,7 +78,7 @@ describe('compareClocks', () => {
   });
 });
 
-describe('simulateCausalHistory — a real scripted scenario', () => {
+describe('simulateCausalHistory - a real scripted scenario', () => {
   const nodeIds = ['A', 'B', 'C'];
   const script: ClockAction[] = [
     { type: 'local', nodeId: 'A', label: 'A writes x=1' },
@@ -112,7 +112,7 @@ describe('simulateCausalHistory — a real scripted scenario', () => {
     expect(events.map((e) => e.id)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
   });
 
-  it('a send always happens-before its matching receive — the core causal guarantee', () => {
+  it('a send always happens-before its matching receive - the core causal guarantee', () => {
     const events = run();
     const send = events[2]; // "A sends its update to B"
     const receive = events[4]; // "B receives A's update"
@@ -122,18 +122,18 @@ describe('simulateCausalHistory — a real scripted scenario', () => {
   it('two local events on different nodes, before any message connects them, are concurrent', () => {
     const events = run();
     const aWrites = events[0]; // A writes x=1
-    const bWrites = events[1]; // B writes y=2 — no message has passed yet
+    const bWrites = events[1]; // B writes y=2 - no message has passed yet
     expect(compareClocks(aWrites.clock, bWrites.clock)).toBe('concurrent');
   });
 
   it('causality is transitive through a relay: B\'s post-receive event happens-after A\'s original local event', () => {
     const events = run();
-    const aOriginal = events[0]; // A writes x=1 — the very first thing A did, before it even sent
-    const bAfterReceive = events[5]; // B writes x=4, informed by A — after B received A's send
+    const aOriginal = events[0]; // A writes x=1 - the very first thing A did, before it even sent
+    const bAfterReceive = events[5]; // B writes x=4, informed by A - after B received A's send
     expect(compareClocks(aOriginal.clock, bAfterReceive.clock)).toBe('before');
   });
 
-  it("C's independent write stays concurrent with B's post-receive event — no message ever linked them", () => {
+  it("C's independent write stays concurrent with B's post-receive event - no message ever linked them", () => {
     const events = run();
     const cWrites = events[3]; // C writes x=3
     const bAfterReceive = events[5]; // B writes x=4, informed by A only, never C
@@ -148,9 +148,9 @@ describe('simulateCausalHistory — a real scripted scenario', () => {
   });
 });
 
-describe('pickLastWriteWinner vs compareClocks — the two-sided finding', () => {
+describe('pickLastWriteWinner vs compareClocks - the two-sided finding', () => {
   const nodeIds = ['A', 'B'];
-  // A and B each write once, independently, having never exchanged a message — genuinely concurrent.
+  // A and B each write once, independently, having never exchanged a message - genuinely concurrent.
   const script: ClockAction[] = [
     { type: 'local', nodeId: 'A', label: 'A writes v1' },
     { type: 'local', nodeId: 'B', label: 'B writes v2' },
@@ -161,7 +161,7 @@ describe('pickLastWriteWinner vs compareClocks — the two-sided finding', () =>
     const skewed = simulateCausalHistory(nodeIds, script, 1000, { A: 5000, B: -5000 });
     expect(compareClocks(noSkew[0].clock, noSkew[1].clock)).toBe('concurrent');
     expect(compareClocks(skewed[0].clock, skewed[1].clock)).toBe('concurrent');
-    // The clocks themselves are identical either way — skew never touches the logical clock.
+    // The clocks themselves are identical either way - skew never touches the logical clock.
     expect(noSkew[0].clock).toEqual(skewed[0].clock);
   });
 
@@ -180,7 +180,7 @@ describe('pickLastWriteWinner vs compareClocks — the two-sided finding', () =>
 
     expect(winnerWhenAAhead.nodeId).toBe('A');
     expect(winnerWhenBAhead.nodeId).toBe('B');
-    // Same two logical events, opposite naive "winner" — purely a function of clock skew, nothing
+    // Same two logical events, opposite naive "winner" - purely a function of clock skew, nothing
     // about what either node actually knew when it wrote. The causal verdict stayed 'concurrent'
     // in both cases (asserted above), which is the entire point being demonstrated.
     expect(winnerWhenAAhead.nodeId).not.toBe(winnerWhenBAhead.nodeId);

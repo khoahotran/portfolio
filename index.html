@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="%BASE_URL%favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call — this is the
+    <!-- Kept in sync with PortfolioHome.tsx's useSeo() call - this is the
          literal first-paint value for any client that renders HTML before
          (or without) executing JS, so it should read the same as the
          hydrated homepage, not a separately-worded fallback. -->
@@ -31,7 +31,7 @@
     <!--
       Theme bootstrap. Must be inline and in <head>: it has to set the class before the first
       paint, or a dark-mode visitor sees a white flash on every navigation. Kept as duplicated
-      logic rather than an import because any module would load too late to prevent that — the
+      logic rather than an import because any module would load too late to prevent that - the
       canonical version is src/theme/theme.ts, and the two must stay in agreement.
 
       Prerendered pages (scripts/prerender.mjs) are serialized with the build machine's theme
@@ -46,13 +46,13 @@
             (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
           if (dark) document.documentElement.classList.add('dark');
         } catch (e) {
-          /* Storage blocked — fall back to the light default rather than failing to render. */
+          /* Storage blocked - fall back to the light default rather than failing to render. */
         }
 
         /* Boot curtain (src/boot-reveal.ts). Hides #root so the prerendered page is never painted
            and then deleted by React's createRoot, which would show real content and take it away
            again behind a Suspense spinner. Added from script, not from the stylesheet, so that a
-           crawler that does not execute JS — or a reader whose JS failed — still gets the fully
+           crawler that does not execute JS - or a reader whose JS failed - still gets the fully
            rendered markup. Skipped during prerendering (scripts/prerender.mjs sets the flag), or
            the class would be serialized into the output and ship content that is display:none. */
         if (!window.__PRERENDER__) {
@@ -65,7 +65,7 @@
           /* A crash between here and React's first commit must not leave a blank page forever, so
              the curtain needs a way up that does not depend on React. Keyed on real failure, not
              on a stopwatch: a stopwatch cannot tell "dead" from "slow", and firing it mid-boot on
-             a slow connection reintroduces exactly the flash the curtain exists to prevent — a
+             a slow connection reintroduces exactly the flash the curtain exists to prevent - a
              4s timer did, on throttled mobile where booting can take longer than that.
 
              Capture phase, because resource errors do not bubble. Only a failed <script> counts:

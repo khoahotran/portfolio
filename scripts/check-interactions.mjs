@@ -3,7 +3,7 @@
 // Why this exists: `.ai/audit-followups.md` item 9. check:responsive and check:contrast both
 // navigate to a route, wait for load, and measure. Neither hovers, focuses, clicks, drags or
 // scrolls anything, so any defect that only exists after an interaction is invisible to both.
-// That is not a hypothetical — `wireGraphLinks` in KnowledgeGraphPage.tsx once double-prefixed
+// That is not a hypothetical - `wireGraphLinks` in KnowledgeGraphPage.tsx once double-prefixed
 // every knowledge-graph href (`/portfolio/portfolio/...`), so every node 404'd on click, and
 // BOTH gates passed, because they load the graph page and never click a node. Review caught it.
 //
@@ -11,10 +11,10 @@
 // brittle for little return on static pages. This covers three surfaces where the interactive
 // state is the whole point, and nothing else:
 //
-//   A. graph node hrefs + a real click        — the wireGraphLinks regression, directly
-//   B. lab controls at their extremes          — labs are simulators; defaults are the one state
+//   A. graph node hrefs + a real click        - the wireGraphLinks regression, directly
+//   B. lab controls at their extremes          - labs are simulators; defaults are the one state
 //                                                the other gates already see
-//   C. header nav strip scrolled to both edges — scroll-position-driven CSS, invisible at rest
+//   C. header nav strip scrolled to both edges - scroll-position-driven CSS, invisible at rest
 //
 // Usage: npm run check:interactions         (needs `npm run preview` already running)
 //        npm run check:interactions -- --base=http://localhost:5173
@@ -63,7 +63,7 @@ async function noOverflow(page) {
  * Two assertions, because they fail for different reasons. The href check is the cheap one and
  * is what would have caught wireGraphLinks: a path segment repeated back-to-back means the base
  * prefix was applied twice. The click is the expensive one and is the only thing that proves the
- * whole chain — wired handler, router, route exists — actually works end to end.
+ * whole chain - wired handler, router, route exists - actually works end to end.
  */
 async function checkGraph(page, base) {
   const failures = [];
@@ -83,7 +83,7 @@ async function checkGraph(page, base) {
   });
 
   if (hrefs.length === 0) {
-    failures.push({ probe: 'graph', detail: 'no SVG anchors found — the graph did not render or lost its links' });
+    failures.push({ probe: 'graph', detail: 'no SVG anchors found - the graph did not render or lost its links' });
     return failures;
   }
 
@@ -92,7 +92,7 @@ async function checkGraph(page, base) {
       failures.push({ probe: 'graph', detail: `anchor for ${appPath ?? '(unknown)'} has no href` });
       continue;
     }
-    // `/portfolio/portfolio/labs/x` — the exact shape the wireGraphLinks bug produced.
+    // `/portfolio/portfolio/labs/x` - the exact shape the wireGraphLinks bug produced.
     if (basePath && href.startsWith(`${basePath}${basePath}/`)) {
       failures.push({ probe: 'graph', detail: `href has the base prefix twice: ${href}` });
     }
@@ -134,20 +134,21 @@ async function checkGraph(page, base) {
  * B. Lab controls at their extremes.
  *
  * Labs are simulators: the default `useState` values are the one state check:responsive and
- * check:contrast already cover, and every other state — which is what the lab is for — is
+ * check:contrast already cover, and every other state - which is what the lab is for - is
  * uncovered. Sliders are driven to both ends because that is where off-by-one and divide-by-zero
  * live; every toggle is clicked once because a toggle has no interesting middle.
  *
  * The slider is set via the native value setter rather than `fill()` so React's synthetic onChange
- * actually fires — assigning `.value` directly is swallowed by React's own value tracker.
+ * actually fires - assigning `.value` directly is swallowed by React's own value tracker.
  */
 async function checkLab(page, base, labId) {
   const failures = [];
   const tracker = trackErrors(page);
 
   await page.goto(`${base}/labs/${labId}`, { waitUntil: 'networkidle', timeout: 20000 });
+  await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(300);
-  tracker.drain(); // ignore anything from load itself — the other gates own that
+  tracker.drain(); // ignore anything from load itself - the other gates own that
 
   // Re-queried by index on every touch rather than held as handles: changing one control can
   // re-render the panel and detach every handle taken before it. Holding them made /labs/redlock
@@ -180,7 +181,7 @@ async function checkLab(page, base, labId) {
   // Re-query each time: clicking a control can re-render the subtree and detach earlier handles.
   // `main button`, not `button[type="button"]`: most labs set the type explicitly but
   // SagaStateMachinePage and EventSourcingReplayPage do not, and the narrower selector silently
-  // found zero controls on both — a gate that passes by not looking is the failure mode item 9
+  // found zero controls on both - a gate that passes by not looking is the failure mode item 9
   // is about.
   const buttonCount = await page.locator('main button').count();
   for (let i = 0; i < buttonCount; i++) {
@@ -201,7 +202,7 @@ async function checkLab(page, base, labId) {
     }
   }
 
-  // Selects drive the branch choice on the Saga and 2PC labs — every option is a distinct
+  // Selects drive the branch choice on the Saga and 2PC labs - every option is a distinct
   // simulated outcome, which is exactly the kind of state the other gates never reach.
   const selectCount = await page.locator('main select').count();
   for (let i = 0; i < selectCount; i++) {
@@ -225,75 +226,118 @@ async function checkLab(page, base, labId) {
   }
 
   if (sliderCount === 0 && buttonCount === 0 && selectCount === 0) {
-    failures.push({ probe: `lab/${labId}`, detail: 'no sliders, buttons or selects found — a lab with no controls is almost certainly broken' });
+    failures.push({ probe: `lab/${labId}`, detail: 'no sliders, buttons or selects found - a lab with no controls is almost certainly broken' });
   }
 
   return failures;
 }
 
 /**
- * C. Header nav strip at both scroll edges.
+ * C. Header at the narrowest supported width.
  *
- * The strip hides its scrollbar and signals overflow with mask-image fades keyed off
- * data-scroll-start / data-scroll-end, which the component sets from real scrollLeft. At rest
- * only one of them is ever present, so a gate that measures the page on load sees exactly half
- * of this behaviour. 360px is used because the strip must actually overflow for any of it to mean
- * anything.
+ * This probe replaced one that measured the scroll-position fades on the old eleven-link strip.
+ * That strip is gone: the header now carries four destinations plus two icon buttons, which is the
+ * whole point of the navigation change, so the thing worth asserting is the thing that failed
+ * before - that the header fits without clipping a label.
+ *
+ * 320px is the narrowest tested viewport. The old header overflowed at 1440px, so the bar this
+ * sets is deliberately the one the previous design could not clear.
  */
-async function checkNavStrip(page, base) {
+async function checkHeader(page, base) {
   const failures = [];
-  await page.setViewportSize({ width: 360, height: 760 });
+  await page.setViewportSize({ width: 320, height: 760 });
   await page.goto(`${base}/`, { waitUntil: 'networkidle', timeout: 20000 });
+  // Header width is measured here, and the labels are set in a webfont that swaps in after first
+  // paint - see the matching note in check-responsive.mjs.
+  await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(300);
 
-  const strip = page.locator('.nav-strip').first();
-  if ((await strip.count()) === 0) {
-    failures.push({ probe: 'nav-strip', detail: '.nav-strip not found — the header markup changed' });
+  const header = page.locator('header').first();
+  if ((await header.count()) === 0) {
+    failures.push({ probe: 'header', detail: 'no <header> found' });
     return failures;
   }
 
-  const geometry = await strip.evaluate((el) => ({
-    scrollWidth: el.scrollWidth,
-    clientWidth: el.clientWidth,
-    offsetHeight: el.offsetHeight,
-    clientHeight: el.clientHeight,
-  }));
+  const geometry = await header.evaluate((el) => {
+    const bar = el.firstElementChild;
+    return {
+      scrollWidth: bar.scrollWidth,
+      clientWidth: bar.clientWidth,
+      links: [...el.querySelectorAll('nav a')].map((a) => ({
+        text: a.textContent.trim(),
+        width: a.getBoundingClientRect().width,
+        right: a.getBoundingClientRect().right,
+      })),
+      viewport: window.innerWidth,
+    };
+  });
 
-  if (geometry.scrollWidth <= geometry.clientWidth + 2) {
-    // Not a failure: a wider default font or fewer nav items could legitimately fit. But then this
-    // probe is asserting nothing, and silently passing would be the exact trap item 9 describes.
-    failures.push({ probe: 'nav-strip', detail: `strip does not overflow at 360px (scrollWidth ${geometry.scrollWidth} <= clientWidth ${geometry.clientWidth}); this probe can no longer verify the fades — retune the viewport or drop it` });
+  if (geometry.scrollWidth > geometry.clientWidth + 2) {
+    failures.push({
+      probe: 'header',
+      detail: `header overflows at 320px: scrollWidth ${geometry.scrollWidth} > clientWidth ${geometry.clientWidth}`,
+    });
+  }
+
+  // The specific defect the redesign exists to fix: a nav label clipped by the viewport edge.
+  for (const link of geometry.links) {
+    if (link.right > geometry.viewport + 1) {
+      failures.push({ probe: 'header', detail: `nav link "${link.text}" extends past the viewport (right ${Math.round(link.right)} > ${geometry.viewport})` });
+    }
+    if (link.width < 8) {
+      failures.push({ probe: 'header', detail: `nav link "${link.text}" collapsed to ${Math.round(link.width)}px` });
+    }
+  }
+
+  if (geometry.links.length !== 4) {
+    failures.push({ probe: 'header', detail: `expected 4 primary nav links, found ${geometry.links.length}` });
+  }
+
+  return failures;
+}
+
+/**
+ * D. The command palette.
+ *
+ * The header only gets to be this small because Cmd-K reaches everything it no longer lists, so a
+ * broken palette is a navigation regression and not a missing nicety. Checked at desktop width
+ * because that is where a keyboard is.
+ */
+async function checkPalette(page, base) {
+  const failures = [];
+  const tracker = trackErrors(page);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto(`${base}/`, { waitUntil: 'networkidle', timeout: 20000 });
+  await page.evaluate(() => document.fonts.ready);
+  await page.waitForTimeout(300);
+  tracker.drain();
+
+  await page.keyboard.press('Control+k');
+  await page.waitForTimeout(400);
+
+  const dialog = page.locator('[role="dialog"]');
+  if ((await dialog.count()) === 0) {
+    failures.push({ probe: 'palette', detail: 'Ctrl-K did not open the dialog' });
     return failures;
   }
 
-  // A visible horizontal scrollbar steals layout height. This is what the fades replaced.
-  if (geometry.offsetHeight - geometry.clientHeight > 2) {
-    failures.push({ probe: 'nav-strip', detail: `scrollbar is taking ${geometry.offsetHeight - geometry.clientHeight}px of layout height — it should be hidden` });
+  await page.keyboard.type('raft');
+  await page.waitForTimeout(500);
+  const firstResult = await page.locator('[role="dialog"] li button').first().textContent().catch(() => null);
+  if (!firstResult || !/raft/i.test(firstResult)) {
+    failures.push({ probe: 'palette', detail: `typing "raft" gave "${firstResult ?? '(nothing)'}" as the first result` });
   }
 
-  const readEdges = () =>
-    strip.evaluate((el) => ({
-      start: el.hasAttribute('data-scroll-start'),
-      end: el.hasAttribute('data-scroll-end'),
-    }));
-
-  const atLeft = await readEdges();
-  if (atLeft.start || !atLeft.end) {
-    failures.push({ probe: 'nav-strip', detail: `at the left edge expected end-fade only, got start=${atLeft.start} end=${atLeft.end}` });
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(700);
+  const landed = await page.evaluate(() => window.location.pathname);
+  if (!landed.includes('raft')) {
+    failures.push({ probe: 'palette', detail: `Enter on the first result landed on ${landed}` });
   }
 
-  await strip.evaluate((el) => { el.scrollLeft = el.scrollWidth; });
-  await page.waitForTimeout(250);
-  const atRight = await readEdges();
-  if (!atRight.start || atRight.end) {
-    failures.push({ probe: 'nav-strip', detail: `at the right edge expected start-fade only, got start=${atRight.start} end=${atRight.end}` });
-  }
-
-  await strip.evaluate((el) => { el.scrollLeft = Math.floor(el.scrollWidth / 2); });
-  await page.waitForTimeout(250);
-  const middle = await readEdges();
-  if (!middle.start || !middle.end) {
-    failures.push({ probe: 'nav-strip', detail: `mid-scroll expected both fades, got start=${middle.start} end=${middle.end}` });
+  const errors = tracker.drain();
+  if (errors.length > 0) {
+    failures.push({ probe: 'palette', detail: errors.join(' | ') });
   }
 
   return failures;
@@ -314,7 +358,7 @@ async function withRetry(label, run) {
 
 async function main() {
   const { base } = parseArgs();
-  console.log(`[check-interactions] graph clicks, ${labIds.length} labs' controls, nav-strip scroll edges against ${base}`);
+  console.log(`[check-interactions] graph clicks, ${labIds.length} labs' controls, header at 320px, command palette against ${base}`);
 
   const browser = await chromium.launch();
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
@@ -325,7 +369,8 @@ async function main() {
   for (const labId of labIds) {
     failures.push(...(await withRetry(`lab/${labId}`, () => checkLab(page, base, labId))));
   }
-  failures.push(...(await withRetry('nav-strip', () => checkNavStrip(page, base))));
+  failures.push(...(await withRetry('header', () => checkHeader(page, base))));
+  failures.push(...(await withRetry('palette', () => checkPalette(page, base))));
 
   await browser.close();
 
@@ -336,7 +381,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`[check-interactions] PASS — graph node click resolves, ${labIds.length} labs survive their control extremes, nav strip fades at both edges.`);
+  console.log(`[check-interactions] PASS - graph node click resolves, ${labIds.length} labs survive their control extremes, header fits at 320px, palette navigates.`);
 }
 
 await main();

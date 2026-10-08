@@ -20,7 +20,7 @@ interface Props {
 }
 
 // schema.org type per collection. `projects` are case studies of a shipped
-// system, not a blog post — CreativeWork fits better. research/system-design/
+// system, not a blog post - CreativeWork fits better. research/system-design/
 // experiments are technical deep-dives, which schema.org models as TechArticle
 // (a real Article subtype Google's structured-data docs recognize), not
 // BlogPosting. Previously every collection was hardcoded to BlogPosting.
@@ -46,7 +46,7 @@ function ContentDetailPage({ collection }: Props) {
    * The article's social-preview image.
    *
    * build-search-index.mjs generates a per-article `public/og/<slug>.png` for all 33 articles
-   * and the JSON feed already links them as `<siteUrl>/og/<slug>.png` — but nothing in the app
+   * and the JSON feed already links them as `<siteUrl>/og/<slug>.png` - but nothing in the app
    * did. `detail.ogImage` is the optional frontmatter override, and no content file sets it, so
    * every article was falling through `resolveImageUrl(undefined)` to the generic
    * og-default.png. content/README.md documents `ogImage:` as overriding "the auto-generated
@@ -59,7 +59,7 @@ function ContentDetailPage({ collection }: Props) {
       return undefined;
     }
 
-    // Query string stripped — same reasoning as the canonical/og:url fix in
+    // Query string stripped - same reasoning as the canonical/og:url fix in
     // useSeo.ts, and this is a direct read of window.location rather than a
     // shared helper, so it needs the same fix applied independently here.
     const url = `${window.location.origin}${window.location.pathname}`;
@@ -95,7 +95,7 @@ function ContentDetailPage({ collection }: Props) {
     type: 'article',
     image: ogImagePath,
     jsonLd,
-    // See the comment on SeoOptions.skip — without this, every article's
+    // See the comment on SeoOptions.skip - without this, every article's
     // first paint briefly carries this generic title/description as real
     // meta, before the actual data resolves a moment later.
     skip: !detail,

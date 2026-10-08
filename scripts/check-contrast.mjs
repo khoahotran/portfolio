@@ -2,8 +2,8 @@
 //
 // Why this exists: `.ai/audit-followups.md` item 2 flagged ~44 `text-slate-400` occurrences as
 // "potentially borderline" and deliberately did not touch them, because nobody had measured which
-// ones actually fail. That was the right call — a blind global colour change is a worse outcome than
-// an unmeasured one — but it left the question open. Adding dark mode made it urgent: the neutral
+// ones actually fail. That was the right call - a blind global colour change is a worse outcome than
+// an unmeasured one - but it left the question open. Adding dark mode made it urgent: the neutral
 // ramp is hand-tuned (see the token block in src/index.css), and "I think these values are legible"
 // is not a thing to ship on.
 //
@@ -28,7 +28,7 @@ function parseArgs() {
 
 /**
  * Runs in the page. Kept as one self-contained function because it is serialized into the browser
- * — it cannot close over anything from this module.
+ * - it cannot close over anything from this module.
  */
 function auditPage() {
   const parseRgb = (value) => {
@@ -80,7 +80,7 @@ function auditPage() {
 
   for (const el of document.querySelectorAll('body *')) {
     // SVG text is out of scope: it is painted with `fill`, not `color`, and sits on shapes rather
-    // than CSS backgrounds, so the ancestor walk below cannot resolve a meaningful pair — it
+    // than CSS backgrounds, so the ancestor walk below cannot resolve a meaningful pair - it
     // reports fg == bg and produces a 1:1 false positive. Mermaid diagrams are excluded for the
     // same reason plus a second one: they render on a deliberately fixed light card (see
     // --c-diagram-bg in src/index.css) with colours Mermaid chooses, not ours.
@@ -138,7 +138,7 @@ async function main() {
   const results = [];
   const navigationFailures = [];
 
-  // Sequential per scheme, CONCURRENCY pages wide within it — this is a diagnostic, not a hot path.
+  // Sequential per scheme, CONCURRENCY pages wide within it - this is a diagnostic, not a hot path.
   const contexts = [];
   for (const colorScheme of ['light', 'dark']) {
     const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme });
@@ -157,6 +157,10 @@ async function main() {
           for (let attempt = 0; attempt <= MAX_RETRIES; attempt += 1) {
             try {
               await page.goto(`${base}${route}`, { waitUntil: 'networkidle', timeout: 25_000 });
+              // Font metrics decide which contrast threshold applies: WCAG relaxes 4.5:1 to 3:1
+              // for large text, and `font-display: swap` means the fallback face is live until
+              // the woff2 arrives. Measuring mid-swap can read a size from the wrong face.
+              await page.evaluate(() => document.fonts.ready);
               await page.waitForTimeout(200);
               for (const f of await page.evaluate(auditPage)) results.push({ route, colorScheme, ...f });
               visited = true;
@@ -165,14 +169,14 @@ async function main() {
               lastError = error;
               if (!isTransientErrorMessage(error.message)) break;
               console.warn(
-                `[check-contrast] ${colorScheme} ${route}: transient error — retry ${attempt + 1}/${MAX_RETRIES}`
+                `[check-contrast] ${colorScheme} ${route}: transient error - retry ${attempt + 1}/${MAX_RETRIES}`
               );
             }
           }
 
           // A route that was never actually visited must never be silently absent from the
-          // report — see this file's own history: an unreachable preview server used to print
-          // "PASS — no text below WCAG AA" with zero routes actually checked, because an empty
+          // report - see this file's own history: an unreachable preview server used to print
+          // "PASS - no text below WCAG AA" with zero routes actually checked, because an empty
           // `results` array is indistinguishable from a clean one unless failed navigations are
           // tracked separately and made to fail the run.
           if (!visited) {
@@ -190,7 +194,7 @@ async function main() {
   //
   // The printed className must come from the WORST node in the group, not the first one seen.
   // Grouping on colour+size alone merges elements with different classes, and reporting the first
-  // class next to the group's worst ratio attributes a bad number to innocent markup — which sent
+  // class next to the group's worst ratio attributes a bad number to innocent markup - which sent
   // an earlier run chasing a 1:1 reading on an element that actually measured 3.58:1.
   const byStyle = new Map();
   for (const r of results) {
@@ -213,7 +217,7 @@ async function main() {
 
   if (navigationFailures.length > 0) {
     console.error(
-      `\n[check-contrast] ${navigationFailures.length} route/theme visit(s) never completed — ` +
+      `\n[check-contrast] ${navigationFailures.length} route/theme visit(s) never completed - ` +
         `NOT counted as clean, cannot be reported as passing:\n`
     );
     for (const f of navigationFailures) {
@@ -223,7 +227,7 @@ async function main() {
 
   const sorted = [...byStyle.values()].sort((a, b) => a.worst - b.worst);
   if (sorted.length === 0 && navigationFailures.length === 0) {
-    console.log(`[check-contrast] PASS — no text below WCAG AA across ${routes.length} routes x 2 themes.`);
+    console.log(`[check-contrast] PASS - no text below WCAG AA across ${routes.length} routes x 2 themes.`);
     return;
   }
 
@@ -231,7 +235,7 @@ async function main() {
     console.log(`\n[check-contrast] ${sorted.length} distinct failing style(s) across ${routes.length} routes x 2 themes:\n`);
     for (const f of sorted) {
       console.log(
-        `  [${f.colorScheme}] ${f.worst}:1 (needs ${f.threshold}) ${f.color} @ ${f.fontSize} — ${f.count} node(s), ${f.routes.size} route(s)`
+        `  [${f.colorScheme}] ${f.worst}:1 (needs ${f.threshold}) ${f.color} @ ${f.fontSize} - ${f.count} node(s), ${f.routes.size} route(s)`
       );
       console.log(`      class: ${f.className}`);
       console.log(`      text:  ${JSON.stringify(f.sample)}`);
