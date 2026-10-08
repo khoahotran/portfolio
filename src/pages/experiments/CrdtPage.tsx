@@ -42,7 +42,7 @@ function CrdtPage() {
           </h2>
 
           <div className="grid gap-6 md:grid-cols-12">
-            <div className="min-w-0 md:col-span-4 space-y-4 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+            <div className="min-w-0 md:col-span-4 space-y-4 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
               <p className="text-micro text-slate-500">
                 Two nodes each apply local increments with no knowledge of the other, then merge.
                 Adjust each node's increment count and the physical timestamp its final write carries.
@@ -119,7 +119,7 @@ function CrdtPage() {
           <h2 className="mb-4 flex items-center gap-2 text-meta font-bold uppercase tracking-widest text-slate-500">
             <ListChecks className="w-4 h-4" aria-hidden="true" /> OR-Set vs. a Naive 2P-Set
           </h2>
-          <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+          <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
             <p className="mb-4 text-micro text-slate-500">
               Fixed scenario, run through both structures: add "x", remove "x" (observing that add),
               then add "x" again with a fresh identity — a real re-add, not a replay.

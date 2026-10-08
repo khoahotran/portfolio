@@ -60,7 +60,7 @@ function QueueVsPubSubPage() {
       <ProvenanceNote labId="queue-vs-pubsub" />
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div className="space-y-4">
             <label className="block text-meta font-semibold text-slate-700">
               <div className="flex justify-between">
@@ -113,7 +113,7 @@ function QueueVsPubSubPage() {
         <section className="min-w-0 md:col-span-8 grid md:grid-cols-2 gap-6">
           
           {/* Work Queue Animation */}
-          <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm flex flex-col relative overflow-hidden">
+          <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised flex flex-col relative overflow-hidden">
             <h2 className="text-micro font-bold uppercase tracking-widest text-sky-700 mb-6">Work Queue (1-to-1)</h2>
             <div className="flex-1 relative flex flex-col justify-center min-h-[250px]">
               
@@ -157,7 +157,7 @@ function QueueVsPubSubPage() {
           </div>
 
           {/* Pub/Sub Animation */}
-          <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm flex flex-col relative overflow-hidden">
+          <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised flex flex-col relative overflow-hidden">
             <h2 className="text-micro font-bold uppercase tracking-widest text-indigo-700 mb-6">Pub/Sub (1-to-N)</h2>
             <div className="flex-1 relative flex flex-col justify-center min-h-[250px]">
               

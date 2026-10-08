@@ -61,7 +61,7 @@ function ThroughputSimulationPage() {
       <ProvenanceNote labId="throughput-simulation" />
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div className="space-y-4">
             <label className="block text-meta font-semibold text-slate-700">
               <div className="flex justify-between">
@@ -111,7 +111,7 @@ function ThroughputSimulationPage() {
           </div>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm flex flex-col">
+        <section className="min-w-0 md:col-span-8 rounded-card border border-slate-200 bg-surface p-6 shadow-raised flex flex-col">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-micro font-bold uppercase tracking-widest text-slate-500">Live simulation</h2>
             <button

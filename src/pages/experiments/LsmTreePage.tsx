@@ -56,7 +56,7 @@ function LsmTreePage() {
       <ProvenanceNote labId="lsm-tree" />
 
       <div className="mt-8 grid gap-6 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-4 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-4 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <label className="block text-micro font-semibold text-slate-600">
             <div className="flex justify-between">
               <span>Total write operations</span>
@@ -126,7 +126,7 @@ function LsmTreePage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+          <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
             <p className="mb-3 flex items-center gap-2 text-micro font-bold uppercase tracking-widest text-slate-500">
               <Layers className="w-4 h-4" aria-hidden="true" /> Measured, not modeled
             </p>

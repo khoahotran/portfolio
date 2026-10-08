@@ -78,7 +78,7 @@ function RedisVsBullMQPage() {
       <ProvenanceNote labId="redis-vs-bullmq" />
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div className="space-y-6">
             <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Parameters</h2>
 

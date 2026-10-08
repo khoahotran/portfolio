@@ -61,7 +61,7 @@ function TwoPhaseCommitVsSagaPage() {
             <Lock className="w-4 h-4" aria-hidden="true" /> Two-Phase Commit — Blocking on a Lost Coordinator
           </h2>
           <div className="grid gap-6 md:grid-cols-12">
-            <div className="min-w-0 md:col-span-4 space-y-4 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+            <div className="min-w-0 md:col-span-4 space-y-4 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
               <p className="text-micro text-slate-500">Toggle each participant's prepare-phase vote.</p>
               {PARTICIPANT_IDS.map((id) => (
                 <div key={id} className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-micro">
@@ -101,7 +101,7 @@ function TwoPhaseCommitVsSagaPage() {
                     : `The coordinator never sent it. ${twoPc.blockedParticipants.length} participant${twoPc.blockedParticipants.length === 1 ? '' : 's'} that voted yes ${twoPc.blockedParticipants.length === 1 ? 'is' : 'are'} stuck holding its locks, with no rule for deciding alone — the actual cost of the atomicity guarantee.`}
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+              <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
                 <p className="mb-3 text-micro font-bold uppercase tracking-widest text-slate-500">Per-participant state</p>
                 <div className="space-y-2">
                   {PARTICIPANT_IDS.map((id) => {
@@ -126,7 +126,7 @@ function TwoPhaseCommitVsSagaPage() {
             <Undo2 className="w-4 h-4" aria-hidden="true" /> Saga — No Blocking, No Atomicity
           </h2>
           <div className="grid gap-6 md:grid-cols-12">
-            <div className="min-w-0 md:col-span-4 space-y-4 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+            <div className="min-w-0 md:col-span-4 space-y-4 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
               <p className="text-micro text-slate-500">Pick which step fails, and whether unwinding it also fails.</p>
               <label className="block text-micro font-semibold text-slate-600">
                 <span>Step that fails</span>
@@ -175,7 +175,7 @@ function TwoPhaseCommitVsSagaPage() {
                       : `${saga.failedAtStep} failed. Every earlier committed step was compensated cleanly, in reverse order — no coordinator, no blocking, just already-committed steps unwinding themselves.`}
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+              <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
                 <p className="mb-3 text-micro font-bold uppercase tracking-widest text-slate-500">Step-by-step outcome</p>
                 <div className="space-y-2">
                   {saga.steps.map((s) => (

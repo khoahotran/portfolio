@@ -26,7 +26,7 @@ function FailureInjectionDemoPage() {
       <ProvenanceNote labId="failure-injection" />
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div className="space-y-4">
             <label className="block text-meta font-semibold text-slate-700">
               <div className="flex justify-between">
@@ -77,7 +77,7 @@ function FailureInjectionDemoPage() {
           </div>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm flex flex-col items-center justify-center relative min-h-[350px] overflow-hidden">
+        <section className="min-w-0 md:col-span-8 rounded-card border border-slate-200 bg-surface p-6 shadow-raised flex flex-col items-center justify-center relative min-h-[350px] overflow-hidden">
           
           {/* Background pulse effect when breaker opens */}
           <div className={`absolute inset-0 transition-opacity duration-1000 ${simulation.breakerOpen ? 'bg-rose-50 opacity-100' : 'opacity-0'}`} />

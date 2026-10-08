@@ -53,7 +53,7 @@ function MerkleTreePage() {
       <ProvenanceNote labId="merkle-tree" />
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <p className="text-meta font-semibold text-slate-700">Scenario</p>
           <div className="space-y-2">
             {PRESETS.map((preset, i) => (
@@ -93,7 +93,7 @@ function MerkleTreePage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+          <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
             <h2 className="mb-4 flex items-center gap-2 text-meta font-bold uppercase tracking-widest text-slate-500">
               <GitCompare className="w-4 h-4" aria-hidden="true" /> Nodes Visited: Targeted Walk vs. Naive Scan
             </h2>

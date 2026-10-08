@@ -63,7 +63,7 @@ function CacheFreshnessPage() {
       <ProvenanceNote labId="cache-freshness" />
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>TTL</span>

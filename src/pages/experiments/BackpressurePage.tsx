@@ -69,7 +69,7 @@ function BackpressurePage() {
       <ProvenanceNote labId="backpressure" />
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div>
             <p className="text-meta font-semibold text-slate-700 mb-2">Policy</p>
             <div className="grid grid-cols-2 gap-2" role="group" aria-label="Backpressure policy">
@@ -154,7 +154,7 @@ function BackpressurePage() {
           </div>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-8 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 mb-1">
             Queue depth over {TICK_COUNT} ticks
           </h2>

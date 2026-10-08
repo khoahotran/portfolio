@@ -46,7 +46,7 @@ function BloomFilterPage() {
       <ProvenanceNote labId="bloom-filter" />
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Items inserted</span>
@@ -87,7 +87,7 @@ function BloomFilterPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+          <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
             <h2 className="mb-4 flex items-center gap-2 text-meta font-bold uppercase tracking-widest text-slate-500">
               <Gauge className="w-4 h-4" aria-hidden="true" /> False-Positive Rate
             </h2>

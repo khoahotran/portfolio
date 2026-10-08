@@ -37,7 +37,7 @@ function RetryStrategyVisualizerPage() {
       <ProvenanceNote labId="retry-strategy" />
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div className="space-y-4">
             <label className="block text-meta font-semibold text-slate-700">
               <div className="flex justify-between">
@@ -116,7 +116,7 @@ function RetryStrategyVisualizerPage() {
           </div>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm flex flex-col">
+        <section className="min-w-0 md:col-span-8 rounded-card border border-slate-200 bg-surface p-6 shadow-raised flex flex-col">
           <div className="flex justify-between items-end mb-6">
             {/* Not a heading — it's a dynamic status readout, not a section title. */}
             <p className="text-micro font-bold uppercase tracking-widest text-slate-500">Time to abandon: <span className="text-slate-800 text-lg">{(maxTime / 1000).toFixed(2)}s</span></p>

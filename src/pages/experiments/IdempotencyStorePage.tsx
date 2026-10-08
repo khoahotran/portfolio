@@ -41,7 +41,7 @@ function Timeline({ mode, requests, processingTicks, ttlTicks, maxTick }: {
   const sim = useMemo(() => simulateIdempotencyStore(mode, requests, processingTicks, ttlTicks), [mode, requests, processingTicks, ttlTicks]);
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+    <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
       <div className="mb-1 flex items-center justify-between">
         <h3 className="text-meta font-bold text-slate-800">{MODE_LABEL[mode]}</h3>
         <span className={`text-micro font-bold ${sim.totalDuplicateProcessed > 0 ? 'text-rose-700' : 'text-teal-700'}`}>
@@ -108,7 +108,7 @@ function IdempotencyStorePage() {
       <ProvenanceNote labId="idempotency-store" />
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Processing time</span>

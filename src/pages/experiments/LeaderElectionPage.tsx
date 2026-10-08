@@ -89,7 +89,7 @@ function LeaderElectionPage() {
       <ProvenanceNote labId="leader-election" />
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Nodes</span>
@@ -156,7 +156,7 @@ function LeaderElectionPage() {
           )}
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-8 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div className="flex items-center justify-between mb-4">
             <p className="text-micro font-bold uppercase tracking-widest text-slate-500">
               Step {currentStep} of {result.steps.length}

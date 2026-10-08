@@ -90,7 +90,7 @@ function EventSourcingReplayPage() {
       <div className="mt-10 grid gap-8 md:grid-cols-12">
         
         {/* Left Col: Event Store Log */}
-        <section className="min-w-0 md:col-span-6 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm flex flex-col max-h-[600px]">
+        <section className="min-w-0 md:col-span-6 space-y-6 rounded-card border border-slate-200 bg-surface p-6 shadow-raised flex flex-col max-h-[600px]">
           <div className="flex flex-wrap justify-between items-center gap-2 mb-4">
             <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500">Append-Only Event Log</h2>
             <div className="flex gap-2">

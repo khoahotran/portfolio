@@ -70,7 +70,7 @@ function RaftPage() {
             <Vote className="w-4 h-4" aria-hidden="true" /> Stage 1 — Election Restriction
           </h2>
           <div className="grid gap-6 md:grid-cols-12">
-            <div className="min-w-0 md:col-span-4 space-y-4 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+            <div className="min-w-0 md:col-span-4 space-y-4 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
               <label className="block text-micro font-semibold text-slate-600">
                 <div className="flex justify-between">
                   <span className="font-bold text-teal-700">Candidate's log length</span>
@@ -124,7 +124,7 @@ function RaftPage() {
                     : "not elected. Every alive peer with a more up-to-date log refuses this candidate's vote request, no matter how many peers are alive — the exact thing Bully's pure id-based election can't do."}
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+              <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
                 <p className="mb-3 text-micro font-bold uppercase tracking-widest text-slate-500">Vote per peer</p>
                 <div className="space-y-2">
                   {PEER_IDS.map((id) => {
@@ -150,7 +150,7 @@ function RaftPage() {
             <ShieldCheck className="w-4 h-4" aria-hidden="true" /> Stage 2 — Commit-Index Safety
           </h2>
           <div className="grid gap-6 md:grid-cols-12">
-            <div className="min-w-0 md:col-span-4 space-y-4 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+            <div className="min-w-0 md:col-span-4 space-y-4 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
               <p className="text-micro text-slate-500">
                 The leader's log is fixed: index 1 from an old term ({OLD_TERM}), index 2 from the
                 current term ({CURRENT_TERM}). Drag each follower's replication progress.
@@ -192,7 +192,7 @@ function RaftPage() {
                     ' A majority has replicated the old-term entry — but replica count alone would have wrongly called that committed. Raft refuses, because that entry isn\'t from the current term.'}
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+              <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
                 <p className="mb-3 text-micro font-bold uppercase tracking-widest text-slate-500">Leader's log</p>
                 <div className="flex gap-2">
                   <div className={`flex-1 rounded-lg border p-3 text-center text-micro font-bold ${commit.newCommitIndex >= 1 ? 'border-teal-300 bg-teal-50 text-teal-800' : 'border-slate-200 bg-slate-50 text-slate-500'}`}>

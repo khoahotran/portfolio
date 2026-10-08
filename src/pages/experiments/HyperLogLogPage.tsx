@@ -74,7 +74,7 @@ function HyperLogLogPage() {
             <Ruler className="w-4 h-4" aria-hidden="true" /> Estimate vs. True Count
           </h2>
           <div className="grid gap-6 md:grid-cols-12">
-            <div className="min-w-0 md:col-span-4 space-y-4 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+            <div className="min-w-0 md:col-span-4 space-y-4 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
               <label className="block text-micro font-semibold text-slate-600">
                 <div className="flex justify-between">
                   <span>True cardinality</span>
@@ -128,7 +128,7 @@ function HyperLogLogPage() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+              <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
                 <p className="mb-3 text-micro font-bold uppercase tracking-widest text-slate-500">
                   The correction that matters below ~{(2.5 * registerCount).toLocaleString()} true items
                 </p>
@@ -167,7 +167,7 @@ function HyperLogLogPage() {
             <GitMerge className="w-4 h-4" aria-hidden="true" /> Merging Two Sketches Without Ever Combining Raw Data
           </h2>
           <div className="grid gap-6 md:grid-cols-12">
-            <div className="min-w-0 md:col-span-4 space-y-4 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+            <div className="min-w-0 md:col-span-4 space-y-4 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
               <p className="text-micro text-slate-500">Two independent sketches (say, two shards each tracking their own users), with a real overlap between them.</p>
               <label className="block text-micro font-semibold text-slate-600">
                 <div className="flex justify-between"><span>Sketch A size</span><span>{sizeA.toLocaleString()}</span></div>
@@ -193,7 +193,7 @@ function HyperLogLogPage() {
                   had seen everything both did would itself contain.
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+              <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                     <p className="text-nano font-bold uppercase tracking-widest text-slate-600">A alone</p>

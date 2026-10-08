@@ -37,7 +37,7 @@ function CanaryRolloutPage() {
       <ProvenanceNote labId="canary-rollout" />
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Canary error rate</span>
@@ -82,7 +82,7 @@ function CanaryRolloutPage() {
           </div>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-8 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 mb-6 flex items-center gap-2">
             <GitBranch className="w-4 h-4" /> Traffic Stages
           </h2>

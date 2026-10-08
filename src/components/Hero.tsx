@@ -1,5 +1,6 @@
 import { ChevronDown, Github, Linkedin, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ButtonAnchor } from './ui/Button';
 import { heroData } from '../data/portfolioData';
 
 export default function Hero() {
@@ -51,18 +52,10 @@ export default function Hero() {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-4">
-          <a
-            href="#projects"
-            className="px-8 py-3 rounded-full bg-inverse text-inverse-fg font-semibold shadow-lg shadow-slate-200 hover:bg-inverse/90 transition-all hover:-translate-y-0.5"
-          >
-            View Projects
-          </a>
-          <a
-            href="#contact"
-            className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-700 transition-colors"
-          >
+          <ButtonAnchor href="#projects">View Projects</ButtonAnchor>
+          <ButtonAnchor href="#contact" variant="secondary">
             Get in touch
-          </a>
+          </ButtonAnchor>
         </div>
 
         <button

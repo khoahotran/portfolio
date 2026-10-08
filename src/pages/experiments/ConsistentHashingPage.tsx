@@ -78,7 +78,7 @@ function ConsistentHashingPage() {
       <ProvenanceNote labId="consistent-hashing" />
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Virtual nodes per physical node</span>
@@ -148,7 +148,7 @@ function ConsistentHashingPage() {
         </section>
 
         <section className="min-w-0 md:col-span-8 space-y-6">
-          <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+          <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
             <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
               <ArrowRightLeft className="w-4 h-4" /> Naive Modulo vs Consistent Hashing
             </h2>
@@ -196,7 +196,7 @@ function ConsistentHashingPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+          <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
             <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
               <Gauge className="w-4 h-4" /> Load Distribution at {virtualNodesPerNode} Virtual Node
               {virtualNodesPerNode === 1 ? '' : 's'}/Node

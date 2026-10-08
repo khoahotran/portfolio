@@ -116,7 +116,7 @@ function RateLimitingAlgorithmsPage() {
       </div>
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Sustained rate</span>
@@ -197,7 +197,7 @@ function RateLimitingAlgorithmsPage() {
           </div>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-8 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <p className="text-micro font-bold uppercase tracking-widest text-slate-500 mb-4">
             {stats.total} requests over {DURATION_SECONDS}s
           </p>

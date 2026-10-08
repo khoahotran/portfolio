@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ButtonLink } from '../components/ui/Button';
 import { getContentCounts, getLatestContent } from '../content-engine/content-service';
 import { collectionLabel, formatDate, routeForCollection } from '../content-engine/format';
 import type { ContentIndexItem } from '../content-engine/types';
@@ -163,42 +164,12 @@ function PortfolioHome() {
             </p>
           )}
           <div className="flex flex-wrap justify-center gap-4">
-            <Link
-              to="/blog"
-              className="px-8 py-3 rounded-full bg-inverse text-inverse-fg font-semibold shadow-lg shadow-slate-200 hover:bg-inverse/90 transition-all hover:-translate-y-0.5"
-            >
-              Blog
-            </Link>
-            <Link
-              to="/projects"
-              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-700 transition-colors"
-            >
-              Projects
-            </Link>
-            <Link
-              to="/research"
-              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-700 transition-colors"
-            >
-              Research
-            </Link>
-            <Link
-              to="/experiments"
-              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-700 transition-colors"
-            >
-              Experiments
-            </Link>
-            <Link
-              to="/labs"
-              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-700 transition-colors"
-            >
-              Labs
-            </Link>
-            <Link
-              to="/system-design"
-              className="px-8 py-3 rounded-full border border-slate-200 text-slate-900 hover:border-teal-600 hover:text-teal-700 transition-colors"
-            >
-              System Design
-            </Link>
+            <ButtonLink to="/blog">Blog</ButtonLink>
+            <ButtonLink to="/projects" variant="secondary">Projects</ButtonLink>
+            <ButtonLink to="/research" variant="secondary">Research</ButtonLink>
+            <ButtonLink to="/experiments" variant="secondary">Experiments</ButtonLink>
+            <ButtonLink to="/labs" variant="secondary">Labs</ButtonLink>
+            <ButtonLink to="/system-design" variant="secondary">System Design</ButtonLink>
           </div>
         </div>
       </section>

@@ -67,7 +67,7 @@ function VectorClocksPage() {
       <ProvenanceNote labId="vector-clocks" />
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div>
             <p className="mb-2 flex items-center gap-1.5 text-meta font-semibold text-slate-700">
               <Shuffle className="w-4 h-4" aria-hidden="true" /> Simulated clock skew
@@ -153,7 +153,7 @@ function VectorClocksPage() {
             </p>
           )}
 
-          <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+          <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
             <h2 className="mb-4 text-meta font-bold uppercase tracking-widest text-slate-500">Full Event Log</h2>
             <div className="space-y-2">
               {events.map((event: ClockEvent) => {
