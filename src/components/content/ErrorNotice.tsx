@@ -6,7 +6,7 @@ interface Props {
 /**
  * Shared failed-to-load state for the data-fetching pages (ContentListPage,
  * SearchPage, ContentDetailPage). Replaces an indefinite "Loading..." state
- * with a visible, actionable error when the content index fetch rejects —
+ * with a visible, actionable error when the content index fetch rejects -
  * previously an unhandled rejection left these pages spinning forever.
  */
 function ErrorNotice({ message, onRetry }: Props) {

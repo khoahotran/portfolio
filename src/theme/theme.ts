@@ -6,7 +6,7 @@
  * Two states, not three. The initial value follows the operating system; once the visitor clicks
  * the toggle their choice is stored and wins from then on. A third explicit "system" state would
  * let them hand control back, but it costs a tri-state control in a 48px-tall header for a case
- * that is served well enough by clearing site data — so the simpler control wins here.
+ * that is served well enough by clearing site data - so the simpler control wins here.
  */
 export type Theme = 'light' | 'dark';
 
@@ -19,7 +19,7 @@ export function systemTheme(): Theme {
 /**
  * Reads the stored preference, falling back to the OS setting.
  *
- * Wrapped in try/catch because localStorage throws outright — not returns null — in a browser
+ * Wrapped in try/catch because localStorage throws outright - not returns null - in a browser
  * configured to block site data, and in that case the page must still render with a correct theme
  * rather than white-screen on a storage exception.
  */
@@ -28,7 +28,7 @@ export function resolveTheme(): Theme {
     const stored = localStorage.getItem(THEME_STORAGE_KEY);
     if (stored === 'light' || stored === 'dark') return stored;
   } catch {
-    // Storage unavailable — fall through to the OS preference.
+    // Storage unavailable - fall through to the OS preference.
   }
   return systemTheme();
 }

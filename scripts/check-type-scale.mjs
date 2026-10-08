@@ -6,7 +6,7 @@
 // headings meant to be the same size were not, and nothing caught it.
 //
 // A scale that is not enforced decays back into ad-hoc values within a few features, so this is a
-// gate rather than a convention in a document. It is a source check, not a browser check — it runs
+// gate rather than a convention in a document. It is a source check, not a browser check - it runs
 // in milliseconds and needs no build.
 //
 // Usage: npm run check:type-scale
@@ -15,7 +15,7 @@ import { readFileSync, writeFileSync, globSync } from 'node:fs';
 
 const SCALE = ['d1', 'd2', 'd3', 'lead', 'body', 'meta', 'micro', 'nano'];
 
-// Tailwind's own size names. Allowed only where the scale has no equivalent — which, by design, is
+// Tailwind's own size names. Allowed only where the scale has no equivalent - which, by design, is
 // nowhere: every one of these has a token. Listed so the error can say what to use instead.
 const LEGACY = {
   'text-xs': 'text-micro',
@@ -109,7 +109,7 @@ if (regressions.length > 0) {
 const total = findings.length;
 const allowed = Object.values(baseline).reduce((a, b) => a + b, 0);
 if (total < allowed) {
-  console.log(`[check-type-scale] PASS — ${total} legacy size(s) left, down from ${allowed}. Run --update-baseline to lock the gain in.`);
+  console.log(`[check-type-scale] PASS - ${total} legacy size(s) left, down from ${allowed}. Run --update-baseline to lock the gain in.`);
 } else {
-  console.log(`[check-type-scale] PASS — no new violations; ${total} legacy display size(s) remain, to be migrated with the surfaces they sit on.`);
+  console.log(`[check-type-scale] PASS - no new violations; ${total} legacy display size(s) remain, to be migrated with the surfaces they sit on.`);
 }

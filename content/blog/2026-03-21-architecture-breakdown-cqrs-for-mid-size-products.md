@@ -9,7 +9,7 @@ summary: "A practical guide to adopting CQRS for mid-size products: when it help
 
 Every monolithic system eventually hits a breaking point where the read model and the write model start fighting for the same database resources. In our case, the read model was overloaded with complex `JOIN`s to serve various dashboards, while the write workflows became increasingly harder to evolve because every schema change threatened to break a critical read query.
 
-Our core application was built on top of a single PostgreSQL database. Under normal operations, this was highly reliable. However, as our user base scaled, two specific tables—`orders` and `inventory_items`—became hot spots for transaction lock contention. 
+Our core application was built on top of a single PostgreSQL database. Under normal operations, this was highly reliable. However, as our user base scaled, two specific tables-`orders` and `inventory_items`-became hot spots for transaction lock contention. 
 
 At peak times, we experienced:
 - **Write Latency Spikes**: Insert and update transactions on orders frequently ran into locks, pushing p99 write latency to over `3,200ms`.

@@ -5,7 +5,7 @@ import { proofPoints } from '../data/expertise';
 import { heroData } from '../data/portfolioData';
 
 /**
- * Hero and the proof strip under it — tiers 1 and 2 of the homepage.
+ * Hero and the proof strip under it - tiers 1 and 2 of the homepage.
  *
  * It no longer fills the viewport. `min-h-screen` meant the first screen carried a name, a generic
  * tagline and two buttons, and pushed every piece of evidence below the fold; a reader who did not
@@ -13,7 +13,7 @@ import { heroData } from '../data/portfolioData';
  * the proof strip breaks the fold, so the first thing visible after the name is a measured number
  * attached to the system it came from.
  *
- * The tagline is still the old copy. It is weak — it describes a stack, not a value — but rewriting
+ * The tagline is still the old copy. It is weak - it describes a stack, not a value - but rewriting
  * it is a content decision, and content comes after the UI architecture settles. The structure
  * around it is built so better copy drops straight in.
  */
@@ -61,7 +61,7 @@ export default function Hero() {
           </span>
         </div>
 
-        {/* Tier 2 — the proof strip. Inside the hero on purpose: it has to break the fold, and a
+        {/* Tier 2 - the proof strip. Inside the hero on purpose: it has to break the fold, and a
             separate band below would put it back under it on a laptop. */}
         <div className="mt-14 grid gap-px overflow-hidden rounded-card border border-slate-200 bg-slate-200 sm:grid-cols-3">
           {proofPoints.map((point) => {

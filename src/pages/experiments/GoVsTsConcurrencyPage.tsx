@@ -6,7 +6,7 @@ import { Activity } from 'lucide-react';
 import rawResults from './go-vs-ts-concurrency-results.json';
 
 /**
- * Raw shape written by benchmarks/go-vs-ts-concurrency/run.sh — one row per (language, task count)
+ * Raw shape written by benchmarks/go-vs-ts-concurrency/run.sh - one row per (language, task count)
  * combination, straight from the harness's own JSON stdout line. Byte-identical copy of
  * benchmarks/go-vs-ts-concurrency/results.json; see that directory's README.md to reproduce it.
  */
@@ -90,7 +90,7 @@ function GoVsTsConcurrencyPage() {
 
             <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-micro flex gap-3 leading-relaxed mt-8">
               <Activity className="w-5 h-5 shrink-0 text-sky-600" />
-              <p>Each task simulates a 50ms network request. Goroutines are spawned via `go` and a wait-group; Node.js uses `Promise.all()`. Watch the gap between them <em>narrow</em> as task count grows &mdash; Node&rsquo;s footprint is dominated by a fixed ~50MB runtime baseline, while Go&rsquo;s scales closer to linearly with task count. Full explanation in the article below.</p>
+              <p>Each task simulates a 50ms network request. Goroutines are spawned via `go` and a wait-group; Node.js uses `Promise.all()`. Watch the gap between them <em>narrow</em> as task count grows - Node&rsquo;s footprint is dominated by a fixed ~50MB runtime baseline, while Go&rsquo;s scales closer to linearly with task count. Full explanation in the article below.</p>
             </div>
           </div>
         </section>
@@ -110,7 +110,7 @@ function GoVsTsConcurrencyPage() {
                   <div className="text-micro font-bold text-teal-700">{currentData.goMemory.toFixed(1)} MB</div>
                   {/* Fixed-height track: the bar's `height: N%` only resolves against a
                       definite-height ancestor, and this column (a child of an `items-end`, not
-                      `stretch`, row) is otherwise auto-height — without this wrapper the bar
+                      `stretch`, row) is otherwise auto-height - without this wrapper the bar
                       silently computes to 0px regardless of the percentage. */}
                   <div className="flex h-48 w-full items-end">
                     <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.goMemory / MAX_MEMORY) * 100}%` }} />

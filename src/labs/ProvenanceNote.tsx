@@ -40,7 +40,7 @@ function Body({ provenance }: { provenance: LabProvenance }) {
   switch (provenance.kind) {
     case 'implementation':
     case 'model':
-      // break-words: this text routinely embeds a source path (e.g. "src/labs/raft.ts") — an
+      // break-words: this text routinely embeds a source path (e.g. "src/labs/raft.ts") - an
       // unbreakable token with no spaces. min-w-0 on the ancestor lets the flex item shrink, but
       // it doesn't make an unbreakable word wrap; without this, a long enough path (as happened
       // with twoPhaseCommitVsSaga.ts, the longest lab filename yet) forces real horizontal
@@ -83,7 +83,7 @@ function Body({ provenance }: { provenance: LabProvenance }) {
 
 /**
  * Looks the lab's provenance up from the registry by id, so each lab page adds one line rather
- * than restating its own provenance — the registry stays the single source of truth, the same way
+ * than restating its own provenance - the registry stays the single source of truth, the same way
  * it already is for routes and index cards.
  *
  * Not a static import cycle despite ProvenanceNote -> registry -> lab page -> ProvenanceNote: the
@@ -93,7 +93,7 @@ export default function ProvenanceNote({ labId }: { labId: string }) {
   const provenance = getLabById(labId)?.provenance;
 
   // A lab id with no registry entry isn't reachable as a route at all (App.tsx builds routes from
-  // the same list), so this is unreachable in practice — but rendering nothing is the right
+  // the same list), so this is unreachable in practice - but rendering nothing is the right
   // degradation, matching the silent-failure convention in ArticleNav and the vitals reporter.
   if (!provenance) return null;
 

@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { slugify as appSlugify } from './content-source';
 // The build-side copy. Imported from scripts/lib/content.mjs rather than
-// scripts/build-search-index.mjs because that file is a top-level script — importing it would run
+// scripts/build-search-index.mjs because that file is a top-level script - importing it would run
 // the entire build (regenerating indexes, feeds and 66 OG images) as a side effect of a unit test.
 import { slugify as buildSlugify } from '../../scripts/lib/content.mjs';
 
@@ -12,7 +12,7 @@ import { slugify as buildSlugify } from '../../scripts/lib/content.mjs';
  * `content-source.ts` keys its `import.meta.glob` loader map by a slug it derives in the browser;
  * `build-search-index.mjs` writes the canonical slug into content-index.json, the sitemap, the
  * feeds, and the prerender route list. Nothing at runtime reconciles the two. If they disagree for
- * any real article, that article is listed everywhere and renders nowhere — the same class of
+ * any real article, that article is listed everywhere and renders nowhere - the same class of
  * silent unreachability that .ai/decision-log.md Decision 5 had to fix once already, and one that
  * neither typecheck nor the responsive sweep would catch, because the route 404s rather than errors.
  */
@@ -21,7 +21,7 @@ describe('slugify parity between the app and the build script', () => {
     'grpc-service-mesh-in-go-aegis-architecture',
     'Aegis: High-Performance Auth & Authorization Platform',
     'ADR: Firestore vs PostgreSQL for Event Sourcing',
-    'Go vs TypeScript — for Backend Services',
+    'Go vs TypeScript - for Backend Services',
     'Trần Nguyễn Anh Khoa',
     '  Leading and trailing whitespace  ',
     'Multiple   internal   spaces',

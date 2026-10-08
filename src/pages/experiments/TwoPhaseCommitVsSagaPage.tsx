@@ -12,10 +12,10 @@ const SAGA_STEP_IDS = ['reserve-inventory', 'charge-card', 'ship-order'] as cons
 function TwoPhaseCommitVsSagaPage() {
   useSeo({
     title: 'Two-Phase Commit vs. Saga Visualizer',
-    description: 'Run the real 2PC blocking failure and the real Saga compensation-failure gap side by side — see exactly what atomicity costs, and exactly what giving it up costs instead.',
+    description: 'Run the real 2PC blocking failure and the real Saga compensation-failure gap side by side - see exactly what atomicity costs, and exactly what giving it up costs instead.',
   });
 
-  // Stage 1 — 2PC
+  // Stage 1 - 2PC
   const [votes, setVotes] = useState<Record<string, 'yes' | 'no'>>({ p1: 'yes', p2: 'yes', p3: 'yes', p4: 'yes' });
   const [coordinatorCrashes, setCoordinatorCrashes] = useState(true);
 
@@ -29,7 +29,7 @@ function TwoPhaseCommitVsSagaPage() {
     setVotes((prev) => ({ ...prev, [id]: prev[id] === 'yes' ? 'no' : 'yes' }));
   }
 
-  // Stage 2 — Saga
+  // Stage 2 - Saga
   const [failStep, setFailStep] = useState<string | null>('charge-card');
   const [compensationFailsFor, setCompensationFailsFor] = useState<string | null>(null);
 
@@ -58,7 +58,7 @@ function TwoPhaseCommitVsSagaPage() {
       <div className="mt-8 space-y-10">
         <section>
           <h2 className="mb-4 flex items-center gap-2 text-meta font-bold uppercase tracking-widest text-slate-500">
-            <Lock className="w-4 h-4" aria-hidden="true" /> Two-Phase Commit — Blocking on a Lost Coordinator
+            <Lock className="w-4 h-4" aria-hidden="true" /> Two-Phase Commit - Blocking on a Lost Coordinator
           </h2>
           <div className="grid gap-6 md:grid-cols-12">
             <div className="min-w-0 md:col-span-4 space-y-4 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
@@ -97,8 +97,8 @@ function TwoPhaseCommitVsSagaPage() {
                 <p>
                   Decision computed: <span className="font-mono">{twoPc.decision}</span>.{' '}
                   {twoPc.decisionReachedByCoordinator
-                    ? 'The coordinator broadcast it — every participant resolves.'
-                    : `The coordinator never sent it. ${twoPc.blockedParticipants.length} participant${twoPc.blockedParticipants.length === 1 ? '' : 's'} that voted yes ${twoPc.blockedParticipants.length === 1 ? 'is' : 'are'} stuck holding its locks, with no rule for deciding alone — the actual cost of the atomicity guarantee.`}
+                    ? 'The coordinator broadcast it - every participant resolves.'
+                    : `The coordinator never sent it. ${twoPc.blockedParticipants.length} participant${twoPc.blockedParticipants.length === 1 ? '' : 's'} that voted yes ${twoPc.blockedParticipants.length === 1 ? 'is' : 'are'} stuck holding its locks, with no rule for deciding alone - the actual cost of the atomicity guarantee.`}
                 </p>
               </div>
               <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
@@ -123,7 +123,7 @@ function TwoPhaseCommitVsSagaPage() {
 
         <section>
           <h2 className="mb-4 flex items-center gap-2 text-meta font-bold uppercase tracking-widest text-slate-500">
-            <Undo2 className="w-4 h-4" aria-hidden="true" /> Saga — No Blocking, No Atomicity
+            <Undo2 className="w-4 h-4" aria-hidden="true" /> Saga - No Blocking, No Atomicity
           </h2>
           <div className="grid gap-6 md:grid-cols-12">
             <div className="min-w-0 md:col-span-4 space-y-4 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
@@ -135,7 +135,7 @@ function TwoPhaseCommitVsSagaPage() {
                   onChange={(e) => setFailStep(e.target.value || null)}
                   className="mt-1.5 w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-micro"
                 >
-                  <option value="">none — every step succeeds</option>
+                  <option value="">none - every step succeeds</option>
                   {SAGA_STEP_IDS.map((id) => (
                     <option key={id} value={id}>{id}</option>
                   ))}
@@ -148,7 +148,7 @@ function TwoPhaseCommitVsSagaPage() {
                   onChange={(e) => setCompensationFailsFor(e.target.value || null)}
                   className="mt-1.5 w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-micro"
                 >
-                  <option value="">none — every compensation succeeds</option>
+                  <option value="">none - every compensation succeeds</option>
                   {SAGA_STEP_IDS.filter((id) => id !== failStep).map((id) => (
                     <option key={id} value={id}>{id}</option>
                   ))}
@@ -169,10 +169,10 @@ function TwoPhaseCommitVsSagaPage() {
                 {saga.compensationsFailed.length > 0 ? <XCircle className="w-5 h-5 shrink-0" aria-hidden="true" /> : <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />}
                 <p>
                   {saga.failedAtStep === null
-                    ? 'Every step committed — no compensation needed.'
+                    ? 'Every step committed - no compensation needed.'
                     : saga.compensationsFailed.length > 0
-                      ? `${saga.failedAtStep} failed, and unwinding "${saga.compensationsFailed[0]}" itself failed. Nothing here blocks — but that step's committed side effect is now stuck, uncompensated, with no fallback like 2PC's held locks to fall back on.`
-                      : `${saga.failedAtStep} failed. Every earlier committed step was compensated cleanly, in reverse order — no coordinator, no blocking, just already-committed steps unwinding themselves.`}
+                      ? `${saga.failedAtStep} failed, and unwinding "${saga.compensationsFailed[0]}" itself failed. Nothing here blocks - but that step's committed side effect is now stuck, uncompensated, with no fallback like 2PC's held locks to fall back on.`
+                      : `${saga.failedAtStep} failed. Every earlier committed step was compensated cleanly, in reverse order - no coordinator, no blocking, just already-committed steps unwinding themselves.`}
                 </p>
               </div>
               <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">

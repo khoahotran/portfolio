@@ -22,7 +22,7 @@ const PRESETS = [
 function MerkleTreePage() {
   useSeo({
     title: 'Merkle Tree Reconciliation Visualizer',
-    description: 'Run a real Merkle-tree targeted diff against a naive full scan on the same two datasets — see the O(1) proof of equality, the near-O(log n) cost of a sparse diff, and the honest case where the targeted walk loses.',
+    description: 'Run a real Merkle-tree targeted diff against a naive full scan on the same two datasets - see the O(1) proof of equality, the near-O(log n) cost of a sparse diff, and the honest case where the targeted walk loses.',
   });
 
   const [presetIndex, setPresetIndex] = useState(1);
@@ -46,7 +46,7 @@ function MerkleTreePage() {
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Merkle Trees</h1>
       <p className="mt-2 text-slate-600">
         Two {DATASET_SIZE.toLocaleString()}-key datasets, a real Merkle tree built over each, and a
-        real targeted walk that only descends into subtrees whose hash actually differs — run
+        real targeted walk that only descends into subtrees whose hash actually differs - run
         against a naive full scan on the identical pair, every time.
       </p>
 
@@ -70,7 +70,7 @@ function MerkleTreePage() {
             ))}
           </div>
           <p className="text-micro text-slate-500">
-            Both trees are built for real from {DATASET_SIZE.toLocaleString()} entries each — the
+            Both trees are built for real from {DATASET_SIZE.toLocaleString()} entries each - the
             comparison below is measured against whichever scenario is selected, not precomputed.
           </p>
         </section>
@@ -88,8 +88,8 @@ function MerkleTreePage() {
             )}
             <p>
               {isWorstCase
-                ? "The honest caveat: with every key different, the targeted walk visits nearly the whole tree — more nodes than the naive scan, not fewer. The win is specific to sparse differences."
-                : `Found ${result.differingKeys.length} differing key${result.differingKeys.length === 1 ? '' : 's'} by visiting only ${result.merkleNodesVisited.toLocaleString()} tree node${result.merkleNodesVisited === 1 ? '' : 's'} — not all ${DATASET_SIZE.toLocaleString()}.`}
+                ? "The honest caveat: with every key different, the targeted walk visits nearly the whole tree - more nodes than the naive scan, not fewer. The win is specific to sparse differences."
+                : `Found ${result.differingKeys.length} differing key${result.differingKeys.length === 1 ? '' : 's'} by visiting only ${result.merkleNodesVisited.toLocaleString()} tree node${result.merkleNodesVisited === 1 ? '' : 's'} - not all ${DATASET_SIZE.toLocaleString()}.`}
             </p>
           </div>
 
@@ -124,10 +124,10 @@ function MerkleTreePage() {
               </div>
             </div>
             <p className="mt-4 text-micro text-slate-500">
-              Both counts come from running the real diff against the identical two datasets — a
+              Both counts come from running the real diff against the identical two datasets - a
               direct measurement, not two formulas asserted separately. Two identical trees cost
               exactly 1 (a single root-hash comparison proves full equality); every key differing
-              costs up to {(DATASET_SIZE * 2 - 1).toLocaleString()} (the entire tree) — worse than
+              costs up to {(DATASET_SIZE * 2 - 1).toLocaleString()} (the entire tree) - worse than
               the naive scan's fixed {DATASET_SIZE.toLocaleString()}.
             </p>
           </div>

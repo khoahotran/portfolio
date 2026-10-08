@@ -1,5 +1,5 @@
 /**
- * Split out of Card.tsx so that file only exports components — a module that exports both a
+ * Split out of Card.tsx so that file only exports components - a module that exports both a
  * component and a helper breaks React Fast Refresh for the whole file.
  *
  * Exists because some card surfaces are <a>, <Link> or <article> rather than <div>, and wrapping

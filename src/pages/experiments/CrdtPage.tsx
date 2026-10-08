@@ -8,7 +8,7 @@ import { useSeo } from '../../seo/useSeo';
 function CrdtPage() {
   useSeo({
     title: 'CRDTs Visualizer',
-    description: 'Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set — see exactly which concurrent updates the naive designs silently lose.',
+    description: 'Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set - see exactly which concurrent updates the naive designs silently lose.',
   });
 
   const [incrementsA, setIncrementsA] = useState(4);
@@ -90,7 +90,7 @@ function CrdtPage() {
                     <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
                     {counterResult.gCounterTotal}
                   </div>
-                  <p className="mt-2 text-micro text-slate-600">Sum of every slot — always equals the true total.</p>
+                  <p className="mt-2 text-micro text-slate-600">Sum of every slot - always equals the true total.</p>
                 </div>
                 <div className={`rounded-2xl border p-5 ${counterResult.lwwLostUpdates > 0 ? 'border-rose-200 bg-rose-50' : 'border-slate-200 bg-slate-50'}`}>
                   <p className="text-nano font-bold uppercase tracking-widest text-slate-600">Naive LWW register</p>
@@ -101,14 +101,14 @@ function CrdtPage() {
                   <p className="mt-2 text-micro text-slate-600">
                     {counterResult.lwwLostUpdates > 0
                       ? `${counterResult.lwwLostUpdates} real increment${counterResult.lwwLostUpdates === 1 ? '' : 's'} silently discarded.`
-                      : 'Nothing lost this time — the winning write happens to hold every real increment.'}
+                      : 'Nothing lost this time - the winning write happens to hold every real increment.'}
                   </p>
                 </div>
               </div>
               <p className="text-micro text-slate-500">
                 True total (ground truth, every increment that actually happened):{' '}
                 <span className="font-bold text-slate-700">{counterResult.trueTotal}</span>. Drag the
-                two timestamps to a tie — the LWW winner is then decided by a nodeId tiebreak alone,
+                two timestamps to a tie - the LWW winner is then decided by a nodeId tiebreak alone,
                 which can discard a node's entire real contribution even when it did all the work.
               </p>
             </div>
@@ -122,7 +122,7 @@ function CrdtPage() {
           <div className="rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
             <p className="mb-4 text-micro text-slate-500">
               Fixed scenario, run through both structures: add "x", remove "x" (observing that add),
-              then add "x" again with a fresh identity — a real re-add, not a replay.
+              then add "x" again with a fresh identity - a real re-add, not a replay.
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className={`rounded-2xl border p-5 ${setResult.orSetHasElement ? 'border-teal-200 bg-teal-50' : 'border-rose-200 bg-rose-50'}`}>
@@ -131,7 +131,7 @@ function CrdtPage() {
                   {setResult.orSetHasElement ? <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" /> : <XCircle className="w-5 h-5 shrink-0" aria-hidden="true" />}
                   "x" is {setResult.orSetHasElement ? 'present' : 'absent'}
                 </div>
-                <p className="mt-2 text-micro text-slate-600">The re-add's fresh tag was never tombstoned — it survives.</p>
+                <p className="mt-2 text-micro text-slate-600">The re-add's fresh tag was never tombstoned - it survives.</p>
               </div>
               <div className={`rounded-2xl border p-5 ${setResult.twoPhaseSetHasElement ? 'border-teal-200 bg-teal-50' : 'border-rose-200 bg-rose-50'}`}>
                 <p className="text-nano font-bold uppercase tracking-widest text-slate-600">Naive 2P-Set</p>
@@ -140,7 +140,7 @@ function CrdtPage() {
                   "x" is {setResult.twoPhaseSetHasElement ? 'present' : 'absent'}
                 </div>
                 <p className="mt-2 text-micro text-slate-600">
-                  {setResult.twoPhaseSetHasElement ? '' : "\"x\" was removed once, by value alone — permanently, even after the real re-add."}
+                  {setResult.twoPhaseSetHasElement ? '' : "\"x\" was removed once, by value alone - permanently, even after the real re-add."}
                 </p>
               </div>
             </div>

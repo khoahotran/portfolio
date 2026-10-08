@@ -121,13 +121,13 @@ sequenceDiagram
 Because the Fraud Engine needs to evaluate historical context (e.g., "how many transfers happened today"), reading the entire event log for an active account would be O(N) and far too slow.
 
 To solve this, the system creates a `Snapshot` every 100 events. 
-When the Fraud Engine needs historical context, it reads the latest snapshot + any events that occurred *after* that snapshot. This bounds the read to O(1) relative to total event count; "under 15ms" is an expected range for that access pattern rather than a measured figure — no load test, environment, or sample size is claimed here.
+When the Fraud Engine needs historical context, it reads the latest snapshot + any events that occurred *after* that snapshot. This bounds the read to O(1) relative to total event count; "under 15ms" is an expected range for that access pattern rather than a measured figure - no load test, environment, or sample size is claimed here.
 
 ## Handling the Saga Compensation
 
 In the target orchestrator design described in the [Saga pattern deep dive](/system-design/implementing-the-saga-pattern-for-distributed-transfers), if the Fraud Engine detects anomaly and appends an `AccountFrozen` event, the Saga Orchestrator (which is executing the multi-step transfer) would see this state change, halt the transfer, execute compensation transactions (refunding any debits already applied), and mark the Saga as `COMPENSATED_FRAUD`.
 
-> **Current implementation vs. this design:** the currently committed Core Banking repository does not implement this centralized orchestrator or the `COMPENSATED_FRAUD` state. Its Saga logic is the choreography-style `SagaManager` described in the linked Saga pattern deep dive, which reacts to domain events — including `AccountFrozen` — directly, rather than through a persisted state machine. The fraud-triggered compensation flow above is the target design this project was working toward, not a description of what's currently running.
+> **Current implementation vs. this design:** the currently committed Core Banking repository does not implement this centralized orchestrator or the `COMPENSATED_FRAUD` state. Its Saga logic is the choreography-style `SagaManager` described in the linked Saga pattern deep dive, which reacts to domain events - including `AccountFrozen` - directly, rather than through a persisted state machine. The fraud-triggered compensation flow above is the target design this project was working toward, not a description of what's currently running.
 
 ## Conclusion
 

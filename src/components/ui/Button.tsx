@@ -4,9 +4,9 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 /**
  * The one button in the design system.
  *
- * Before this, the same filled-pill string — `px-8 py-3 rounded-full bg-inverse text-inverse-fg
+ * Before this, the same filled-pill string - `px-8 py-3 rounded-full bg-inverse text-inverse-fg
  * font-semibold shadow-lg shadow-slate-200 hover:bg-inverse/90 transition-all hover:-translate-y-0.5`
- * — was pasted in 8 places across Hero and PortfolioHome, with the outline variant pasted beside it
+ * - was pasted in 8 places across Hero and PortfolioHome, with the outline variant pasted beside it
  * each time. Changing the hover treatment meant finding all 16.
  *
  * `shadow-lg shadow-slate-200` is deliberately not carried over: tinting a shadow with a palette

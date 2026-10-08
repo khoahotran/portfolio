@@ -54,7 +54,7 @@ Client App                   API Gateway               Database
 
 ## The Remediation Strategy
 
-The root cause wasn't the code defect itself—defects will always slip through. The root cause was our broken release safety mechanism. We completely overhauled our release pipeline with three core patterns.
+The root cause wasn't the code defect itself-defects will always slip through. The root cause was our broken release safety mechanism. We completely overhauled our release pipeline with three core patterns.
 
 ### 1. Staged Rollouts (Canary)
 

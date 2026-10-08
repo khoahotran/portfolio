@@ -11,7 +11,7 @@ import { labs } from '../../labs/registry';
  *
  * This is what lets the header drop from eleven entries to four without burying anything: a reader
  * who knows what they want types two letters, and a reader who does not still has four labelled
- * destinations. It is deliberately an addition to the header, never a replacement for it — a
+ * destinations. It is deliberately an addition to the header, never a replacement for it - a
  * recruiter does not know that Cmd-K opens anything, which is why `/search` keeps its own route and
  * the trigger renders as a visible button rather than a bare shortcut hint.
  *

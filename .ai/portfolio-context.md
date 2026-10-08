@@ -5,7 +5,7 @@ This repository is the personal engineering portfolio of **Khoa Tran**. It is an
 engineering showcase: deep, narrative-driven case studies, architectural deep-dives, and interactive
 laboratories that let a reader interrogate a claim rather than take it on faith.
 
-It moves beyond standard "resume" bullet points. The argument it makes is not *"I am senior"* — it is
+It moves beyond standard "resume" bullet points. The argument it makes is not *"I am senior"* - it is
 *"here is the reasoning, here are the trade-offs I accepted, here is the code, and here is how you can
 check it yourself."* Depth of reasoning is the evidence. The reader draws their own conclusion about level.
 
@@ -13,12 +13,12 @@ check it yourself."* Depth of reasoning is the evidence. The reader draws their 
 Khoa is an **early-career backend / distributed-systems engineer** who works and documents at an unusually
 senior level of rigor:
 
-- BSc Computer Science, HCMUT — expected Jun 2026. MSc Computer Science, HCMUT — Jan 2026 to Dec 2027.
+- BSc Computer Science, HCMUT - expected Jun 2026. MSc Computer Science, HCMUT - Jan 2026 to Dec 2027.
 - Professional experience: JK Technologies, Jun 2025 to present (intern -> part-time -> full-time),
   shipping production backend services (SeensioGO, Jujuja).
 - Self-directed engineering projects built to production standards: Aegis, Event-Driven Core Banking, PFM.
 
-Never write copy — on the site or in these docs — that claims or implies a Staff/Principal *title*, years of
+Never write copy - on the site or in these docs - that claims or implies a Staff/Principal *title*, years of
 experience that don't exist, or team leadership that didn't happen. That claim is trivially checkable against
 the timeline on `/about`, and a reader who catches it discounts everything else on the site, including the
 parts that are genuinely strong. The technical depth needs no inflation to be impressive for this stage; the
@@ -36,11 +36,11 @@ Written for engineers who will actually read the trade-offs:
 ## Provenance Is Mandatory
 Every project and every number must make its own nature unmistakable, without the reader having to infer it:
 
-- **Professional work** — shipped at JK Technologies (SeensioGO, Jujuja).
-- **Self-directed engineering projects** — designed and built solo to production standards (Aegis,
+- **Professional work** - shipped at JK Technologies (SeensioGO, Jujuja).
+- **Self-directed engineering projects** - designed and built solo to production standards (Aegis,
   Event-Driven Core Banking, PFM).
-- **Academic / research** — built in a university research context (QuantAlpha).
-- **Coursework / team projects** — university group work (Tesell, Smart Printing Service).
+- **Academic / research** - built in a university research context (QuantAlpha).
+- **Coursework / team projects** - university group work (Tesell, Smart Printing Service).
 
 The same rule applies to numbers: a metric states the system it was measured on, and a benchmark states
 whether it was **measured** (with environment and a runnable harness) or **modeled** (with the formula shown).
@@ -51,7 +51,7 @@ The portfolio primarily showcases work in:
 - **Distributed Systems:** handling state, consistency, and asynchronous communication across services.
 - **Core Banking / FinTech:** transactional guarantees, Event Sourcing, Saga patterns, and idempotency.
 - **High-Frequency Trading (HFT):** low-latency data ingestion and deterministic performance
-  (academic research context — label it as such).
+  (academic research context - label it as such).
 
 ## Expertise Areas
 - **Backend Languages:** Go (Golang), TypeScript (Node.js/NestJS), Python (for ML pipelines).
@@ -63,9 +63,9 @@ The portfolio primarily showcases work in:
 The portfolio must communicate that the author is an engineer who:
 - Builds for **resilience and failure** (designing systems that expect network partitions).
 - Relies on **boring technology** (PostgreSQL) when possible, but uses specialized tools (Redis Streams,
-  Kafka) when the domain demands it — and says which.
+  Kafka) when the domain demands it - and says which.
 - Communicates complex ideas effectively using **visualizations** (Mermaid, C4).
-- Values **measurability** — hence the interactive laboratories, and hence the discipline of never
+- Values **measurability** - hence the interactive laboratories, and hence the discipline of never
   presenting a model as a measurement.
 
 ## Maturity Goals
@@ -76,5 +76,5 @@ Every artifact in this repository must hold up to a careful reader:
   and the scale at which it breaks.
 - **Honest scope:** when the shipped code does less than the ideal design, say so in the article. Several
   existing pages already do this well (see `content/projects/aegis.md` on rate limiting and graceful
-  shutdown) — that candor is a feature, not a weakness, and must be preserved.
+  shutdown) - that candor is a feature, not a weakness, and must be preserved.
 - **Actionable outcomes:** articles end with concrete "Lessons Learned," not generic conclusions.

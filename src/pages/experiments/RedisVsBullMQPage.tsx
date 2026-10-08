@@ -6,7 +6,7 @@ import { BarChart3, Info } from 'lucide-react';
 import rawResults from './redis-vs-bullmq-results.json';
 
 /**
- * Raw shape written by benchmarks/redis-vs-bullmq/run.sh — one row per (engine, payload, workers)
+ * Raw shape written by benchmarks/redis-vs-bullmq/run.sh - one row per (engine, payload, workers)
  * combination, straight from each harness's own JSON stdout line. This file is a byte-identical
  * copy of benchmarks/redis-vs-bullmq/results.json; see that directory's README.md to reproduce it.
  */
@@ -118,7 +118,7 @@ function RedisVsBullMQPage() {
 
             <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-micro flex gap-3 leading-relaxed mt-8">
               <Info className="w-5 h-5 shrink-0 text-sky-600" />
-              <p>BullMQ relies on Lua scripts for atomic operations, adding overhead per job. Raw Redis Streams via Go (`XADD` / `XREADGROUP`) bypasses this logic for sheer speed. These numbers come from <code>benchmarks/redis-vs-bullmq/</code> in the repository &mdash; a runnable Docker Compose harness, not a fixed dataset.</p>
+              <p>BullMQ relies on Lua scripts for atomic operations, adding overhead per job. Raw Redis Streams via Go (`XADD` / `XREADGROUP`) bypasses this logic for sheer speed. These numbers come from <code>benchmarks/redis-vs-bullmq/</code> in the repository - a runnable Docker Compose harness, not a fixed dataset.</p>
             </div>
           </div>
         </section>
@@ -139,7 +139,7 @@ function RedisVsBullMQPage() {
                   <div className="text-micro font-bold text-teal-700">{Math.round(currentData.redisThroughput).toLocaleString()}</div>
                   {/* Fixed-height track: `height: N%` only resolves against a definite-height
                       ancestor, and this column (child of an `items-end`, not `stretch`, row) is
-                      otherwise auto-height — without this wrapper the bar silently renders 0px. */}
+                      otherwise auto-height - without this wrapper the bar silently renders 0px. */}
                   <div className="flex h-48 w-full items-end">
                     <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.redisThroughput / MAX_THROUGHPUT) * 100}%` }} />
                   </div>

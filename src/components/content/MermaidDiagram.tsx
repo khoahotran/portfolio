@@ -6,7 +6,7 @@ interface Props {
   /**
    * Called once after a successful render with the container element, so a
    * caller can post-process the generated SVG (e.g. wire up click-to-navigate
-   * on `click nodeId href "..."` anchors — see KnowledgeGraphPage). Read from
+   * on `click nodeId href "..."` anchors - see KnowledgeGraphPage). Read from
    * a ref rather than the effect's dependency array: `chart` is the only
    * thing that should re-trigger a re-render, and callers typically pass a
    * fresh closure on every render (e.g. one capturing `navigate`).

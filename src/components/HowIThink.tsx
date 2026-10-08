@@ -6,7 +6,7 @@ import { expertisePillars } from '../data/expertise';
 import { labs } from '../labs/registry';
 
 /**
- * Tier 4 — the section this whole redesign exists for.
+ * Tier 4 - the section this whole redesign exists for.
  *
  * It replaces a band of six pill buttons that repeated the navigation (Blog, Projects, Research,
  * Experiments, Labs, System Design). Those presented 91 write-ups and labs as a list of places.
@@ -14,13 +14,13 @@ import { labs } from '../labs/registry';
  * reader test it sitting directly underneath.
  *
  * The reason this matters more here than it would on most portfolios is that the labs run real
- * algorithms. "Run Raft log replication" is not a link to an article about Raft — it is a link to
+ * algorithms. "Run Raft log replication" is not a link to an article about Raft - it is a link to
  * the election restriction executing on the reader's own input. A claim a stranger can falsify in
  * ten seconds is worth more than a paragraph asserting seniority.
  */
 /**
  * `writingCount` is fetched by the page and passed in rather than hardcoded. A number typed into
- * JSX drifts the moment an article is added — exactly what happened to the `reading_time`
+ * JSX drifts the moment an article is added - exactly what happened to the `reading_time`
  * frontmatter field, which sat in every article being read by nothing and wrong by 2.6x
  * (`.ai/audit-followups.md` item 1). The lab count comes from the registry, which is a static
  * import and cannot drift.

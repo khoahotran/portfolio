@@ -19,14 +19,14 @@ async function fetchJson<T>(fileName: string): Promise<T> {
 /**
  * The lean index (~17 KB, generated alongside search-index.json by
  * build-search-index.mjs) used by every list page, detail page, and
- * related-articles lookup. It has every field except `searchableText` —
- * the full article body used only for full-text search — so navigating the
+ * related-articles lookup. It has every field except `searchableText` -
+ * the full article body used only for full-text search - so navigating the
  * site never pulls down 34 articles' worth of text just to render cards.
  */
 export async function loadContentIndex(): Promise<ContentIndexItem[]> {
   if (!contentIndexPromise) {
     contentIndexPromise = fetchJson<ContentIndexItem[]>('content-index.json').then(sortByDateDesc).catch((error) => {
-      // Don't memoize a rejection — a transient network failure would otherwise
+      // Don't memoize a rejection - a transient network failure would otherwise
       // permanently break every consumer for the rest of the session.
       contentIndexPromise = null;
       throw error;

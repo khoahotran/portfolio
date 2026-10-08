@@ -14,8 +14,8 @@ import { useSeo } from '../seo/useSeo';
 /**
  * One browse surface over every written piece on the site.
  *
- * Replaces five top-level navigation entries — Blog, Research, Experiments, System Design, Field
- * Notes — with one entry and five filters. Those five are the author's taxonomy, not the reader's
+ * Replaces five top-level navigation entries - Blog, Research, Experiments, System Design, Field
+ * Notes - with one entry and five filters. Those five are the author's taxonomy, not the reader's
  * intent: nobody arrives wanting "field notes", they arrive wanting to see how someone reasons
  * about a problem. Five labels is a job for a filter, not for a header.
  *
@@ -38,7 +38,7 @@ function WritingIndexPage() {
   useSeo({
     title: 'Writing',
     description:
-      'Every write-up on the site in one place: engineering blog posts, applied research, experiments, system design notes and field notes — filterable by kind and by tag.',
+      'Every write-up on the site in one place: engineering blog posts, applied research, experiments, system design notes and field notes - filterable by kind and by tag.',
   });
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -87,7 +87,7 @@ function WritingIndexPage() {
 
   /**
    * Filters live in the URL rather than in component state so a filtered view can be linked,
-   * shared and bookmarked — and so the back button steps through filter changes the way a reader
+   * shared and bookmarked - and so the back button steps through filter changes the way a reader
    * expects. `replace` keeps a long filtering session from burying the previous page in history.
    */
   function setParam(key: string, value: string | null) {

@@ -25,7 +25,7 @@ function SagaStateMachinePage() {
   const [shouldFailAt, setShouldFailAt] = useState<'none' | 'payment' | 'inventory'>('none');
   const [state, setState] = useState<SagaState>(IDLE_STATE);
   // A ref (not state) so `runSaga`'s already-scheduled `await`s can check it
-  // synchronously between steps — flipping it is how "Stop" actually halts an
+  // synchronously between steps - flipping it is how "Stop" actually halts an
   // in-flight run instead of just disabling the button that started it.
   const stoppedRef = useRef(false);
 
@@ -187,7 +187,7 @@ function SagaStateMachinePage() {
 
         <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-8 shadow-sm flex flex-col justify-center">
 
-          {/* Three StepBoxes + connectors are ~526px at their natural width — narrower than
+          {/* Three StepBoxes + connectors are ~526px at their natural width - narrower than
               some phones. overflow-x-auto contains that as a scroll instead of a page-level
               overflow (same pattern as the /graph Mermaid diagram), but the load-bearing fix
               is `min-w-0` on this section: without it, the grid item's automatic minimum size

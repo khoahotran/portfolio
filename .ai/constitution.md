@@ -16,7 +16,7 @@ These are the immutable rules of engagement for all AI agents operating in this 
 
 ## 3. Documentation Rules
 - **Maintain Portfolio Narrative:** The author is an early-career backend/distributed-systems engineer
-  who writes with senior-level rigor — see `.ai/portfolio-context.md` "Career Stage". Write in a
+  who writes with senior-level rigor - see `.ai/portfolio-context.md` "Career Stage". Write in a
   professional, first-person plural ("we") or authoritative first-person singular ("I") as defined in the
   `writing-style-guide.md`. Never claim a seniority title, years of experience, or team leadership the
   timeline does not support.

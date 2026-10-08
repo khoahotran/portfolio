@@ -11,7 +11,7 @@ function ThroughputSimulationPage() {
   const [failureRate, setFailureRate] = useState(2);
   const [ticks, setTicks] = useState(0);
   // The jitter ticker previously ran forever with no way to freeze the
-  // animation — every parameter was live, but the chart itself was
+  // animation - every parameter was live, but the chart itself was
   // "watch only". Pausing stops just the decorative noise; the sliders
   // above still recompute the chart instantly either way.
   const [isPaused, setIsPaused] = useState(false);

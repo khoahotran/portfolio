@@ -9,7 +9,7 @@ export interface LabDefinition {
   component: ComponentType;
   /**
    * True when this lab's id is also the slug of a real /experiments article
-   * (after the filename's date prefix is stripped) — e.g. `go-vs-ts-concurrency`
+   * (after the filename's date prefix is stripped) - e.g. `go-vs-ts-concurrency`
    * names both the lab and its companion write-up. For these, App.tsx must NOT
    * register an `/experiments/<id>` -> `/labs/<id>` redirect: that literal route
    * would out-rank `/experiments/:slug` and make the article unreachable at its
@@ -18,18 +18,18 @@ export interface LabDefinition {
    */
   collidesWithArticleSlug?: boolean;
   /**
-   * Slug of the companion write-up, if one exists — either a bare slug (assumed to live in
+   * Slug of the companion write-up, if one exists - either a bare slug (assumed to live in
    * content/experiments/, true for every lab so far) or a `"collection/slug"` string for a
    * companion elsewhere (e.g. `idempotency-store`'s companion is a content/blog/ post it extends
    * rather than a new content/experiments/ article), the same "collection/slug" shape `related:`
-   * frontmatter already uses. Lets the lab page link back to its article — previously every lab's
+   * frontmatter already uses. Lets the lab page link back to its article - previously every lab's
    * only way out was a generic link to the /experiments list, a dead end for a reader who arrived
    * from the article and wants to return to it. `retry-strategy` and `failure-injection` have no
    * companion article and are left without this field rather than inventing one.
    */
   relatedArticle?: string;
   /**
-   * What kind of interaction this lab actually offers — shown as a badge on
+   * What kind of interaction this lab actually offers - shown as a badge on
    * LabsIndexPage so a visitor knows what to expect before opening it,
    * instead of every card looking identical regardless of depth:
    * - 'live': sliders/toggles recompute the visualization instantly, no run step.
@@ -38,7 +38,7 @@ export interface LabDefinition {
    */
   interaction: 'live' | 'run' | 'preset';
   /**
-   * Where this lab's numbers come from — see `./provenance.ts`. Required, so a new lab cannot be
+   * Where this lab's numbers come from - see `./provenance.ts`. Required, so a new lab cannot be
    * registered without answering the question a reader will ask first. Rendered by
    * `ProvenanceNote` at the top of the lab page and badged on `/labs`.
    *
@@ -94,7 +94,7 @@ export const labs: LabDefinition[] = [
         'Closed-form arithmetic, not a measurement of any queue: capacity = workers x 1000 / processing_ms, ' +
         'and effective throughput multiplies that by (1 - failure_rate). p95 latency is modelled as ' +
         'processing_ms x (1 + failure_rate / 50). The moving chart adds sinusoidal and random noise for ' +
-        'legibility only — it carries no information. The relationship between the sliders is the point; ' +
+        'legibility only - it carries no information. The relationship between the sliders is the point; ' +
         'the absolute numbers are not.',
     },
     title: 'Throughput Simulation',
@@ -110,7 +110,7 @@ export const labs: LabDefinition[] = [
       basis:
         'The real backoff schedules, computed in your browser from your inputs: linear is base x attempt, ' +
         'exponential is base x 2^attempt, and full jitter replaces each delay with a uniform random value ' +
-        'in [0, delay) — the AWS "Exponential Backoff and Jitter" formulation. The cumulative timeline is ' +
+        'in [0, delay) - the AWS "Exponential Backoff and Jitter" formulation. The cumulative timeline is ' +
         'the actual sum of those delays, so what you see is what a client using this policy would wait.',
     },
     title: 'Retry Strategy Visualizer',
@@ -125,7 +125,7 @@ export const labs: LabDefinition[] = [
       basis:
         'A static illustration of the circuit-breaker idea, not a breaker implementation. Failures are ' +
         'failure_rate x request_count and the breaker is shown as open whenever failure_rate reaches the ' +
-        'threshold. There is no time dimension, no rolling window, and no half-open probe state — the ' +
+        'threshold. There is no time dimension, no rolling window, and no half-open probe state - the ' +
         'three things that make a real breaker interesting. Read it as a diagram you can move, and see ' +
         'the retry-strategy lab for a policy that is genuinely computed.',
     },
@@ -157,7 +157,7 @@ export const labs: LabDefinition[] = [
       basis:
         'A real orchestrator-style saga state machine executing in your browser. Each step transitions, ' +
         'awaits, and on the failure you select runs the compensating transactions for the steps that had ' +
-        'already committed — including the COMPENSATION_FAILED terminal state, which is the case that ' +
+        'already committed - including the COMPENSATION_FAILED terminal state, which is the case that ' +
         'actually matters in production. The transitions are the same ones described in the write-up.',
     },
     title: 'Saga State Machine',
@@ -187,7 +187,7 @@ export const labs: LabDefinition[] = [
     provenance: {
       kind: 'measured',
       environment:
-        'A local x86_64 host (AMD Ryzen AI 5, Docker Compose network — not the AWS c6g.xlarge cited ' +
+        'A local x86_64 host (AMD Ryzen AI 5, Docker Compose network - not the AWS c6g.xlarge cited ' +
         'in the June 2026 run this replaced, since that machine and harness were gone). ' +
         'Producer/consumer on Go 1.22 using go-redis (XADD / XREADGROUP), one goroutine per worker, ' +
         'sharing a consumer group. BullMQ on Node.js 20, one Worker instance per worker, concurrency 1. ' +
@@ -210,12 +210,12 @@ export const labs: LabDefinition[] = [
         'N concurrent workers each performing a 50 ms mock network call, on the same local Docker ' +
         'host, one language at a time. Go spawns one goroutine per task under a sync.WaitGroup; ' +
         'Node.js uses Promise.all over setTimeout-based async functions. Peak resident set size read ' +
-        "from /proc/self/status's VmHWM — the OS's own peak-memory accounting, identical method for " +
-        'both languages — and total wall-clock time.',
+        "from /proc/self/status's VmHWM - the OS's own peak-memory accounting, identical method for " +
+        'both languages - and total wall-clock time.',
       measuredOn: 'August 2026',
       harness: 'https://github.com/khoahotran/portfolio/tree/main/benchmarks/go-vs-ts-concurrency',
       caveat:
-        'The re-measurement reverses the direction of the original claim, not just its magnitude — ' +
+        'The re-measurement reverses the direction of the original claim, not just its magnitude - ' +
         "see this lab's article for why: the memory gap narrows with scale (10.3x at 1k tasks, 1.2x " +
         'at 50k), because Node pays a roughly fixed ~50MB runtime baseline once while Go scales ' +
         'closer to linearly per task.',
@@ -234,14 +234,14 @@ export const labs: LabDefinition[] = [
       environment:
         'PostgreSQL 16 and the official Firestore emulator, each populated with 10k/50k/100k mock ' +
         'events for one aggregate, queried by a Go application on the same Docker Compose network ' +
-        'as both. Not a real Cloud Firestore instance — see benchmarks/db-event-replay-benchmark/ ' +
+        'as both. Not a real Cloud Firestore instance - see benchmarks/db-event-replay-benchmark/ ' +
         'README.md for why the relative shape of the result still holds against production Firestore ' +
         'even though the emulator has no real network latency to model.',
       measuredOn: 'August 2026',
       harness: 'https://github.com/khoahotran/portfolio/tree/main/benchmarks/db-event-replay-benchmark',
       caveat:
-        'The comparison is structurally lopsided by design — one indexed range scan against N ' +
-        'individual document reads — which is the architectural point being demonstrated, not a ' +
+        'The comparison is structurally lopsided by design - one indexed range scan against N ' +
+        'individual document reads - which is the architectural point being demonstrated, not a ' +
         'like-for-like database benchmark or a Firestore configuration problem.',
     },
     title: 'Benchmark: DB Event Replay',
@@ -257,7 +257,7 @@ export const labs: LabDefinition[] = [
       kind: 'implementation',
       basis:
         'The real Token Bucket, Leaky Bucket, and Fixed Window Counter algorithms (src/labs/rateLimiting.ts, ' +
-        'unit-tested), run against an identical arrival timeline built from your rate/burst sliders — not three ' +
+        'unit-tested), run against an identical arrival timeline built from your rate/burst sliders - not three ' +
         'formulas tuned to look different. Refill/leak amounts are computed from real elapsed time between ' +
         "arrivals, and Fixed Window's boundary-reset flaw (a burst split across a window edge can double- " +
         'admit) is the actual algorithm, not a dramatized bug.',
@@ -277,11 +277,11 @@ export const labs: LabDefinition[] = [
         'A real push-based epidemic broadcast (src/labs/gossipProtocol.ts, unit-tested): every infected ' +
         'node picks real random peers each round via Fisher-Yates shuffling and pushes to them, exactly the ' +
         'rumor-mongering protocol underlying real cluster membership systems (Cassandra, Consul, SWIM). The ' +
-        "round-by-round spread you scrub through is the actual simulation's output, not a smoothed curve — " +
+        "round-by-round spread you scrub through is the actual simulation's output, not a smoothed curve - " +
         'the O(log n) convergence claim is asserted directly in the test suite, not just described in prose.',
     },
     title: 'Gossip Protocol Visualizer',
-    description: 'A push-based epidemic broadcast simulation — watch a message spread node by node.',
+    description: 'A push-based epidemic broadcast simulation - watch a message spread node by node.',
     component: GossipProtocolVisualizerPage,
     interaction: 'run',
     collidesWithArticleSlug: true, // content/experiments/2026-08-28-gossip-protocol-visualizer.md
@@ -301,7 +301,7 @@ export const labs: LabDefinition[] = [
       harness: 'https://github.com/khoahotran/portfolio/tree/main/benchmarks/websockets-vs-sse',
       caveat:
         'Peak-memory figures reproduced closely on a manual re-run (see the harness README); connect-time ' +
-        'did not — it reversed direction between two consecutive runs at 5,000 connections, most plausibly ' +
+        'did not - it reversed direction between two consecutive runs at 5,000 connections, most plausibly ' +
         'host scheduling/FD-pressure noise from opening that many connections from one client process in a ' +
         'short window. Connect-time is committed for transparency but is not treated as a reliable finding.',
     },
@@ -344,7 +344,7 @@ export const labs: LabDefinition[] = [
       caveat:
         'Host was under confirmed heavy, fluctuating CPU contention from unrelated processes while ' +
         'this matrix ran, which most plausibly inflates the p95 tail-latency figures in results.json ' +
-        "beyond what an idle host would show — the throughput/avg-latency trend this lab's finding " +
+        "beyond what an idle host would show - the throughput/avg-latency trend this lab's finding " +
         'rests on reproduced consistently across manual smoke-test runs and the full committed matrix; ' +
         'the exact multiples should not be expected to reproduce on a different host.',
     },
@@ -385,7 +385,7 @@ export const labs: LabDefinition[] = [
         'transitions are decided from the state each tick actually entered with, not asserted in prose.',
     },
     title: 'Backpressure Strategies',
-    description: 'Run four real backpressure policies against the same overload — block, drop-new, drop-old, circuit breaker.',
+    description: 'Run four real backpressure policies against the same overload - block, drop-new, drop-old, circuit breaker.',
     component: BackpressurePage,
     interaction: 'live',
     relatedArticle: 'backpressure-four-policies-one-overload',
@@ -400,14 +400,14 @@ export const labs: LabDefinition[] = [
         'same deterministic data generator so a given id returns byte-identical content on either ' +
         "protocol. Two payload shapes measured: 'single' (one User record) and 'list' (100 records). " +
         'Client concurrency 10/25/50, 30 requests per client, one shared reused connection per run ' +
-        '(a single *grpc.ClientConn / *http.Client) — the realistic deployment pattern for either ' +
+        '(a single *grpc.ClientConn / *http.Client) - the realistic deployment pattern for either ' +
         'protocol, not a strawman that reconnects per request on only one side.',
       measuredOn: 'September 2026',
       harness: 'https://github.com/khoahotran/portfolio/tree/main/benchmarks/grpc-vs-rest',
       caveat:
         'Host was under this session\'s already-documented fluctuating CPU contention while this ' +
         'matrix ran; a spot-check rerun of the single-mode, 10-client case reproduced the same ' +
-        'direction (REST ahead on both throughput and latency) but not the same magnitude — read the ' +
+        'direction (REST ahead on both throughput and latency) but not the same magnitude - read the ' +
         "direction of each result as reliable, the exact multiples as this run's, not a universal constant.",
     },
     title: 'Benchmark: gRPC vs REST',
@@ -424,13 +424,13 @@ export const labs: LabDefinition[] = [
         'A real two-proportion z-test (src/labs/canaryRollout.ts, unit-tested), the same class of ' +
         'statistical test real canary-analysis systems (Kayenta, Flagger) run instead of a raw ' +
         'threshold comparison. Error counts per stage are computed deterministically from each ' +
-        'input rate, not drawn from a random-number generator — the thing being tested is the ' +
+        'input rate, not drawn from a random-number generator - the thing being tested is the ' +
         'statistical decision procedure itself. Tests prove the actual two-sided finding as ' +
         'behaviour: a real regression can go undetected at a small sample size, and the identical ' +
         'regression is caught once the sample size is realistic.',
     },
     title: 'Canary Rollout Analysis',
-    description: 'Run a real two-proportion z-test canary analysis through traffic stages — see how sample size decides whether a regression is even detectable.',
+    description: 'Run a real two-proportion z-test canary analysis through traffic stages - see how sample size decides whether a regression is even detectable.',
     component: CanaryRolloutPage,
     interaction: 'live',
     relatedArticle: 'canary-deploys-and-the-sample-size-nobody-checks',
@@ -450,7 +450,7 @@ export const labs: LabDefinition[] = [
         'determine staleness, not assumed from which branch ran.',
     },
     title: 'Cache Freshness Policies',
-    description: 'Run three real cache-freshness policies against the same origin outage — TTL-blocking, stale-while-revalidate, and stale-if-error.',
+    description: 'Run three real cache-freshness policies against the same origin outage - TTL-blocking, stale-while-revalidate, and stale-if-error.',
     component: CacheFreshnessPage,
     interaction: 'live',
     relatedArticle: 'cache-freshness-what-stale-while-revalidate-actually-buys-you',
@@ -465,11 +465,11 @@ export const labs: LabDefinition[] = [
         'ring, and a node-count change is run through both this scheme and naive hash(key) % ' +
         'nodeCount against the identical key set, so the remapped-fraction comparison is measured, ' +
         'not asserted. The load-imbalance figure at low virtual-node counts is the real output of ' +
-        "that same ring, not a separate illustration — it's also what caught a genuine under-mixing " +
+        "that same ring, not a separate illustration - it's also what caught a genuine under-mixing " +
         'bug in the first hash implementation, fixed before this lab shipped.',
     },
     title: 'Consistent Hashing',
-    description: 'Compare naive modulo hashing against a real hash ring — see how little of the keyspace moves on a node-count change, and what happens without enough virtual nodes.',
+    description: 'Compare naive modulo hashing against a real hash ring - see how little of the keyspace moves on a node-count change, and what happens without enough virtual nodes.',
     component: ConsistentHashingPage,
     interaction: 'live',
     relatedArticle: 'consistent-hashing-and-the-rebalancing-nobody-notices',
@@ -482,14 +482,14 @@ export const labs: LabDefinition[] = [
         'Two real idempotency-key store designs (src/labs/idempotencyStore.ts, unit-tested), run ' +
         'against the identical concurrent-duplicate arrival pattern. check-then-set mirrors the ' +
         "companion article's own NestJS sample (a GET of the completed-results cache, followed " +
-        "later by a SET once processing finishes) — two non-atomic steps, so a duplicate that " +
+        "later by a SET once processing finishes) - two non-atomic steps, so a duplicate that " +
         "arrives while the first is still in flight finds nothing cached and genuinely reprocesses, " +
         'not a hypothetical. atomic-claim replaces that with one atomic check-and-claim, so a ' +
-        'concurrent duplicate coalesces onto the in-flight run and shares its result instead — both ' +
+        'concurrent duplicate coalesces onto the in-flight run and shares its result instead - both ' +
         'counted directly, not asserted.',
     },
     title: 'Idempotency-Key Store',
-    description: 'Run the real race between a concurrent duplicate and an in-flight request — see it double-process under check-then-set, then get coalesced under atomic-claim.',
+    description: 'Run the real race between a concurrent duplicate and an in-flight request - see it double-process under check-then-set, then get coalesced under atomic-claim.',
     component: IdempotencyStorePage,
     interaction: 'live',
     relatedArticle: 'blog/system-design-notes-idempotency',
@@ -521,16 +521,16 @@ export const labs: LabDefinition[] = [
       basis:
         'Two real CRDTs (src/labs/crdt.ts, unit-tested) run against the naive design each replaces, ' +
         'on the identical scenario. G-Counter: two nodes independently apply real local increments, ' +
-        "merge by component-wise max, and the merged total always equals the true total — compared " +
+        "merge by component-wise max, and the merged total always equals the true total - compared " +
         "against a naive LWW register that discards the non-winning node's increments entirely, " +
         "counted directly as lwwLostUpdates. OR-Set: a real add-remove-add sequence is run through " +
-        "both structures — OR-Set's per-tag tombstoning lets the re-add survive, while a naive " +
+        "both structures - OR-Set's per-tag tombstoning lets the re-add survive, while a naive " +
         '2P-Set permanently loses the value once it has ever been removed. The tests assert the ' +
         "actual CRDT merge laws directly (commutative, associative, idempotent, and idempotent " +
         "under duplicate delivery), not just that the demo scenario happens to work.",
     },
     title: 'CRDTs',
-    description: 'Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set — see exactly which concurrent updates the naive designs silently lose.',
+    description: 'Run a real G-Counter against a naive LWW register, and a real OR-Set against a naive 2P-Set - see exactly which concurrent updates the naive designs silently lose.',
     component: CrdtPage,
     interaction: 'live',
     relatedArticle: 'crdts-what-to-do-once-you-know-two-writes-are-concurrent',
@@ -543,7 +543,7 @@ export const labs: LabDefinition[] = [
         'A real bit-array Bloom filter (src/labs/bloomFilter.ts, unit-tested): the standard ' +
         'Kirsch-Mitzenmacher construction derives k hash-function outputs from two real hash ' +
         'computations (h1(x) + i*h2(x) mod m), and every bit set/tested is a real array write/read, ' +
-        'not a formula. False negatives are asserted at 0 across every configuration tested — the ' +
+        'not a formula. False negatives are asserted at 0 across every configuration tested - the ' +
         'hard guarantee. The false-positive rate is measured directly against 5,000 ' +
         'genuinely-not-inserted test items and compared to the closed-form estimate ' +
         '(1 - e^(-kn/m))^k for the identical m/k/n, both at designed capacity (where they track ' +
@@ -551,7 +551,7 @@ export const labs: LabDefinition[] = [
         'measured, not asserted).',
     },
     title: 'Bloom Filters',
-    description: 'Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real.',
+    description: 'Run a real bit-array Bloom filter - measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real.',
     component: BloomFilterPage,
     interaction: 'live',
     relatedArticle: 'bloom-filters-and-the-capacity-you-cant-see-coming',
@@ -566,13 +566,13 @@ export const labs: LabDefinition[] = [
         "actually differs. Every scenario is measured against the identical naive full-scan " +
         'baseline: two identical trees cost exactly 1 node visit (an O(1) proof of full equality) ' +
         'versus the scan\'s fixed 1,024; a single differing key costs ~21 visits versus 1,024; and ' +
-        '— the honest caveat, asserted directly rather than omitted — when every key differs the ' +
+        '- the honest caveat, asserted directly rather than omitted - when every key differs the ' +
         "targeted walk visits nearly the whole tree (~2,047 nodes), genuinely more than the naive " +
         "scan's 1,024, since the sparse-difference win doesn't hold when there is nothing sparse " +
         'about the difference.',
     },
     title: 'Merkle Trees',
-    description: 'Run a real Merkle-tree targeted diff against a naive full scan on the same two datasets — see the O(1) proof of equality, the near-O(log n) cost of a sparse diff, and the honest case where the targeted walk loses.',
+    description: 'Run a real Merkle-tree targeted diff against a naive full scan on the same two datasets - see the O(1) proof of equality, the near-O(log n) cost of a sparse diff, and the honest case where the targeted walk loses.',
     component: MerkleTreePage,
     interaction: 'live',
     relatedArticle: 'merkle-trees-and-the-diff-nobody-has-to-compute',
@@ -585,14 +585,14 @@ export const labs: LabDefinition[] = [
         'Two real Raft mechanisms (src/labs/raft.ts, unit-tested), the algorithm the leader-election ' +
         'lab\'s own comparison table names as what production systems reach for over Bully. ' +
         "simulateElection is the real election restriction: a candidate's log is compared against " +
-        "every alive peer's, and a stale candidate loses regardless of how many peers are alive — " +
+        "every alive peer's, and a stale candidate loses regardless of how many peers are alive - " +
         "unlike Bully, which elects purely by node id. advanceCommitIndex is Raft's subtle commit " +
         "safety rule: an entry replicated to a majority is asserted as NOT committed unless it's " +
         "also from the leader's current term (wouldBeUnsafeWithoutTermCheck, tested directly), " +
         'and correctly commits once a current-term entry also reaches that majority.',
     },
     title: 'Raft Consensus',
-    description: "Run Raft's real election restriction and commit-index safety rule — see why a stale node can't win an election, and why replica count alone can't prove a log entry is safely committed.",
+    description: "Run Raft's real election restriction and commit-index safety rule - see why a stale node can't win an election, and why replica count alone can't prove a log entry is safely committed.",
     component: RaftPage,
     interaction: 'live',
     relatedArticle: 'raft-and-the-commit-rule-replica-count-alone-cant-prove',
@@ -603,17 +603,17 @@ export const labs: LabDefinition[] = [
       kind: 'implementation',
       basis:
         'Two real distributed-transaction protocols (src/labs/twoPhaseCommitVsSaga.ts, unit-tested), ' +
-        'run on the same kind of failure — a step in a multi-participant transaction going wrong. ' +
+        'run on the same kind of failure - a step in a multi-participant transaction going wrong. ' +
         'simulateTwoPhaseCommit models the actual blocking failure: a coordinator crash after every ' +
         'participant votes yes but before the decision is broadcast leaves every yes-voter stuck ' +
-        'holding its locks, with no rule for deciding alone — the real cost of the atomicity ' +
+        'holding its locks, with no rule for deciding alone - the real cost of the atomicity ' +
         'guarantee. simulateSaga models the mirror-image cost: nothing ever blocks, but a ' +
         'compensation that itself fails (compensationSucceeds: false) leaves a committed side ' +
         'effect with no built-in way back to a consistent state, asserted directly as a test rather ' +
         'than assumed away.',
     },
     title: 'Two-Phase Commit vs. Saga',
-    description: "Run the real 2PC blocking failure and the real Saga compensation-failure gap side by side — see exactly what atomicity costs, and exactly what giving it up costs instead.",
+    description: "Run the real 2PC blocking failure and the real Saga compensation-failure gap side by side - see exactly what atomicity costs, and exactly what giving it up costs instead.",
     component: TwoPhaseCommitVsSagaPage,
     interaction: 'live',
     relatedArticle: 'two-phase-commit-vs-saga-what-atomicity-actually-costs',
@@ -623,12 +623,12 @@ export const labs: LabDefinition[] = [
     provenance: {
       kind: 'implementation',
       basis:
-        'A real HyperLogLog sketch (src/labs/hyperLogLog.ts, unit-tested) — hashes each item, ' +
+        'A real HyperLogLog sketch (src/labs/hyperLogLog.ts, unit-tested) - hashes each item, ' +
         'keeps only the longest leading-zero run per register, and estimates cardinality from the ' +
         'harmonic mean across registers. Accuracy is measured directly against a true count, not ' +
         'claimed: relativeError from runCardinalityTrial is checked against ' +
         'theoreticalStandardError (1.04/sqrt(m)) across a wide range of true cardinalities. The ' +
-        'small-range (linear counting) correction is also asserted directly — at low true ' +
+        'small-range (linear counting) correction is also asserted directly - at low true ' +
         'cardinality, the uncorrected formula overestimates by more than 10x, tested as a real ' +
         'before/after comparison, not described in prose. mergeHyperLogLog (elementwise max per ' +
         'register) is asserted to estimate a true union cardinality correctly even under heavy ' +
@@ -636,7 +636,7 @@ export const labs: LabDefinition[] = [
         "wrong by double-counting the overlap.",
     },
     title: 'HyperLogLog',
-    description: 'Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.',
+    description: 'Run a real HyperLogLog sketch - measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.',
     component: HyperLogLogPage,
     interaction: 'live',
     relatedArticle: 'hyperloglog-and-the-question-bloom-filters-cant-answer',
@@ -646,7 +646,7 @@ export const labs: LabDefinition[] = [
     provenance: {
       kind: 'implementation',
       basis:
-        'A real log-structured merge tree (src/labs/lsmTree.ts, unit-tested) — writes land in an ' +
+        'A real log-structured merge tree (src/labs/lsmTree.ts, unit-tested) - writes land in an ' +
         'in-memory memtable, flush as immutable sorted runs, and are only ever combined by an ' +
         'explicit compaction step, never updated in place. Both sides of the trade-off are ' +
         'measured, not stated: with no compaction, writeAmplification is exactly 1.0 (every ' +
@@ -654,11 +654,11 @@ export const labs: LabDefinition[] = [
         'missing-key lookup both grow unbounded with total writes, asserted directly across two ' +
         'different write volumes. With compaction, run count and read amplification are asserted ' +
         'to stay bounded at a small constant regardless of write volume, while writeAmplification ' +
-        'is asserted to rise above 1.0 — and to rise further still when compaction runs more ' +
+        'is asserted to rise above 1.0 - and to rise further still when compaction runs more ' +
         'frequently, a real relationship between compaction frequency and rewrite cost.',
     },
     title: 'LSM Trees',
-    description: 'Run a real log-structured merge tree — measure read amplification growing unbounded without compaction, then measure the real write-amplification cost of bounding it.',
+    description: 'Run a real log-structured merge tree - measure read amplification growing unbounded without compaction, then measure the real write-amplification cost of bounding it.',
     component: LsmTreePage,
     interaction: 'live',
     relatedArticle: 'lsm-trees-and-the-write-youll-pay-for-later',

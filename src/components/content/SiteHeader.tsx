@@ -8,17 +8,17 @@ import { useTheme } from '../../theme/useTheme';
  * Four destinations, and nothing that scrolls.
  *
  * The previous header carried eleven equally weighted links in a horizontally scrolling strip. It
- * overflowed at 1440px — "Tags" rendered as a clipped "T" on a standard desktop — and at 390px a
+ * overflowed at 1440px - "Tags" rendered as a clipped "T" on a standard desktop - and at 390px a
  * reader saw four of the eleven with no affordance for the rest. The scroll-position fades added
  * for that strip were solving the wrong problem: the fault was never that the overflow was
  * unsignposted, it was that eleven peer destinations is a sitemap rather than a navigation.
  *
  * What the five writing collections cost here was the whole argument: Blog, Research, Experiments,
  * System Design and Field Notes are the author's taxonomy, and they now live as filters inside
- * Writing. Their routes are untouched — see WritingIndexPage.
+ * Writing. Their routes are untouched - see WritingIndexPage.
  *
  * Four labels total about 210px at 320px wide, so the same markup serves every breakpoint: no
- * hamburger, no scroll strip, no fade. Cmd-K is an accelerator layered on top, never the way in —
+ * hamburger, no scroll strip, no fade. Cmd-K is an accelerator layered on top, never the way in -
  * the four labels stay visible for a reader who has never pressed it.
  */
 
@@ -49,7 +49,7 @@ function SiteHeader() {
           {/* The wordmark doubles as the home link, which is what the house icon used to do with
               no label at all. A name is the right thing to lead a personal site with. */}
           {/* Initials below 640px. Four labels plus two controls plus the full wordmark measured
-              411px against a 320px viewport — the gate caught it — and the name is the one element
+              411px against a 320px viewport - the gate caught it - and the name is the one element
               here that a reader can still identify from two letters. */}
           <NavLink
             to="/"

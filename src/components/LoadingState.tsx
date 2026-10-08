@@ -3,13 +3,13 @@ import { Loader2 } from 'lucide-react';
 interface Props {
   /** What's loading, e.g. "articles", "search index". Rendered after a generic lead-in. */
   label?: string;
-  /** Extra classes for the outer wrapper — use this to match a specific page's
+  /** Extra classes for the outer wrapper - use this to match a specific page's
    * container width/padding instead of duplicating the flex/icon/text markup. */
   className?: string;
 }
 
 /**
- * Shared loading indicator — a spinning icon instead of static "Loading…" text,
+ * Shared loading indicator - a spinning icon instead of static "Loading…" text,
  * so a slow connection reads as "working" rather than a possibly-stuck page.
  * `role="status"` + `aria-live="polite"` announce the label to screen readers
  * without the icon itself (decorative, `aria-hidden`) being read out.

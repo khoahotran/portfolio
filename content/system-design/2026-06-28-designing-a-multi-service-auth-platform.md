@@ -8,7 +8,7 @@ summary: "A deep dive into Aegis, a high-performance authorization platform usin
 
 Authentication and authorization are often the first bottlenecks in a growing system. A monolithic auth service can quickly become a single point of failure and a scaling bottleneck, especially when policy evaluation happens on every single incoming request.
 
-To address this, I built **Aegis**—a modular, high-performance auth platform designed around strict service boundaries, observability, and sub-millisecond policy decisions.
+To address this, I built **Aegis**-a modular, high-performance auth platform designed around strict service boundaries, observability, and sub-millisecond policy decisions.
 
 In this deep dive, I'll break down the system context, the internal container architecture, and the request flows for authentication and authorization.
 
@@ -89,7 +89,7 @@ Handles user lifecycle, password hashing using `Argon2id`, and JWT issuance. It 
 ### 3. Policy Service (gRPC)
 An ultra-fast decision engine. It evaluates RBAC/ABAC rules. Since this service is queried on *almost every API call*, it uses Redis as an aggressive caching layer for policy decisions.
 
-The permission-*evaluation* engine itself is real and DB-backed — role-to-permission lookups, wildcard matching, and the fail-closed default described below all run against actual code. Role *assignment* — deciding which roles a given user has in the first place — is currently a hardcoded demo mapping in the repository rather than a live query against the `UserRole` table the schema already defines; end-to-end, database-driven role resolution isn't wired up yet.
+The permission-*evaluation* engine itself is real and DB-backed - role-to-permission lookups, wildcard matching, and the fail-closed default described below all run against actual code. Role *assignment* - deciding which roles a given user has in the first place - is currently a hardcoded demo mapping in the repository rather than a live query against the `UserRole` table the schema already defines; end-to-end, database-driven role resolution isn't wired up yet.
 
 ### 4. Audit Service (gRPC)
 A passive consumer. Both Identity and Policy services drop events onto a Kafka topic asynchronously. The Audit service consumes these and persists them to its own PostgreSQL database for compliance reporting.

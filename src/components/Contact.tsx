@@ -5,7 +5,7 @@ export default function Contact() {
   return (
     <section id="contact" className="py-24 px-6 bg-surface">
       <div className="max-w-5xl mx-auto text-center font-light">
-        {/* Decorative kicker, not a heading — see the matching note in About.tsx. */}
+        {/* Decorative kicker, not a heading - see the matching note in About.tsx. */}
         <p className="text-meta uppercase tracking-widest text-teal-700 mb-6 font-medium italic">
           {contactData.title}
         </p>

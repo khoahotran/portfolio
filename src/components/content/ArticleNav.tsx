@@ -38,7 +38,7 @@ function ArticleNav({ collection, slug }: Props) {
       setPrevious(items[currentIndex + 1] ?? null);
       setNext(items[currentIndex - 1] ?? null);
     }).catch(() => {
-      // Prev/next is a non-critical enhancement — degrade silently rather
+      // Prev/next is a non-critical enhancement - degrade silently rather
       // than surfacing an error for a missing navigation widget.
     });
 

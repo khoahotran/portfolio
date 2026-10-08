@@ -10,9 +10,9 @@ interface State {
 }
 
 /**
- * Top-level error boundary. Without this, a render-phase error — most
+ * Top-level error boundary. Without this, a render-phase error - most
  * commonly a lazy route chunk that 404s after a redeploy replaces the
- * hashed asset filenames — throws during render and unmounts the whole
+ * hashed asset filenames - throws during render and unmounts the whole
  * React tree, leaving a permanently blank page with no recovery path.
  * <Suspense> only covers *pending* lazy imports, not *failed* ones.
  */

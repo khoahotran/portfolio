@@ -16,10 +16,10 @@ import { useSeo } from '../../seo/useSeo';
 function HyperLogLogPage() {
   useSeo({
     title: 'HyperLogLog Visualizer',
-    description: 'Run a real HyperLogLog sketch — measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.',
+    description: 'Run a real HyperLogLog sketch - measure its estimation error against a true count and the theoretical standard error, watch the small-range correction matter, then merge two overlapping sketches for a real union estimate.',
   });
 
-  // Stage 1 — accuracy vs. true cardinality
+  // Stage 1 - accuracy vs. true cardinality
   const [precision, setPrecision] = useState(10);
   const [trueCardinality, setTrueCardinality] = useState(1000);
   const registerCount = 1 << precision;
@@ -33,7 +33,7 @@ function HyperLogLogPage() {
     return { raw: estimateCardinalityRaw(hll), corrected: estimateCardinality(hll), n: Math.min(trueCardinality, 50) };
   }, [precision, trueCardinality]);
 
-  // Stage 2 — merge
+  // Stage 2 - merge
   const [sizeA, setSizeA] = useState(1000);
   const [sizeB, setSizeB] = useState(1000);
   const [overlap, setOverlap] = useState(500);
@@ -62,7 +62,7 @@ function HyperLogLogPage() {
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">HyperLogLog</h1>
       <p className="mt-2 text-slate-600">
         The Bloom filter lab answers "have I seen this exact item." This one answers the different
-        question of "how many distinct items have I seen" — in a fixed handful of registers, never
+        question of "how many distinct items have I seen" - in a fixed handful of registers, never
         storing a single item itself.
       </p>
 
@@ -120,10 +120,10 @@ function HyperLogLogPage() {
                 <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
                 <p>
                   True count {trueCardinality.toLocaleString()}, estimated {trial.estimate.toFixed(0)}{' '}
-                  — {(trial.relativeError * 100).toFixed(2)}% off, against a theoretical standard
+                  - {(trial.relativeError * 100).toFixed(2)}% off, against a theoretical standard
                   error of {(standardError * 100).toFixed(2)}% for {registerCount.toLocaleString()}{' '}
                   registers. Never exact, but never storing a single one of the{' '}
-                  {trueCardinality.toLocaleString()} items either — only {registerCount.toLocaleString()}{' '}
+                  {trueCardinality.toLocaleString()} items either - only {registerCount.toLocaleString()}{' '}
                   small registers, regardless of true cardinality.
                 </p>
               </div>
@@ -188,7 +188,7 @@ function HyperLogLogPage() {
                 <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
                 <p>
                   True union: {mergeResult.trueUnion.toLocaleString()}. Merged sketch estimates{' '}
-                  {mergeResult.mergedEstimate.toFixed(0)} — correct regardless of how much A and B
+                  {mergeResult.mergedEstimate.toFixed(0)} - correct regardless of how much A and B
                   overlap, because merging takes the max per register, exactly what one sketch that
                   had seen everything both did would itself contain.
                 </p>
@@ -212,7 +212,7 @@ function HyperLogLogPage() {
                   </div>
                 </div>
                 <p className="mt-4 text-micro text-slate-500">
-                  Drag overlap up toward A's or B's full size — the naive sum keeps climbing (it
+                  Drag overlap up toward A's or B's full size - the naive sum keeps climbing (it
                   double-counts every shared user) while the merged estimate keeps tracking the real
                   union, because it never counted anyone twice in the first place.
                 </p>

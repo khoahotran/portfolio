@@ -11,7 +11,7 @@ const NODE_COLOR: Record<string, string> = { A: 'text-teal-700', B: 'text-sky-70
 
 // A fixed, real scenario: A and B each write independently before any message connects them; A's
 // update reaches B and visibly informs B's next write; C's write stays isolated the whole time,
-// so C's write and B's post-receive write stay concurrent right through the end of the script —
+// so C's write and B's post-receive write stay concurrent right through the end of the script -
 // the pair the lab defaults to comparing.
 const SCRIPT: ClockAction[] = [
   { type: 'local', nodeId: 'A', label: 'A writes x=1' },
@@ -29,7 +29,7 @@ const COMPARISON_STYLE: Record<ClockComparison, { icon: typeof ArrowRight; label
   before: { icon: ArrowRight, label: 'happened-before', surface: 'border-sky-200 bg-sky-50', accent: 'text-sky-800' },
   after: { icon: ArrowRight, label: 'happened-after', surface: 'border-sky-200 bg-sky-50', accent: 'text-sky-800' },
   equal: { icon: Equal, label: 'equal', surface: 'border-slate-200 bg-slate-50', accent: 'text-slate-700' },
-  concurrent: { icon: ArrowLeftRight, label: 'concurrent — provably no causal link', surface: 'border-amber-200 bg-amber-50', accent: 'text-amber-800' },
+  concurrent: { icon: ArrowLeftRight, label: 'concurrent - provably no causal link', surface: 'border-amber-200 bg-amber-50', accent: 'text-amber-800' },
 };
 
 function clockLabel(clock: VectorClock): string {
@@ -59,7 +59,7 @@ function VectorClocksPage() {
       <LabBackLink labId="vector-clocks" />
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Vector Clocks</h1>
       <p className="mt-2 text-slate-600">
-        A real scripted causal history across three nodes — pick any two events and see the actual
+        A real scripted causal history across three nodes - pick any two events and see the actual
         happens-before/happens-after/concurrent verdict, then compare it against what a naive
         last-write-wins resolver would do with the same events' physical timestamps.
       </p>
@@ -120,7 +120,7 @@ function VectorClocksPage() {
 
           <p className="text-micro text-slate-500">
             The default pair (C's write, B's write informed by A) never exchanged a message with
-            each other in this script — try dragging their clock skew apart and see the naive
+            each other in this script - try dragging their clock skew apart and see the naive
             winner flip while the causal verdict underneath never does.
           </p>
         </section>
@@ -133,20 +133,20 @@ function VectorClocksPage() {
                 <ComparisonIcon className="w-4 h-4 shrink-0" aria-hidden="true" />
                 {COMPARISON_STYLE[comparison].label}
               </div>
-              <p className="mt-2 text-micro text-slate-600">Depends only on the two events' vector clocks — immune to clock skew.</p>
+              <p className="mt-2 text-micro text-slate-600">Depends only on the two events' vector clocks - immune to clock skew.</p>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
               <p className="text-nano font-bold uppercase tracking-widest text-slate-600">Naive last-write-wins</p>
               <div className={`mt-2 text-meta font-bold ${NODE_COLOR[winner.nodeId]}`}>
                 #{winner.id} [{winner.nodeId}] wins
               </div>
-              <p className="mt-2 text-micro text-slate-600">Picked purely by physical timestamp — always produces a winner, even here.</p>
+              <p className="mt-2 text-micro text-slate-600">Picked purely by physical timestamp - always produces a winner, even here.</p>
             </div>
           </div>
 
           {comparison === 'concurrent' && (
             <p className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-micro text-amber-800">
-              These two events are provably concurrent — neither could have influenced the other —
+              These two events are provably concurrent - neither could have influenced the other -
               yet last-write-wins still confidently names a winner. Drag the skew sliders for{' '}
               {eventA.nodeId} and {eventB.nodeId} in opposite directions: the naive winner flips,
               but the causal verdict above stays exactly "concurrent" the entire time.

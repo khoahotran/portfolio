@@ -8,11 +8,11 @@ summary: "A modular, high-performance Identity and Policy microservice platform 
 
 ## Provenance & Source
 
-- **Provenance** — Self-directed engineering project. Designed and built solo to production standards;
+- **Provenance** - Self-directed engineering project. Designed and built solo to production standards;
   it runs in Docker Compose, not in front of real users. Where the shipped code is narrower than the
   design, this write-up says so explicitly rather than describing the intent as the outcome.
-- **Role** — Sole author: architecture, all four Go services, and the local infrastructure.
-- **Source** — [github.com/khoahotran/aegis](https://github.com/khoahotran/aegis)
+- **Role** - Sole author: architecture, all four Go services, and the local infrastructure.
+- **Source** - [github.com/khoahotran/aegis](https://github.com/khoahotran/aegis)
 
 ## Project Foundation
 
@@ -22,7 +22,7 @@ summary: "A modular, high-performance Identity and Policy microservice platform 
 1. Centralize Identity (Authentication) and Policy (Authorization).
 2. Achieve **sub-5ms** authorization checks so downstream services aren't penalized.
 3. Provide a unified GraphQL API gateway for clients, while keeping internal service-to-service communication on high-speed gRPC.
-4. Build a durable audit log — every auth event delivered at-least-once and safely deduplicated, rather than best-effort — as a foundation for compliance.
+4. Build a durable audit log - every auth event delivered at-least-once and safely deduplicated, rather than best-effort - as a foundation for compliance.
 
 ## Architecture
 
@@ -93,9 +93,9 @@ C4Container
 
 ## Production Engineering
 
-- **Rate Limiting:** The Gateway rate-limits requests via Redis to blunt brute-force and credential-stuffing attempts. The current repository implements this as a fixed-window `INCR`/`EXPIRE` counter (separate IP and per-user limits); a Lua-scripted token-bucket variant — shown as the more precise reference pattern in the [gRPC service mesh walkthrough](/blog/grpc-service-mesh-in-go-aegis-architecture) — is not what's currently running.
+- **Rate Limiting:** The Gateway rate-limits requests via Redis to blunt brute-force and credential-stuffing attempts. The current repository implements this as a fixed-window `INCR`/`EXPIRE` counter (separate IP and per-user limits); a Lua-scripted token-bucket variant - shown as the more precise reference pattern in the [gRPC service mesh walkthrough](/blog/grpc-service-mesh-in-go-aegis-architecture) - is not what's currently running.
 - **Distributed Tracing:** OpenTelemetry is instrumented across all gRPC calls. Every request has a `trace_id` injected into the context, allowing us to visualize the exact latency breakdown between the Gateway, Identity Service, and Database in Jaeger.
-- **Graceful Shutdown:** The Audit worker traps `SIGTERM`, stops pulling new work, and lets in-flight processing finish before exiting — this is one piece of a zero-downtime Kubernetes rollout design, though it is not the whole story (readiness probes, PodDisruptionBudgets, and drain-timeout tuning also matter and aren't demonstrated here). The Gateway, Identity, and Policy services do not yet implement the same signal handling in the current repository.
+- **Graceful Shutdown:** The Audit worker traps `SIGTERM`, stops pulling new work, and lets in-flight processing finish before exiting - this is one piece of a zero-downtime Kubernetes rollout design, though it is not the whole story (readiness probes, PodDisruptionBudgets, and drain-timeout tuning also matter and aren't demonstrated here). The Gateway, Identity, and Policy services do not yet implement the same signal handling in the current repository.
 
 ## Reflection
 

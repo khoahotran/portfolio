@@ -11,5 +11,5 @@
   <text x="72" y="260" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">gRPC vs REST: When the Smaller</text>
   <text x="72" y="324" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Payload Loses</text>
   <text x="72" y="414" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">A real harness measuring gRPC against REST for the same</text>
-  <text x="72" y="454" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">data, same server, same Go process — and REST wins…</text>
+  <text x="72" y="454" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">data, same server, same Go process - and REST wins…</text>
 </svg>

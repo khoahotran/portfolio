@@ -4,7 +4,7 @@ Before an AI agent can consider a task "complete" and ready for a final commit, 
 
 ## 1. Content Quality Gate
 - [ ] Does the article have a valid YAML frontmatter block (`title`, `date`, `tags`, `summary`)?
-      Reading time is computed at build time — do not add a `reading_time` field.
+      Reading time is computed at build time - do not add a `reading_time` field.
 - [ ] Is the narrative written in a professional, trade-off-first tone (authoritative without overclaiming)?
 - [ ] Does the article avoid implying seniority, experience, or ownership beyond what actually happened?
 - [ ] Are all architectural claims backed by trade-off analysis?
@@ -18,12 +18,12 @@ Before an AI agent can consider a task "complete" and ready for a final commit, 
 - [ ] Is the lab registered in `src/labs/registry.ts` (which is what `App.tsx` and `/labs` both
       derive from), and is its id in `src/labs/lab-ids.json`?
 - [ ] **Does it declare `provenance`?** The type in `src/labs/provenance.ts` makes this
-      unskippable — a lab cannot be registered without it — but declaring it *accurately* is the
+      unskippable - a lab cannot be registered without it - but declaring it *accurately* is the
       actual gate:
-  - `implementation` — the lab runs the real algorithm on the reader's input. `basis` names it.
-  - `model` — the lab computes chosen formulas. `basis` must **state the formulas**, so the reader
+  - `implementation` - the lab runs the real algorithm on the reader's input. `basis` names it.
+  - `model` - the lab computes chosen formulas. `basis` must **state the formulas**, so the reader
     can judge them, and must not imply the absolute numbers measure anything.
-  - `measured` — results from a real run. `environment` must be specific enough to reproduce,
+  - `measured` - results from a real run. `environment` must be specific enough to reproduce,
     `harness` should link the code, and `caveat` must state what is missing (unpublished harness,
     unrecorded host, sample of one).
 - [ ] Does the lab render `<ProvenanceNote labId="..." />` above its controls, not below the charts?

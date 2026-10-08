@@ -6,13 +6,13 @@ import { simulateCanaryRollout } from '../../labs/canaryRollout';
 import { useSeo } from '../../seo/useSeo';
 
 const TRAFFIC_STAGES = [5, 25, 50, 100];
-const Z_THRESHOLD = 1.96; // standard 95%-confidence one-tailed cutoff, not exposed as a slider —
+const Z_THRESHOLD = 1.96; // standard 95%-confidence one-tailed cutoff, not exposed as a slider -
 // tuning the confidence level is a separate question from the one this lab demonstrates.
 
 function CanaryRolloutPage() {
   useSeo({
     title: 'Canary Rollout Analysis Visualizer',
-    description: 'Run a real two-proportion z-test canary analysis through traffic stages — see how sample size decides whether a regression is even detectable.',
+    description: 'Run a real two-proportion z-test canary analysis through traffic stages - see how sample size decides whether a regression is even detectable.',
   });
 
   const [canaryRatePercent, setCanaryRatePercent] = useState(4);
@@ -30,7 +30,7 @@ function CanaryRolloutPage() {
       <LabBackLink labId="canary-rollout" />
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Canary Rollout Analysis</h1>
       <p className="mt-2 text-slate-600">
-        Runs a real two-proportion z-test at every traffic stage — the same class of statistical test
+        Runs a real two-proportion z-test at every traffic stage - the same class of statistical test
         real canary systems use instead of a raw error-rate threshold.
       </p>
 
@@ -65,7 +65,7 @@ function CanaryRolloutPage() {
           <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-micro flex gap-3 leading-relaxed mt-8">
             <Info className="w-5 h-5 shrink-0 text-sky-600" />
             <p>
-              The canary and baseline error rates are the true, fixed rates each stage samples from —
+              The canary and baseline error rates are the true, fixed rates each stage samples from -
               they don't change between stages. Only how much traffic is sampled changes, via "requests
               sampled per stage." Drag it down to see a real regression go undetected; drag it up to
               see the test catch the same regression.
@@ -105,7 +105,7 @@ function CanaryRolloutPage() {
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-meta font-bold text-slate-800">Stage {stageNum} — {traffic}% traffic</span>
+                    <span className="text-meta font-bold text-slate-800">Stage {stageNum} - {traffic}% traffic</span>
                     {!reached ? (
                       <span className="text-nano font-bold uppercase tracking-widest text-slate-600">Not reached</span>
                     ) : (

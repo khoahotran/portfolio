@@ -5,7 +5,7 @@ import { useSeo } from '../seo/useSeo';
 /**
  * Reading paths from `.ai/knowledge-graph.md` ("Recommended Reading Paths"),
  * kept as plain in-app links here as the reliable fallback next-action for
- * this page — independent of whether the diagram's node-click wiring below
+ * this page - independent of whether the diagram's node-click wiring below
  * works in a given browser. Each `to` is verified to resolve to a real route.
  */
 const READING_PATHS = [
@@ -29,7 +29,7 @@ const READING_PATHS = [
       { label: 'Go vs TS Concurrency', kind: 'Benchmark', to: '/labs/go-vs-ts-concurrency' },
     ],
   },
-  // QuantAlpha and PFM had graph nodes but no reading path at all — this closes that gap for
+  // QuantAlpha and PFM had graph nodes but no reading path at all - this closes that gap for
   // QuantAlpha specifically (added alongside the Phase 5 §5.4 database-indexing article, which
   // gave it its first research-depth piece beyond the flagship page and the HFT signal article).
   {
@@ -47,7 +47,7 @@ const READING_PATHS = [
  * Wires the diagram's `click <nodeId> href "/path" "_self"` anchors (see the
  * `click` lines in graphDefinition below) to client-side navigation instead
  * of a full page reload. Mermaid emits these as real SVG `<a>` elements using
- * `xlink:href` (not `href`) — confirmed against the rendered output, not
+ * `xlink:href` (not `href`) - confirmed against the rendered output, not
  * assumed. Same convention as MarkdownContent's normalizeLinks/handleLinkClick:
  * the visible href is rewritten to include the app's base path (correct
  * without JS / on view-source), while the original app-relative path is
@@ -59,13 +59,13 @@ function wireGraphLinks(container: HTMLElement, navigate: NavigateFunction) {
 
   container.querySelectorAll<SVGAElement>('a').forEach((anchor) => {
     const element = anchor as unknown as HTMLElement;
-    // data-app-path, when already present, is the app path from a previous pass — prefer it over
+    // data-app-path, when already present, is the app path from a previous pass - prefer it over
     // the href, which that pass has already prefixed with BASE_URL. Reading the href again would
     // prefix a prefixed value: with base "/portfolio/", "/projects/aegis" becomes
     // "/portfolio/portfolio/projects/aegis" and the node stops resolving to a route.
     //
     // This is reachable now that a prerendered graph is restored from its serialized SVG rather
-    // than re-rendered (src/content-engine/mermaid-prerendered.ts) — that markup already carries
+    // than re-rendered (src/content-engine/mermaid-prerendered.ts) - that markup already carries
     // both attributes, so onRendered runs over links this function has effectively seen before.
     const appPath =
       element.dataset.appPath ?? anchor.getAttributeNS(XLINK, 'href') ?? anchor.getAttribute('href');
@@ -94,7 +94,7 @@ function KnowledgeGraphPage() {
 
   useSeo({ title: 'Ecosystem Graph', description: 'Interactive ecosystem graph of the portfolio.' });
 
-  // Scoped to the flagship projects (content/projects/*.md — see .ai/flagship-projects.md) —
+  // Scoped to the flagship projects (content/projects/*.md - see .ai/flagship-projects.md) -
   // SeensioGO and Jujuja were previously drawn here as project nodes
   // identical in style to Aegis/Core Banking/QuantAlpha, but neither has a
   // content/projects/ page; they're covered via blog/system-design articles
@@ -103,7 +103,7 @@ function KnowledgeGraphPage() {
   // project's own frontmatter tags, not carried over from the previous version.
   //
   // The three `click` lines make the flagship nodes navigate to their project
-  // pages (wired to client-side routing by wireGraphLinks above) — this used
+  // pages (wired to client-side routing by wireGraphLinks above) - this used
   // to be a diagram with zero links anywhere on the page.
   const graphDefinition = `
 graph TD

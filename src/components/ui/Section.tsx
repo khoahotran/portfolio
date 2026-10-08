@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
  *
  * Every section on the site currently uses `py-24` and `max-w-5xl`. That evenness is the thing the
  * redesign is about: when every band has the same weight, nothing recedes, so nothing stands out,
- * and the page reads as a list of equally important things — which is exactly how a template reads.
+ * and the page reads as a list of equally important things - which is exactly how a template reads.
  *
  * `rhythm` is assigned by importance, not by position: `anchor` for the few bands that carry the
  * argument, `quiet` for the ones that are there because the information has to live somewhere.
@@ -45,7 +45,7 @@ export function Section({ id, rhythm = 'standard', width = 'standard', className
 interface SectionHeaderProps {
   /**
    * The small coloured line above the heading. Rendered as a <p>, not a heading: it is a label for
-   * the section, and putting it in the heading outline would give every band two entries — see the
+   * the section, and putting it in the heading outline would give every band two entries - see the
    * matching note that already exists in About.tsx.
    */
   kicker?: string;

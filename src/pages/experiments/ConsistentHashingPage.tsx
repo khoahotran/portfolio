@@ -11,7 +11,7 @@ import {
 import { useSeo } from '../../seo/useSeo';
 
 /** Fixed, not a slider: the key-set size isn't the thing being varied here, and the finding is
- * only legible once it's large enough to average out per-key hashing noise — the same reasoning
+ * only legible once it's large enough to average out per-key hashing noise - the same reasoning
  * as Redlock's fixed acquire timeout. */
 const KEY_COUNT = 5000;
 /** Fixed at 5 base nodes: enough to make "one node added/removed" a real minority-of-the-fleet
@@ -33,7 +33,7 @@ function ConsistentHashingPage() {
   useSeo({
     title: 'Consistent Hashing Visualizer',
     description:
-      'Run the real hash-ring key-placement algorithm and compare it against naive modulo hashing — see exactly how much of the keyspace each scheme reshuffles when a node joins or leaves.',
+      'Run the real hash-ring key-placement algorithm and compare it against naive modulo hashing - see exactly how much of the keyspace each scheme reshuffles when a node joins or leaves.',
   });
 
   const [virtualNodesPerNode, setVirtualNodesPerNode] = useState(10);
@@ -70,7 +70,7 @@ function ConsistentHashingPage() {
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Consistent Hashing</h1>
       <p className="mt-2 text-slate-600">
         The real hash-ring placement algorithm, run against the same key set as naive modulo
-        hashing — see how little of the keyspace the ring actually moves when a node joins or
+        hashing - see how little of the keyspace the ring actually moves when a node joins or
         leaves, and what happens to load balance when there aren't enough virtual nodes to spread
         the luck around.
       </p>
@@ -119,7 +119,7 @@ function ConsistentHashingPage() {
           </div>
 
           <p className="text-micro text-slate-500">
-            Fixed at {NODE_COUNT} base nodes and {KEY_COUNT.toLocaleString()} keys — large enough
+            Fixed at {NODE_COUNT} base nodes and {KEY_COUNT.toLocaleString()} keys - large enough
             that per-key hashing noise averages out and the comparison reflects the schemes
             themselves, not the sample.
           </p>
@@ -191,7 +191,7 @@ function ConsistentHashingPage() {
               {change.naive.remappedKeys.toLocaleString()} of {change.naive.totalKeys.toLocaleString()}{' '}
               keys changed owner under naive modulo; only{' '}
               {change.consistentHashing.remappedKeys.toLocaleString()} changed owner on the ring for
-              the identical node-count change — both counted against the same key set, so this is a
+              the identical node-count change - both counted against the same key set, so this is a
               direct comparison, not two separate claims.
             </p>
           </div>
@@ -221,9 +221,9 @@ function ConsistentHashingPage() {
               Coefficient of variation: <span className="font-bold text-slate-700">{imbalance.toFixed(3)}</span> (0 =
               perfectly even).{' '}
               {virtualNodesPerNode <= 2
-                ? 'At this few virtual nodes per physical node, a handful of hashed positions simply don’t land evenly by chance — drag the slider up to see it settle.'
+                ? 'At this few virtual nodes per physical node, a handful of hashed positions simply don’t land evenly by chance - drag the slider up to see it settle.'
                 : virtualNodesPerNode <= 15
-                  ? 'Better, but still visibly uneven — more virtual nodes keep smoothing this out.'
+                  ? 'Better, but still visibly uneven - more virtual nodes keep smoothing this out.'
                   : 'Comfortably balanced: enough virtual nodes per node that the luck of any one position averages out.'}
             </p>
           </div>

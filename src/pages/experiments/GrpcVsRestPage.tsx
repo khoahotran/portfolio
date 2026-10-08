@@ -6,7 +6,7 @@ import { BarChart3, Info } from 'lucide-react';
 import rawResults from './grpc-vs-rest-results.json';
 
 /**
- * Raw shape written by benchmarks/grpc-vs-rest/run.sh — one row per (target, mode, clients)
+ * Raw shape written by benchmarks/grpc-vs-rest/run.sh - one row per (target, mode, clients)
  * combination, straight from the harness's own JSON stdout line. Byte-identical copy of
  * benchmarks/grpc-vs-rest/results.json; see that directory's README.md to reproduce it.
  */
@@ -73,7 +73,7 @@ function GrpcVsRestPage() {
     return DATASET.find((d) => d.mode === mode && d.clients === clients)!;
   }, [mode, clients]);
 
-  // Scaled per-mode, not globally — single (hundreds of q/s, ~250 bytes) and list (thousands of
+  // Scaled per-mode, not globally - single (hundreds of q/s, ~250 bytes) and list (thousands of
   // q/s at 50 clients, ~25-30 KB) live on completely different scales.
   const modeData = useMemo(() => DATASET.filter((d) => d.mode === mode), [mode]);
   const maxThroughput = Math.max(...modeData.flatMap((d) => [d.grpcThroughput, d.restThroughput])) * 1.1;
@@ -144,9 +144,9 @@ function GrpcVsRestPage() {
               <Info className="w-5 h-5 shrink-0 text-sky-600" />
               <p>
                 {mode === 'single'
-                  ? "One small record per request — protobuf's smaller payload barely matters at this size; watch which protocol actually wins throughput anyway."
-                  : "100 records per request — protobuf's ~20% smaller payload is real here, but watch whether that translates into a throughput win at every concurrency level."}{' '}
-                These numbers come from <code>benchmarks/grpc-vs-rest/</code> in the repository — a
+                  ? "One small record per request - protobuf's smaller payload barely matters at this size; watch which protocol actually wins throughput anyway."
+                  : "100 records per request - protobuf's ~20% smaller payload is real here, but watch whether that translates into a throughput win at every concurrency level."}{' '}
+                These numbers come from <code>benchmarks/grpc-vs-rest/</code> in the repository - a
                 runnable Docker Compose harness, not a fixed dataset.
               </p>
             </div>
@@ -166,7 +166,7 @@ function GrpcVsRestPage() {
                   <div className="text-micro font-bold text-teal-700">{Math.round(currentData.grpcThroughput).toLocaleString()}</div>
                   {/* Fixed-height track: `height: N%` only resolves against a definite-height
                       ancestor, and this column (child of an `items-end`, not `stretch`, row) is
-                      otherwise auto-height — without this wrapper the bar silently renders 0px. */}
+                      otherwise auto-height - without this wrapper the bar silently renders 0px. */}
                   <div className="flex h-48 w-full items-end">
                     <div
                       className="w-full bg-teal-500 rounded-t-sm transition-all duration-500"

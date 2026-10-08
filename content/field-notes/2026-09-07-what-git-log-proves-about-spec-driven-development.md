@@ -3,7 +3,7 @@ title: "Field Note: What My Own Git Log Proves About Spec-Driven Development"
 date: "2026-09-07"
 tags: ["spec-driven-development", "testing", "trade-offs"]
 related: ["projects/pfm", "field-notes/measuring-contrast-instead-of-guessing"]
-summary: "PFM's governance docs claim every business rule traces from spec to test to code. A plain git log, not the docs, is what actually proves it — and it also shows two honest cases of deliberately not fixing something."
+summary: "PFM's governance docs claim every business rule traces from spec to test to code. A plain git log, not the docs, is what actually proves it - and it also shows two honest cases of deliberately not fixing something."
 ---
 
 [The PFM case study](/projects/pfm) describes a spec-first workflow: an SRS, an SDS, a constitution
@@ -26,25 +26,25 @@ feat(user): let an authenticated admin manage a user's role
 Merge branch 'feature/ua-us-04-manage-user-roles' into develop
 ```
 
-That is not one example cherry-picked to make a point — the same four-step pattern (plan, then test,
+That is not one example cherry-picked to make a point - the same four-step pattern (plan, then test,
 then implement, then merge) appears for revoke-pending-invitation, reset-password, change-email, and
 a custom date-range report, each on its own branch, each merged separately. A docs-first commit that
 exists *before* the feature commit is a genuinely different artifact than a docs commit added
-alongside or after the code — the former is only possible if the spec was actually written first, the
+alongside or after the code - the former is only possible if the spec was actually written first, the
 latter is retroactive documentation wearing the same commit message. `git log --oneline` is a place
 that ordering can't be faked without deliberately backdating commits, which is more effort than just
 doing the thing honestly.
 
 ## Two honest non-fixes, not two fixes
 
-The more interesting evidence isn't the pattern holding — it's what a real audit pass under this same
+The more interesting evidence isn't the pattern holding - it's what a real audit pass under this same
 discipline chose *not* to touch, and said so.
 
 **A componentization sweep** (documented in PFM's own `documents/roadmap.md`) extracted a shared
 `Pagination` and `CardHeader` component only after confirming the duplicated markup was byte-for-byte
-identical across the files that used it — not "looks similar," the same bar this portfolio's own
-`TagPill` extraction used. The much larger duplication the same sweep found — nearly identical
-field-rendering JSX repeated across three entity forms, 260+ lines — was **deliberately left alone**,
+identical across the files that used it - not "looks similar," the same bar this portfolio's own
+`TagPill` extraction used. The much larger duplication the same sweep found - nearly identical
+field-rendering JSX repeated across three entity forms, 260+ lines - was **deliberately left alone**,
 because those three forms are the most heavily-tested code paths in the entire app; a rushed
 extraction there traded a real, present maintenance cost for a regression risk on every E2E suite the
 app has. The bigger number was the more tempting fix and the one that got scoped out.
@@ -58,16 +58,16 @@ rediscovering and misdiagnosing the same transient artifact as a real design-tok
 
 > [!NOTE]
 > Neither of those is a story about a tool catching a bug. They're both stories about a review that
-> could name a real cost and still choose not to pay it — the harder discipline, and the one a
+> could name a real cost and still choose not to pay it - the harder discipline, and the one a
 > pattern of commit messages alone can't demonstrate.
 
 ## What this does and doesn't prove
 
 It proves the plan-before-code ordering is real at the commit-history level, across enough separate
-stories that it isn't a one-off. It does not prove the resulting code is good — a disciplined process
+stories that it isn't a one-off. It does not prove the resulting code is good - a disciplined process
 can still ship a bug, and this portfolio's own most recent full re-audit (`.ai/decision-log.md`
 Decision 21) found four real defects in code that had already passed review once, on this site, not
 PFM. What a consistent git log adds isn't a guarantee of correctness; it's that when something does
-need fixing later, there's a real paper trail — an SRS line, an SDS decision, a test written before
-the feature — to fix it against, instead of only a working system and no record of why it works the
+need fixing later, there's a real paper trail - an SRS line, an SDS decision, a test written before
+the feature - to fix it against, instead of only a working system and no record of why it works the
 way it does.

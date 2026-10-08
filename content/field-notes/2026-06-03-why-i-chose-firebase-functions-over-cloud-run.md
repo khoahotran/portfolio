@@ -33,7 +33,7 @@ CLOUD RUN DIRECT PATH (Full Control)
 
 Cloud Run requires you to think about Dockerfiles, registry management, image vulnerability scanning, and custom CI/CD pipelines for container deployment. While we are comfortable with Docker, adding this layer meant spending engineering cycles on infrastructure rather than business logic.
 
-Firebase Functions allows us to deploy pure TypeScript/NestJS code with a single CLI command (`firebase deploy`). The abstraction layer it provides—automatically provisioning the underlying Cloud Run instances and wiring up IAM roles, EventArc triggers, and HTTPS routes—saves us hours of DevOps work every week.
+Firebase Functions allows us to deploy pure TypeScript/NestJS code with a single CLI command (`firebase deploy`). The abstraction layer it provides-automatically provisioning the underlying Cloud Run instances and wiring up IAM roles, EventArc triggers, and HTTPS routes-saves us hours of DevOps work every week.
 
 ### TypeScript / NestJS Firebase Functions Gen 2 Integration
 

@@ -8,18 +8,18 @@ summary: "A core banking ledger demonstrating Event Sourcing, CQRS, and distribu
 
 ## Provenance & Source
 
-- **Provenance** — Self-directed engineering project. Designed and built solo to production standards;
+- **Provenance** - Self-directed engineering project. Designed and built solo to production standards;
   it is not a deployed banking system and holds no real money. The transactional guarantees discussed
   below are real properties of the code, not of a production deployment.
-- **Role** — Sole author: event store, projections, Saga worker, and fraud engine.
-- **Source** — [github.com/khoahotran/event-driven-core-banking](https://github.com/khoahotran/event-driven-core-banking)
+- **Role** - Sole author: event store, projections, Saga worker, and fraud engine.
+- **Source** - [github.com/khoahotran/event-driven-core-banking](https://github.com/khoahotran/event-driven-core-banking)
 
 ## Project Foundation
 
 **Business Problem:** Traditional banking ledgers use mutable database rows (e.g., `UPDATE accounts SET balance = balance - 100`). If a bug occurs, or an auditor asks *why* an account has a specific balance, the history is lost unless you explicitly maintain complex audit tables. Furthermore, executing cross-account transfers across different banking microservices requires distributed transactions, which can lock up databases and cause cascading failures.
 
 **Goals:**
-1. Design for full auditability of all financial movements — every state change derived from an immutable, replayable event log.
+1. Design for full auditability of all financial movements - every state change derived from an immutable, replayable event log.
 2. Implement O(1) read latency for account balances.
 3. Handle cross-account transfers safely without relying on 2-Phase Commit (2PC).
 4. Implement real-time fraud detection without slowing down the core ledger.
@@ -57,7 +57,7 @@ C4Container
 
 ### Saga Pattern for Distributed Transfers
 
-Transferring money between Account A and Account B requires altering two distinct aggregates. The target design is an orchestration-based Saga — see the [Saga pattern deep dive](/system-design/implementing-the-saga-pattern-for-distributed-transfers) for how that design compares to the simpler, choreography-style Saga manager currently committed to the repository.
+Transferring money between Account A and Account B requires altering two distinct aggregates. The target design is an orchestration-based Saga - see the [Saga pattern deep dive](/system-design/implementing-the-saga-pattern-for-distributed-transfers) for how that design compares to the simpler, choreography-style Saga manager currently committed to the repository.
 
 ```mermaid
 sequenceDiagram
@@ -102,12 +102,12 @@ sequenceDiagram
 ## Production Engineering
 
 - **Real-Time Fraud Detection:** A detached worker listens to the Event Store stream. It applies velocity rules (e.g., "more than 3 transfers in 1 minute") and burst-silence rules. Because it listens asynchronously, heavy ML/rules engines never block the user's API request. If fraud is detected, it simply appends an `AccountFrozen` event.
-- **Metrics:** Instrumented with Prometheus, tracking business flows and operational counters — for example, money deposited/withdrawn (`banking_money_in_total`, `banking_money_out_total`) and fraud incidents (`banking_fraud_detected_total`). No dedicated Saga-compensation metric or alerting rule is currently implemented.
+- **Metrics:** Instrumented with Prometheus, tracking business flows and operational counters - for example, money deposited/withdrawn (`banking_money_in_total`, `banking_money_out_total`) and fraud incidents (`banking_fraud_detected_total`). No dedicated Saga-compensation metric or alerting rule is currently implemented.
 
 ## Reflection
 
 **Lessons Learned:**
 - **Event Versioning:** You must think carefully about event schema evolution. An event is immutable; you cannot change it once it's written. We had to implement an `Upcaster` pattern to transform V1 events into V2 shapes during replay.
-- **Eventual Consistency:** The UI must be designed to handle eventual consistency. When a user deposits money, the API returns `202 Accepted`, and the Read Projector asynchronously folds the new event into the read model before a balance query reflects it. The exact lag is implementation- and environment-dependent — no load test or SLO is measured for it here — so the UI copes by polling or subscribing rather than assuming immediate consistency. The Fraud Engine consumes the raw event stream directly rather than the projected read model (see the architecture diagram above), so fraud detection itself is not delayed by projection lag; a balance read made in that same window, however, can briefly reflect stale state.
+- **Eventual Consistency:** The UI must be designed to handle eventual consistency. When a user deposits money, the API returns `202 Accepted`, and the Read Projector asynchronously folds the new event into the read model before a balance query reflects it. The exact lag is implementation- and environment-dependent - no load test or SLO is measured for it here - so the UI copes by polling or subscribing rather than assuming immediate consistency. The Fraud Engine consumes the raw event stream directly rather than the projected read model (see the architecture diagram above), so fraud detection itself is not delayed by projection lag; a balance read made in that same window, however, can briefly reflect stale state.
 
 <a href="/graph" class="inline-block mt-8 text-meta text-slate-500 hover:text-slate-700 hover:underline transition-colors">See how this project connects to the rest of the ecosystem &rarr;</a>

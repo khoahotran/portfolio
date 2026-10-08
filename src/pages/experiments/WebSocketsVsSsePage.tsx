@@ -6,7 +6,7 @@ import { useSeo } from '../../seo/useSeo';
 import rawResults from './websockets-vs-sse-results.json';
 
 /**
- * Raw shape written by benchmarks/websockets-vs-sse/run.sh — one row per (transport, connection
+ * Raw shape written by benchmarks/websockets-vs-sse/run.sh - one row per (transport, connection
  * count) combination, straight from the harness's own JSON stdout line. Byte-identical copy of
  * benchmarks/websockets-vs-sse/results.json; see that directory's README.md to reproduce it.
  */
@@ -93,7 +93,7 @@ function WebSocketsVsSsePage() {
           <div className="flex gap-3 rounded-xl bg-sky-50 p-4 text-micro leading-relaxed text-sky-800">
             <Gauge className="h-5 w-5 shrink-0 text-sky-600" aria-hidden="true" />
             <p>
-              Both transports are implemented in the same Go process model — a broadcaster pushes a
+              Both transports are implemented in the same Go process model - a broadcaster pushes a
               tick to every connected client every 200ms. What's measured is each transport's own
               connection-holding cost, not a language or runtime difference.
             </p>
@@ -103,7 +103,7 @@ function WebSocketsVsSsePage() {
             <AlertTriangle className="h-5 w-5 shrink-0 text-amber-600" aria-hidden="true" />
             <p>
               Connect-time (below) showed high run-to-run variance at 5,000 connections when this
-              harness was re-run — see the article and{' '}
+              harness was re-run - see the article and{' '}
               <a
                 href="https://github.com/khoahotran/portfolio/tree/main/benchmarks/websockets-vs-sse"
                 target="_blank"
@@ -119,14 +119,14 @@ function WebSocketsVsSsePage() {
 
         <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-8 shadow-sm flex flex-col">
           <h2 className="mb-8 text-meta font-bold uppercase tracking-widest text-slate-500">
-            Peak Server Memory (MB) — {connections.toLocaleString()} connections
+            Peak Server Memory (MB) - {connections.toLocaleString()} connections
           </h2>
 
           <div className="flex flex-1 items-end justify-center gap-8 h-64 border-b border-slate-200 pb-2">
             <div className="w-20 flex flex-col items-center gap-2">
               <div className="text-micro font-bold text-teal-700">{currentData.wsMemory.toFixed(1)} MB</div>
               {/* The bar's height is a percentage, which only resolves against a definite-height
-                  ancestor — the outer row is `items-end` (not `stretch`), so this column's own
+                  ancestor - the outer row is `items-end` (not `stretch`), so this column's own
                   height is auto/content-sized and a percentage inside it computes to 0 without
                   this fixed-height track wrapping it. */}
               <div className="flex h-48 w-full items-end">
@@ -153,7 +153,7 @@ function WebSocketsVsSsePage() {
 
           <div className="mt-8 flex items-center justify-between border-t border-slate-100 pt-4 text-micro text-slate-500">
             <span>
-              Connect time (unreliable at scale — see caveat):{' '}
+              Connect time (unreliable at scale - see caveat):{' '}
               <span className="font-mono text-slate-700">{currentData.wsConnectMs.toFixed(0)}ms</span> WS vs{' '}
               <span className="font-mono text-slate-700">{currentData.sseConnectMs.toFixed(0)}ms</span> SSE
             </span>

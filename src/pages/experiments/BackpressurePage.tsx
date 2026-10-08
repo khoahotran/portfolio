@@ -17,7 +17,7 @@ const POLICY_LABEL: Record<BackpressurePolicy, string> = {
 
 const POLICY_BLURB: Record<BackpressurePolicy, string> = {
   block:
-    "Producer is throttled to match the consumer. Nothing is ever lost — the excess piles up in the producer's own backlog instead, unbounded if the mismatch never resolves.",
+    "Producer is throttled to match the consumer. Nothing is ever lost - the excess piles up in the producer's own backlog instead, unbounded if the mismatch never resolves.",
   'drop-new':
     'The queue keeps what it already holds; incoming items that overflow capacity are discarded on arrival. FIFO order of admitted items is preserved.',
   'drop-old':
@@ -35,7 +35,7 @@ const CIRCUIT_COLOR: Record<CircuitState, string> = {
 function BackpressurePage() {
   useSeo({
     title: 'Backpressure Strategies Visualizer',
-    description: 'Run four real backpressure policies against the same producer/consumer overload — block, drop-new, drop-old, and circuit breaker.',
+    description: 'Run four real backpressure policies against the same producer/consumer overload - block, drop-new, drop-old, and circuit breaker.',
   });
 
   const [policy, setPolicy] = useState<BackpressurePolicy>('drop-new');
@@ -62,7 +62,7 @@ function BackpressurePage() {
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Backpressure Strategies</h1>
       <p className="mt-2 text-slate-600">
         Four real policies for a bounded queue between a producer and a slower consumer, run against
-        the same overload. Drop-new and drop-old drop the same <em>number</em> of items — watch which
+        the same overload. Drop-new and drop-old drop the same <em>number</em> of items - watch which
         ones.
       </p>
 
@@ -199,7 +199,7 @@ function BackpressurePage() {
               {result.maxPendingBacklog > capacity * 3 && (
                 <p className="mt-3 flex items-start gap-2 text-micro font-semibold text-amber-700">
                   <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
-                  Backlog reached {result.maxPendingBacklog} — {result.maxPendingBacklog}x the queue's own capacity
+                  Backlog reached {result.maxPendingBacklog} - {result.maxPendingBacklog}x the queue's own capacity
                   of {capacity}. Blocking doesn't fix a sustained rate mismatch, it just relocates where the
                   unprocessed work piles up.
                 </p>

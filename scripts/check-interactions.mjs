@@ -3,7 +3,7 @@
 // Why this exists: `.ai/audit-followups.md` item 9. check:responsive and check:contrast both
 // navigate to a route, wait for load, and measure. Neither hovers, focuses, clicks, drags or
 // scrolls anything, so any defect that only exists after an interaction is invisible to both.
-// That is not a hypothetical — `wireGraphLinks` in KnowledgeGraphPage.tsx once double-prefixed
+// That is not a hypothetical - `wireGraphLinks` in KnowledgeGraphPage.tsx once double-prefixed
 // every knowledge-graph href (`/portfolio/portfolio/...`), so every node 404'd on click, and
 // BOTH gates passed, because they load the graph page and never click a node. Review caught it.
 //
@@ -11,10 +11,10 @@
 // brittle for little return on static pages. This covers three surfaces where the interactive
 // state is the whole point, and nothing else:
 //
-//   A. graph node hrefs + a real click        — the wireGraphLinks regression, directly
-//   B. lab controls at their extremes          — labs are simulators; defaults are the one state
+//   A. graph node hrefs + a real click        - the wireGraphLinks regression, directly
+//   B. lab controls at their extremes          - labs are simulators; defaults are the one state
 //                                                the other gates already see
-//   C. header nav strip scrolled to both edges — scroll-position-driven CSS, invisible at rest
+//   C. header nav strip scrolled to both edges - scroll-position-driven CSS, invisible at rest
 //
 // Usage: npm run check:interactions         (needs `npm run preview` already running)
 //        npm run check:interactions -- --base=http://localhost:5173
@@ -63,7 +63,7 @@ async function noOverflow(page) {
  * Two assertions, because they fail for different reasons. The href check is the cheap one and
  * is what would have caught wireGraphLinks: a path segment repeated back-to-back means the base
  * prefix was applied twice. The click is the expensive one and is the only thing that proves the
- * whole chain — wired handler, router, route exists — actually works end to end.
+ * whole chain - wired handler, router, route exists - actually works end to end.
  */
 async function checkGraph(page, base) {
   const failures = [];
@@ -83,7 +83,7 @@ async function checkGraph(page, base) {
   });
 
   if (hrefs.length === 0) {
-    failures.push({ probe: 'graph', detail: 'no SVG anchors found — the graph did not render or lost its links' });
+    failures.push({ probe: 'graph', detail: 'no SVG anchors found - the graph did not render or lost its links' });
     return failures;
   }
 
@@ -92,7 +92,7 @@ async function checkGraph(page, base) {
       failures.push({ probe: 'graph', detail: `anchor for ${appPath ?? '(unknown)'} has no href` });
       continue;
     }
-    // `/portfolio/portfolio/labs/x` — the exact shape the wireGraphLinks bug produced.
+    // `/portfolio/portfolio/labs/x` - the exact shape the wireGraphLinks bug produced.
     if (basePath && href.startsWith(`${basePath}${basePath}/`)) {
       failures.push({ probe: 'graph', detail: `href has the base prefix twice: ${href}` });
     }
@@ -134,12 +134,12 @@ async function checkGraph(page, base) {
  * B. Lab controls at their extremes.
  *
  * Labs are simulators: the default `useState` values are the one state check:responsive and
- * check:contrast already cover, and every other state — which is what the lab is for — is
+ * check:contrast already cover, and every other state - which is what the lab is for - is
  * uncovered. Sliders are driven to both ends because that is where off-by-one and divide-by-zero
  * live; every toggle is clicked once because a toggle has no interesting middle.
  *
  * The slider is set via the native value setter rather than `fill()` so React's synthetic onChange
- * actually fires — assigning `.value` directly is swallowed by React's own value tracker.
+ * actually fires - assigning `.value` directly is swallowed by React's own value tracker.
  */
 async function checkLab(page, base, labId) {
   const failures = [];
@@ -148,7 +148,7 @@ async function checkLab(page, base, labId) {
   await page.goto(`${base}/labs/${labId}`, { waitUntil: 'networkidle', timeout: 20000 });
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(300);
-  tracker.drain(); // ignore anything from load itself — the other gates own that
+  tracker.drain(); // ignore anything from load itself - the other gates own that
 
   // Re-queried by index on every touch rather than held as handles: changing one control can
   // re-render the panel and detach every handle taken before it. Holding them made /labs/redlock
@@ -181,7 +181,7 @@ async function checkLab(page, base, labId) {
   // Re-query each time: clicking a control can re-render the subtree and detach earlier handles.
   // `main button`, not `button[type="button"]`: most labs set the type explicitly but
   // SagaStateMachinePage and EventSourcingReplayPage do not, and the narrower selector silently
-  // found zero controls on both — a gate that passes by not looking is the failure mode item 9
+  // found zero controls on both - a gate that passes by not looking is the failure mode item 9
   // is about.
   const buttonCount = await page.locator('main button').count();
   for (let i = 0; i < buttonCount; i++) {
@@ -202,7 +202,7 @@ async function checkLab(page, base, labId) {
     }
   }
 
-  // Selects drive the branch choice on the Saga and 2PC labs — every option is a distinct
+  // Selects drive the branch choice on the Saga and 2PC labs - every option is a distinct
   // simulated outcome, which is exactly the kind of state the other gates never reach.
   const selectCount = await page.locator('main select').count();
   for (let i = 0; i < selectCount; i++) {
@@ -226,7 +226,7 @@ async function checkLab(page, base, labId) {
   }
 
   if (sliderCount === 0 && buttonCount === 0 && selectCount === 0) {
-    failures.push({ probe: `lab/${labId}`, detail: 'no sliders, buttons or selects found — a lab with no controls is almost certainly broken' });
+    failures.push({ probe: `lab/${labId}`, detail: 'no sliders, buttons or selects found - a lab with no controls is almost certainly broken' });
   }
 
   return failures;
@@ -238,7 +238,7 @@ async function checkLab(page, base, labId) {
  * This probe replaced one that measured the scroll-position fades on the old eleven-link strip.
  * That strip is gone: the header now carries four destinations plus two icon buttons, which is the
  * whole point of the navigation change, so the thing worth asserting is the thing that failed
- * before — that the header fits without clipping a label.
+ * before - that the header fits without clipping a label.
  *
  * 320px is the narrowest tested viewport. The old header overflowed at 1440px, so the bar this
  * sets is deliberately the one the previous design could not clear.
@@ -248,7 +248,7 @@ async function checkHeader(page, base) {
   await page.setViewportSize({ width: 320, height: 760 });
   await page.goto(`${base}/`, { waitUntil: 'networkidle', timeout: 20000 });
   // Header width is measured here, and the labels are set in a webfont that swaps in after first
-  // paint — see the matching note in check-responsive.mjs.
+  // paint - see the matching note in check-responsive.mjs.
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(300);
 
@@ -381,7 +381,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`[check-interactions] PASS — graph node click resolves, ${labIds.length} labs survive their control extremes, header fits at 320px, palette navigates.`);
+  console.log(`[check-interactions] PASS - graph node click resolves, ${labIds.length} labs survive their control extremes, header fits at 320px, palette navigates.`);
 }
 
 await main();

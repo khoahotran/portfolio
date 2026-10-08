@@ -11,12 +11,12 @@ export interface ContentFrontmatter {
    * Curated cross-links as "collection/slug" strings, e.g.
    * "blog/grpc-service-mesh-in-go-aegis-architecture". Rendered ahead of the
    * tag-scored algorithmic suggestions in RelatedContent. Validated against
-   * the real index at build time (build-search-index.mjs) — a bad reference
+   * the real index at build time (build-search-index.mjs) - a bad reference
    * fails the build rather than silently rendering nothing.
    */
   related?: string[];
   /**
-   * Opt-in multi-part grouping, independent of `collection` — a series can span collections (e.g.
+   * Opt-in multi-part grouping, independent of `collection` - a series can span collections (e.g.
    * a benchmark rewrite that's one `experiments` post and one `blog` retrospective), so it can't
    * reuse the same "sort within one collection" logic ArticleNav uses. `series` is the shared,
    * free-text group name; `seriesOrder` its 1-indexed position within that group. Both are

@@ -6,9 +6,9 @@ function logOfLength(length: number, term = 1): LogEntry[] {
   return Array.from({ length }, () => ({ term }));
 }
 
-describe('simulateElection — the election restriction Bully does not have', () => {
+describe('simulateElection - the election restriction Bully does not have', () => {
   it('a candidate whose log is behind loses the election even though every peer is alive', () => {
-    // Candidate has only 1 entry; three peers each have 3 entries at the same last term — all
+    // Candidate has only 1 entry; three peers each have 3 entries at the same last term - all
     // strictly more up-to-date, so none of them can grant a vote no matter how "electable" the
     // candidate would otherwise look. A fourth peer has an empty log (less up-to-date than the
     // candidate) and does grant a vote.
@@ -64,7 +64,7 @@ describe('simulateElection — the election restriction Bully does not have', ()
     expect(result.votesGranted).toContain('p2');
   });
 
-  it('down nodes still count toward the quorum denominator — partition tolerance, not a smaller cluster', () => {
+  it('down nodes still count toward the quorum denominator - partition tolerance, not a smaller cluster', () => {
     // 5-node cluster, 2 down. Quorum is still 3 (majority of 5), not 2 (majority of the 3 alive).
     const peers: Record<string, PeerState> = {
       p1: { log: [], alive: false },
@@ -79,7 +79,7 @@ describe('simulateElection — the election restriction Bully does not have', ()
   });
 });
 
-describe('advanceCommitIndex — the subtle safety rule', () => {
+describe('advanceCommitIndex - the subtle safety rule', () => {
   it('rejects a matchIndex outside [0, leaderLog.length]', () => {
     expect(() => advanceCommitIndex(logOfLength(2), [3], 1)).toThrow();
     expect(() => advanceCommitIndex(logOfLength(2), [-1], 1)).toThrow();
@@ -99,11 +99,11 @@ describe('advanceCommitIndex — the subtle safety rule', () => {
     expect(result.quorum).toBe(3); // 5-node cluster (leader + 4 followers)
   });
 
-  it('a previous-term entry on a majority is NOT committed by replica count alone — the actual finding', () => {
+  it('a previous-term entry on a majority is NOT committed by replica count alone - the actual finding', () => {
     // Leader's log: index 1 is an old term-2 entry, index 2 is the new term-4 entry (currentTerm 4).
     // 5-node cluster: 2 followers only have the term-2 entry (matchIndex 1), 1 follower has both
     // (matchIndex 2), 1 follower has nothing (matchIndex 0). A majority (4 of 5, leader included)
-    // has replicated index 1 — but its term (2) doesn't match currentTerm (4).
+    // has replicated index 1 - but its term (2) doesn't match currentTerm (4).
     const leaderLog: LogEntry[] = [{ term: 2 }, { term: 4 }];
     const result = advanceCommitIndex(leaderLog, [1, 1, 2, 0], 4);
     expect(result.newCommitIndex).toBe(0);
@@ -116,7 +116,7 @@ describe('advanceCommitIndex — the subtle safety rule', () => {
     const result = advanceCommitIndex(leaderLog, [2, 2, 2, 0], 4);
     expect(result.newCommitIndex).toBe(2);
     // The higher index (matching current term) is found first in the scan, so the "unsafe" flag
-    // for the lower, old-term index is never reached — the safe path short-circuits it entirely.
+    // for the lower, old-term index is never reached - the safe path short-circuits it entirely.
     expect(result.wouldBeUnsafeWithoutTermCheck).toBe(false);
   });
 });

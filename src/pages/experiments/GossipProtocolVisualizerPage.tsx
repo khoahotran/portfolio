@@ -16,7 +16,7 @@ function nodePosition(index: number, total: number): { x: number; y: number } {
 function GossipProtocolVisualizerPage() {
   useSeo({
     title: 'Gossip Protocol Visualizer',
-    description: 'A real push-based epidemic broadcast simulation — watch a message spread node by node.',
+    description: 'A real push-based epidemic broadcast simulation - watch a message spread node by node.',
   });
 
   const [nodeCount, setNodeCount] = useState(24);
@@ -26,10 +26,10 @@ function GossipProtocolVisualizerPage() {
   const [isPlaying, setIsPlaying] = useState(false);
 
   // Math.random() runs inside this useMemo, so a new random simulation is only drawn when one of
-  // the actual inputs changes — nodeCount, fanout, or an explicit "Reshuffle" click — not on every
+  // the actual inputs changes - nodeCount, fanout, or an explicit "Reshuffle" click - not on every
   // render, the same pattern RetryStrategyVisualizerPage uses for its jitter.
   const rounds = useMemo(() => {
-    // Not read for its value — `void`-ing it is what tells useMemo (and exhaustive-deps) that
+    // Not read for its value - `void`-ing it is what tells useMemo (and exhaustive-deps) that
     // bumping reshuffleToken via the "Reshuffle peers" button should force a fresh Math.random()
     // draw below, the same way changing nodeCount or fanout does.
     void reshuffleToken;
@@ -52,7 +52,7 @@ function GossipProtocolVisualizerPage() {
     return () => clearTimeout(timer);
   }, [isPlaying, currentRound, rounds.length]);
 
-  // Cumulative set of infected node ids as of `currentRound` — node 0 is always patient zero.
+  // Cumulative set of infected node ids as of `currentRound` - node 0 is always patient zero.
   const infectedIds = useMemo(() => {
     const ids = new Set<number>([0]);
     for (let i = 0; i < currentRound; i += 1) {
@@ -129,9 +129,9 @@ function GossipProtocolVisualizerPage() {
 
           <p className="pt-2 text-micro text-slate-500">
             {converged
-              ? `Fully converged in ${rounds.length} round${rounds.length === 1 ? '' : 's'} — O(log n) spread, not linear.`
+              ? `Fully converged in ${rounds.length} round${rounds.length === 1 ? '' : 's'} - O(log n) spread, not linear.`
               : fanout === 0
-                ? 'Fanout is 0 — patient zero never pushes, so the message never leaves node 0.'
+                ? 'Fanout is 0 - patient zero never pushes, so the message never leaves node 0.'
                 : `Did not reach full coverage within ${MAX_ROUNDS} rounds at this fanout.`}
           </p>
         </section>

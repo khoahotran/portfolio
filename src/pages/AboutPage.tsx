@@ -19,7 +19,7 @@ function AboutPage() {
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 mb-6">About & Philosophy</h1>
         <p className="text-xl text-slate-600 leading-relaxed max-w-3xl font-light">
           I am a backend engineer focused on distributed systems, event-driven architectures, and
-          high-performance services &mdash; currently shipping production services at JK Technologies while
+          high-performance services - currently shipping production services at JK Technologies while
           finishing a CS master&rsquo;s at HCMUT. Here is how I think about software engineering.
         </p>
       </header>
@@ -68,11 +68,11 @@ function AboutPage() {
         </h2>
 
         {/* Stated plainly so the phases below can't be read as a seniority ladder. The dates match
-            experienceData/educationData in portfolioData.ts — see .ai/portfolio-context.md "Career
+            experienceData/educationData in portfolioData.ts - see .ai/portfolio-context.md "Career
             Stage" for why this is spelled out rather than left to inference. */}
         <p className="-mt-8 mb-12 max-w-2xl text-meta leading-relaxed text-slate-600">
           Roughly three years in, counting from my first production commit. The phases below describe what I
-          was <em>working on</em>, not a title ladder &mdash; the distributed-systems work is largely
+          was <em>working on</em>, not a title ladder - the distributed-systems work is largely
           self-directed, and each case study says so.
         </p>
         
@@ -83,12 +83,12 @@ function AboutPage() {
           <div className="relative flex flex-col md:flex-row items-center justify-between group">
             <div className="md:w-5/12 text-left md:text-right pl-12 md:pl-0 pr-0 md:pr-12 mb-4 md:mb-0">
               <h3 className="text-xl font-bold text-slate-900">Distributed Systems &amp; Architecture Depth</h3>
-              <p className="text-meta font-bold text-teal-700 my-1">2026 &mdash; Present</p>
+              <p className="text-meta font-bold text-teal-700 my-1">2026 - Present</p>
               <p className="text-meta text-slate-600 mt-2">
                 Building event-driven systems end to end, mostly as self-directed projects: an auth platform on
                 gRPC, an event-sourced ledger with Saga-based transfers, and an HFT research and ingestion
                 platform. What defines this phase is designing the whole system and being able to defend the
-                trade-offs &mdash; not just implementing a spec.
+                trade-offs - not just implementing a spec.
               </p>
             </div>
             <div className="absolute left-0 md:left-1/2 w-8 h-8 rounded-full border-4 border-white bg-teal-500 shadow-md md:-translate-x-1/2 z-10 group-hover:scale-125 transition-transform"></div>
@@ -109,7 +109,7 @@ function AboutPage() {
             <div className="absolute left-0 md:left-1/2 w-8 h-8 rounded-full border-4 border-white bg-slate-300 shadow-md md:-translate-x-1/2 z-10 group-hover:scale-125 transition-transform group-hover:bg-teal-400"></div>
             <div className="md:w-5/12 order-1 md:order-2 text-left pl-12 md:pl-0 pr-0 md:pr-12 mb-4 md:mb-0">
               <h3 className="text-xl font-bold text-slate-900">Production Backend Services</h3>
-              <p className="text-meta font-bold text-slate-500 my-1">Jun 2025 &mdash; Present</p>
+              <p className="text-meta font-bold text-slate-500 my-1">Jun 2025 - Present</p>
               <p className="text-meta text-slate-600 mt-2">
                 Shifted focus entirely to the backend at JK Technologies (intern &rarr; part-time &rarr;
                 full-time). Shipped production services for SeensioGO and Jujuja, and learned the hard lessons
@@ -122,9 +122,9 @@ function AboutPage() {
           <div className="relative flex flex-col md:flex-row items-center justify-between group">
             <div className="md:w-5/12 text-left md:text-right pl-12 md:pl-0 pr-0 md:pr-12 mb-4 md:mb-0">
               <h3 className="text-xl font-bold text-slate-900">Full-Stack Foundations</h3>
-              <p className="text-meta font-bold text-slate-500 my-1">2022 &mdash; 2025</p>
+              <p className="text-meta font-bold text-slate-500 my-1">2022 - 2025</p>
               <p className="text-meta text-slate-600 mt-2">
-                Started with full-stack web applications during my CS degree at HCMUT &mdash; coursework and
+                Started with full-stack web applications during my CS degree at HCMUT - coursework and
                 team projects. Learned MVC, responsive UI, RESTful APIs, and how to work inside an agile team
                 of five to seven people.
               </p>
@@ -147,7 +147,7 @@ function AboutPage() {
         <div className="bg-panel text-panel-fg p-8 rounded-2xl shadow-xl">
           <p className="text-panel-fg leading-relaxed mb-6">
             Go and TypeScript are where I am most fluent today. These are the areas I am actively reading and
-            building in to widen the toolkit &mdash; listed as directions, not as things I claim to know yet:
+            building in to widen the toolkit - listed as directions, not as things I claim to know yet:
           </p>
           <ul className="space-y-4 font-mono text-meta">
             <li className="flex items-start gap-3">
@@ -178,7 +178,7 @@ function AboutPage() {
       {/*
         Everything below moved off the homepage in P4.
         /about previously opened with "About & Philosophy" and then re-stated the same identity
-        material the homepage was already showing — two competing answers to "who is this", neither
+        material the homepage was already showing - two competing answers to "who is this", neither
         of them complete. The homepage now leads with evidence and stops; this page owns the full
         record. Nothing was dropped in the move: the components are the same ones, rendered here
         instead of there.

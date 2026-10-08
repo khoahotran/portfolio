@@ -5,11 +5,11 @@ interface Props {
 }
 
 /**
- * The small rounded label used for a tag or a tech-stack entry — extracted after
+ * The small rounded label used for a tag or a tech-stack entry - extracted after
  * `.ai/audit-followups.md` item 8's own bar ("3+ occurrences, genuinely shared behavior") was
  * crossed by real duplication: this exact `className` (byte-for-byte, not just visually similar)
  * existed independently in `ContentListPage.tsx`, `ArticleHeader.tsx`, and `Projects.tsx` before
- * this component existed. Deliberately narrow — just a styled wrapper, no variant props — because
+ * this component existed. Deliberately narrow - just a styled wrapper, no variant props - because
  * the *other* rounded-pill badges on the site (the `/tags` count badge, `TagDetailPage`'s collection
  * label, `SeriesNav`'s "Part N of M") each carry a genuinely different padding/weight/casing
  * treatment; forcing those into this component via a handful of boolean props would trade three

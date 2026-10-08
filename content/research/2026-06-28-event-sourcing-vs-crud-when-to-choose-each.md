@@ -151,7 +151,7 @@ func (r *EventStore) ReadWithSnapshot(ctx context.Context, accountID string) (in
 }
 ```
 
-With snapshots every 100 events, balance reads become $O(1)$ amortized — always reading the most recent snapshot plus at most 99 delta events.
+With snapshots every 100 events, balance reads become $O(1)$ amortized - always reading the most recent snapshot plus at most 99 delta events.
 
 ---
 
@@ -197,7 +197,7 @@ CRUD cannot do this. Once you overwrite the balance, the previous value is gone.
 
 ### 3. Event Replay for Projection Rebuilding
 
-When business requirements change, you can rebuild derived views (projections) by replaying the event history through new logic — without running migrations on the source table.
+When business requirements change, you can rebuild derived views (projections) by replaying the event history through new logic - without running migrations on the source table.
 
 ---
 
@@ -256,12 +256,12 @@ flowchart TD
 
 | Dimension | CRUD | Event Sourcing |
 |:---|:---|:---|
-| **Read latency** | $O(1)$ — direct document read | $O(N/S)$ — events since last snapshot |
-| **Write latency** | $O(1)$ — update in place | $O(1)$ — append event |
-| **Audit history** | Requires separate log table | Built-in — event stream is the log |
-| **Temporal queries** | Impossible without external snapshots | Native — replay to any timestamp |
+| **Read latency** | $O(1)$ - direct document read | $O(N/S)$ - events since last snapshot |
+| **Write latency** | $O(1)$ - update in place | $O(1)$ - append event |
+| **Audit history** | Requires separate log table | Built-in - event stream is the log |
+| **Temporal queries** | Impossible without external snapshots | Native - replay to any timestamp |
 | **Schema evolution** | Migrations on existing rows | Event versioning + backwards-compatible readers |
-| **Operational complexity** | Low | High — projections, snapshots, reclaim logic |
+| **Operational complexity** | Low | High - projections, snapshots, reclaim logic |
 | **Team learning curve** | Minimal | Significant |
 | **Best fit** | Loyalty points, sessions, simple CRUD APIs | Financial ledgers, audit-critical systems, multi-model reads |
 
@@ -282,6 +282,6 @@ A banking ledger is the canonical event-sourcing use case. Every debit and credi
 ## Key Takeaways
 
 1. **CRUD is the correct default.** Reach for event sourcing only when your domain explicitly requires full history, temporal queries, or multiple divergent read projections.
-2. **Snapshotting is mandatory at scale.** Without periodic snapshots, read performance degrades linearly with account age — making event sourcing impractical for long-lived aggregates.
-3. **The event schema is a public contract.** Once an event type is written to the store, you cannot change its shape — only append new versions. Design your event schemas with the same care as a gRPC protobuf contract.
-4. **Event sourcing doesn't replace CQRS — it enables it.** Event sourcing gives you a reliable source from which to build multiple specialized read projections, each optimized for a specific query pattern.
+2. **Snapshotting is mandatory at scale.** Without periodic snapshots, read performance degrades linearly with account age - making event sourcing impractical for long-lived aggregates.
+3. **The event schema is a public contract.** Once an event type is written to the store, you cannot change its shape - only append new versions. Design your event schemas with the same care as a gRPC protobuf contract.
+4. **Event sourcing doesn't replace CQRS - it enables it.** Event sourcing gives you a reliable source from which to build multiple specialized read projections, each optimized for a specific query pattern.

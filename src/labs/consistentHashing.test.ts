@@ -15,7 +15,7 @@ function keyRange(count: number, prefix = 'key'): string[] {
 }
 
 describe('hashToRing', () => {
-  it('is deterministic — same input always lands on the same position', () => {
+  it('is deterministic - same input always lands on the same position', () => {
     expect(hashToRing('user-42')).toBe(hashToRing('user-42'));
   });
 
@@ -60,7 +60,7 @@ describe('lookupNode', () => {
   });
 
   it('wraps around: a key past every ring position resolves to the first entry, not nothing', () => {
-    // A single-entry ring pinned at position 0 — every key's hash position is >= 0, so the "first
+    // A single-entry ring pinned at position 0 - every key's hash position is >= 0, so the "first
     // entry at or after" is always that one entry; this is the wrap-around case in miniature.
     const ring = buildRing(['solo'], 1, 1);
     expect(lookupNode(ring, 'anything', 1)).toBe('solo');
@@ -117,10 +117,10 @@ describe('compareAssignments', () => {
   });
 });
 
-describe('simulateNodeChange — the two-sided finding', () => {
+describe('simulateNodeChange - the two-sided finding', () => {
   it('naive modulo remaps nearly the entire keyspace when the node count changes by one', () => {
     // 5000 keys, 4 nodes growing to 5. Naive modulo's remapped fraction has no reason to land near
-    // any particular value except "most of it" — this asserts that directly rather than picking a
+    // any particular value except "most of it" - this asserts that directly rather than picking a
     // number by hand.
     const keys = keyRange(5000);
     const result = simulateNodeChange(keys, ['n1', 'n2', 'n3', 'n4'], ['n1', 'n2', 'n3', 'n4', 'n5'], 100);
@@ -142,14 +142,14 @@ describe('simulateNodeChange — the two-sided finding', () => {
     expect(result.consistentHashing.remappedFraction).toBeLessThan(result.naive.remappedFraction / 2);
   });
 
-  it('removing a node behaves the same way as adding one — the surviving keyspace barely moves', () => {
+  it('removing a node behaves the same way as adding one - the surviving keyspace barely moves', () => {
     const keys = keyRange(5000);
     const result = simulateNodeChange(keys, ['n1', 'n2', 'n3', 'n4', 'n5'], ['n1', 'n2', 'n3', 'n4'], 100);
     expect(result.consistentHashing.remappedFraction).toBeLessThan(result.naive.remappedFraction / 2);
   });
 });
 
-describe('computeLoadDistribution / loadImbalance — the ring\'s own trade-off', () => {
+describe('computeLoadDistribution / loadImbalance - the ring\'s own trade-off', () => {
   it('accounts for every key exactly once across all nodes', () => {
     const nodeIds = ['n1', 'n2', 'n3', 'n4'];
     const keys = keyRange(2000);
@@ -170,7 +170,7 @@ describe('computeLoadDistribution / loadImbalance — the ring\'s own trade-off'
     const denseImbalance = loadImbalance([...computeLoadDistribution(denseRing, keys, nodeIds).values()]);
 
     expect(sparseImbalance).toBeGreaterThan(denseImbalance);
-    // Not just "higher" — the whole point is that a handful of positions per node do not average
+    // Not just "higher" - the whole point is that a handful of positions per node do not average
     // out, while hundreds of positions per node do. Measured at ~0.15 for 200 virtual nodes/node
     // over 5 nodes, comfortably under half of the 1-virtual-node case.
     expect(denseImbalance).toBeLessThan(sparseImbalance / 2);

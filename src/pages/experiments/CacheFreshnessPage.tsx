@@ -16,15 +16,15 @@ const POLICY_LABEL: Record<CachePolicy, string> = {
 };
 
 const POLICY_BLURB: Record<CachePolicy, string> = {
-  'ttl-blocking': 'Fresh: instant. Expired: blocks on a synchronous origin fetch. No fallback — an outage during that fetch is an error.',
-  'stale-while-revalidate': 'Fresh: instant. Within the grace window: serves stale instantly and refreshes in the background — never blocks the request, whether or not the origin is up.',
-  'stale-if-error': 'Fresh: instant. Expired: always attempts the origin. Falls back to stale only if that attempt fails and the grace window hasn\'t elapsed — otherwise errors.',
+  'ttl-blocking': 'Fresh: instant. Expired: blocks on a synchronous origin fetch. No fallback - an outage during that fetch is an error.',
+  'stale-while-revalidate': 'Fresh: instant. Within the grace window: serves stale instantly and refreshes in the background - never blocks the request, whether or not the origin is up.',
+  'stale-if-error': 'Fresh: instant. Expired: always attempts the origin. Falls back to stale only if that attempt fails and the grace window hasn\'t elapsed - otherwise errors.',
 };
 
 function CacheFreshnessPage() {
   useSeo({
     title: 'Cache Freshness Policies Visualizer',
-    description: 'Run three real cache-freshness policies against the same origin outage — TTL-blocking, stale-while-revalidate, and stale-if-error.',
+    description: 'Run three real cache-freshness policies against the same origin outage - TTL-blocking, stale-while-revalidate, and stale-if-error.',
   });
 
   const [ttlTicks, setTtlTicks] = useState(8);
@@ -56,7 +56,7 @@ function CacheFreshnessPage() {
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Cache Freshness Policies</h1>
       <p className="mt-2 text-slate-600">
         Three real cache-freshness policies run against the same origin outage. TTL-blocking has no
-        fallback; SWR never blocks; stale-if-error blocks but falls back — watch which ones error and
+        fallback; SWR never blocks; stale-if-error blocks but falls back - watch which ones error and
         which ones just quietly serve stale content instead.
       </p>
 
@@ -107,7 +107,7 @@ function CacheFreshnessPage() {
           <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-micro flex gap-3 leading-relaxed">
             <Info className="w-5 h-5 shrink-0 text-sky-600" />
             <p>
-              All three policies share the same origin update schedule and outage window — the only
+              All three policies share the same origin update schedule and outage window - the only
               variable is the policy's own decision procedure, run tick by tick over {TICK_COUNT}{' '}
               simulated requests.
             </p>

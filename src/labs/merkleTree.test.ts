@@ -16,7 +16,7 @@ describe('buildMerkleTree', () => {
     expect(() => buildMerkleTree([])).toThrow();
   });
 
-  it('is deterministic — the same entries in the same order always produce the same root hash', () => {
+  it('is deterministic - the same entries in the same order always produce the same root hash', () => {
     const entries = entryRange(10);
     const a = buildMerkleTree(entries.map((e) => ({ ...e })));
     const b = buildMerkleTree(entries.map((e) => ({ ...e })));
@@ -42,8 +42,8 @@ describe('buildMerkleTree', () => {
   });
 });
 
-describe('findDifferingKeys — the targeted walk', () => {
-  it('two identical trees require visiting only the root — O(1) proof of full equality', () => {
+describe('findDifferingKeys - the targeted walk', () => {
+  it('two identical trees require visiting only the root - O(1) proof of full equality', () => {
     const entries = entryRange(1024);
     const a = buildMerkleTree(entries.map((e) => ({ ...e })));
     const b = buildMerkleTree(entries.map((e) => ({ ...e })));
@@ -59,7 +59,7 @@ describe('findDifferingKeys — the targeted walk', () => {
     const b = buildMerkleTree(changed);
     const result = findDifferingKeys(a, b);
     expect(result.differingKeys).toEqual(['k500']);
-    // Measured at 21 (roughly 2*log2(1024)+1) — asserting well under the 1024-leaf count is the
+    // Measured at 21 (roughly 2*log2(1024)+1) - asserting well under the 1024-leaf count is the
     // real claim; the exact figure is noted for context, not pinned as a brittle exact match.
     expect(result.nodesVisited).toBeLessThan(30);
   });
@@ -78,7 +78,7 @@ describe('findDifferingKeys — the targeted walk', () => {
     const allDifferent = base.map((e, i) => ({ key: e.key, value: `X${i}` }));
     const result = findDifferingKeys(buildMerkleTree(base), buildMerkleTree(allDifferent));
     expect(result.differingKeys).toHaveLength(1024);
-    // Visits essentially the whole tree (2*leafCount - 1 internal+leaf nodes) — worse than the
+    // Visits essentially the whole tree (2*leafCount - 1 internal+leaf nodes) - worse than the
     // naive scan's 1024 comparisons, not better. The win is specific to sparse differences.
     expect(result.nodesVisited).toBeGreaterThan(1024);
   });
@@ -102,7 +102,7 @@ describe('naiveFindDifferingKeys', () => {
   });
 });
 
-describe('compareReconciliation — the measured two-sided finding', () => {
+describe('compareReconciliation - the measured two-sided finding', () => {
   it('rejects mismatched-length entry lists', () => {
     expect(() => compareReconciliation(entryRange(5), entryRange(6))).toThrow();
   });
@@ -121,14 +121,14 @@ describe('compareReconciliation — the measured two-sided finding', () => {
     expect(result.merkleNodesVisited).toBeLessThan(result.naiveComparisons / 20);
   });
 
-  it('for identical large datasets, Merkle reconciliation is a single comparison — the sharpest case', () => {
+  it('for identical large datasets, Merkle reconciliation is a single comparison - the sharpest case', () => {
     const base = entryRange(1024);
     const result = compareReconciliation(base, base.map((e) => ({ ...e })));
     expect(result.merkleNodesVisited).toBe(1);
     expect(result.naiveComparisons).toBe(1024);
   });
 
-  it('when everything has changed, Merkle reconciliation costs more than the naive scan — the honest caveat, measured', () => {
+  it('when everything has changed, Merkle reconciliation costs more than the naive scan - the honest caveat, measured', () => {
     const base = entryRange(1024);
     const allDifferent = base.map((e, i) => ({ key: e.key, value: `X${i}` }));
     const result = compareReconciliation(base, allDifferent);

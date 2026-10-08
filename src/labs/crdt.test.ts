@@ -30,7 +30,7 @@ function canonicalORSet(state: ORSetState): string {
   return JSON.stringify({ adds, tombstones });
 }
 
-describe('GCounter — basics', () => {
+describe('GCounter - basics', () => {
   it('starts every node at 0', () => {
     expect(createGCounter(['a', 'b'])).toEqual({ a: 0, b: 0 });
   });
@@ -52,7 +52,7 @@ describe('GCounter — basics', () => {
   });
 });
 
-describe('GCounter merge — the actual CRDT laws, not just "seems to work"', () => {
+describe('GCounter merge - the actual CRDT laws, not just "seems to work"', () => {
   const a = { a: 3, b: 1, c: 0 };
   const b = { a: 1, b: 5, c: 2 };
   const c = { a: 0, b: 0, c: 9 };
@@ -78,7 +78,7 @@ describe('GCounter merge — the actual CRDT laws, not just "seems to work"', ()
   });
 });
 
-describe('compareConcurrentIncrements — the lost-update finding', () => {
+describe('compareConcurrentIncrements - the lost-update finding', () => {
   it('rejects an empty node set', () => {
     expect(() => compareConcurrentIncrements({}, {})).toThrow();
   });
@@ -89,7 +89,7 @@ describe('compareConcurrentIncrements — the lost-update finding', () => {
     expect(result.gCounterTotal).toBe(5);
   });
 
-  it('the naive LWW register loses the non-winning node\'s increments — a real, counted bug', () => {
+  it('the naive LWW register loses the non-winning node\'s increments - a real, counted bug', () => {
     const result = compareConcurrentIncrements({ A: 3, B: 2 }, { A: 100, B: 200 });
     // B's timestamp (200) is later, so B's register wins and A's 3 increments vanish entirely.
     expect(result.lwwTotal).toBe(2);
@@ -97,7 +97,7 @@ describe('compareConcurrentIncrements — the lost-update finding', () => {
   });
 
   it('which node "wins" under LWW depends only on timestamp, not on which node did more real work', () => {
-    // Same increment counts, timestamps reversed — the LWW winner flips, the G-Counter total does not.
+    // Same increment counts, timestamps reversed - the LWW winner flips, the G-Counter total does not.
     const bWins = compareConcurrentIncrements({ A: 3, B: 2 }, { A: 100, B: 200 });
     const aWins = compareConcurrentIncrements({ A: 3, B: 2 }, { A: 200, B: 100 });
     expect(bWins.lwwTotal).toBe(2);
@@ -110,9 +110,9 @@ describe('compareConcurrentIncrements — the lost-update finding', () => {
     expect(result.lwwLostUpdates).toBe(0);
   });
 
-  it('but a timestamp tie can still lose a sole contributor\'s work — the tiebreak, not the work, decides', () => {
+  it('but a timestamp tie can still lose a sole contributor\'s work - the tiebreak, not the work, decides', () => {
     // A did all the real work (4 increments); B did none. A tied timestamp with B, and the
-    // deterministic nodeId tiebreak favors 'B' — so the naive register reports 0, discarding every
+    // deterministic nodeId tiebreak favors 'B' - so the naive register reports 0, discarding every
     // one of A's real increments even though B contributed nothing at all. The lesson: LWW's
     // "winner" is a property of the resolver's tiebreak rule, not of who actually did the work.
     const result = compareConcurrentIncrements({ A: 4, B: 0 }, { A: 10, B: 10 });
@@ -137,7 +137,7 @@ describe('mergeLwwRegister', () => {
   });
 });
 
-describe('ORSet — basics', () => {
+describe('ORSet - basics', () => {
   it('starts empty', () => {
     expect(orSetElements(createORSet())).toEqual(new Set());
   });
@@ -153,7 +153,7 @@ describe('ORSet — basics', () => {
     state = addToORSet(state, 'y', 'A#2');
     state = removeFromORSet(state, 'x');
     expect(orSetElements(state)).toEqual(new Set(['y']));
-    // 'y' is untouched — remove only ever looked at tags for 'x'.
+    // 'y' is untouched - remove only ever looked at tags for 'x'.
     expect(state.tombstones).toEqual(['A#1']);
   });
 
@@ -170,7 +170,7 @@ describe('ORSet — basics', () => {
   });
 });
 
-describe('ORSet merge — the actual CRDT laws', () => {
+describe('ORSet merge - the actual CRDT laws', () => {
   const a = addToORSet(addToORSet(createORSet(), 'x', 'A#1'), 'y', 'A#2');
   const b = removeFromORSet(addToORSet(createORSet(), 'x', 'A#1'), 'x');
   const c = addToORSet(createORSet(), 'z', 'C#1');
@@ -196,7 +196,7 @@ describe('ORSet merge — the actual CRDT laws', () => {
   });
 });
 
-describe('ORSet — true concurrent add-wins across two independently evolving replicas', () => {
+describe('ORSet - true concurrent add-wins across two independently evolving replicas', () => {
   it('a concurrent re-add survives a remove neither replica knew about', () => {
     // Both replicas start having synced one add of 'x' (tag A#1).
     const synced = addToORSet(createORSet(), 'x', 'A#1');
@@ -204,18 +204,18 @@ describe('ORSet — true concurrent add-wins across two independently evolving r
     // Replica 1: removes 'x', observing only A#1 (the only tag it knows about).
     const replica1 = removeFromORSet(synced, 'x');
 
-    // Replica 2: concurrently, independently, re-adds 'x' with a fresh tag — no knowledge of replica 1's remove.
+    // Replica 2: concurrently, independently, re-adds 'x' with a fresh tag - no knowledge of replica 1's remove.
     const replica2 = addToORSet(synced, 'x', 'A#2');
 
     const merged = mergeORSet(replica1, replica2);
-    // A#1 is tombstoned, but A#2 never was — the element survives the concurrent remove.
+    // A#1 is tombstoned, but A#2 never was - the element survives the concurrent remove.
     expect(orSetElements(merged).has('x')).toBe(true);
     // Merging the other direction gives the identical answer.
     expect(orSetElements(mergeORSet(replica2, replica1)).has('x')).toBe(true);
   });
 });
 
-describe('TwoPhaseSet — the naive contrast', () => {
+describe('TwoPhaseSet - the naive contrast', () => {
   it('basic add/remove/merge behaves as a plain set until a remove happens', () => {
     let state = createTwoPhaseSet();
     state = addToTwoPhaseSet(state, 'x');
@@ -233,7 +233,7 @@ describe('TwoPhaseSet — the naive contrast', () => {
   });
 });
 
-describe('compareReAddAfterRemove — the finding: OR-Set survives a re-add, 2P-Set does not', () => {
+describe('compareReAddAfterRemove - the finding: OR-Set survives a re-add, 2P-Set does not', () => {
   it('OR-Set correctly keeps the re-added element present', () => {
     const result = compareReAddAfterRemove('x', 'A#1', 'A#2');
     expect(result.orSetHasElement).toBe(true);

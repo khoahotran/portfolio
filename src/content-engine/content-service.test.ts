@@ -4,14 +4,14 @@ import type { ContentIndexItem } from './types';
 /**
  * `getRelatedArticles`'s curated-then-scored ordering was flagged as worth testing back in the
  * Phase 4 plan's "cross-cutting track" (alongside `slugify` parity, which did get a test) but never
- * actually landed one — found while auditing test coverage in Phase 6. It is the most
+ * actually landed one - found while auditing test coverage in Phase 6. It is the most
  * behaviorally complex pure-ish function in the content engine: curated links always win, are never
  * truncated by `limit` even when there are more of them than `limit`, tag-scored suggestions fill
  * remaining slots ordered by overlap then recency, and a final fallback pads out anything still
- * short — four distinct rules in one function, none covered before this file.
+ * short - four distinct rules in one function, none covered before this file.
  *
  * `loadContentIndex()` fetches `content-index.json` and memoizes the promise at module scope, so
- * this mocks `fetch` once for the whole suite rather than per test — every test below runs its own
+ * this mocks `fetch` once for the whole suite rather than per test - every test below runs its own
  * query (different tags/curated/limit) against this one fixture, which is simpler and just as valid
  * as resetting modules per test since no test needs a *different* underlying index.
  */
@@ -40,7 +40,7 @@ describe('getRelatedArticles', () => {
   });
 
   it('orders tag-scored matches by overlap count, then most recent for ties', async () => {
-    // 'x' isn't in the fixture, so nothing is "current" here — purely testing scored ordering.
+    // 'x' isn't in the fixture, so nothing is "current" here - purely testing scored ordering.
     // tags ['go', 'redis'] overlap: a=2, b=1, c=1, d=0, e=0. b and c tie at 1; b (2026-01-04) is
     // newer than c (2026-01-03), so b must come first.
     const related = await getRelatedArticles('x', ['go', 'redis'], 3);
@@ -53,7 +53,7 @@ describe('getRelatedArticles', () => {
   });
 
   it('does not truncate curated links when there are more of them than `limit`', async () => {
-    // limit=1 but 3 curated links — curated is a floor for padding, not a ceiling on evidence.
+    // limit=1 but 3 curated links - curated is a floor for padding, not a ceiling on evidence.
     const related = await getRelatedArticles('x', [], 1, ['blog/a', 'research/b', 'experiments/c']);
     expect(related.map((item) => item.slug).sort()).toEqual(['a', 'b', 'c']);
   });

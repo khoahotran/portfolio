@@ -17,6 +17,7 @@
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:interactions": "node scripts/check-interactions.mjs",
     "check:type-scale": "node scripts/check-type-scale.mjs",
+    "check:prose": "node scripts/check-prose.mjs",
     "test": "vitest run"
   },
   "dependencies": {

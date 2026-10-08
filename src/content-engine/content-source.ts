@@ -10,7 +10,7 @@ const rawLoaderMap = new Map<string, () => Promise<string>>();
 /**
  * MUST stay byte-identical to `slugify()` in scripts/lib/content.mjs, which produces the canonical
  * slugs stored in the generated content index. If the two ever diverge, an article keeps its entry
- * in the index and the sitemap but stops resolving at its own URL — the same failure mode
+ * in the index and the sitemap but stops resolving at its own URL - the same failure mode
  * .ai/decision-log.md Decision 5 had to fix once already.
  *
  * Exported solely so that invariant can be asserted: see src/content-engine/slugify.test.ts.
@@ -55,7 +55,7 @@ function getRawKey(collection: ContentCollection, slug: string): string {
 // build-search-index.mjs honours an explicit `slug:` frontmatter field, so the
 // canonical slug in the generated index can differ from the filename-derived one
 // this module keys its loader map by. That only matters for the rare file that
-// sets `slug:` — extracting it means reading the file's raw text, so this stays
+// sets `slug:` - extracting it means reading the file's raw text, so this stays
 // a fallback triggered only when the cheap filename-based lookup above misses,
 // rather than parsing frontmatter for every file up front on module load.
 function extractFrontmatterSlug(raw: string): string | null {

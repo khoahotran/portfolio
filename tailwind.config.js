@@ -1,14 +1,14 @@
 /**
  * Design tokens for the portfolio.
  *
- * Before this, `theme.extend` was empty and there were zero `dark:` variants in `src/` — despite
+ * Before this, `theme.extend` was empty and there were zero `dark:` variants in `src/` - despite
  * `.ai/constitution.md` §4 listing dark mode as something not to break. 885 colour classes across
  * 43 files hardcoded the palette, so adding `dark:` variants one by one was not realistic.
  *
  * Instead the palettes themselves are CSS variables, defined in `src/index.css` under `:root` and
  * `.dark`. `bg-slate-50`, `text-slate-900`, `border-slate-200` and the rest keep their names and
  * become theme-aware for free. The light values are the literal Tailwind v3 ramps, so light mode is
- * unchanged — that equivalence is the safety net for a change this wide.
+ * unchanged - that equivalence is the safety net for a change this wide.
  *
  * `<alpha-value>` is what keeps `/80`-style opacity modifiers working through the variable
  * indirection; without it `bg-slate-900/50` silently produces an invalid colour.
@@ -26,7 +26,7 @@ const ramp = (name) =>
 export default {
   /**
    * `./content/**` matters more than it looks. The articles embed raw HTML for their
-   * "View Interactive Benchmark" CTAs, and those class names live only in Markdown — so with the
+   * "View Interactive Benchmark" CTAs, and those class names live only in Markdown - so with the
    * previous globs Tailwind purged every one of them. `bg-teal-600` appears in 8 content files and
    * generated exactly zero CSS rules, which means every article's primary call to action had been
    * rendering as white text on the page background: invisible. Verified against the built CSS.
@@ -48,15 +48,15 @@ export default {
          * Role tokens for the cases a reversible ramp cannot express, because the same step is
          * doing two different jobs. These are named by role and rewritten at the call site.
          *
-         * - `surface` — a raised card on the page background. Was `bg-white`, which had to be split
+         * - `surface` - a raised card on the page background. Was `bg-white`, which had to be split
          *   from `text-white`: a card background must darken in dark mode, but the white text on a
          *   filled button must not.
-         * - `inverse` — the primary filled button: maximum contrast against the page, so it flips
+         * - `inverse` - the primary filled button: maximum contrast against the page, so it flips
          *   from near-black in light mode to near-white in dark. Was `bg-slate-900 text-white`,
          *   which would have become white-on-white once slate-900 inverted.
-         * - `panel` — a deliberately dark display surface (code-style cards, stack pills). Unlike
+         * - `panel` - a deliberately dark display surface (code-style cards, stack pills). Unlike
          *   `inverse` it stays dark in both themes; on a dark page it reads as a raised panel.
-         * - `accent` / `danger` — filled colour buttons. In dark mode the fill brightens and the
+         * - `accent` / `danger` - filled colour buttons. In dark mode the fill brightens and the
          *   label goes dark, because white on teal-500 is about 2.6:1 and fails AA either way.
          */
         surface: 'rgb(var(--c-surface) / <alpha-value>)',
@@ -73,7 +73,7 @@ export default {
         /**
          * The code surface, exposed as utilities so a component rendering something code-shaped
          * (the event-store badges in the Event Sourcing lab, for instance) can sit on the same
-         * fixed dark surface the `<pre>` blocks use. Identical in both themes — see the note beside
+         * fixed dark surface the `<pre>` blocks use. Identical in both themes - see the note beside
          * `--c-code-bg` in src/index.css for why a code block must not follow the inverting ramp.
          */
         code: 'rgb(var(--c-code-bg) / <alpha-value>)',
@@ -86,7 +86,7 @@ export default {
 
       /**
        * Before this there was no `fontFamily` key at all, so every piece of type on the site fell
-       * back to the browser's default sans. That absence — not the colours, not the spacing — is
+       * back to the browser's default sans. That absence - not the colours, not the spacing - is
        * the main reason the site read as unstyled: nobody had ever chosen a typeface.
        *
        * `Variable` suffixes are what @fontsource-variable registers; the static names follow as a
@@ -106,7 +106,7 @@ export default {
        * looking different.
        *
        * Display steps use clamp() so they scale with the viewport instead of switching at a
-       * breakpoint — the `md:` jump is what makes headings look oversized on a 768px tablet.
+       * breakpoint - the `md:` jump is what makes headings look oversized on a 768px tablet.
        */
       fontSize: {
         d1: ['clamp(2.5rem, 1.6rem + 4.5vw, 4.25rem)', { lineHeight: '1.04', letterSpacing: '-0.03em' }],
@@ -118,7 +118,7 @@ export default {
         micro: ['0.75rem', { lineHeight: '1.45', letterSpacing: '0.04em' }],
         /* 10px, matching the 72 existing `text-[10px]` uses one for one so adopting the token
            changes nothing visually. Whether a badge should be 10px at all is a design question,
-           and it belongs with the Badge component in P1 — not with a token migration, where it
+           and it belongs with the Badge component in P1 - not with a token migration, where it
            would hide a visual change inside a mechanical one. */
         nano: ['0.625rem', { lineHeight: '1.4', letterSpacing: '0.06em' }],
       },

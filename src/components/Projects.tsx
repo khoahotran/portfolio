@@ -7,7 +7,7 @@ import type { ProjectProvenance } from '../data/portfolioData';
 /**
  * Badge copy + styling per provenance. The label spells out what the category
  * actually means ("Shipped at work", not "Professional") because the whole point
- * is that a reader shouldn't have to interpret it — see
+ * is that a reader shouldn't have to interpret it - see
  * `.ai/portfolio-context.md` "Provenance Is Mandatory".
  *
  * Text is at the -700 level on a -50 surface throughout: these badges are
@@ -48,18 +48,18 @@ function ProvenanceBadge({ provenance }: { provenance: ProjectProvenance }) {
 
 interface ProjectsProps {
   /**
-   * Restricts rendering to these section ids. Omit to render all — kept as
+   * Restricts rendering to these section ids. Omit to render all - kept as
    * the default so this stays a drop-in replacement for the previous
    * no-props usage. The homepage now renders two instances of this
    * component (flagship near the top, personal+university further down);
    * this is what lets it do that without duplicating the card markup below.
    * `'experience'` (SeensioGO/Jujuja) is deliberately never requested by
-   * either homepage instance — that data now lives only in Experience.tsx's
+   * either homepage instance - that data now lives only in Experience.tsx's
    * timeline, which already covers the same facts. caseStudiesData itself
    * is untouched; the entries are just no longer selected for rendering.
    */
   sectionIds?: string[];
-  /** Section id for the outer <section> — see the anchor-preservation note in PortfolioHome.tsx. */
+  /** Section id for the outer <section> - see the anchor-preservation note in PortfolioHome.tsx. */
   id?: string;
   /**
    * The "/ Projects & Case Studies" header only makes sense once per page.
@@ -76,7 +76,7 @@ interface ProjectsProps {
 }
 
 export default function Projects({ sectionIds, id = 'projects', showHeader = true, bare = false }: ProjectsProps) {
-  // Flagship case studies (Aegis, Core Banking, QuantAlpha — each with its own
+  // Flagship case studies (Aegis, Core Banking, QuantAlpha - each with its own
   // content/projects/*.md deep dive) lead, ahead of Professional Experience:
   // they're the strongest evidence of architectural depth in the portfolio,
   // and were previously filed under "Personal Projects" below the resume-style
@@ -106,8 +106,8 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
 
           // Only the flagship section gets the full evidence-card treatment
           // (metrics, architecture bullets, case-study CTA). Personal/University
-          // projects render as a lighter list further down — see the row
-          // branch below — so they read as supporting work, not competing
+          // projects render as a lighter list further down - see the row
+          // branch below - so they read as supporting work, not competing
           // evidence, without losing any of their own data.
           if (section.id === 'flagship') {
             return (
@@ -224,7 +224,7 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
           }
 
           // Lighter row treatment for non-flagship projects (Personal Projects,
-          // University): title + summary + stack tags + repo link only — no
+          // University): title + summary + stack tags + repo link only - no
           // metric pills, no Architecture list, no case-study CTA, no card
           // shadow/hover-lift. Deliberately a plain divided list rather than a
           // grid of boxes, so it reads as supporting content, not competing

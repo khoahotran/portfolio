@@ -51,7 +51,7 @@ export async function getLatestContent(limit = 6): Promise<ContentIndexItem[]> {
 
 /**
  * Every non-draft article across all six collections, unsliced. Backs `/tags` and `/tags/:tag`
- * (`TagsIndexPage`, `TagDetailPage`) — tags mean nothing scoped to one collection (`.ai/phases/phase-5.md`
+ * (`TagsIndexPage`, `TagDetailPage`) - tags mean nothing scoped to one collection (`.ai/phases/phase-5.md`
  * §5.5 measured tags only ever being filterable within a single collection as the actual problem),
  * so both pages need the full corpus, unlike `getContentIndex`'s single-collection scope.
  */
@@ -61,7 +61,7 @@ export async function getAllContentIndex(): Promise<ContentIndexItem[]> {
 }
 
 /**
- * Counts for the homepage's "what exists here" strip (see PortfolioHome) —
+ * Counts for the homepage's "what exists here" strip (see PortfolioHome) -
  * derived from the real index rather than hardcoded, so they can't drift out
  * of date as content is added or removed. `projects` is the flagship-case-study
  * count specifically (each has its own content/projects/*.md deep dive).
@@ -84,7 +84,7 @@ export async function getRelatedArticles(
   const eligibleItems = items.filter((item) => shouldInclude(item) && item.slug !== currentSlug);
 
   // Curated links (the `related:` frontmatter field) take priority over the
-  // tag-scored algorithm below — they exist specifically for the relationships
+  // tag-scored algorithm below - they exist specifically for the relationships
   // that mattered enough for the author to name explicitly, e.g. the flagship
   // project pages that were previously totally unlinked despite every article
   // about them referencing each other in prose.
@@ -92,7 +92,7 @@ export async function getRelatedArticles(
   const curated = curatedRelated
     .map((ref) => bySlugPath.get(ref))
     // `item.slug !== currentSlug` guards against an article's own `related:` accidentally
-    // referencing itself (a typo, or a copy-pasted frontmatter block) — without it, that article
+    // referencing itself (a typo, or a copy-pasted frontmatter block) - without it, that article
     // would render itself in its own "Read Next" section. build-search-index.mjs also rejects this
     // at build time; this is defense-in-depth for content that predates that check.
     .filter((item): item is ContentIndexItem => item !== undefined && item.slug !== currentSlug && shouldInclude(item));
@@ -122,7 +122,7 @@ export async function getRelatedArticles(
 
   // `limit` is a floor for how many cards to show when curated links are thin,
   // not a ceiling on curated evidence. Curated links are explicit, author-vetted
-  // relationships (see the comment above) — silently dropping one just because
+  // relationships (see the comment above) - silently dropping one just because
   // an article happens to have more than `limit` of them would hide evidence the
   // author specifically chose to surface. Only the tag-scored/fallback padding
   // below is capped, so a thin article still gets a bounded number of suggestions.
@@ -166,7 +166,7 @@ export async function getContentDetail(
   }
 
   // Index lookup, raw content, and the markdown-compiler chunk are three
-  // independent fetches (none reads the others' result) — previously each
+  // independent fetches (none reads the others' result) - previously each
   // `await` blocked the next one from even starting, turning a page load
   // into a fully serial waterfall. Only the final compile step actually
   // needs all three to have resolved.

@@ -28,13 +28,17 @@ jobs:
       # from day one rather than after the migration finishes.
       - run: npm run check:type-scale
 
+      # Source-only, same reasoning as the type-scale gate: 2,195 em dashes had accumulated across
+      # 217 files before anyone asked for a hyphen, so the convention needs something that fails.
+      - run: npm run check:prose
+
       # Pure-logic unit tests: lab registry / lab-ids.json parity, slugify parity between the app
       # and the build script, and the frontmatter + reading-time helpers. Runs before the build
       # because a slugify divergence would otherwise produce a green build full of unreachable
       # articles. See src/content-engine/slugify.test.ts for why that one matters most.
       - run: npm test
 
-      # Chromium only — neither the prerender pass nor the regression check needs
+      # Chromium only - neither the prerender pass nor the regression check needs
       # Firefox/WebKit. Resolved from the `playwright` devDependency already in
       # package.json, not installed ad hoc. Must come BEFORE the build: `npm run build`
       # now ends with `npm run prerender`, which drives headless Chromium.
@@ -59,7 +63,7 @@ jobs:
           exit 1
 
       # Routes x viewports horizontal-overflow + console/page-error check.
-      # See scripts/check-responsive.mjs and .ai/audit-followups.md item 5 —
+      # See scripts/check-responsive.mjs and .ai/audit-followups.md item 5 -
       # this is what protects the `min-w-0` convention from silently
       # regressing as new components are added.
       - name: Responsive regression check
@@ -67,13 +71,13 @@ jobs:
 
       # WCAG AA contrast across every route in BOTH themes. This is what makes the dark theme
       # verifiable rather than asserted, and it closes .ai/audit-followups.md item 2 with a
-      # measurement instead of an opinion — the whole point of that item was that nobody had
+      # measurement instead of an opinion - the whole point of that item was that nobody had
       # measured which `text-slate-400` uses actually failed.
       - name: Contrast check
         run: npm run check:contrast
 
       # The states you only reach by clicking, dragging or scrolling. The two gates above both
-      # navigate, wait for load, and measure — neither interacts, so anything that only breaks
+      # navigate, wait for load, and measure - neither interacts, so anything that only breaks
       # after an interaction passed both. See .ai/audit-followups.md item 9: wireGraphLinks once
       # made every knowledge-graph node 404 on click and both gates stayed green. This step was
       # verified by reintroducing that exact bug, rebuilding, and confirming it fails.
@@ -81,7 +85,7 @@ jobs:
         run: npm run check:interactions
 
       # Only a fully green job produces the artifact the deploy job consumes, and only for a push
-      # to main — a PR build has nothing to deploy. Keeping the upload last means every gate above
+      # to main - a PR build has nothing to deploy. Keeping the upload last means every gate above
       # has already passed by the time this runs, so there is no window where a half-checked build
       # could reach the deploy job.
       - name: Upload built site
@@ -94,12 +98,12 @@ jobs:
 
   # Why this lives in ci.yml as a dependent job rather than its own workflow: a separate workflow
   # triggered on push to main would race this one, and could publish a build whose checks had not
-  # finished — or had failed. `needs: build-and-check` makes "the site is live" mean "every gate
+  # finished - or had failed. `needs: build-and-check` makes "the site is live" mean "every gate
   # passed", which is the whole point of having the gates.
   #
   # Before this existed, deploy was `npm run deploy` (gh-pages -d dist) run by hand from a laptop,
   # and main had no technical role at all: Pages serves gh-pages, and nothing connected the two.
-  # main could sit 160 commits ahead of the live site with nothing to signal it — which is exactly
+  # main could sit 160 commits ahead of the live site with nothing to signal it - which is exactly
   # what happened between 2026-08-20 and 2026-10-06.
   deploy:
     needs: build-and-check
@@ -125,7 +129,7 @@ jobs:
 
       # --delete is deliberate: the deploy branch mirrors dist/ exactly, so a route or asset that
       # disappears from the build must disappear from the live site too. This also clears the stray
-      # .gitignore the branch has carried since it was created — it listed `dist` and `node_modules`,
+      # .gitignore the branch has carried since it was created - it listed `dist` and `node_modules`,
       # which would silently drop any future build output that happened to match those names.
       - name: Sync the build into the deploy branch
         run: rsync -a --delete --exclude '.git' dist/ gh-pages/
@@ -143,7 +147,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           if git diff --cached --quiet; then
-            echo "Built output is byte-identical to what is already live — nothing to deploy."
+            echo "Built output is byte-identical to what is already live - nothing to deploy."
             exit 0
           fi
           git commit -m "Deploy ${GITHUB_SHA:0:7} from main"

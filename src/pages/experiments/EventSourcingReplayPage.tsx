@@ -19,7 +19,7 @@ interface EventStoreItem {
  * lab. The projection below is a pure left fold: it applies `MoneyWithdrawn` unconditionally
  * because an event log records what *happened*, not what *should have been allowed*. Rejecting an
  * overdraft is a command-side invariant, and the account is already debited by the time the read
- * model sees it. What follows is the system reacting — a fraud rule observing the impossible
+ * model sees it. What follows is the system reacting - a fraud rule observing the impossible
  * balance and emitting `AccountFrozen` at version 6.
  *
  * This is the difference between event sourcing and a mutable `UPDATE accounts SET balance`: the

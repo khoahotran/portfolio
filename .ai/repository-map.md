@@ -15,16 +15,16 @@ A high-level map of the portfolio's architecture and ownership.
 - `/system-design/`: System design notes and diagrams.
 - `/field-notes/`: Pragmatic, boots-on-the-ground engineering lessons.
 - `/experiments/`: Standalone write-ups (methodology, benchmarks, comparisons). Several also
-  link out to an interactive lab at `/labs/<id>` via a CTA button — see `/src/labs/`. The
+  link out to an interactive lab at `/labs/<id>` via a CTA button - see `/src/labs/`. The
   article and the lab are two separate routes; an article's slug and a lab's id may be the
   same string without colliding (`/experiments/:slug` and `/labs/:id` are disjoint paths).
 
 ### `/src/`
 **Purpose:** The React + TypeScript frontend codebase (Vite).
-- `/content-engine/`: The custom JAMstack core. Uses Vite's `import.meta.glob` to parse Markdown, render HTML, and extract Mermaid diagrams. `content-index.ts` fetches two generated artifacts — `content-index.json` (lean, used almost everywhere) and `search-index.json` (full article text, used only by `/search`) — see `.ai/decision-log.md` Decision 4.
-- `/labs/`: `registry.ts` is the single source of truth for interactive labs — id, title, description, and the lazy-loaded component. `App.tsx` maps over it to register `/labs/:id` routes and (for non-colliding ids) `/experiments/:id` -> `/labs/:id` redirects.
+- `/content-engine/`: The custom JAMstack core. Uses Vite's `import.meta.glob` to parse Markdown, render HTML, and extract Mermaid diagrams. `content-index.ts` fetches two generated artifacts - `content-index.json` (lean, used almost everywhere) and `search-index.json` (full article text, used only by `/search`) - see `.ai/decision-log.md` Decision 4.
+- `/labs/`: `registry.ts` is the single source of truth for interactive labs - id, title, description, and the lazy-loaded component. `App.tsx` maps over it to register `/labs/:id` routes and (for non-colliding ids) `/experiments/:id` -> `/labs/:id` redirects.
 - `/pages/`: Route-level React components.
-  - `/experiments/`: The interactive lab page components. Folder name is a historical holdover — these render at `/labs/<id>`, not `/experiments/<id>`; see `/src/labs/registry.ts`.
+  - `/experiments/`: The interactive lab page components. Folder name is a historical holdover - these render at `/labs/<id>`, not `/experiments/<id>`; see `/src/labs/registry.ts`.
   - `LabsIndexPage.tsx`: renders `/labs`, the lab directory.
 - `/components/content/`: Composable article-rendering pieces (`MarkdownContent`, `ArticleHeader`, `TableOfContents`, `RelatedContent`, `ArticleNav`, `ReadingProgress`, `MermaidDiagram`) consumed by `ContentDetailPage`.
 - `/components/`: Reusable UI elements (Buttons, Headers, Project Cards).
@@ -32,7 +32,7 @@ A high-level map of the portfolio's architecture and ownership.
 - `/seo/`: Hooks and utilities for metadata and web vitals.
 
 ### `/site.config.mjs`
-**Purpose:** The site's public identity — origin, base path, title, description — in one place.
+**Purpose:** The site's public identity - origin, base path, title, description - in one place.
 Previously `siteUrl` was hardcoded in four unrelated files. Every Node-side build script reads it
 from here. `basePath` must stay in sync with `base` in `vite.config.ts`; see `.ai/decision-log.md`
 Decision 7.
@@ -46,7 +46,7 @@ Decision 7.
 - `prerender.mjs`: Runs after `vite build`. Serializes every route to `dist/<route>.html` so
   crawlers and social cards see real per-page metadata instead of the SPA shell. Fails the build on
   a route missing its own title/canonical/`og:image`. See `.ai/decision-log.md` Decision 6.
-- `check-responsive.mjs`: Browser regression check — overflow, console/page errors, and mermaid
+- `check-responsive.mjs`: Browser regression check - overflow, console/page errors, and mermaid
   rendering across every route and 7 viewport widths.
 
 ### `/public/`

@@ -28,14 +28,14 @@ describe('createBloomFilter', () => {
   });
 });
 
-describe('addToBloomFilter / mightContain — the hard guarantee', () => {
+describe('addToBloomFilter / mightContain - the hard guarantee', () => {
   it('does not mutate the input state', () => {
     const state = createBloomFilter(100, 3);
     addToBloomFilter(state, 'x');
     expect(bitsSetCount(state)).toBe(0);
   });
 
-  it('an inserted item always tests as present — never a false negative for a single item', () => {
+  it('an inserted item always tests as present - never a false negative for a single item', () => {
     const state = addToBloomFilter(createBloomFilter(1000, 5), 'hello');
     expect(mightContain(state, 'hello')).toBe(true);
   });
@@ -98,7 +98,7 @@ describe('optimalK', () => {
   });
 });
 
-describe('runBloomFilterTrial — the two-sided finding', () => {
+describe('runBloomFilterTrial - the two-sided finding', () => {
   const m = 2000;
   const k = optimalK(m, 200); // 7
 
@@ -111,7 +111,7 @@ describe('runBloomFilterTrial — the two-sided finding', () => {
 
   it('at designed capacity, the measured false-positive rate tracks the theoretical estimate closely', () => {
     const trial = runBloomFilterTrial(m, k, itemRange(200, 'item'), itemRange(5000, 'test'));
-    // Measured ~1.0%, theoretical ~0.8% in practice — both comfortably under 3%, well within a
+    // Measured ~1.0%, theoretical ~0.8% in practice - both comfortably under 3%, well within a
     // generous absolute tolerance band rather than an exact match (real hashing has sampling noise).
     expect(trial.theoreticalFalsePositiveRate).toBeLessThan(0.03);
     expect(trial.measuredFalsePositiveRate).toBeLessThan(0.03);
@@ -120,7 +120,7 @@ describe('runBloomFilterTrial — the two-sided finding', () => {
   it('overloading the same filter to 5x its designed capacity makes the false-positive rate dramatically worse', () => {
     const designed = runBloomFilterTrial(m, k, itemRange(200, 'item'), itemRange(5000, 'test'));
     const overloaded = runBloomFilterTrial(m, k, itemRange(1000, 'item'), itemRange(5000, 'test'));
-    // Measured jumps from ~1% to ~80% in practice — assert the order-of-magnitude difference
+    // Measured jumps from ~1% to ~80% in practice - assert the order-of-magnitude difference
     // directly rather than pinning exact figures that would be brittle against hashing noise.
     expect(overloaded.measuredFalsePositiveRate).toBeGreaterThan(designed.measuredFalsePositiveRate * 10);
     expect(overloaded.measuredFalsePositiveRate).toBeGreaterThan(0.5);

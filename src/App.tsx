@@ -28,13 +28,13 @@ function LoadingFallback() {
  * Reveals `#root` once React has real content to show.
  *
  * Rendered inside <Suspense>, so its effect cannot run while the boundary is showing the
- * fallback — React does not commit effects in a suspended subtree. That makes "the route chunk
+ * fallback - React does not commit effects in a suspended subtree. That makes "the route chunk
  * resolved" the signal, with no path matching or timeout to keep in sync. See src/boot-reveal.ts
  * for why #root starts hidden at all.
  */
 function BootReveal() {
   useEffect(() => {
-    // Next frame, so React has committed and laid out before anything becomes visible — the
+    // Next frame, so React has committed and laid out before anything becomes visible - the
     // entrance animation then starts from a painted frame rather than mid-flight.
     const id = requestAnimationFrame(revealApp);
     return () => cancelAnimationFrame(id);
@@ -47,7 +47,7 @@ function BootReveal() {
  * Routes live in their own component so ErrorBoundary can be keyed on the
  * current path via useLocation() (which requires Router context, so it
  * can't be called from App itself, above <BrowserRouter>). Keying by
- * pathname remounts the boundary — and clears any caught error — on every
+ * pathname remounts the boundary - and clears any caught error - on every
  * navigation, so a failed route doesn't permanently blank the rest of the site.
  */
 function AppRoutes() {
@@ -61,7 +61,7 @@ function AppRoutes() {
           <Route path="/" element={<PortfolioHome />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/graph" element={<KnowledgeGraphPage />} />
-          {/* One browse surface over the five writing collections. Their own list routes stay —
+          {/* One browse surface over the five writing collections. Their own list routes stay -
               see the note at the top of WritingIndexPage. */}
           <Route path="/writing" element={<WritingIndexPage />} />
           <Route
@@ -81,7 +81,7 @@ function AppRoutes() {
               <ContentListPage
                 collection="blog"
                 title="Developer Blog"
-                description="Narrative build stories — how a specific system got built, and what broke along the way."
+                description="Narrative build stories - how a specific system got built, and what broke along the way."
               />
             }
           />
@@ -92,7 +92,7 @@ function AppRoutes() {
               <ContentListPage
                 collection="research"
                 title="Engineering Case Studies"
-                description="Why a technical decision was investigated — the options considered, and what the evidence said."
+                description="Why a technical decision was investigated - the options considered, and what the evidence said."
               />
             }
           />
@@ -114,7 +114,7 @@ function AppRoutes() {
           ))}
           {/* Redirects for the old /experiments/<lab> paths so existing links, bookmarks, and search
               engine indexes keep working now that interactive labs live under /labs/*. Skipped for
-              labs whose id is also a real article slug (collidesWithArticleSlug) — for those,
+              labs whose id is also a real article slug (collidesWithArticleSlug) - for those,
               /experiments/<slug> must render the article via the :slug route below, not redirect. */}
           {labs
             .filter((lab) => !lab.collidesWithArticleSlug)
@@ -131,7 +131,7 @@ function AppRoutes() {
               <ContentListPage
                 collection="system-design"
                 title="System Design Notes"
-                description="How one system or subsystem was actually designed — the architecture, not the debate."
+                description="How one system or subsystem was actually designed - the architecture, not the debate."
               />
             }
           />
@@ -142,7 +142,7 @@ function AppRoutes() {
               <ContentListPage
                 collection="field-notes"
                 title="Field Notes"
-                description="Short, opinionated notes on real engineering decisions — framework choices, language trade-offs, and hard-won lessons."
+                description="Short, opinionated notes on real engineering decisions - framework choices, language trade-offs, and hard-won lessons."
               />
             }
           />

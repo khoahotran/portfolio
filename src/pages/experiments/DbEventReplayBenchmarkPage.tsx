@@ -6,7 +6,7 @@ import { Database, Info } from 'lucide-react';
 import rawResults from './db-event-replay-benchmark-results.json';
 
 /**
- * Raw shape written by benchmarks/db-event-replay-benchmark/run.sh — one row per (database, event
+ * Raw shape written by benchmarks/db-event-replay-benchmark/run.sh - one row per (database, event
  * count) combination, straight from the harness's own JSON stdout line. Byte-identical copy of
  * benchmarks/db-event-replay-benchmark/results.json; see that directory's README.md to reproduce it.
  */

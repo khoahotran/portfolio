@@ -2,7 +2,7 @@
  * The three capability claims the homepage makes, and the proof sitting next to each one.
  *
  * This file is the mechanism behind the whole redesign. The previous homepage carried a section of
- * six pill buttons — Blog, Projects, Research, Experiments, Labs, System Design — that duplicated
+ * six pill buttons - Blog, Projects, Research, Experiments, Labs, System Design - that duplicated
  * the navigation verbatim, so labs and write-ups appeared as *places to go*. Here they appear as
  * *evidence cited in place*: a claim about what someone can do, with the thing that lets a reader
  * check it immediately underneath.
@@ -46,7 +46,7 @@ export const expertisePillars: ExpertisePillar[] = [
   {
     title: 'Data structures that hold at scale',
     summary:
-      'Choosing the structure whose failure mode you can live with — probabilistic counting, bounded reads, rebalancing that does not move everything.',
+      'Choosing the structure whose failure mode you can live with - probabilistic counting, bounded reads, rebalancing that does not move everything.',
     proof: [
       { label: 'Run consistent hashing', to: '/labs/consistent-hashing', kind: 'lab' },
       { label: 'Run an LSM tree', to: '/labs/lsm-tree', kind: 'lab' },
@@ -61,7 +61,7 @@ export const expertisePillars: ExpertisePillar[] = [
   {
     title: 'Staying up when things fail',
     summary:
-      'Backpressure, retries, rollout safety and cache staleness — the parts that decide whether a correct system is also an operable one.',
+      'Backpressure, retries, rollout safety and cache staleness - the parts that decide whether a correct system is also an operable one.',
     proof: [
       { label: 'Run backpressure', to: '/labs/backpressure', kind: 'lab' },
       { label: 'Run retry strategies', to: '/labs/retry-strategy', kind: 'lab' },

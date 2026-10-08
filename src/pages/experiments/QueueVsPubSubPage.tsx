@@ -11,7 +11,7 @@ function QueueVsPubSubPage() {
   const [subscribers, setSubscribers] = useState(3);
   const [ticks, setTicks] = useState(0);
   // Both message-flow animations ran forever with no way to freeze a frame
-  // to inspect it. Pausing stops the shared ticker only — the rate/consumer/
+  // to inspect it. Pausing stops the shared ticker only - the rate/consumer/
   // subscriber sliders stay fully live either way.
   const [isPaused, setIsPaused] = useState(false);
 

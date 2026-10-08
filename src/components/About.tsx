@@ -4,7 +4,7 @@ export default function About() {
   return (
     <section id="about" className="py-24 px-6 bg-slate-50">
       <div className="max-w-4xl mx-auto">
-        {/* Not a heading — a decorative kicker above the real section title below.
+        {/* Not a heading - a decorative kicker above the real section title below.
             Previously an <h2>, which inverted the semantic hierarchy: a screen
             reader would announce this 12px label before the visually-dominant
             headline, which is the section's actual heading. */}

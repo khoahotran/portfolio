@@ -16,7 +16,7 @@ function itemRange(count: number, prefix: string): string[] {
 function BloomFilterPage() {
   useSeo({
     title: 'Bloom Filter Visualizer',
-    description: 'Run a real bit-array Bloom filter — measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real.',
+    description: 'Run a real bit-array Bloom filter - measure its false-positive rate against the closed-form formula, then overload it past design capacity and watch the rate climb for real.',
   });
 
   const [insertedCount, setInsertedCount] = useState(DESIGNED_CAPACITY);
@@ -39,7 +39,7 @@ function BloomFilterPage() {
       <p className="mt-2 text-slate-600">
         A real {BIT_ARRAY_SIZE}-bit filter, sized for {DESIGNED_CAPACITY} items at {k} hash
         functions each. Drag how many items actually get inserted and watch the measured
-        false-positive rate — not a formula, a real count against {TEST_ITEM_COUNT.toLocaleString()}
+        false-positive rate - not a formula, a real count against {TEST_ITEM_COUNT.toLocaleString()}
         {' '}genuinely-not-inserted test items every time.
       </p>
 
@@ -64,7 +64,7 @@ function BloomFilterPage() {
           </label>
 
           <p className="text-micro text-slate-500">
-            Designed capacity is {DESIGNED_CAPACITY} items — you're at{' '}
+            Designed capacity is {DESIGNED_CAPACITY} items - you're at{' '}
             <span className="font-bold text-slate-700">{overloadFactor.toFixed(1)}×</span> that.
             {overloadFactor > 1.5 && ' Past design capacity, the false-positive rate stops being a small cost and becomes the dominant one.'}
           </p>
@@ -82,7 +82,7 @@ function BloomFilterPage() {
             <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
             <p>
               Every one of the {insertedCount.toLocaleString()} inserted items still tests as
-              present — {trial.falseNegativeCount} false negatives, always. This never changes,
+              present - {trial.falseNegativeCount} false negatives, always. This never changes,
               no matter how overloaded the filter gets.
             </p>
           </div>
@@ -109,7 +109,7 @@ function BloomFilterPage() {
               </div>
             </div>
             <p className="mt-4 text-micro text-slate-500">
-              The two numbers track each other closely at any fill level — this is a real hash-based
+              The two numbers track each other closely at any fill level - this is a real hash-based
               structure being measured, not a formula asserted separately from an implementation.
               Drag the slider from {DESIGNED_CAPACITY} up to {DESIGNED_CAPACITY * 6} and watch both
               rise together, sharply, once the filter holds more than it was sized for.

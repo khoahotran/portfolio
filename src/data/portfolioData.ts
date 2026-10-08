@@ -8,14 +8,14 @@ export const heroData = {
   github: 'https://github.com/khoahotran',
   linkedin: 'https://linkedin.com/in/khoahotran',
   // Each stat is attributed to the system it was measured on (see
-  // experienceData.impact below) rather than left as an unlabeled number —
+  // experienceData.impact below) rather than left as an unlabeled number -
   // otherwise "Latency 150-300ms" reads as decoration, not evidence.
   //
   // `route` is optional and only set for the 2 stats that have a dedicated
   // article deriving the number (see Hero.tsx, which renders the label as a
   // Link only when `route` is present). Transaction Consistency and API
   // Response are sourced only from experienceData.impact below, with no
-  // article — they intentionally have no `route` and stay plain text rather
+  // article - they intentionally have no `route` and stay plain text rather
   // than link to a bare bullet point.
   stats: [
     { label: 'Store Lookup Latency', value: '150 - 300ms', route: '/research/algolia-geo-search-for-store-discovery' },
@@ -32,12 +32,12 @@ export const aboutData = {
   // read "production backend services at scale, Go microservices with gRPC and
   // Kafka, event-sourced financial systems..." as one list, which let a reader
   // assume the gRPC/event-sourcing work also shipped to production users. It
-  // didn't — those are self-directed projects, and the cards say so via
+  // didn't - those are self-directed projects, and the cards say so via
   // `provenance`. See `.ai/portfolio-context.md` "Provenance Is Mandatory".
   paragraph1:
     "I'm a backend engineer focused on distributed systems, event-driven architectures, and high-performance services using Go and TypeScript. I care about correctness, observability, and operational simplicity.",
   paragraph2:
-    'At work I ship production backend services on NestJS and Firebase, handling transaction consistency, caching, and geo-search. On my own time I build the harder architecture end to end — Go microservices on gRPC and Kafka, an event-sourced ledger with Saga transfers — and write up the trade-offs I had to accept.',
+    'At work I ship production backend services on NestJS and Firebase, handling transaction consistency, caching, and geo-search. On my own time I build the harder architecture end to end - Go microservices on gRPC and Kafka, an event-sourced ledger with Saga transfers - and write up the trade-offs I had to accept.',
   values: [
     'Modular, scalable backend services.',
     'Fast, reliable APIs with caching and search.',
@@ -73,7 +73,7 @@ export const experienceData = [
 /**
  * Where a project actually came from. Rendered as a badge on every project card
  * so a reader never has to infer whether something shipped to real users, was
- * built solo, or was coursework — guessing wrong is what costs credibility.
+ * built solo, or was coursework - guessing wrong is what costs credibility.
  * See `.ai/portfolio-context.md` "Provenance Is Mandatory".
  *
  * This is deliberately a closed union rather than a free string: `scale` used to
@@ -145,15 +145,15 @@ export const caseStudiesData: Project[] = [
   },
   // ── Flagship Case Studies ────────────────────────────────────────────────
   // The three deep-dive projects with their own content/projects/*.md page
-  // (see .ai/flagship-projects.md's "Big Three") — kept in their own section,
+  // (see .ai/flagship-projects.md's "Big Three") - kept in their own section,
   // distinct from `personal` below, so this label doesn't also cover
   // ScrapeAndDown, which has no deep-dive page.
   {
     title: 'Aegis',
     slug: 'aegis',
-    role: 'Author — Backend Engineer',
+    role: 'Author - Backend Engineer',
     provenance: 'self-directed',
-    scale: 'Solo build — 4 Go services',
+    scale: 'Solo build - 4 Go services',
     section: 'flagship',
     summary:
       'Modular, high-performance Auth & Authorization platform in Go. Separate Identity, Policy, and Gateway microservices connected via gRPC, with a GraphQL API gateway, Kafka-based audit logging, and OpenTelemetry tracing.',
@@ -178,9 +178,9 @@ export const caseStudiesData: Project[] = [
   {
     title: 'Event-Driven Core Banking',
     slug: 'core-banking',
-    role: 'Author — Backend Engineer',
+    role: 'Author - Backend Engineer',
     provenance: 'self-directed',
-    scale: 'Solo build — Go + Firestore',
+    scale: 'Solo build - Go + Firestore',
     section: 'flagship',
     summary:
       'Core banking system in Go using Event Sourcing and CQRS on Firestore. Includes distributed Saga transfers, real-time fraud detection with velocity rules, Prometheus metrics, and snapshotting every 100 events.',
@@ -203,23 +203,23 @@ export const caseStudiesData: Project[] = [
     },
   },
   {
-    title: 'PFM — Personal Finance Manager',
+    title: 'PFM - Personal Finance Manager',
     slug: 'pfm',
-    role: 'Author — Full-stack Engineer',
+    role: 'Author - Full-stack Engineer',
     provenance: 'self-directed',
-    scale: 'Solo build — Go + React 19, spec-driven',
+    scale: 'Solo build - Go + React 19, spec-driven',
     section: 'flagship',
     summary:
-      'An invite-only personal finance tracker built spec-first: every business rule traces from an SRS to an SDS to a passing integration test. React 19 Server Actions are the only client the Go API accepts — the browser never calls it directly.',
+      'An invite-only personal finance tracker built spec-first: every business rule traces from an SRS to an SDS to a passing integration test. React 19 Server Actions are the only client the Go API accepts - the browser never calls it directly.',
     metrics: [
-      'Invite-only — no open registration',
+      'Invite-only - no open registration',
       '212 backend integration tests (Testcontainers)',
       'Atomic wallet balance + transaction writes',
       'PBAC via JWT claims, enforced server-side only',
     ],
     stack: ['Go', 'Gin', 'React 19', 'Next.js (vinext)', 'PostgreSQL', 'Redis', 'Asynq', 'sqlc'],
     architecture: [
-      'Server Actions are the only client the Go API accepts — no token ever reaches the browser.',
+      'Server Actions are the only client the Go API accepts - no token ever reaches the browser.',
       'Package-by-Feature backend: one bounded context per module, enforced by import rules.',
       'Redis backs exactly two things: the Asynq email queue and the JWT logout denylist.',
       'Wallet balance and transaction writes are atomic; currency locks on first transaction.',
@@ -231,7 +231,7 @@ export const caseStudiesData: Project[] = [
   {
     title: 'QuantAlpha Lab (HFT)',
     slug: 'quant-alpha',
-    role: 'Contributor — Backend + ML',
+    role: 'Contributor - Backend + ML',
     provenance: 'academic',
     scale: 'University research platform',
     section: 'flagship',
@@ -255,7 +255,7 @@ export const caseStudiesData: Project[] = [
   // ── Personal Projects ────────────────────────────────────────────────────
   {
     title: 'ScrapeAndDown',
-    role: 'Author — Backend Engineer',
+    role: 'Author - Backend Engineer',
     provenance: 'self-directed',
     scale: 'Solo CLI tool',
     section: 'personal',

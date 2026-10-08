@@ -21,7 +21,7 @@ const MESSAGE_STYLE: Record<ElectionMessageType, { stroke: string; label: string
 function LeaderElectionPage() {
   useSeo({
     title: 'Leader Election (Bully Algorithm) Visualizer',
-    description: 'A real Bully algorithm election, run step by step — crash the leader and watch a new one get chosen.',
+    description: 'A real Bully algorithm election, run step by step - crash the leader and watch a new one get chosen.',
   });
 
   const [nodeCount, setNodeCount] = useState(7);
@@ -33,7 +33,7 @@ function LeaderElectionPage() {
   const aliveIds = useMemo(() => new Set(nodeIds.filter((id) => !downIds.has(id))), [nodeIds, downIds]);
 
   // The node that "notices" the previous leader is unreachable and starts the election is always
-  // the lowest surviving id — a deliberate simplification so the lab has one control (which nodes
+  // the lowest surviving id - a deliberate simplification so the lab has one control (which nodes
   // are down) instead of two, and because it also happens to be the worst case for message volume
   // (see the O(n^2) test in leaderElection.test.ts), which is the more interesting thing to show.
   const initiatorId = useMemo(() => {
@@ -82,7 +82,7 @@ function LeaderElectionPage() {
       <LabBackLink labId="leader-election" />
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Leader Election (Bully Algorithm)</h1>
       <p className="mt-2 text-slate-600">
-        Crash the current leader and watch the real Bully election protocol pick a new one — every
+        Crash the current leader and watch the real Bully election protocol pick a new one - every
         message shown actually gets sent by the simulation, not implied.
       </p>
 
@@ -129,15 +129,15 @@ function LeaderElectionPage() {
           </button>
 
           <p className="text-micro text-slate-500">
-            Click any node in the ring to crash or recover it directly. Node {initiatorId ?? '—'} is the
+            Click any node in the ring to crash or recover it directly. Node {initiatorId ?? '-'} is the
             lowest surviving id, so it's the one that notices the leader is gone and starts the election
-            — the worst case for message volume.
+            - the worst case for message volume.
           </p>
 
           <div className="grid grid-cols-2 gap-2 pt-4 border-t border-slate-100 text-center">
             <div>
               <div className="text-lg font-bold text-teal-700">
-                {result.leaderId ?? (initiatorId === null ? '—' : '…')}
+                {result.leaderId ?? (initiatorId === null ? '-' : '…')}
               </div>
               <div className="text-nano font-bold uppercase tracking-widest text-slate-600">
                 {currentStep >= result.steps.length ? 'Leader' : 'Electing'}
@@ -151,7 +151,7 @@ function LeaderElectionPage() {
 
           {initiatorId === null && (
             <p className="pt-2 text-micro font-semibold text-red-600">
-              Every node is down — there's no one left alive to notice, let alone start an election.
+              Every node is down - there's no one left alive to notice, let alone start an election.
             </p>
           )}
         </section>
@@ -235,7 +235,7 @@ function LeaderElectionPage() {
                       className="cursor-pointer"
                       onClick={() => toggleNode(id)}
                       role="button"
-                      aria-label={`Node ${id}${isDown ? ', down' : ', alive'}${isLeader ? ', leader' : ''} — click to ${isDown ? 'recover' : 'crash'}`}
+                      aria-label={`Node ${id}${isDown ? ', down' : ', alive'}${isLeader ? ', leader' : ''} - click to ${isDown ? 'recover' : 'crash'}`}
                     />
                     <text x={x} y={y + 0.2} fontSize={3} textAnchor="middle" dominantBaseline="middle" fill="white" className="pointer-events-none select-none font-bold">
                       {isDown ? '×' : id}

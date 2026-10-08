@@ -19,7 +19,7 @@ const ALL_COLLECTIONS: ContentCollection[] = [
 
 /**
  * ignoreLocation (see the Fuse config below) fixes recall but on its own
- * regresses ranking for exact project/article names — e.g. "Aegis" no longer
+ * regresses ranking for exact project/article names - e.g. "Aegis" no longer
  * surfaces the Aegis project page first, because a blog post that merely
  * mentions Aegis several times can out-score it under Fuse's own similarity
  * metric. This re-sorts an exact or prefix title match to the front before
@@ -60,7 +60,7 @@ function SearchPage() {
 
   useSeo({
     title: 'Search Engineering Articles',
-    // Was undercounting scope (named only 3 of 6 searchable collections) —
+    // Was undercounting scope (named only 3 of 6 searchable collections) -
     // aligned with the visible subhead just below, which already lists all 6.
     description: 'Search across projects, blog posts, research, system design, experiments, and field notes.',
     // Internal search-result pages are a standard noindex candidate (no
@@ -104,7 +104,7 @@ function SearchPage() {
         includeScore: true,
         // Fuse's default `location: 0, distance: 100` means a match past roughly
         // the first ~34 characters of a field scores above any reasonable
-        // threshold and gets discarded — measured: "Argon2id" (in 5 articles),
+        // threshold and gets discarded - measured: "Argon2id" (in 5 articles),
         // "rate limiting" (in 4), and "core banking" (in 6, only 1 returned) all
         // undercounted results because of this. ignoreLocation removes that
         // position penalty; the threshold is tightened from 0.34 to compensate
@@ -112,7 +112,7 @@ function SearchPage() {
         //
         // 0.25 alone let a short acronym (<=4 chars) match on a single edit against
         // almost anything: "BRIN" (in 1 article) returned 32/33; "RBAC" (in 3) returned
-        // 32/33. Tightened to 0.20 — verified against a 24-query battery (exact/partial
+        // 32/33. Tightened to 0.20 - verified against a 24-query battery (exact/partial
         // titles, tech names, project names, tags, rare keywords, multi-word, case
         // variants, no-result queries): every previously-correct top hit is unchanged,
         // and BRIN/RBAC/saga/CQRS all drop back down to their real counts.

@@ -4,7 +4,7 @@
  * Why this exists: the nine labs look identical on the surface but differ enormously in what they
  * are actually worth as evidence. Three run the real algorithm live in the browser. Three compute
  * chosen formulas that illustrate a shape rather than measure anything. Three render a fixed
- * dataset. Before this, a reader could not tell them apart — and three of them were labelled
+ * dataset. Before this, a reader could not tell them apart - and three of them were labelled
  * "Benchmark", one of them describing a hardcoded array as "a measured benchmark".
  *
  * `.ai/prompts/benchmark-study.md` already required every benchmark to state its hardware and
@@ -17,7 +17,7 @@
  */
 export type LabProvenance =
   /**
-   * The lab implements the actual algorithm and runs it on your input — the backoff schedule,
+   * The lab implements the actual algorithm and runs it on your input - the backoff schedule,
    * the saga state machine, the event fold. The output is a real computation, not an estimate.
    */
   | { kind: 'implementation'; basis: string }
@@ -31,14 +31,14 @@ export type LabProvenance =
    * The lab renders results captured from a real run. `environment` must be specific enough to
    * reproduce, and `harness` should point at the code that produced the numbers.
    *
-   * `caveat` states what is missing — an unpublished harness, an unrecorded host, a sample size
+   * `caveat` states what is missing - an unpublished harness, an unrecorded host, a sample size
    * too small to be a distribution. It is not optional politeness: a measurement a reader cannot
    * re-run is weaker evidence than one they can, and saying which kind this is costs nothing while
    * being caught overstating costs everything.
    */
   | { kind: 'measured'; environment: string; measuredOn: string; harness?: string; caveat?: string }
   /**
-   * The lab renders a fixed dataset whose origin has not been established — it is neither a
+   * The lab renders a fixed dataset whose origin has not been established - it is neither a
    * verified measurement nor a stated model. This is a holding state, not a destination: a lab
    * should not stay here. It exists so an unverified dataset is labelled as such instead of
    * being presented as a benchmark, which is strictly better than the alternative of guessing.

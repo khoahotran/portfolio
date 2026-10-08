@@ -13,7 +13,7 @@ import { useSeo } from '../../seo/useSeo';
 type Algorithm = 'token-bucket' | 'leaky-bucket' | 'fixed-window';
 
 // Each algorithm's second parameter means something different (a rate for the two bucket
-// algorithms, a window duration for Fixed Window) — this config drives the slider's label, unit,
+// algorithms, a window duration for Fixed Window) - this config drives the slider's label, unit,
 // and range per algorithm, and its own default, rather than forcing one shared slider to mean
 // three different things depending on which tab is active.
 const ALGORITHM_CONFIG: Record<
@@ -35,7 +35,7 @@ function runAlgorithm(algorithm: Algorithm, arrivals: number[], capacity: number
     case 'leaky-bucket':
       return simulateLeakyBucket(arrivals, capacity, param);
     case 'fixed-window':
-      // `param` is the window size here; `capacity` doubles as the per-window limit — see the
+      // `param` is the window size here; `capacity` doubles as the per-window limit - see the
       // maxState comment below for why that reuse keeps the visualization's normalization uniform
       // across all three algorithms instead of needing a fourth, algorithm-specific axis.
       return simulateFixedWindow(arrivals, param, capacity);
@@ -45,7 +45,7 @@ function runAlgorithm(algorithm: Algorithm, arrivals: number[], capacity: number
 function RateLimitingAlgorithmsPage() {
   useSeo({
     title: 'Rate Limiting Algorithms',
-    description: 'Token Bucket vs Leaky Bucket vs Fixed Window Counter — the real algorithms, run on a shared burst scenario.',
+    description: 'Token Bucket vs Leaky Bucket vs Fixed Window Counter - the real algorithms, run on a shared burst scenario.',
   });
 
   const [algorithm, setAlgorithm] = useState<Algorithm>('token-bucket');
@@ -81,9 +81,9 @@ function RateLimitingAlgorithmsPage() {
     };
   }, [steps]);
 
-  // Every algorithm's `state` is normalized against `capacity` — the bucket's own ceiling for
+  // Every algorithm's `state` is normalized against `capacity` - the bucket's own ceiling for
   // Token/Leaky Bucket, and the per-window limit (reused as `capacity`, see runAlgorithm) for
-  // Fixed Window — so the state chart's y-axis means "how full is the thing that gates
+  // Fixed Window - so the state chart's y-axis means "how full is the thing that gates
   // admission" consistently across all three tabs, not three differently-scaled charts.
   const maxState = Math.max(1, capacity);
 
@@ -93,7 +93,7 @@ function RateLimitingAlgorithmsPage() {
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Rate Limiting Algorithms</h1>
       <p className="mt-2 text-slate-600">
         Token Bucket, Leaky Bucket, and Fixed Window Counter, run for real against the same burst
-        scenario &mdash; a sustained rate plus one burst injected at t={BURST_AT_SECOND}s &mdash; so
+        scenario - a sustained rate plus one burst injected at t={BURST_AT_SECOND}s - so
         the different admission decisions come from the algorithms, not from different inputs.
       </p>
 
@@ -204,7 +204,7 @@ function RateLimitingAlgorithmsPage() {
 
           <div className="relative w-full min-h-[220px] bg-slate-50 rounded-xl border border-slate-100 overflow-hidden p-4">
             <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-              {/* Window boundary guides — only meaningful for Fixed Window, but shown for all three
+              {/* Window boundary guides - only meaningful for Fixed Window, but shown for all three
                   so switching tabs doesn't jump the reader's sense of the timeline's scale. */}
               {algorithm === 'fixed-window' &&
                 Array.from({ length: Math.floor(DURATION_SECONDS / param) + 1 }, (_, i) => i * param).map((boundary) => (
@@ -220,7 +220,7 @@ function RateLimitingAlgorithmsPage() {
                   />
                 ))}
 
-              {/* State area — how full the bucket/window is at each arrival, normalized to maxState. */}
+              {/* State area - how full the bucket/window is at each arrival, normalized to maxState. */}
               <polyline
                 points={steps
                   .map((s) => `${5 + (s.t / DURATION_SECONDS) * 90},${85 - (s.state / maxState) * 70}`)

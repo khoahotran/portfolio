@@ -9,8 +9,8 @@ import type { ContentIndexItem } from '../content-engine/types';
 import { useSeo } from '../seo/useSeo';
 
 /**
- * `/tags/:tag` — every article carrying this tag, across all six collections. The cross-collection
- * span is the entire point (see TagsIndexPage's doc comment) — each card therefore shows its
+ * `/tags/:tag` - every article carrying this tag, across all six collections. The cross-collection
+ * span is the entire point (see TagsIndexPage's doc comment) - each card therefore shows its
  * collection as a badge, which `ContentListPage`'s single-collection cards don't need to.
  */
 function TagDetailPage() {

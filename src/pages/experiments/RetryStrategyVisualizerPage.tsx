@@ -98,7 +98,7 @@ function RetryStrategyVisualizerPage() {
 
             <label className="flex items-center gap-3 pt-4 cursor-pointer">
               {/* The checkbox itself is sr-only (clipped to 1x1px) so tabbing to it left no
-                  visible focus indicator — `focus-within` on the visible track (an ancestor of
+                  visible focus indicator - `focus-within` on the visible track (an ancestor of
                   the input) puts the ring where a keyboard user can actually see it. */}
               <div
                 className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus-within:ring-2 focus-within:ring-teal-500 focus-within:ring-offset-2 ${useJitter ? 'bg-teal-500' : 'bg-slate-200'}`}
@@ -118,7 +118,7 @@ function RetryStrategyVisualizerPage() {
 
         <section className="min-w-0 md:col-span-8 rounded-card border border-slate-200 bg-surface p-6 shadow-raised flex flex-col">
           <div className="flex justify-between items-end mb-6">
-            {/* Not a heading — it's a dynamic status readout, not a section title. */}
+            {/* Not a heading - it's a dynamic status readout, not a section title. */}
             <p className="text-micro font-bold uppercase tracking-widest text-slate-500">Time to abandon: <span className="text-slate-800 text-lg">{(maxTime / 1000).toFixed(2)}s</span></p>
             <button 
               onClick={() => setUseJitter(!useJitter)} 

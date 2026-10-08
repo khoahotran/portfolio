@@ -6,7 +6,7 @@ import { BarChart3, Info } from 'lucide-react';
 import rawResults from './pgbouncer-vs-direct-results.json';
 
 /**
- * Raw shape written by benchmarks/pgbouncer-vs-direct/run.sh — one row per (target, mode, clients)
+ * Raw shape written by benchmarks/pgbouncer-vs-direct/run.sh - one row per (target, mode, clients)
  * combination, straight from the harness's own JSON stdout line. Byte-identical copy of
  * benchmarks/pgbouncer-vs-direct/results.json; see that directory's README.md to reproduce it.
  */
@@ -68,7 +68,7 @@ function PgbouncerVsDirectPage() {
     return DATASET.find((d) => d.mode === mode && d.clients === clients)!;
   }, [mode, clients]);
 
-  // Scaled per-mode, not globally — churn (tens of q/s) and persistent (thousands of q/s) live on
+  // Scaled per-mode, not globally - churn (tens of q/s) and persistent (thousands of q/s) live on
   // completely different scales, and one shared axis would make churn's bars unreadably tiny.
   const modeData = useMemo(() => DATASET.filter((d) => d.mode === mode), [mode]);
   const maxThroughput = Math.max(...modeData.flatMap((d) => [d.directThroughput, d.pgbouncerThroughput])) * 1.1;
@@ -128,10 +128,10 @@ function PgbouncerVsDirectPage() {
               <Info className="w-5 h-5 shrink-0 text-sky-600" />
               <p>
                 {mode === 'churn'
-                  ? "Churn opens a fresh connection per query — the pattern a pooler exists to help with. Watch PgBouncer's advantage widen as client count rises."
-                  : "Persistent opens one connection per client and reuses it — there's no setup cost left to amortize, only an extra hop's cost to pay."}{' '}
+                  ? "Churn opens a fresh connection per query - the pattern a pooler exists to help with. Watch PgBouncer's advantage widen as client count rises."
+                  : "Persistent opens one connection per client and reuses it - there's no setup cost left to amortize, only an extra hop's cost to pay."}{' '}
                 These numbers come from <code>benchmarks/pgbouncer-vs-direct/</code> in the repository
-                — a runnable Docker Compose harness, not a fixed dataset.
+                - a runnable Docker Compose harness, not a fixed dataset.
               </p>
             </div>
           </div>
@@ -150,7 +150,7 @@ function PgbouncerVsDirectPage() {
                   <div className="text-micro font-bold text-teal-700">{Math.round(currentData.directThroughput).toLocaleString()}</div>
                   {/* Fixed-height track: `height: N%` only resolves against a definite-height
                       ancestor, and this column (child of an `items-end`, not `stretch`, row) is
-                      otherwise auto-height — without this wrapper the bar silently renders 0px. */}
+                      otherwise auto-height - without this wrapper the bar silently renders 0px. */}
                   <div className="flex h-48 w-full items-end">
                     <div
                       className="w-full bg-teal-500 rounded-t-sm transition-all duration-500"
