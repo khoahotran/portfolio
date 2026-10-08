@@ -10,7 +10,8 @@
 //
 // Usage: npm run check:prose
 
-import { readFileSync, globSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { walkFiles } from './lib/walk-files.mjs';
 
 const PATTERNS = [
   { find: /—/g, name: 'em dash (—)', use: 'a plain hyphen -' },
@@ -18,13 +19,15 @@ const PATTERNS = [
 ];
 
 const files = [
-  ...globSync('src/**/*.{ts,tsx,css}'),
-  ...globSync('content/**/*.md'),
-  ...globSync('scripts/**/*.mjs'),
-  ...globSync('.ai/**/*.md'),
-  ...globSync('*.md'),
-  ...globSync('index.html'),
-];
+  ...walkFiles('src', ['.ts', '.tsx', '.css']),
+  ...walkFiles('content', ['.md']),
+  ...walkFiles('scripts', ['.mjs']),
+  ...walkFiles('.ai', ['.md']),
+  ...readdirSync('.', { withFileTypes: true })
+    .filter((e) => e.isFile() && e.name.endsWith('.md'))
+    .map((e) => e.name),
+  'index.html',
+].filter(existsSync);
 
 /**
  * Naming the character is documentation; using it is the violation. A line that writes the em dash

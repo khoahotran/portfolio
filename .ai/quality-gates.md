@@ -66,13 +66,22 @@ npm run check:contrast      # WCAG AA on every visible text node, every route x 
 npm run check:interactions  # the states only clicking reaches
 ```
 
-Three standing rules about these gates, each of them learned by getting it wrong:
+**Run them on the Node version CI runs.** `.nvmrc` pins 20, which is what `ci.yml` uses. A gate
+written on a newer local Node can pass every time locally and fail on CI for a reason that says
+nothing about the code - `globSync` from `node:fs` is Node 22+, and both `check:prose` and
+`check:type-scale` shipped using it. If you cannot switch versions, `npx -y node@20 scripts/<gate>.mjs`
+runs a single script under the CI runtime.
+
+Four standing rules about these gates, each of them learned by getting it wrong:
 
 - **A gate failure is a finding, not an obstacle.** The first `check:interactions` run failed three
   times and all three were bugs in the gate. The second one was a real regression. Read the failure
   before assuming which.
 - **Do not estimate a measurement you can take.** "Four labels, about 210px" omitted the wordmark
   and two icon buttons, and the header overflowed at 320px. Measuring four widths took one command.
+- **A failing gate is not automatically a failing codebase.** The first `check:type-scale` run on
+  CI failed on a syntax error in the gate's own imports. Before changing the code under test, check
+  that the gate ran at all.
 - **A gate only sees what it looks at.** These cover first paint, overflow, contrast and a handful
   of interactions. Hover and focus-visible contrast, Safari/WebKit, and hand-feel on a real phone
   are not covered by anything - see `.ai/audit-followups.md` items 6 and 9.

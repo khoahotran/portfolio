@@ -11,7 +11,8 @@
 //
 // Usage: npm run check:type-scale
 
-import { readFileSync, writeFileSync, globSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { walkFiles } from './lib/walk-files.mjs';
 
 const SCALE = ['d1', 'd2', 'd3', 'lead', 'body', 'meta', 'micro', 'nano'];
 
@@ -51,8 +52,8 @@ function scan(files) {
 }
 
 const files = [
-  ...globSync('src/**/*.{ts,tsx}'),
-  ...globSync('content/**/*.md'),
+  ...walkFiles('src', ['.ts', '.tsx']),
+  ...walkFiles('content', ['.md']),
 ].filter((f) => !f.endsWith('.test.ts') && !f.endsWith('.test.tsx'));
 
 const findings = scan(files);
