@@ -7,6 +7,7 @@ import { contactData, educationData, heroData } from '../data/portfolioData';
 import { useSeo } from '../seo/useSeo';
 import Hero from '../components/Hero';
 import HowIThink from '../components/HowIThink';
+import BackgroundStrip from '../components/BackgroundStrip';
 import Projects from '../components/Projects';
 import Contact from '../components/Contact';
 import { Section, SectionHeader } from '../components/ui/Section';
@@ -15,8 +16,8 @@ import { cardClasses } from '../components/ui/card-classes';
 function PortfolioHome() {
   /**
    * Person structured data for the homepage. Articles have carried JSON-LD since
-   * ContentDetailPage was split out, but the homepage — the page that actually identifies
-   * who this is — had none, so search engines had no structured link between the name, the
+   * ContentDetailPage was split out, but the homepage - the page that actually identifies
+   * who this is - had none, so search engines had no structured link between the name, the
    * profiles, and the site.
    *
    * `jobTitle` is the real title, not an aspirational one: see `.ai/portfolio-context.md`
@@ -58,7 +59,7 @@ function PortfolioHome() {
   );
 
   useSeo({
-    // "Portfolio" is dropped here — useSeo's site-suffix already appends
+    // "Portfolio" is dropped here - useSeo's site-suffix already appends
     // " | Khoa Tran Engineering Portfolio", so the un-trimmed version rendered
     // the word twice in the final <title>.
     title: 'Trần Nguyễn Anh Khoa - Software Engineer',
@@ -92,7 +93,7 @@ function PortfolioHome() {
         if (active) setWritingCount(all.filter((item) => item.collection !== 'projects').length);
       })
       .catch(() => {
-        // Non-critical enhancement — the sentence reads correctly without the number.
+        // Non-critical enhancement - the sentence reads correctly without the number.
       });
 
     getLatestContent(3)
@@ -100,7 +101,7 @@ function PortfolioHome() {
         if (active) setLatest(result);
       })
       .catch(() => {
-        // Non-critical enhancement — degrade silently, same convention as above.
+        // Non-critical enhancement - degrade silently, same convention as above.
       });
 
     return () => {
@@ -124,6 +125,11 @@ function PortfolioHome() {
       </Section>
 
       <HowIThink writingCount={writingCount} />
+
+      {/* The way through to /about. Sits after the capability claims and before the feed: a reader
+          convinced by HowIThink asks "who is this person" next, and until now the homepage gave
+          them nowhere to go for it. */}
+      <BackgroundStrip />
 
       {latest !== null && latest.length > 0 && (
         <Section rhythm="quiet" className="border-t border-slate-100">
