@@ -45,8 +45,8 @@ flowchart TB
     
     API -.->|"Query O(1)"| PR
 
-    classDef service fill:#f0fdf4,stroke:#86efac,stroke-width:2px;
-    classDef db fill:#eff6ff,stroke:#93c5fd,stroke-width:2px;
+    classDef service stroke-width:2px;
+    classDef db stroke-width:2px;
     
     class API,Saga,Fraud,Proj service;
     class ES,PR,Metrics db;

@@ -105,7 +105,7 @@ flowchart LR
   Invite --> Redis[(Redis: Asynq queue)]
   Auth --> RedisDeny[(Redis: JWT denylist)]
 
-  classDef mod fill:#f0fdf4,stroke:#86efac,stroke-width:2px;
+  classDef mod stroke-width:2px;
 ```
 
 Each module - `auth`, `invitation`, `user`, `wallet`, `category`, `transaction`, `dashboard` - is a

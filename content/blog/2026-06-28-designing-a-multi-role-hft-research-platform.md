@@ -52,10 +52,10 @@ flowchart TB
     
     GoAPI <-->|Read Results| PG
 
-    classDef frontend fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px;
-    classDef api fill:#f0fdf4,stroke:#86efac,stroke-width:2px;
-    classDef compute fill:#fef08a,stroke:#fde047,stroke-width:2px;
-    classDef db fill:#eff6ff,stroke:#93c5fd,stroke-width:2px;
+    classDef frontend stroke-width:2px;
+    classDef api stroke-width:2px;
+    classDef compute stroke-width:2px;
+    classDef db stroke-width:2px;
     
     class Web frontend;
     class GoAPI api;

@@ -28,9 +28,9 @@ graph TD
     
     Gateway -.->|Auth Header| Downstream[Downstream Domain Services]
     
-    classDef external fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px;
-    classDef core fill:#f0fdf4,stroke:#86efac,stroke-width:2px;
-    classDef storage fill:#eff6ff,stroke:#93c5fd,stroke-width:2px;
+    classDef external stroke-width:2px;
+    classDef core stroke-width:2px;
+    classDef storage stroke-width:2px;
     
     class Client,Downstream external;
     class Gateway,Identity,Policy,Audit core;
@@ -71,9 +71,9 @@ flowchart TB
     Broker -.->|Sub: *.events| Audit
     Audit <-->|SQL| DB_Audit
 
-    classDef service fill:#f0fdf4,stroke:#86efac,stroke-width:2px;
-    classDef db fill:#eff6ff,stroke:#93c5fd,stroke-width:2px;
-    classDef queue fill:#fef08a,stroke:#fde047,stroke-width:2px;
+    classDef service stroke-width:2px;
+    classDef db stroke-width:2px;
+    classDef queue stroke-width:2px;
     
     class Gateway,Identity,Policy,Audit service;
     class DB_Id,DB_Pol,DB_Audit db;

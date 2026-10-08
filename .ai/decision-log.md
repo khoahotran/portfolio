@@ -113,11 +113,17 @@ a naive mirror sends `slate-400` (34 uses) to `#475569`, unreadable on a `#02061
 - Some steps carry two different roles and cannot both invert. `bg-slate-900 text-white` is a
   primary button in one place and a dark display panel in another; inverting the ramp turns the
   first into white-on-white. Those ~30 call sites were rewritten to role tokens instead.
-- **The code and diagram surfaces deliberately do not follow the theme.** The syntax palette is One
-  Dark, tuned for a dark background, so `pre` is pinned dark in both themes. Conversely 20 Mermaid
-  `classDef` rules across 12 content files hardcode light fills like `fill:#f0fdf4`, so the diagram
-  card is pinned light - switching Mermaid to its dark theme would pair its light label colour with
-  those light fills. A reader sees the same diagram in either theme.
+- **The code surface deliberately does not follow the theme.** The syntax palette is One Dark,
+  tuned for a dark background, so `pre` is pinned dark in both themes.
+- ~~The diagram surface is pinned light for the same kind of reason.~~ **Superseded (2026-10-08).**
+  The original reasoning was that Mermaid writes `classDef` fills as inline `!important`, which no
+  stylesheet can override, so a dark card would have carried light nodes and near-black labels.
+  That was a correct description of the setup and a wrong conclusion about what was possible: the
+  fills were hardcoded in Markdown, and Markdown is editable. The 16 `classDef` rules now carry only
+  their class name, the colour moved to four role tokens in `src/index.css`, and the diagram follows
+  the page. Measured at 14.48:1 for the worst label in dark mode. The lesson worth keeping is that
+  "the tool will not let us" was really "the content would have to change", and those are different
+  claims.
 - `scripts/prerender.mjs` snapshots with `colorScheme: 'light'` forced and asserts no `dark` class
   is baked in, since the theme is a per-visitor preference and the bootstrap applies it before paint.
 

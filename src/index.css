@@ -141,17 +141,32 @@
   --c-code-chrome-fg: 203 213 225;
   --c-code-accent: 45 212 191;
 
-  /* Diagram surface - also identical in both themes, for the mirror-image reason to the code
-   * surface above. Mermaid is initialised with `theme: 'neutral'` (src/content-engine/mermaid.ts)
-   * and 20 `classDef` rules across 12 content files hardcode light fills like `fill:#f0fdf4`.
-   * Switching Mermaid to its dark theme would pair its light label colour with those light fills
-   * and make the labels unreadable, and re-theming 20 classDefs in Markdown to follow a CSS
-   * variable is not something Mermaid supports. So diagrams keep a light card in both themes,
-   * which also means a diagram looks the same to a reader whichever theme they are in. */
+  /* Diagram surface and node palette.
+   *
+   * This used to be pinned to the light values in both themes, with a note saying a dark diagram
+   * was not reachable: mermaid writes `classDef` fills as inline `!important`, which no stylesheet
+   * can override, so a dark card would have carried light nodes and near-black labels. That was
+   * true of the setup as it stood, and false as a general claim - the fills were hardcoded in
+   * Markdown, and Markdown is editable. The 16 classDef rules now carry only their class name, the
+   * colour lives here, and the diagram follows the page.
+   *
+   * Four roles, read off the class names the articles already used: own code, data store, outside
+   * the system, async work. */
   --c-diagram-bg: 248 250 252;
   --c-diagram-border: 226 232 240;
   --c-diagram-skeleton-a: 241 245 249;
   --c-diagram-skeleton-b: 226 232 240;
+  --c-diagram-text: 15 23 42;
+  --c-diagram-line: 100 116 139;
+  --c-diagram-cluster: 241 245 249;
+  --c-diagram-own: 240 253 244;
+  --c-diagram-own-line: 134 239 172;
+  --c-diagram-data: 239 246 255;
+  --c-diagram-data-line: 147 197 253;
+  --c-diagram-outside: 248 250 252;
+  --c-diagram-outside-line: 203 213 225;
+  --c-diagram-async: 254 240 138;
+  --c-diagram-async-line: 253 224 71;
 }
 
 .dark {
@@ -255,11 +270,24 @@
   --c-code-chrome-fg: 203 213 225;
   --c-code-accent: 45 212 191;
 
-  /* Identical to the light values on purpose - see the note in :root. */
-  --c-diagram-bg: 248 250 252;
-  --c-diagram-border: 226 232 240;
-  --c-diagram-skeleton-a: 241 245 249;
-  --c-diagram-skeleton-b: 226 232 240;
+  /* The diagram card now follows the page - see the note in :root for why it could not before.
+   * Fills are deep, strokes are the mid step of the same hue so the role still reads, and labels
+   * invert. Checked against check:contrast rather than by eye. */
+  --c-diagram-bg: 15 23 42;
+  --c-diagram-border: 51 65 85;
+  --c-diagram-skeleton-a: 30 41 59;
+  --c-diagram-skeleton-b: 51 65 85;
+  --c-diagram-text: 226 232 240;
+  --c-diagram-line: 148 163 184;
+  --c-diagram-cluster: 30 41 59;
+  --c-diagram-own: 20 59 44;
+  --c-diagram-own-line: 52 148 103;
+  --c-diagram-data: 23 48 85;
+  --c-diagram-data-line: 59 118 191;
+  --c-diagram-outside: 30 41 59;
+  --c-diagram-outside-line: 100 116 139;
+  --c-diagram-async: 68 56 12;
+  --c-diagram-async-line: 161 134 32;
 }
 
 @tailwind base;
@@ -923,6 +951,92 @@ h3 {
 .mermaid-diagram.mermaid-rendered svg {
   max-width: 100%;
   height: auto;
+}
+
+/* Diagram node colours, by role rather than by hex.
+ *
+ * The 16 `classDef` rules in content/ used to carry literal light fills (`fill:#f0fdf4`), which
+ * mermaid writes onto each node as an inline `style` with `!important`. Nothing in a stylesheet can
+ * override that - inline and author `!important` land in the same cascade bucket, and the style
+ * attribute wins - so the whole diagram stayed light while the page around it went dark, and the
+ * only honest options were to leave it or to change the content. This is the change: the content
+ * keeps the class names, which carry the meaning, and loses the hex, which was presentation sitting
+ * in a Markdown file.
+ *
+ * Ten class names across five articles collapse to four roles:
+ *   own code  - service, core, api, mod
+ *   data      - db, storage
+ *   outside   - external, frontend
+ *   async     - queue, compute
+ *
+ * `!important` is needed here because mermaid emits its base node styles inside the SVG under an
+ * id selector (`#mermaid-1 .node rect`), which outranks any class selector we can write. */
+.mermaid-diagram .node.service > rect,
+.mermaid-diagram .node.core > rect,
+.mermaid-diagram .node.api > rect,
+.mermaid-diagram .node.mod > rect {
+  fill: rgb(var(--c-diagram-own)) !important;
+  stroke: rgb(var(--c-diagram-own-line)) !important;
+}
+
+.mermaid-diagram .node.db > rect,
+.mermaid-diagram .node.storage > rect {
+  fill: rgb(var(--c-diagram-data)) !important;
+  stroke: rgb(var(--c-diagram-data-line)) !important;
+}
+
+.mermaid-diagram .node.external > rect,
+.mermaid-diagram .node.frontend > rect {
+  fill: rgb(var(--c-diagram-outside)) !important;
+  stroke: rgb(var(--c-diagram-outside-line)) !important;
+}
+
+.mermaid-diagram .node.queue > rect,
+.mermaid-diagram .node.compute > rect {
+  fill: rgb(var(--c-diagram-async)) !important;
+  stroke: rgb(var(--c-diagram-async-line)) !important;
+}
+
+/* Everything mermaid draws in near-black against its own light theme: node labels, edge labels,
+ * cluster titles, and the edge lines and arrowheads themselves. On a dark card these are the part
+ * that actually becomes unreadable, and they are what made "switch mermaid to its dark theme" the
+ * wrong fix - that would have paired its light label colour with the light fills above. */
+.mermaid-diagram .node .nodeLabel,
+.mermaid-diagram .node foreignObject div,
+.mermaid-diagram .edgeLabel,
+.mermaid-diagram .edgeLabel p,
+.mermaid-diagram .cluster-label .nodeLabel {
+  color: rgb(var(--c-diagram-text)) !important;
+  fill: rgb(var(--c-diagram-text)) !important;
+}
+
+/* Edge labels sit in a foreignObject, so the plate behind them is an HTML `background-color` on
+ * `.edgeLabel` and on the `<p>` inside it, not only the `<rect>`. Overriding the rect alone left a
+ * white pill with light text on it in dark mode, which the screenshot showed and the token did
+ * not. */
+.mermaid-diagram .edgeLabel,
+.mermaid-diagram .edgeLabel p,
+.mermaid-diagram .edgeLabel rect,
+.mermaid-diagram .edgeLabel .labelBkg,
+.mermaid-diagram .labelBkg {
+  fill: rgb(var(--c-diagram-bg)) !important;
+  background-color: rgb(var(--c-diagram-bg)) !important;
+}
+
+.mermaid-diagram .edgePath .path,
+.mermaid-diagram .flowchart-link {
+  stroke: rgb(var(--c-diagram-line)) !important;
+}
+
+.mermaid-diagram .marker,
+.mermaid-diagram .marker path {
+  fill: rgb(var(--c-diagram-line)) !important;
+  stroke: rgb(var(--c-diagram-line)) !important;
+}
+
+.mermaid-diagram .cluster > rect {
+  fill: rgb(var(--c-diagram-cluster)) !important;
+  stroke: rgb(var(--c-diagram-outside-line)) !important;
 }
 
 .mermaid-diagram .mermaid-error {
