@@ -615,3 +615,53 @@ and leaves `npm run deploy` working as an emergency escape hatch.
   open the PR early rather than batching 161 commits behind an unverified branch, not to widen the
   trigger - a push-triggered run on every feature branch would spend a full Playwright sweep on
   every work-in-progress commit.
+
+## Decision 24 - The homepage answers "can he do it", not "who is he"
+
+**Date:** 2026-10-08
+
+**Context.** The brief was explicit that the existing design was not to be preserved by default, so
+the first question was what the structure was actually doing. The old homepage ran About, Metrics,
+Experience, Skills, Education, Certifications, Projects and Contact in sequence: eight sections, all
+self-description, before a reader reached a single piece of evidence. Meanwhile the site held 58
+articles, 29 interactive labs and three benchmark harnesses - the strongest material it has - behind
+a nav strip that scrolled horizontally and a `/writing` route that did not exist. The homepage was
+the weakest page on the site and the only one most visitors would see.
+
+A proposed IA was also on the table that would have promoted four units and demoted 91 of the 95.
+Counting the content before accepting the structure is what disqualified it.
+
+**Decision.** Six changes, approved together:
+
+1. **The homepage leads with evidence.** Six tiers - hero, selected work, how I think, background,
+   recently published, contact. The proof strip sits inside the hero so the fold breaks mid-evidence
+   rather than after a tagline.
+2. **Everything self-descriptive moved to `/about`.** Nothing was deleted; the same components
+   render there. `/about` previously opened by re-stating what the homepage already said, so two
+   pages gave two incomplete answers to the same question. Now one page owns the record.
+3. **Four destinations in the header** - About, Work, Writing, Labs - replacing the scrolling strip.
+   Plus Cmd-K, because a 95-unit site needs search to be one keystroke, not one navigation.
+4. **`/writing` exists**, one entry point across all five collections with filters in the query
+   string so a filtered view is a shareable URL.
+5. **Diagrams follow the theme.** See Decision 8, whose diagram bullet this supersedes.
+6. **A token layer under the type, rhythm and elevation**, with `check:type-scale` as a ratchet so
+   the arbitrary sizes it replaced can only decrease.
+
+**Consequences:**
+
+- **Sections are now data, not markup.** `expertise.ts` and `background.ts` hold lists; the markup
+  sizes itself from them. Adding a background fact is one object. This was asked for directly, and
+  it is also what keeps the homepage from drifting out of sync with `portfolioData.ts`, since every
+  value is derived rather than retyped.
+- **Content was deliberately left alone.** The brief was redesign first, content second. The hero
+  tagline is still the old one, and it still describes a stack rather than a value - that is the
+  known open item, not an oversight.
+- **The new markup reintroduced a bug class the repo already had a note about.** Pillar cards
+  overflowed at 320px for want of `min-w-0`, which is exactly `.ai/audit-followups.md` item 5. A
+  written-down lesson does not transfer to new code by itself; the gate is what caught it.
+- **Self-hosted variable fonts made the layout gates timing-sensitive.** `font-display: swap` means
+  a route can be measured mid-reflow and fail at a width it does not actually overflow at. The three
+  browser gates now await `document.fonts.ready`. The flake was introduced by this redesign.
+- **`tabular-nums` cannot go on `body`.** Inter's `tnum` widens U+002D to a digit cell, so prose
+  hyphens render as "high - performance". It is opt-in through `.tabular-figures` now. No gate
+  measures letterforms; this was caught by looking at the page.

@@ -42,10 +42,37 @@ Before an AI agent can consider a task "complete" and ready for a final commit, 
 - [ ] Was the `.ai/content-roadmap.md` updated to move the item from "In Progress" to "Completed"?
 
 ## 5. Technical Quality Gate (Mandatory)
-All commands must exit with code `0`:
+
+These are the same commands `.github/workflows/ci.yml` runs, in the same order. Running a subset
+locally and letting CI find the rest is how a branch ends up red after it looked done. All must exit
+`0`:
+
 ```bash
 npm run typecheck
 npm run lint
-npm run build:search-index
-npm run build
+npm run check:type-scale    # ratchet: no new arbitrary display sizes
+npm run check:prose         # no em dashes
+npm test
+npm run build               # build:search-index, vite build, then prerender
 ```
+
+The last three need a server. Start `npx vite preview --port 4173 --strictPort` against the `dist/`
+the build just produced - **not** `npm run dev`, which serves unprerendered routes and different
+fonts:
+
+```bash
+npm run check:responsive    # overflow and console errors, every route x 7 widths x 2 themes
+npm run check:contrast      # WCAG AA on every visible text node, every route x 2 themes
+npm run check:interactions  # the states only clicking reaches
+```
+
+Three standing rules about these gates, each of them learned by getting it wrong:
+
+- **A gate failure is a finding, not an obstacle.** The first `check:interactions` run failed three
+  times and all three were bugs in the gate. The second one was a real regression. Read the failure
+  before assuming which.
+- **Do not estimate a measurement you can take.** "Four labels, about 210px" omitted the wordmark
+  and two icon buttons, and the header overflowed at 320px. Measuring four widths took one command.
+- **A gate only sees what it looks at.** These cover first paint, overflow, contrast and a handful
+  of interactions. Hover and focus-visible contrast, Safari/WebKit, and hand-feel on a real phone
+  are not covered by anything - see `.ai/audit-followups.md` items 6 and 9.
