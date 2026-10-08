@@ -21,7 +21,7 @@ const MESSAGE_STYLE: Record<ElectionMessageType, { stroke: string; label: string
 function LeaderElectionPage() {
   useSeo({
     title: 'Leader Election (Bully Algorithm) Visualizer',
-    description: 'A real Bully algorithm election, run step by step — crash the leader and watch a new one get chosen.',
+    description: 'A real Bully algorithm election, run step by step - crash the leader and watch a new one get chosen.',
   });
 
   const [nodeCount, setNodeCount] = useState(7);
@@ -33,7 +33,7 @@ function LeaderElectionPage() {
   const aliveIds = useMemo(() => new Set(nodeIds.filter((id) => !downIds.has(id))), [nodeIds, downIds]);
 
   // The node that "notices" the previous leader is unreachable and starts the election is always
-  // the lowest surviving id — a deliberate simplification so the lab has one control (which nodes
+  // the lowest surviving id - a deliberate simplification so the lab has one control (which nodes
   // are down) instead of two, and because it also happens to be the worst case for message volume
   // (see the O(n^2) test in leaderElection.test.ts), which is the more interesting thing to show.
   const initiatorId = useMemo(() => {
@@ -82,15 +82,15 @@ function LeaderElectionPage() {
       <LabBackLink labId="leader-election" />
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Leader Election (Bully Algorithm)</h1>
       <p className="mt-2 text-slate-600">
-        Crash the current leader and watch the real Bully election protocol pick a new one — every
+        Crash the current leader and watch the real Bully election protocol pick a new one - every
         message shown actually gets sent by the simulation, not implied.
       </p>
 
       <ProvenanceNote labId="leader-election" />
 
       <div className="mt-8 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-5 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
-          <label className="block text-sm font-semibold text-slate-700">
+        <section className="min-w-0 md:col-span-4 space-y-5 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
+          <label className="block text-meta font-semibold text-slate-700">
             <div className="flex justify-between">
               <span>Nodes</span>
               <span className="text-teal-700">{nodeCount}</span>
@@ -112,7 +112,7 @@ function LeaderElectionPage() {
             type="button"
             onClick={crashLeader}
             disabled={result.leaderId === null}
-            className="flex w-full items-center justify-center gap-1.5 rounded-md bg-amber-50 px-3 py-2 text-xs font-bold text-amber-700 transition-colors hover:bg-amber-100 disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-1.5 rounded-md bg-amber-50 px-3 py-2 text-micro font-bold text-amber-700 transition-colors hover:bg-amber-100 disabled:opacity-50"
           >
             <Zap size={14} aria-hidden="true" />
             Crash the leader
@@ -122,43 +122,43 @@ function LeaderElectionPage() {
             type="button"
             onClick={() => setDownIds(new Set())}
             disabled={downIds.size === 0}
-            className="flex w-full items-center justify-center gap-1.5 rounded-md bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600 transition-colors hover:bg-slate-200 disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-1.5 rounded-md bg-slate-100 px-3 py-2 text-micro font-bold text-slate-600 transition-colors hover:bg-slate-200 disabled:opacity-50"
           >
             <RotateCcw size={14} aria-hidden="true" />
             Recover all nodes
           </button>
 
-          <p className="text-xs text-slate-500">
-            Click any node in the ring to crash or recover it directly. Node {initiatorId ?? '—'} is the
+          <p className="text-micro text-slate-500">
+            Click any node in the ring to crash or recover it directly. Node {initiatorId ?? '-'} is the
             lowest surviving id, so it's the one that notices the leader is gone and starts the election
-            — the worst case for message volume.
+            - the worst case for message volume.
           </p>
 
           <div className="grid grid-cols-2 gap-2 pt-4 border-t border-slate-100 text-center">
             <div>
               <div className="text-lg font-bold text-teal-700">
-                {result.leaderId ?? (initiatorId === null ? '—' : '…')}
+                {result.leaderId ?? (initiatorId === null ? '-' : '…')}
               </div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
+              <div className="text-nano font-bold uppercase tracking-widest text-slate-600">
                 {currentStep >= result.steps.length ? 'Leader' : 'Electing'}
               </div>
             </div>
             <div>
               <div className="text-lg font-bold text-slate-900">{totalMessages}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Total messages</div>
+              <div className="text-nano font-bold uppercase tracking-widest text-slate-600">Total messages</div>
             </div>
           </div>
 
           {initiatorId === null && (
-            <p className="pt-2 text-xs font-semibold text-red-600">
-              Every node is down — there's no one left alive to notice, let alone start an election.
+            <p className="pt-2 text-micro font-semibold text-red-600">
+              Every node is down - there's no one left alive to notice, let alone start an election.
             </p>
           )}
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-8 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div className="flex items-center justify-between mb-4">
-            <p className="text-xs font-bold uppercase tracking-widest text-slate-500">
+            <p className="text-micro font-bold uppercase tracking-widest text-slate-500">
               Step {currentStep} of {result.steps.length}
             </p>
             <div className="flex gap-2">
@@ -166,7 +166,7 @@ function LeaderElectionPage() {
                 type="button"
                 onClick={() => setIsPlaying((p) => !p)}
                 disabled={result.steps.length === 0}
-                className="flex items-center gap-1 rounded-md bg-teal-50 px-3 py-1.5 text-xs font-bold text-teal-700 transition-colors hover:bg-teal-100 disabled:opacity-50"
+                className="flex items-center gap-1 rounded-md bg-teal-50 px-3 py-1.5 text-micro font-bold text-teal-700 transition-colors hover:bg-teal-100 disabled:opacity-50"
               >
                 {isPlaying ? <Pause size={12} aria-hidden="true" /> : <Play size={12} aria-hidden="true" />}
                 {isPlaying ? 'Pause' : 'Play'}
@@ -177,7 +177,7 @@ function LeaderElectionPage() {
                   setIsPlaying(false);
                   setCurrentStep(0);
                 }}
-                className="flex items-center gap-1 rounded-md bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600 transition-colors hover:bg-slate-200"
+                className="flex items-center gap-1 rounded-md bg-slate-100 px-3 py-1.5 text-micro font-bold text-slate-600 transition-colors hover:bg-slate-200"
               >
                 <RotateCcw size={12} aria-hidden="true" />
                 Reset
@@ -235,7 +235,7 @@ function LeaderElectionPage() {
                       className="cursor-pointer"
                       onClick={() => toggleNode(id)}
                       role="button"
-                      aria-label={`Node ${id}${isDown ? ', down' : ', alive'}${isLeader ? ', leader' : ''} — click to ${isDown ? 'recover' : 'crash'}`}
+                      aria-label={`Node ${id}${isDown ? ', down' : ', alive'}${isLeader ? ', leader' : ''} - click to ${isDown ? 'recover' : 'crash'}`}
                     />
                     <text x={x} y={y + 0.2} fontSize={3} textAnchor="middle" dominantBaseline="middle" fill="white" className="pointer-events-none select-none font-bold">
                       {isDown ? '×' : id}
@@ -246,7 +246,7 @@ function LeaderElectionPage() {
             </svg>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+          <div className="mt-4 flex flex-wrap items-center gap-4 text-micro text-slate-600">
             <span className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-teal-600" aria-hidden="true" />
               Alive
@@ -265,12 +265,12 @@ function LeaderElectionPage() {
 
           <ul className="mt-4 flex flex-wrap gap-1.5" aria-label={`Messages sent in step ${currentStep}`}>
             {activeMessages.length === 0 && currentStep === 0 && (
-              <li className="text-xs text-slate-500">Press Play or drag the scrubber to see the election unfold.</li>
+              <li className="text-micro text-slate-500">Press Play or drag the scrubber to see the election unfold.</li>
             )}
             {activeMessages.map((m, i) => (
               <li
                 key={i}
-                className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide"
+                className="rounded-full px-2 py-0.5 text-nano font-bold uppercase tracking-wide"
                 style={{ backgroundColor: `${MESSAGE_STYLE[m.type].stroke}1a`, color: MESSAGE_STYLE[m.type].stroke }}
               >
                 {m.from} → {m.to} {MESSAGE_STYLE[m.type].label}

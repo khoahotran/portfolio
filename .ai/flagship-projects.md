@@ -1,6 +1,6 @@
 # Flagship Projects Catalog
 
-This document is the canonical reference for the four flagship projects showcased in this portfolio. All future articles, benchmarks, and interactive labs should anchor back to these systems. (Named "Big Three" until PFM was added on 2026-08-27 — the phrase is retired but may still appear in older commit messages/comments.)
+This document is the canonical reference for the four flagship projects showcased in this portfolio. All future articles, benchmarks, and interactive labs should anchor back to these systems. (Named "Big Three" until PFM was added on 2026-08-27 - the phrase is retired but may still appear in older commit messages/comments.)
 
 ## 1. Aegis Auth Platform
 **Path:** `content/projects/aegis.md`
@@ -52,7 +52,7 @@ A low-latency research and ingestion platform for High-Frequency Trading (HFT) s
 ### Architecture & Tech Stack
 - **Language:** Go (Data Ingestion), Python (Machine Learning / Alpha Generation)
 - **Queue/Buffer:** Redis Streams
-- **Database:** PostgreSQL (BRIN-indexed for time-series queries; migration to TimescaleDB or ClickHouse is a considered future step, not yet done — see `content/projects/quant-alpha.md`)
+- **Database:** PostgreSQL (BRIN-indexed for time-series queries; migration to TimescaleDB or ClickHouse is a considered future step, not yet done - see `content/projects/quant-alpha.md`)
 
 ### Key Features & Patterns
 - Decoupling high-speed WebSocket market data streams from slow, CPU-bound Python workers.
@@ -67,14 +67,14 @@ A low-latency research and ingestion platform for High-Frequency Trading (HFT) s
 
 ### Summary
 A spec-driven, invite-only personal finance tracker. React 19 Server Actions are the only client
-the Go API accepts — the browser never calls it directly.
+the Go API accepts - the browser never calls it directly.
 
 ### Architecture & Tech Stack
 - **Frontend:** React 19, Next.js App Router / Server Actions (via vinext, an experimental Vite-based
-  reimplementation — a named risk, not a hidden one).
+  reimplementation - a named risk, not a hidden one).
 - **Backend:** Go, Gin, sqlc (no ORM).
 - **Database:** PostgreSQL (sole authoritative store, including invitation TTL).
-- **Cache/Queue:** Redis — exactly two uses: the Asynq email queue and the JWT logout denylist.
+- **Cache/Queue:** Redis - exactly two uses: the Asynq email queue and the JWT logout denylist.
 
 ### Key Features & Patterns
 - Hard client boundary: the browser never holds a credential the Go API accepts.

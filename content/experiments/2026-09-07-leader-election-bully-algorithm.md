@@ -3,13 +3,13 @@ title: "Leader Election: Running the Actual Bully Algorithm, Not a Diagram of It
 date: "2026-09-07"
 tags: ["distributed-systems", "benchmark"]
 related: ["experiments/gossip-protocol-visualizer", "experiments/distributed-locks-redlock-and-the-pause-that-breaks-it", "experiments/raft-and-the-commit-rule-replica-count-alone-cant-prove", "experiments/two-phase-commit-vs-saga-what-atomicity-actually-costs"]
-summary: "Crash the leader and watch the real Bully algorithm elect a new one, message by message — including the O(n^2) worst case the protocol is criticized for."
+summary: "Crash the leader and watch the real Bully algorithm elect a new one, message by message - including the O(n^2) worst case the protocol is criticized for."
 ---
 
 Almost every distributed system that needs exactly one node to do something (issue transaction
 IDs, own a partition, act as the write path for a replica set) needs a way to pick that one node,
 and to re-pick it when it disappears. **Leader election** is the general problem, and the **Bully
-algorithm** (Garcia-Molina, 1982) is one of its oldest, simplest solutions — simple enough that it's
+algorithm** (Garcia-Molina, 1982) is one of its oldest, simplest solutions - simple enough that it's
 usually taught as a diagram of arrows on a whiteboard. The [interactive lab](/labs/leader-election)
 runs the real thing instead: crash any node, and every ELECTION, ALIVE, and COORDINATOR message you
 see is one the simulation actually sent, in the order the protocol actually sends them.
@@ -23,7 +23,7 @@ see is one the simulation actually sent, in the order the protocol actually send
 
 ## The Algorithm
 
-Every node has a unique, comparable id, and every node knows the full membership list — who
+Every node has a unique, comparable id, and every node knows the full membership list - who
 *exists*, not who's currently alive. The rule (`src/labs/leaderElection.ts`):
 
 ```
@@ -36,7 +36,7 @@ a node that notices the leader is unreachable sends ELECTION to every higher id
 ```
 
 The name comes from the outcome, not the mechanism: whoever is the biggest ("bulliest") id still
-standing always wins, unconditionally — there's no voting, no term numbers, no quorum. That's also
+standing always wins, unconditionally - there's no voting, no term numbers, no quorum. That's also
 exactly what makes it fully deterministic and simulatable: given a fixed alive/down set, the winner
 is always `max(aliveIds)`, so the lab can compute the entire message trace up front and let you
 scrub through it, the same way the [gossip protocol lab](/experiments/gossip-protocol-visualizer)
@@ -47,29 +47,29 @@ lets you scrub through rounds of spread.
 Crash node 1's leader in the lab when every other node is alive, and watch what node 1 (the lowest
 surviving id, and therefore the one that "notices" first in this lab) actually triggers: it sends
 ELECTION to *every* higher node at once, not just the next one up. Every one of those replies
-ALIVE — and, per the algorithm, **each of them also starts its own election** against the ids above
+ALIVE - and, per the algorithm, **each of them also starts its own election** against the ids above
 it, whether or not that election can possibly change the outcome. Node 2 challenges 3 through *n*.
 Node 3 challenges 4 through *n*. This keeps happening all the way up, and only the single highest
 node ever gets silence instead of a reply.
 
-That redundant work is real, not a simulation artifact — it's the concrete thing behind Bully's
+That redundant work is real, not a simulation artifact - it's the concrete thing behind Bully's
 textbook criticism of being message-expensive: `leaderElection.test.ts` asserts total message
 volume more than doubles when node count doubles under this worst case, the signature of quadratic,
 not linear, cost. The lab's "Total messages" counter is reading that number directly off the same
 simulation the visualization animates, not a separate illustrative estimate.
 
 > [!NOTE]
-> The lab always has the *lowest* surviving id start the election, deliberately — that's the worst
+> The lab always has the *lowest* surviving id start the election, deliberately - that's the worst
 > case for message volume (every other alive node ends up running a redundant sub-election), and
 > showing the worst case is more informative than showing a lucky one. A real system doesn't get to
 > choose who notices first; whichever node's health check fires first is the one that starts.
 
 ## What Bully Deliberately Doesn't Solve
 
-This lab, like the algorithm itself, assumes perfect failure detection — a node is either cleanly
+This lab, like the algorithm itself, assumes perfect failure detection - a node is either cleanly
 "alive" or "down," discovered instantly and unambiguously. Real networks don't offer that: a
 message can be slow rather than lost, which is exactly the scenario that produces a **split
-brain** — two nodes each concluding *they* are the highest alive id, because each one's messages to
+brain** - two nodes each concluding *they* are the highest alive id, because each one's messages to
 the other are delayed rather than dropped. Bully has no mechanism to detect or resolve that; it
 simply assumes the failure model it needs is true.
 
@@ -79,11 +79,11 @@ broadcast) instead of textbook Bully for anything that actually matters:
 | | Bully | Raft |
 |---|---|---|
 | **Decision rule** | Highest id always wins, unconditionally | Majority vote; any node with enough votes wins |
-| **Split-brain handling** | None — assumes perfect failure detection | Quorum requirement makes two simultaneous leaders provably impossible |
+| **Split-brain handling** | None - assumes perfect failure detection | Quorum requirement makes two simultaneous leaders provably impossible |
 | **Worst-case messages** | O(n²) (this lab's own measured worst case) | O(n) per election |
 | **What it needs from the network** | Accurate alive/down status | Nothing stronger than eventual message delivery |
 
-Bully's appeal is that it's trivial to reason about and implement — which is exactly why it's still
+Bully's appeal is that it's trivial to reason about and implement - which is exactly why it's still
 the right choice for a small, low-stakes cluster where perfect failure detection is a reasonable
 assumption (a fixed set of worker processes on one host, say), and exactly why it's the wrong choice
 for anything a real outage could split-brain.

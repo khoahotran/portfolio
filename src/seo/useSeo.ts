@@ -7,7 +7,7 @@ interface SeoOptions {
   image?: string;
   jsonLd?: Record<string, unknown>;
   /**
-   * Skip this call entirely — no meta tag is touched, including document.title.
+   * Skip this call entirely - no meta tag is touched, including document.title.
    * For ContentDetailPage: while the article is still loading, `title`/`description`
    * would otherwise have to be a generic placeholder ("Article" / "Technical
    * article"), which briefly becomes the real first-paint meta for every one of
@@ -16,7 +16,7 @@ interface SeoOptions {
    * than overwriting it with a placeholder for that one render.
    */
   skip?: boolean;
-  /** Emits <meta name="robots" content="noindex"> — for pages like the 404
+  /** Emits <meta name="robots" content="noindex"> - for pages like the 404
    * that should never rank or appear in search results. */
   noindex?: boolean;
 }
@@ -111,7 +111,7 @@ export function useSeo({ title, description, type = 'website', image, jsonLd, sk
 
     const fullTitle = `${title} | ${siteName}`;
     // Query strings (e.g. /blog?tag=go) are a filtered view of the same
-    // content as /blog, not a distinct page — canonical/og:url should point
+    // content as /blog, not a distinct page - canonical/og:url should point
     // at the clean URL so they don't register as near-duplicates.
     const url = `${window.location.origin}${window.location.pathname}`;
     const imageUrl = resolveImageUrl(image);

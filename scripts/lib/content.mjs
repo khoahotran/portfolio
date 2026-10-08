@@ -2,7 +2,7 @@
 //
 // These used to live inside build-search-index.mjs, which is a top-level script: importing it to
 // test anything would have run the whole build. They are extracted here so the parsing and slug
-// logic can be asserted directly — in particular `slugify`, which is duplicated in
+// logic can be asserted directly - in particular `slugify`, which is duplicated in
 // src/content-engine/content-source.ts and MUST stay byte-identical to it. When those two diverge,
 // an article stays in the index and the sitemap but stops resolving at its own URL, which is the
 // same failure mode .ai/decision-log.md Decision 5 already had to fix once.
@@ -20,7 +20,7 @@ export function slugify(value) {
  * Finds any slug used in more than one collection. Slugs only need to be unique *within* a
  * collection for routing (`/collection/:slug`), but several places in src/ (getRelatedArticles's
  * and ArticleNav's self-exclusion, prefetchNextArticle, getIndexItem) compare by bare `item.slug`
- * across the whole cross-collection index rather than `collection/slug` — cheaper than threading a
+ * across the whole cross-collection index rather than `collection/slug` - cheaper than threading a
  * `currentCollection` through every call site, but only safe if slugs are unique across the entire
  * corpus. `build-search-index.mjs` fails the build on any collision this returns; extracted here
  * (rather than left inline in that script) so the check itself is unit-testable.

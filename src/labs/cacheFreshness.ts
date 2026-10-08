@@ -1,24 +1,24 @@
 /**
- * Cache freshness policies — what a CDN/edge cache actually does when a cached entry's TTL expires
+ * Cache freshness policies - what a CDN/edge cache actually does when a cached entry's TTL expires
  * and a request arrives, run against the same origin-update schedule and the same origin outage
  * window, so the only variable between policies is the policy itself. Three real, distinct
  * decision procedures, not three names for "cache things":
  *
- * - `ttl-blocking` — the naive default. Fresh (age < TTL): serve instantly from cache. Expired:
+ * - `ttl-blocking` - the naive default. Fresh (age < TTL): serve instantly from cache. Expired:
  *   block the request on a synchronous origin fetch. If the origin is down at that moment, the
- *   request errors — there is no fallback.
- * - `stale-while-revalidate` — fresh: same as above. Within the SWR grace window past TTL: serve
+ *   request errors - there is no fallback.
+ * - `stale-while-revalidate` - fresh: same as above. Within the SWR grace window past TTL: serve
  *   the *stale* cached content immediately (never blocks), and best-effort refresh the cache in the
- *   background for the next request (silently skipped if the origin is down — this request is
+ *   background for the next request (silently skipped if the origin is down - this request is
  *   unaffected either way, since it never depended on that fetch succeeding). Past the grace
  *   window: falls back to blocking, same as `ttl-blocking`.
- * - `stale-if-error` — fresh: same as above. Expired: always *attempts* a synchronous origin fetch
+ * - `stale-if-error` - fresh: same as above. Expired: always *attempts* a synchronous origin fetch
  *   (so it pays origin latency, unlike SWR). If the origin succeeds, serves fresh. If it fails and
  *   the entry is still within the stale-if-error grace window, falls back to serving the stale
  *   cached content instead of erroring. Past that grace window, it errors like `ttl-blocking` does.
  *
  * Deterministic throughout: the origin's true content version is `floor(tick / originUpdateIntervalTicks)`,
- * not drawn from randomness, and "the origin is down" is a fixed tick range the caller supplies —
+ * not drawn from randomness, and "the origin is down" is a fixed tick range the caller supplies -
  * the thing being tested is each policy's decision procedure against a known timeline, the same
  * choice `simulateBackpressure` makes for its own tick-based policies.
  */
@@ -30,7 +30,7 @@ export interface RequestOutcome {
   /** Content version actually served, or null if the request errored with nothing to serve. */
   servedVersion: number | null;
   trueVersionAtTick: number;
-  /** servedVersion !== null && servedVersion !== trueVersionAtTick — real staleness, not assumed. */
+  /** servedVersion !== null && servedVersion !== trueVersionAtTick - real staleness, not assumed. */
   stale: boolean;
   latencyMs: number;
   /** Whether this request's own handling attempted a synchronous origin fetch. */
@@ -63,7 +63,7 @@ export interface CacheSimOptions {
   outageEndTick?: number;
   fastLatencyMs?: number;
   originLatencyMs?: number;
-  /** Ticks a request arrives, in ascending order — the caller controls the request schedule. */
+  /** Ticks a request arrives, in ascending order - the caller controls the request schedule. */
   requestTicks: number[];
 }
 
@@ -82,7 +82,7 @@ export function simulateCachePolicy(policy: CachePolicy, opts: CacheSimOptions):
   const origin = opts.originLatencyMs ?? 50;
   const trueVersionAt = (tick: number) => Math.floor(tick / opts.originUpdateIntervalTicks);
 
-  // Cache starts pre-warmed at tick 0 for every policy — the same starting footing, so a
+  // Cache starts pre-warmed at tick 0 for every policy - the same starting footing, so a
   // difference in outcomes is attributable to the policy, not to a cold-start artifact.
   let cachedVersion = trueVersionAt(0);
   let cachedAtTick = 0;
@@ -123,7 +123,7 @@ export function simulateCachePolicy(policy: CachePolicy, opts: CacheSimOptions):
         requests.push({ tick, servedVersion, trueVersionAtTick: trueVersion, stale: servedVersion !== trueVersion, latencyMs: fast, originAttempted: down, originFailed: down, error: false });
         continue;
       }
-      // Grace window elapsed — falls back to blocking, same as ttl-blocking's expired branch.
+      // Grace window elapsed - falls back to blocking, same as ttl-blocking's expired branch.
       if (down) {
         requests.push({ tick, servedVersion: null, trueVersionAtTick: trueVersion, stale: false, latencyMs: origin, originAttempted: true, originFailed: true, error: true });
         continue;

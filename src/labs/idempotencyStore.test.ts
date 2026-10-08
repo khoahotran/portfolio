@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { simulateIdempotencyStore } from './idempotencyStore';
 import type { IdempotencyRequestInput } from './idempotencyStore';
 
-describe('simulateIdempotencyStore — validation', () => {
+describe('simulateIdempotencyStore - validation', () => {
   it('rejects processingTicks < 1', () => {
     expect(() => simulateIdempotencyStore('atomic-claim', [], 0, 10)).toThrow();
   });
@@ -12,7 +12,7 @@ describe('simulateIdempotencyStore — validation', () => {
   });
 });
 
-describe('simulateIdempotencyStore — a single request, either mode', () => {
+describe('simulateIdempotencyStore - a single request, either mode', () => {
   for (const mode of ['check-then-set', 'atomic-claim'] as const) {
     it(`processes a lone request under ${mode}`, () => {
       const sim = simulateIdempotencyStore(mode, [{ key: 'order-1', arrivalTick: 0 }], 5, 100);
@@ -24,7 +24,7 @@ describe('simulateIdempotencyStore — a single request, either mode', () => {
   }
 });
 
-describe('simulateIdempotencyStore — sequential requests (no overlap)', () => {
+describe('simulateIdempotencyStore - sequential requests (no overlap)', () => {
   it('a request after completion, within TTL, is a cache-hit sharing the same resultId', () => {
     const requests: IdempotencyRequestInput[] = [
       { key: 'order-1', arrivalTick: 0 }, // completes at tick 5
@@ -34,7 +34,7 @@ describe('simulateIdempotencyStore — sequential requests (no overlap)', () => 
     expect(sim.results[0].outcome).toBe('processed');
     expect(sim.results[1].outcome).toBe('cache-hit');
     expect(sim.results[1].resultId).toBe(sim.results[0].resultId);
-    expect(sim.results[1].resolvedTick).toBe(10); // instant — no processing wait
+    expect(sim.results[1].resolvedTick).toBe(10); // instant - no processing wait
     expect(sim.totalExecutions).toBe(1);
     expect(sim.totalCacheHits).toBe(1);
   });
@@ -51,29 +51,29 @@ describe('simulateIdempotencyStore — sequential requests (no overlap)', () => 
   });
 });
 
-describe('simulateIdempotencyStore — the actual finding: a concurrent duplicate', () => {
+describe('simulateIdempotencyStore - the actual finding: a concurrent duplicate', () => {
   // Both arrive at tick 0 for the same key; processing takes 10 ticks, so the second arrives
-  // while the first is still in flight — a genuine concurrent duplicate, not a replay.
+  // while the first is still in flight - a genuine concurrent duplicate, not a replay.
   const concurrentPair: IdempotencyRequestInput[] = [
     { key: 'charge-1', arrivalTick: 0 },
     { key: 'charge-1', arrivalTick: 0 },
   ];
 
-  it('check-then-set double-processes it — the race is real, not hypothetical', () => {
+  it('check-then-set double-processes it - the race is real, not hypothetical', () => {
     const sim = simulateIdempotencyStore('check-then-set', concurrentPair, 10, 1000);
     expect(sim.results[0].outcome).toBe('processed');
     expect(sim.results[1].outcome).toBe('duplicate-processed');
-    // Each did its own real work — different resultIds, not sharing one.
+    // Each did its own real work - different resultIds, not sharing one.
     expect(sim.results[1].resultId).not.toBe(sim.results[0].resultId);
     expect(sim.totalExecutions).toBe(2);
     expect(sim.totalDuplicateProcessed).toBe(1);
   });
 
-  it('atomic-claim coalesces it onto the in-flight run instead — the fix', () => {
+  it('atomic-claim coalesces it onto the in-flight run instead - the fix', () => {
     const sim = simulateIdempotencyStore('atomic-claim', concurrentPair, 10, 1000);
     expect(sim.results[0].outcome).toBe('processed');
     expect(sim.results[1].outcome).toBe('coalesced');
-    // Both share the same resultId — proof they got the same result, not double work.
+    // Both share the same resultId - proof they got the same result, not double work.
     expect(sim.results[1].resultId).toBe(sim.results[0].resultId);
     expect(sim.results[1].resolvedTick).toBe(sim.results[0].resolvedTick);
     expect(sim.totalExecutions).toBe(1);
@@ -81,7 +81,7 @@ describe('simulateIdempotencyStore — the actual finding: a concurrent duplicat
   });
 
   it('a duplicate arriving mid-flight (not just at the same tick) still races under check-then-set', () => {
-    // First arrives at 0 (completes at 10); second arrives at 4 — after the first started, well
+    // First arrives at 0 (completes at 10); second arrives at 4 - after the first started, well
     // before it finishes. check-then-set's completed-cache check still finds nothing.
     const requests: IdempotencyRequestInput[] = [
       { key: 'charge-1', arrivalTick: 0 },
@@ -125,7 +125,7 @@ describe('simulateIdempotencyStore — the actual finding: a concurrent duplicat
   });
 });
 
-describe('simulateIdempotencyStore — independent keys never interact', () => {
+describe('simulateIdempotencyStore - independent keys never interact', () => {
   it('two different keys arriving concurrently each get their own execution under both modes', () => {
     const requests: IdempotencyRequestInput[] = [
       { key: 'order-1', arrivalTick: 0 },
@@ -140,7 +140,7 @@ describe('simulateIdempotencyStore — independent keys never interact', () => {
   });
 });
 
-describe('simulateIdempotencyStore — result ordering', () => {
+describe('simulateIdempotencyStore - result ordering', () => {
   it('returns results in the same order as the input requests, not grouped by key', () => {
     const requests: IdempotencyRequestInput[] = [
       { key: 'a', arrivalTick: 0 },
@@ -151,7 +151,7 @@ describe('simulateIdempotencyStore — result ordering', () => {
     expect(sim.results.map((r) => r.key)).toEqual(['a', 'b', 'a']);
   });
 
-  it('is insensitive to the input array\'s own ordering — arrival tick order is what matters', () => {
+  it('is insensitive to the input array\'s own ordering - arrival tick order is what matters', () => {
     const inOrder: IdempotencyRequestInput[] = [
       { key: 'charge-1', arrivalTick: 0 },
       { key: 'charge-1', arrivalTick: 4 },

@@ -6,7 +6,7 @@ import { Database, Info } from 'lucide-react';
 import rawResults from './db-event-replay-benchmark-results.json';
 
 /**
- * Raw shape written by benchmarks/db-event-replay-benchmark/run.sh — one row per (database, event
+ * Raw shape written by benchmarks/db-event-replay-benchmark/run.sh - one row per (database, event
  * count) combination, straight from the harness's own JSON stdout line. Byte-identical copy of
  * benchmarks/db-event-replay-benchmark/results.json; see that directory's README.md to reproduce it.
  */
@@ -62,11 +62,11 @@ function DbEventReplayBenchmarkPage() {
       <ProvenanceNote labId="db-event-replay-benchmark" />
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div className="space-y-6">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Dataset</h2>
+            <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Dataset</h2>
 
-            <div className="block text-sm font-semibold text-slate-700">
+            <div className="block text-meta font-semibold text-slate-700">
               Total Events to Replay
               <div className="mt-3 flex gap-2" role="group" aria-label="Total events to replay">
                 {[10000, 50000, 100000].map(e => (
@@ -75,7 +75,7 @@ function DbEventReplayBenchmarkPage() {
                     type="button"
                     aria-pressed={events === e}
                     onClick={() => setEvents(e as 10000 | 50000 | 100000)}
-                    className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-colors ${events === e ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
+                    className={`flex-1 py-2 text-micro font-bold rounded-lg border transition-colors ${events === e ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
                   >
                     {e.toLocaleString()}
                   </button>
@@ -83,12 +83,12 @@ function DbEventReplayBenchmarkPage() {
               </div>
             </div>
 
-            <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-xs flex gap-3 leading-relaxed mt-8">
+            <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-micro flex gap-3 leading-relaxed mt-8">
               <Database className="w-5 h-5 shrink-0 text-sky-600" />
               <p>PostgreSQL excels at sequential reads and pulling large datasets into memory quickly. Firestore is a document store optimized for single-document reads; retrieving 50,000 documents requires significantly more network overhead and deserialization time.</p>
             </div>
             
-            <div className="bg-amber-50 text-amber-800 p-4 rounded-xl text-xs flex gap-3 leading-relaxed mt-2">
+            <div className="bg-amber-50 text-amber-800 p-4 rounded-xl text-micro flex gap-3 leading-relaxed mt-2">
               <Info className="w-5 h-5 shrink-0 text-amber-600" />
               <p><strong>Conclusion:</strong> For an Event Store where you routinely need to replay long streams of events, a relational DB (or dedicated event store like EventStoreDB) vastly outperforms document databases like Firestore.</p>
             </div>
@@ -96,7 +96,7 @@ function DbEventReplayBenchmarkPage() {
         </section>
 
         <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-8 shadow-sm flex flex-col justify-center">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2 text-center w-full justify-center">
+          <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2 text-center w-full justify-center">
             <Database className="w-4 h-4" /> Replay Time (milliseconds)
           </h2>
           
@@ -125,7 +125,7 @@ function DbEventReplayBenchmarkPage() {
             </div>
 
           </div>
-          <p className="text-center text-xs text-slate-500 mt-12 font-mono">Lower is better &darr;</p>
+          <p className="text-center text-micro text-slate-500 mt-12 font-mono">Lower is better &darr;</p>
         </section>
       </div>
     </main>

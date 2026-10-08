@@ -26,9 +26,9 @@ function FailureInjectionDemoPage() {
       <ProvenanceNote labId="failure-injection" />
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div className="space-y-4">
-            <label className="block text-sm font-semibold text-slate-700">
+            <label className="block text-meta font-semibold text-slate-700">
               <div className="flex justify-between">
                 <span className="text-rose-600">Injected Failure Rate</span>
                 <span className="text-rose-600">{failureRate}%</span>
@@ -43,7 +43,7 @@ function FailureInjectionDemoPage() {
               />
             </label>
 
-            <label className="block text-sm font-semibold text-slate-700 pt-2">
+            <label className="block text-meta font-semibold text-slate-700 pt-2">
               <div className="flex justify-between">
                 <span>Request Volume</span>
                 <span className="text-teal-700">{requestCount} req/s</span>
@@ -59,7 +59,7 @@ function FailureInjectionDemoPage() {
               />
             </label>
 
-            <label className="block text-sm font-semibold text-slate-700 pt-2">
+            <label className="block text-meta font-semibold text-slate-700 pt-2">
               <div className="flex justify-between">
                 <span>Breaker Threshold</span>
                 <span className="text-amber-700">{circuitThreshold}%</span>
@@ -77,7 +77,7 @@ function FailureInjectionDemoPage() {
           </div>
         </section>
 
-        <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm flex flex-col items-center justify-center relative min-h-[350px] overflow-hidden">
+        <section className="min-w-0 md:col-span-8 rounded-card border border-slate-200 bg-surface p-6 shadow-raised flex flex-col items-center justify-center relative min-h-[350px] overflow-hidden">
           
           {/* Background pulse effect when breaker opens */}
           <div className={`absolute inset-0 transition-opacity duration-1000 ${simulation.breakerOpen ? 'bg-rose-50 opacity-100' : 'opacity-0'}`} />
@@ -85,7 +85,7 @@ function FailureInjectionDemoPage() {
           <div className="z-10 w-full max-w-lg">
             <div className="flex justify-between items-center mb-8 px-4">
               <div className="text-center">
-                <div className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">Gateway</div>
+                <div className="text-micro uppercase tracking-widest text-slate-500 font-bold mb-1">Gateway</div>
                 <div className="bg-surface border-2 border-slate-300 w-16 h-16 rounded-xl flex items-center justify-center shadow-sm relative">
                   {/* Traffic animation */}
                   <div className={`absolute -right-4 w-3 h-3 rounded-full ${simulation.breakerOpen ? 'bg-rose-400' : 'bg-emerald-400'} animate-ping opacity-75`} />
@@ -95,7 +95,7 @@ function FailureInjectionDemoPage() {
               {/* Animated Circuit Breaker SVG */}
               <div className="flex-1 px-8 relative">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[120%] text-center whitespace-nowrap">
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase transition-colors ${
+                  <span className={`px-3 py-1 rounded-full text-micro font-bold tracking-widest uppercase transition-colors ${
                     simulation.breakerOpen ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'
                   }`}>
                     State: {simulation.breakerOpen ? 'OPEN' : 'CLOSED'}
@@ -127,7 +127,7 @@ function FailureInjectionDemoPage() {
                 </svg>
 
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-6 text-center w-full">
-                  <div className="text-[10px] font-medium text-slate-500">Current Failure Rate: {failureRate}%</div>
+                  <div className="text-nano font-medium text-slate-500">Current Failure Rate: {failureRate}%</div>
                   <div className="w-full h-1 bg-slate-100 rounded-full mt-1 overflow-hidden">
                     <div 
                       className={`h-full transition-all duration-300 ${simulation.breakerOpen ? 'bg-rose-500' : 'bg-amber-400'}`} 
@@ -138,7 +138,7 @@ function FailureInjectionDemoPage() {
               </div>
 
               <div className="text-center">
-                <div className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">Downstream</div>
+                <div className="text-micro uppercase tracking-widest text-slate-500 font-bold mb-1">Downstream</div>
                 <div className={`border-2 w-16 h-16 rounded-xl flex items-center justify-center shadow-sm transition-colors duration-500 ${
                   simulation.breakerOpen ? 'bg-slate-50 border-slate-200 opacity-50' : 'bg-surface border-slate-300'
                 }`}>
@@ -153,24 +153,24 @@ function FailureInjectionDemoPage() {
 
             <div className="mt-12 bg-surface rounded-xl border border-slate-100 p-4 shadow-sm flex gap-4 text-center divide-x divide-slate-100">
               <div className="flex-1">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600 mb-1">Requests Sent</div>
+                <div className="text-nano font-bold uppercase tracking-widest text-slate-600 mb-1">Requests Sent</div>
                 <div className="text-xl font-bold text-slate-700">{simulation.breakerOpen ? 0 : requestCount}</div>
               </div>
               <div className="flex-1">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-emerald-700 mb-1">Success</div>
+                <div className="text-nano font-bold uppercase tracking-widest text-emerald-700 mb-1">Success</div>
                 <div className="text-xl font-bold text-emerald-700">{simulation.breakerOpen ? 0 : simulation.success}</div>
               </div>
               <div className="flex-1">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-rose-600 mb-1">Failed</div>
+                <div className="text-nano font-bold uppercase tracking-widest text-rose-600 mb-1">Failed</div>
                 <div className="text-xl font-bold text-rose-600">{simulation.breakerOpen ? 0 : simulation.failed}</div>
               </div>
               <div className="flex-1">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-amber-700 mb-1">Fast Failed</div>
+                <div className="text-nano font-bold uppercase tracking-widest text-amber-700 mb-1">Fast Failed</div>
                 <div className="text-xl font-bold text-amber-700">{simulation.breakerOpen ? requestCount : 0}</div>
               </div>
             </div>
             {simulation.breakerOpen && (
-              <p className="text-center text-xs text-rose-700 mt-4 animate-pulse">
+              <p className="text-center text-micro text-rose-700 mt-4 animate-pulse">
                 Breaker is OPEN. All requests are short-circuited to protect downstream.
               </p>
             )}

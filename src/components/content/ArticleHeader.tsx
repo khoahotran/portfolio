@@ -18,11 +18,11 @@ function ArticleHeader({ detail }: Props) {
       </Link>
       <header className="mb-6 border-b border-slate-200 pb-6">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">{detail.title}</h1>
-        <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-500">
+        <div className="mt-3 flex flex-wrap gap-2 text-micro text-slate-500">
           <span>{formatDate(detail.date)}</span>
           <span>{detail.readingText}</span>
         </div>
-        <p className="mt-3 text-sm text-slate-600">{detail.summary}</p>
+        <p className="mt-3 text-meta text-slate-600">{detail.summary}</p>
         <div className="mt-4 flex flex-wrap gap-2">
           {detail.tags.map((tag) => (
             <TagPill key={tag}>#{tag}</TagPill>

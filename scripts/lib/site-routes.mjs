@@ -2,7 +2,7 @@
 //
 // The nine lab ids used to be hand-mirrored in three files (src/labs/registry.ts,
 // scripts/build-search-index.mjs, scripts/check-responsive.mjs) with a comment in each
-// admitting the duplication. scripts/prerender.mjs would have been the fourth copy — and
+// admitting the duplication. scripts/prerender.mjs would have been the fourth copy - and
 // unlike the others, a missing id there means an article silently ships without prerendered
 // metadata. So the list moved to src/labs/lab-ids.json, which every consumer reads.
 //
@@ -21,7 +21,7 @@ export const collections = ['blog', 'research', 'experiments', 'system-design', 
 /**
  * Routes that exist regardless of content: pages, collection list pages, and lab pages.
  *
- * `/search` is deliberately excluded from the sitemap/prerender default — it renders nothing
+ * `/search` is deliberately excluded from the sitemap/prerender default - it renders nothing
  * until a query is typed, so there is no content to index. Callers that want it (the responsive
  * check does) add it explicitly.
  */
@@ -29,6 +29,7 @@ export const staticRoutes = [
   '/',
   '/about',
   '/graph',
+  '/writing',
   ...collections.map((collection) => `/${collection}`),
   '/labs',
   ...labIds.map((id) => `/labs/${id}`),
@@ -52,7 +53,7 @@ export function readArticleRoutes(label = 'site-routes') {
   } catch (error) {
     console.warn(
       `[${label}] Could not read public/content-index.json (${error.message}). ` +
-        'Run `npm run build:search-index` first — article routes will be skipped for this run.'
+        'Run `npm run build:search-index` first - article routes will be skipped for this run.'
     );
     return [];
   }
@@ -75,7 +76,7 @@ export function readTagRoutes(label = 'site-routes') {
   } catch (error) {
     console.warn(
       `[${label}] Could not read public/content-index.json (${error.message}). ` +
-        'Run `npm run build:search-index` first — tag routes will be skipped for this run.'
+        'Run `npm run build:search-index` first - tag routes will be skipped for this run.'
     );
     return [];
   }

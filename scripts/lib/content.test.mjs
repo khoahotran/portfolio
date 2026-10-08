@@ -9,10 +9,10 @@ import {
 } from './content.mjs';
 
 /**
- * The frontmatter parser is hand-rolled (no gray-matter — see .ai/decision-log.md Decision 1 on
+ * The frontmatter parser is hand-rolled (no gray-matter - see .ai/decision-log.md Decision 1 on
  * keeping dependencies thin). That is a reasonable trade for a 33-file corpus, but it means the
  * parsing rules live only in this code, so they are pinned here: a regression would corrupt every
- * downstream artifact at once — index, sitemap, feeds and OG images are all generated from it.
+ * downstream artifact at once - index, sitemap, feeds and OG images are all generated from it.
  */
 describe('frontmatter parsing', () => {
   it('splits the block from the body', () => {
@@ -56,7 +56,7 @@ describe('frontmatter parsing', () => {
 
 /**
  * `searchableText` is what /search matches against. Leaving code fences in it means a query for a
- * common identifier matches nearly every article — and it roughly doubles the index the page has
+ * common identifier matches nearly every article - and it roughly doubles the index the page has
  * to download.
  */
 describe('search-noise stripping', () => {
@@ -122,7 +122,7 @@ describe('reading-time estimation', () => {
 
 /**
  * Slugs only need to be unique *within* a collection for routing, but several places in src/
- * (getRelatedArticles's self-exclusion in particular — see .ai/decision-log.md Decision 20) compare
+ * (getRelatedArticles's self-exclusion in particular - see .ai/decision-log.md Decision 20) compare
  * articles by bare slug across the whole corpus, not `collection/slug`. This is what makes that
  * shortcut safe: build-search-index.mjs fails the build on any cross-collection collision this
  * finds, rather than letting the two colliding articles silently misidentify each other.

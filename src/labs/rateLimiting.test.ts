@@ -68,7 +68,7 @@ describe('simulateFixedWindow', () => {
   });
 
   it('demonstrates the boundary-burst flaw: ~2x limit can land either side of an edge', () => {
-    // limit 2 per 1s window: 2 requests just before the t=1 boundary, 2 more just after —
+    // limit 2 per 1s window: 2 requests just before the t=1 boundary, 2 more just after -
     // all 4 admitted inside a ~0.2s span, because they fall in two different windows.
     const steps = simulateFixedWindow([0.9, 0.95, 1.0, 1.05], 1, 2);
     expect(steps.every((s) => s.allowed)).toBe(true);

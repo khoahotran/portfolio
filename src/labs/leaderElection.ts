@@ -1,11 +1,11 @@
 /**
  * The Bully algorithm (Garcia-Molina, 1982) for leader election in a distributed system where
- * every node has a unique, comparable, totally-ordered id — the classic mechanism this lab
+ * every node has a unique, comparable, totally-ordered id - the classic mechanism this lab
  * implements exactly, not a diagram of it. Rule: any node that notices the leader is unreachable
  * sends an ELECTION message to every node with a *higher* id. Any higher node that is alive
  * replies ALIVE and starts its own election against ids above *it*. A node that gets no ALIVE
  * reply (because every higher id is down) declares itself leader and broadcasts COORDINATOR to
- * every alive node below it. The winner is always the highest-id alive node — deterministically,
+ * every alive node below it. The winner is always the highest-id alive node - deterministically,
  * given a fixed alive/down set, which is what makes this simulatable step by step rather than
  * needing real timeouts or randomness.
  *
@@ -13,7 +13,7 @@
  * algorithm, every alive node that receives an ELECTION message replies *and* starts its own
  * election concurrently, so a single initiator's message can fan out to several simultaneous
  * sub-elections in one step. This is also what makes Bully's well-known worst-case message cost
- * (O(n^2) in the number of alive nodes) visible in the simulation rather than asserted in prose —
+ * (O(n^2) in the number of alive nodes) visible in the simulation rather than asserted in prose -
  * see the "all nodes alive" test below.
  */
 
@@ -43,12 +43,12 @@ export interface ElectionResult {
 /**
  * Simulates a full Bully election.
  *
- * `nodeIds` is every node id that exists in the cluster (alive or not) — a node must know the full
+ * `nodeIds` is every node id that exists in the cluster (alive or not) - a node must know the full
  * membership to know who is "higher" than it, exactly as the real algorithm requires.
  * `aliveIds` is the subset currently reachable. `initiatorId` is the node that noticed the previous
  * leader was unreachable and is the one that starts the election.
  *
- * Returns `{ steps: [], leaderId: null }` if `initiatorId` is not itself alive — a crashed node
+ * Returns `{ steps: [], leaderId: null }` if `initiatorId` is not itself alive - a crashed node
  * cannot notice anything or send a message, so "the dead node starts an election" is not a
  * degraded case this function silently guesses an answer for; it is simply not a thing that
  * happens. Same treatment `simulateFixedWindow` gives `windowSeconds <= 0` (Decision 21): reject
@@ -81,7 +81,7 @@ export function simulateBullyElection(
 
       const aliveHigher = higher.filter((id) => aliveIds.has(id));
       if (aliveHigher.length === 0) {
-        // No one above `candidate` is alive to answer — `candidate` wins. Only one candidate in
+        // No one above `candidate` is alive to answer - `candidate` wins. Only one candidate in
         // the whole run can ever satisfy this (the highest alive id overall), since every other
         // alive node has at least the eventual winner above it to reply ALIVE.
         leaderId = candidate;

@@ -5,8 +5,8 @@ export default function Contact() {
   return (
     <section id="contact" className="py-24 px-6 bg-surface">
       <div className="max-w-5xl mx-auto text-center font-light">
-        {/* Decorative kicker, not a heading — see the matching note in About.tsx. */}
-        <p className="text-sm uppercase tracking-widest text-teal-700 mb-6 font-medium italic">
+        {/* Decorative kicker, not a heading - see the matching note in About.tsx. */}
+        <p className="text-meta uppercase tracking-widest text-teal-700 mb-6 font-medium italic">
           {contactData.title}
         </p>
         <h2 className="text-4xl md:text-5xl text-slate-900 font-bold mb-8">
@@ -44,7 +44,7 @@ export default function Contact() {
           </a>
         </div>
 
-        <div className="flex items-center justify-center gap-2 text-slate-500 text-sm font-medium tracking-wide">
+        <div className="flex items-center justify-center gap-2 text-slate-500 text-meta font-medium tracking-wide">
           <MapPin size={14} className="text-teal-500" />
           <span>{contactData.location}</span>
         </div>

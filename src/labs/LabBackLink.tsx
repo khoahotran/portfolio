@@ -9,7 +9,7 @@ interface Props {
 /**
  * Every lab page previously had its own identical "&larr; Back to Experiments"
  * link, and no way to get back to the specific article a reader arrived from
- * — the only way out of any lab was the generic collection list. This adds a
+ * - the only way out of any lab was the generic collection list. This adds a
  * second link to the companion write-up when one exists (see
  * LabDefinition.relatedArticle), and is a shared component rather than 9
  * copies specifically so that second link's presence/absence stays correct

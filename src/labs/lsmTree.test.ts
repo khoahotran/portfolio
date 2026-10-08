@@ -3,8 +3,8 @@ import { compact, createLsmTree, get, put, remove, runCount, writeAmplification 
 
 const MEMTABLE_CAPACITY = 50;
 
-/** Runs a deterministic update-heavy workload — `totalOps` puts cycling through `uniqueKeys`
- * distinct keys (so most operations are updates, not first-time inserts) — optionally compacting
+/** Runs a deterministic update-heavy workload - `totalOps` puts cycling through `uniqueKeys`
+ * distinct keys (so most operations are updates, not first-time inserts) - optionally compacting
  * every `compactEveryNFlushes` flushes. Returns the same measurements the lab UI shows. */
 function runWorkload(totalOps: number, uniqueKeys: number, compactEveryNFlushes: number | null) {
   const tree = createLsmTree(MEMTABLE_CAPACITY);
@@ -30,17 +30,17 @@ function runWorkload(totalOps: number, uniqueKeys: number, compactEveryNFlushes:
   };
 }
 
-describe('LSM tree — the real trade-off, measured on both sides', () => {
-  it('with no compaction, write amplification is exactly 1.0 — every operation written to disk exactly once', () => {
+describe('LSM tree - the real trade-off, measured on both sides', () => {
+  it('with no compaction, write amplification is exactly 1.0 - every operation written to disk exactly once', () => {
     const result = runWorkload(5000, 500, null);
     expect(result.writeAmp).toBe(1);
   });
 
-  it('with no compaction, run count and read amplification for a miss both grow with total writes — unbounded, not just large', () => {
+  it('with no compaction, run count and read amplification for a miss both grow with total writes - unbounded, not just large', () => {
     const at5000 = runWorkload(5000, 500, null);
     const at20000 = runWorkload(20000, 500, null);
     expect(at5000.finalRunCount).toBe(100); // 5000 ops / 50-entry memtable
-    expect(at20000.finalRunCount).toBe(400); // 20000 ops / 50-entry memtable — 4x the runs for 4x the writes
+    expect(at20000.finalRunCount).toBe(400); // 20000 ops / 50-entry memtable - 4x the runs for 4x the writes
     // A miss must check every run, since nothing rules a run out without a per-run filter.
     expect(at5000.missRunsProbed).toBe(at5000.finalRunCount);
     expect(at20000.missRunsProbed).toBe(at20000.finalRunCount);

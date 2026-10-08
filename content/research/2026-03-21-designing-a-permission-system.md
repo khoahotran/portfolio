@@ -9,7 +9,7 @@ summary: "How to evolve from brittle role checks to a maintainable, high-perform
 
 Most applications start with a simple Role-Based Access Control (RBAC) system. You have `Admin`, `Staff`, and `User` roles. When a request comes in, the code looks something like: `if (user.role === 'Admin') { allow(); }`.
 
-This works perfectly—until your product grows. Soon, you need granular control:
+This works perfectly-until your product grows. Soon, you need granular control:
 - *"A Manager can edit a document, but only if they are the author, or if the document is in the 'Draft' state."*
 - *"A Support Agent can view user profiles, but only users within their assigned geographic region."*
 

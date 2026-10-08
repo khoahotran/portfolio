@@ -22,12 +22,12 @@ export default tseslint.config(
     rules: {
       // The accessibility work in Phase 3 (skip link, labelled nav landmarks, aria-live regions,
       // role="img" on diagrams) was all done by hand and had nothing stopping it from regressing.
-      // These rules catch the mechanical half of that automatically — a missing alt, a click
+      // These rules catch the mechanical half of that automatically - a missing alt, a click
       // handler on a non-interactive element, an anchor with no href.
       ...jsxA11y.flatConfigs.recommended.rules,
 
       // The lab sliders wrap their <input> in a <label> whose text sits one level deeper than the
-      // rule's default `depth: 2` — `label > div > span`. The association is valid HTML (implicit,
+      // rule's default `depth: 2` - `label > div > span`. The association is valid HTML (implicit,
       // via wrapping) and the accessible name resolves correctly; only the static analysis stops
       // short. Raising the depth is the fix. Restructuring eleven working labels to satisfy a
       // default would be changing correct markup to please a linter.

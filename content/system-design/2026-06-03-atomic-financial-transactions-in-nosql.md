@@ -10,7 +10,7 @@ summary: "Implementing virtual currency transactions on Firestore with <1% consi
 
 Building a virtual currency system ("J-Points") on a NoSQL database like Cloud Firestore comes with a unique set of challenges. Unlike traditional SQL databases with strong ACID guarantees and lock-based execution, NoSQL stores are typically designed for horizontal scaling and eventual consistency. 
 
-However, when dealing with financial data—even virtual loyalty points—consistency cannot be compromised. Our goal was to build a system that guarantees:
+However, when dealing with financial data-even virtual loyalty points-consistency cannot be compromised. Our goal was to build a system that guarantees:
 - **Zero Double-Spending**: Users cannot concurrent-submit requests to spend points they do not have.
 - **Audit Traceability**: Every balance change must have a corresponding immutable ledger entry.
 - **Scalability**: High throughput for point additions without hitting database hotspot limits.

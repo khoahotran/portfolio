@@ -6,7 +6,7 @@ related: ["projects/quant-alpha", "blog/designing-a-multi-role-hft-research-plat
 summary: "Research notes on extracting Order Book Imbalance (OBI) features from Level-3 market data (VN30F2112) to train rolling-window ML classifiers for High-Frequency Trading."
 ---
 
-In High-Frequency Trading (HFT), price movements in the next 10 seconds are rarely driven by macroeconomic news. Instead, they are driven by micro-structural imbalances in the order book—specifically, the pressure difference between buyers (bids) and sellers (asks).
+In High-Frequency Trading (HFT), price movements in the next 10 seconds are rarely driven by macroeconomic news. Instead, they are driven by micro-structural imbalances in the order book-specifically, the pressure difference between buyers (bids) and sellers (asks).
 
 During the development of the **QuantAlpha Lab**, an academic HFT research platform, I focused heavily on engineering **Order Book Imbalance (OBI)** as the primary feature for our machine learning classifiers.
 
@@ -32,7 +32,7 @@ $$ OBI_{weighted} = \sum_{i=1}^{5} \left( \frac{V_{bid,i} - V_{ask,i}}{V_{bid,i}
 
 This equation decays the importance of the imbalance exponentially as we look deeper into the book.
 
-> **Current implementation vs. this formula:** the weighted, multi-level depth imbalance above is the research methodology this project explored, not a formula computed anywhere in the committed `HFT` repository. The one OBI calculation that does exist in code is a simpler single-level version — `(bid_depth − ask_depth) / (bid_depth + ask_depth)` — used as a seeded example user alpha script (a demonstration of the platform's user-scriptable signal feature), not an automatic feature the training pipeline computes for every model.
+> **Current implementation vs. this formula:** the weighted, multi-level depth imbalance above is the research methodology this project explored, not a formula computed anywhere in the committed `HFT` repository. The one OBI calculation that does exist in code is a simpler single-level version - `(bid_depth − ask_depth) / (bid_depth + ask_depth)` - used as a seeded example user alpha script (a demonstration of the platform's user-scriptable signal feature), not an automatic feature the training pipeline computes for every model.
 
 ## The Rolling Window Training Pipeline
 
@@ -40,7 +40,7 @@ Financial data is notoriously non-stationary. The market microstructure dynamics
 
 If you train a model on Monday's data and trade it on Tuesday, it will likely lose money. To counteract this, we designed a **Rolling Window Pipeline**.
 
-<!-- Periods use "09h00" not "09:00" on purpose — a colon is unescapable in a
+<!-- Periods use "09h00" not "09:00" on purpose - a colon is unescapable in a
      Mermaid timeline period (fails even quoted: `"09:00"` still errors). Don't
      "restore" real clock notation here without re-testing against the renderer. -->
 ```mermaid
@@ -55,7 +55,7 @@ timeline
 
 Instead of a single global model, the target design for QuantAlpha is to train hundreds of micro-models throughout the day using `scikit-learn` (specifically `RandomForestClassifier` and `GradientBoostingClassifier`), continuously rolling the window forward: every 10 seconds, the worker would receive a job via **Redis Streams** from the Go API, pull the last 30 minutes of tick data, compute the OBI features, train a fresh model, and push the serialized weights back out.
 
-> **Current implementation vs. this pipeline:** the committed `HFT` repository's `train` job runs a single fit per request — a user or the API submits one training job over a CSV-sourced, date-range-bounded slice of tick data, the worker performs one chronological 80/20 train/validation split, and saves the resulting model artifact and metrics. There is no scheduler or loop that automatically re-triggers training every 10 seconds, and tick data itself is read directly from CSV rather than stored in or queried back out of PostgreSQL. The continuous rolling-window design above remains the intended methodology; it is not what's currently running.
+> **Current implementation vs. this pipeline:** the committed `HFT` repository's `train` job runs a single fit per request - a user or the API submits one training job over a CSV-sourced, date-range-bounded slice of tick data, the worker performs one chronological 80/20 train/validation split, and saves the resulting model artifact and metrics. There is no scheduler or loop that automatically re-triggers training every 10 seconds, and tick data itself is read directly from CSV rather than stored in or queried back out of PostgreSQL. The continuous rolling-window design above remains the intended methodology; it is not what's currently running.
 
 ## Predicting the Next 10 Seconds
 
@@ -68,7 +68,7 @@ Our target variable (`y`) was a trinary classification:
 
 The OBI feature, especially when combined with trade flow imbalance (the delta of market orders hitting the bids vs asks), proved highly predictive of the 10-second forward return.
 
-However, the primary challenge wasn't model accuracy—it was **latency and slippage**. 
+However, the primary challenge wasn't model accuracy-it was **latency and slippage**. 
 
 By the time our Python worker detected an OBI of `+0.8` and generated a `BUY` signal, the market had often already moved. The VN30F2112 contract is highly liquid, and competing HFT firms using FPGAs react to these imbalances in microseconds, whereas our Go/Python stack operated in milliseconds.
 

@@ -20,7 +20,7 @@ async function getMermaid() {
         // listed first here but is never loaded anywhere in the app (no
         // @font-face, no Google Fonts, no Tailwind fontFamily override), so
         // diagram text silently fell through to this fallback on every
-        // machine anyway — asking for it was dead, misleading config.
+        // machine anyway - asking for it was dead, misleading config.
         fontFamily: 'ui-sans-serif, system-ui, sans-serif',
         securityLevel: 'loose',
         flowchart: { curve: 'basis' },
@@ -56,7 +56,7 @@ function renderError(container: HTMLElement, source: string) {
 /**
  * Mermaid's output SVG has no text alternative by default, so screen readers either skip it
  * entirely or read through its internal <text> nodes out of context. A generic label at least
- * announces it as a diagram rather than silence or noise — a real per-diagram description would
+ * announces it as a diagram rather than silence or noise - a real per-diagram description would
  * mean writing content, not a rendering fix.
  */
 function applyDiagramLabel(container: HTMLElement): void {
@@ -95,7 +95,7 @@ export async function renderMermaidInto(
     }
     // Not user input: `alreadyRendered` is SVG that mermaid itself produced during prerender
     // and that capturePrerenderedDiagrams() read back out of our own served DOM. The same
-    // markup is already in the document before this line runs — this only moves it.
+    // markup is already in the document before this line runs - this only moves it.
     container.innerHTML = alreadyRendered;
     container.classList.add('mermaid-rendered');
     applyDiagramLabel(container);
@@ -120,11 +120,11 @@ export async function renderMermaidInto(
     // Mermaid's output SVG has no text alternative by default, so screen
     // readers either skip it entirely or read through its internal <text>
     // nodes out of context. A generic label at least announces it as a
-    // diagram rather than silence or noise — a real per-diagram description
+    // diagram rather than silence or noise - a real per-diagram description
     // would mean writing content, not a rendering fix.
     applyDiagramLabel(container);
 
-    // Optional hook for callers that need to post-process the rendered SVG —
+    // Optional hook for callers that need to post-process the rendered SVG -
     // e.g. wiring up `click nodeId href "..."` anchors (see KnowledgeGraphPage)
     // to client-side routing instead of a full page reload. Only fires on a
     // real successful render, never on error/stale.

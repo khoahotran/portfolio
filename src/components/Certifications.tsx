@@ -5,7 +5,7 @@ export default function Certifications() {
   return (
     <section className="py-24 px-6 bg-slate-50">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-sm uppercase tracking-widest text-teal-700 mb-12 font-medium">
+        <h2 className="text-meta uppercase tracking-widest text-teal-700 mb-12 font-medium">
           Certifications
         </h2>
         <div className="grid md:grid-cols-2 gap-6">
@@ -22,8 +22,8 @@ export default function Certifications() {
                   <h3 className="font-medium text-slate-900 mb-1">
                     {cert.name}
                   </h3>
-                  <p className="text-sm text-slate-600 mb-1">{cert.issuer}</p>
-                  <p className="text-sm text-slate-500">{cert.date}</p>
+                  <p className="text-meta text-slate-600 mb-1">{cert.issuer}</p>
+                  <p className="text-meta text-slate-500">{cert.date}</p>
                 </div>
               </div>
             </div>

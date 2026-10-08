@@ -6,7 +6,7 @@ import { Activity } from 'lucide-react';
 import rawResults from './go-vs-ts-concurrency-results.json';
 
 /**
- * Raw shape written by benchmarks/go-vs-ts-concurrency/run.sh — one row per (language, task count)
+ * Raw shape written by benchmarks/go-vs-ts-concurrency/run.sh - one row per (language, task count)
  * combination, straight from the harness's own JSON stdout line. Byte-identical copy of
  * benchmarks/go-vs-ts-concurrency/results.json; see that directory's README.md to reproduce it.
  */
@@ -67,11 +67,11 @@ function GoVsTsConcurrencyPage() {
       <ProvenanceNote labId="go-vs-ts-concurrency" />
 
       <div className="mt-10 grid gap-8 md:grid-cols-12">
-        <section className="min-w-0 md:col-span-4 space-y-6 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm">
+        <section className="min-w-0 md:col-span-4 space-y-6 rounded-card border border-slate-200 bg-surface p-6 shadow-raised">
           <div className="space-y-6">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Workload</h2>
+            <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 border-b border-slate-100 pb-2">Workload</h2>
 
-            <div className="block text-sm font-semibold text-slate-700">
+            <div className="block text-meta font-semibold text-slate-700">
               Number of Concurrent Tasks
               <div className="mt-3 flex gap-2" role="group" aria-label="Number of concurrent tasks">
                 {[1000, 10000, 50000].map(t => (
@@ -80,7 +80,7 @@ function GoVsTsConcurrencyPage() {
                     type="button"
                     aria-pressed={tasks === t}
                     onClick={() => setTasks(t as 1000 | 10000 | 50000)}
-                    className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-colors ${tasks === t ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
+                    className={`flex-1 py-2 text-micro font-bold rounded-lg border transition-colors ${tasks === t ? 'bg-inverse text-inverse-fg border-inverse' : 'bg-surface text-slate-600 border-slate-200 hover:border-slate-400'}`}
                   >
                     {t.toLocaleString()}
                   </button>
@@ -88,15 +88,15 @@ function GoVsTsConcurrencyPage() {
               </div>
             </div>
 
-            <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-xs flex gap-3 leading-relaxed mt-8">
+            <div className="bg-sky-50 text-sky-800 p-4 rounded-xl text-micro flex gap-3 leading-relaxed mt-8">
               <Activity className="w-5 h-5 shrink-0 text-sky-600" />
-              <p>Each task simulates a 50ms network request. Goroutines are spawned via `go` and a wait-group; Node.js uses `Promise.all()`. Watch the gap between them <em>narrow</em> as task count grows &mdash; Node&rsquo;s footprint is dominated by a fixed ~50MB runtime baseline, while Go&rsquo;s scales closer to linearly with task count. Full explanation in the article below.</p>
+              <p>Each task simulates a 50ms network request. Goroutines are spawned via `go` and a wait-group; Node.js uses `Promise.all()`. Watch the gap between them <em>narrow</em> as task count grows - Node&rsquo;s footprint is dominated by a fixed ~50MB runtime baseline, while Go&rsquo;s scales closer to linearly with task count. Full explanation in the article below.</p>
             </div>
           </div>
         </section>
 
         <section className="min-w-0 md:col-span-8 rounded-2xl border border-slate-200 bg-surface p-8 shadow-sm flex flex-col">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2">
+          <h2 className="text-meta font-bold uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2">
             <Activity className="w-4 h-4" /> Benchmark Results
           </h2>
 
@@ -107,26 +107,26 @@ function GoVsTsConcurrencyPage() {
               <h3 className="text-center font-bold text-slate-800 mb-6">Peak Memory (MB)</h3>
               <div className="flex items-end justify-center gap-6 h-64 border-b border-slate-200 pb-2 relative">
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-teal-700">{currentData.goMemory.toFixed(1)} MB</div>
+                  <div className="text-micro font-bold text-teal-700">{currentData.goMemory.toFixed(1)} MB</div>
                   {/* Fixed-height track: the bar's `height: N%` only resolves against a
                       definite-height ancestor, and this column (a child of an `items-end`, not
-                      `stretch`, row) is otherwise auto-height — without this wrapper the bar
+                      `stretch`, row) is otherwise auto-height - without this wrapper the bar
                       silently computes to 0px regardless of the percentage. */}
                   <div className="flex h-48 w-full items-end">
                     <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.goMemory / MAX_MEMORY) * 100}%` }} />
                   </div>
-                  <div className="text-xs font-semibold text-slate-500 mt-2">Go</div>
+                  <div className="text-micro font-semibold text-slate-500 mt-2">Go</div>
                 </div>
 
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-rose-700">{currentData.tsMemory.toFixed(1)} MB</div>
+                  <div className="text-micro font-bold text-rose-700">{currentData.tsMemory.toFixed(1)} MB</div>
                   <div className="flex h-48 w-full items-end">
                     <div className="w-full bg-rose-400 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.tsMemory / MAX_MEMORY) * 100}%` }} />
                   </div>
-                  <div className="text-xs font-semibold text-slate-500 mt-2">Node.js</div>
+                  <div className="text-micro font-semibold text-slate-500 mt-2">Node.js</div>
                 </div>
               </div>
-              <p className="text-center text-xs text-slate-500 mt-4 font-mono">Lower is better &darr;</p>
+              <p className="text-center text-micro text-slate-500 mt-4 font-mono">Lower is better &darr;</p>
             </div>
 
             {/* Time Chart */}
@@ -134,22 +134,22 @@ function GoVsTsConcurrencyPage() {
               <h3 className="text-center font-bold text-slate-800 mb-6">Execution Time (ms)</h3>
               <div className="flex items-end justify-center gap-6 h-64 border-b border-slate-200 pb-2 relative">
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-teal-700">{currentData.goTime.toFixed(0)} ms</div>
+                  <div className="text-micro font-bold text-teal-700">{currentData.goTime.toFixed(0)} ms</div>
                   <div className="flex h-48 w-full items-end">
                     <div className="w-full bg-teal-500 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.goTime / MAX_TIME) * 100}%` }} />
                   </div>
-                  <div className="text-xs font-semibold text-slate-500 mt-2">Go</div>
+                  <div className="text-micro font-semibold text-slate-500 mt-2">Go</div>
                 </div>
 
                 <div className="w-16 flex flex-col items-center gap-2 group">
-                  <div className="text-xs font-bold text-rose-700">{currentData.tsTime.toFixed(0)} ms</div>
+                  <div className="text-micro font-bold text-rose-700">{currentData.tsTime.toFixed(0)} ms</div>
                   <div className="flex h-48 w-full items-end">
                     <div className="w-full bg-rose-400 rounded-t-sm transition-all duration-500" style={{ height: `${(currentData.tsTime / MAX_TIME) * 100}%` }} />
                   </div>
-                  <div className="text-xs font-semibold text-slate-500 mt-2">Node.js</div>
+                  <div className="text-micro font-semibold text-slate-500 mt-2">Node.js</div>
                 </div>
               </div>
-              <p className="text-center text-xs text-slate-500 mt-4 font-mono">Lower is better &darr;</p>
+              <p className="text-center text-micro text-slate-500 mt-4 font-mono">Lower is better &darr;</p>
             </div>
 
           </div>

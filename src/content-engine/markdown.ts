@@ -106,7 +106,7 @@ function rehypeMermaidExtract() {
       if (parent && typeof index === 'number') {
         // Reserves roughly the diagram's real rendered height *before*
         // mermaid.js (a lazy chunk) has loaded and rendered it, instead of a
-        // flat 48px skeleton — the mismatch between that skeleton and a real
+        // flat 48px skeleton - the mismatch between that skeleton and a real
         // multi-hundred-px diagram was a measured layout-shift (CLS)
         // contributor. Source line count is a rough but source-available
         // proxy for diagram size (no real layout pass has run yet at compile
@@ -146,8 +146,8 @@ const CALLOUT_MARKER = /^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*\n?/i;
 /**
  * Custom rehype plugin implementing GitHub-style Markdown alerts
  * (`> [!NOTE]`, `> [!WARNING]`, etc.) as documented in
- * .ai/writing-style-guide.md. remark-gfm does not implement these itself —
- * it is a separate GFM-adjacent convention — so without this plugin the
+ * .ai/writing-style-guide.md. remark-gfm does not implement these itself -
+ * it is a separate GFM-adjacent convention - so without this plugin the
  * marker rendered as literal text inside a plain blockquote.
  *
  * Detects a <blockquote> whose first paragraph opens with a `[!TYPE]`
@@ -209,7 +209,7 @@ function rehypeCallout() {
 }
 
 // Cheap pre-check so the ~78 KB gzipped KaTeX renderer is only ever fetched
-// for the handful of articles that actually contain LaTeX — everything else
+// for the handful of articles that actually contain LaTeX - everything else
 // (30 of 33 articles) never triggers this import. A bare `$` is a
 // deliberately loose heuristic: false positives just mean an article with a
 // literal dollar sign pays for an unused import; false negatives are
@@ -236,21 +236,21 @@ export async function compileMarkdownToHtml(markdown: string): Promise<string> {
 
   // `.use(list)` with an empty array is a documented unified no-op, used
   // here (rather than an `if` + reassignment) so both branches produce the
-  // exact same processor type — conditionally reassigning `let processor =
+  // exact same processor type - conditionally reassigning `let processor =
   // processor.use(...)` across an if/else gives each branch a slightly
   // different generic instantiation that TS won't unify.
   const output = await unified()
     .use(remarkParse)
     .use(remarkGfm)
     // Renders `$inline$` and `$$block$$` LaTeX (used for the OBI formulas in
-    // the order-book-imbalance research article and a couple of others) —
+    // the order-book-imbalance research article and a couple of others) -
     // previously unhandled, so it displayed as literal `\frac{...}` source.
     .use(math ? [math.remarkMath] : [])
     // allowDangerousHtml + rehypeRaw: content authors embed raw HTML for CTA
     // buttons linking articles to their companion /labs/<id> lab (see any
     // file in content/experiments/). Without this pair, remark-rehype's
     // default silently drops those tags and leaves only their bare text
-    // behind — the buttons never rendered as clickable elements at all.
+    // behind - the buttons never rendered as clickable elements at all.
     // Content is author-controlled, not user input, so this carries no
     // injection risk.
     .use(remarkRehype, { allowDangerousHtml: true })

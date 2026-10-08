@@ -23,7 +23,7 @@ I built this interactive lab to visualize exactly how this replay mechanism work
 
 As demonstrated in the lab, this architecture provides several unique benefits:
 
-1. **Perfect Auditability:** Because state is derived from events, the audit log is not an afterthought—it *is* the source of truth.
+1. **Perfect Auditability:** Because state is derived from events, the audit log is not an afterthought-it *is* the source of truth.
 2. **Time Travel:** You can rebuild the exact state of the system at any given timestamp by stopping the replay at a specific event version.
 3. **CQRS Enablement:** You can build multiple, entirely different read-projections from the exact same event log (e.g., one projection for Account Balances, and a completely different projection for Fraud Analysis).
 

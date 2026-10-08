@@ -39,7 +39,7 @@
       <link>https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/blog/grpc-service-mesh-in-go-aegis-architecture</guid>
       <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
-      <description>A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.</description>
+      <description>A walkthrough of Aegis - a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation.</description>
     </item>
     <item>
       <title>Architecture Breakdown: CQRS for Mid-size Products</title>

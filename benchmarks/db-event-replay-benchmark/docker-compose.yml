@@ -14,7 +14,7 @@ services:
     image: google/cloud-sdk:emulators
     command: gcloud emulators firestore start --host-port=0.0.0.0:8080 --project=bench-project
     healthcheck:
-      # curl, not wget — the google/cloud-sdk image doesn't ship wget.
+      # curl, not wget - the google/cloud-sdk image doesn't ship wget.
       test: ["CMD", "curl", "-sf", "http://localhost:8080/"]
       interval: 1s
       retries: 30

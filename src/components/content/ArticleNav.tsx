@@ -38,7 +38,7 @@ function ArticleNav({ collection, slug }: Props) {
       setPrevious(items[currentIndex + 1] ?? null);
       setNext(items[currentIndex - 1] ?? null);
     }).catch(() => {
-      // Prev/next is a non-critical enhancement — degrade silently rather
+      // Prev/next is a non-critical enhancement - degrade silently rather
       // than surfacing an error for a missing navigation widget.
     });
 
@@ -60,8 +60,8 @@ function ArticleNav({ collection, slug }: Props) {
           to={`${base}/${previous.slug}`}
           className="group rounded-xl border border-slate-200 bg-surface p-4 transition-colors hover:border-teal-500"
         >
-          <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Previous</div>
-          <div className="text-sm font-semibold text-slate-900 group-hover:text-teal-700">{previous.title}</div>
+          <div className="mb-1 text-nano font-bold uppercase tracking-widest text-slate-500">Previous</div>
+          <div className="text-meta font-semibold text-slate-900 group-hover:text-teal-700">{previous.title}</div>
         </Link>
       ) : (
         <div />
@@ -71,8 +71,8 @@ function ArticleNav({ collection, slug }: Props) {
           to={`${base}/${next.slug}`}
           className="group rounded-xl border border-slate-200 bg-surface p-4 text-right transition-colors hover:border-teal-500"
         >
-          <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next</div>
-          <div className="text-sm font-semibold text-slate-900 group-hover:text-teal-700">{next.title}</div>
+          <div className="mb-1 text-nano font-bold uppercase tracking-widest text-slate-500">Next</div>
+          <div className="text-meta font-semibold text-slate-900 group-hover:text-teal-700">{next.title}</div>
         </Link>
       ) : (
         <div />

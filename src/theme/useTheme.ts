@@ -5,7 +5,7 @@ import { applyTheme, resolveTheme, storeTheme, systemTheme, THEME_STORAGE_KEY, t
  * Reads and writes the active theme.
  *
  * The initial state re-derives from the DOM rather than assuming a default, because the inline
- * bootstrap in index.html has already applied the correct theme before React mounts — starting
+ * bootstrap in index.html has already applied the correct theme before React mounts - starting
  * from a guess here would make the toggle show the wrong icon on first paint for anyone whose
  * theme isn't the default.
  *
@@ -26,7 +26,7 @@ export function useTheme(): { theme: Theme; toggle: () => void } {
       try {
         hasExplicitChoice = localStorage.getItem(THEME_STORAGE_KEY) !== null;
       } catch {
-        // Storage unreadable — treat as no explicit choice and follow the OS.
+        // Storage unreadable - treat as no explicit choice and follow the OS.
       }
       if (hasExplicitChoice) return;
 
@@ -54,7 +54,7 @@ export function useTheme(): { theme: Theme; toggle: () => void } {
 /**
  * Re-applies the resolved theme on mount. The inline bootstrap already did this, so this is a
  * safety net for the one case the bootstrap can't cover: a prerendered page is served with
- * whatever class the build machine had (forced to light — see scripts/prerender.mjs), and if the
+ * whatever class the build machine had (forced to light - see scripts/prerender.mjs), and if the
  * inline script were ever removed or blocked, this keeps the page correct one frame later.
  */
 export function useThemeBootstrap(): void {

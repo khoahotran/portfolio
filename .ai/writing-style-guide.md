@@ -1,7 +1,7 @@
 # Writing Style Guide
 
 The tone must be authoritative, pragmatic, and highly technical without being arrogant. Authority here comes
-from precision and honest trade-off analysis, never from claimed seniority — see `.ai/portfolio-context.md`
+from precision and honest trade-off analysis, never from claimed seniority - see `.ai/portfolio-context.md`
 "Career Stage".
 
 ## 1. Tone & Narrative Style
@@ -17,6 +17,13 @@ from precision and honest trade-off analysis, never from claimed seniority — s
   - Keep code snippets short and focused. 
   - Do not dump 100 lines of code; extract the core algorithm. 
   - Always specify the language in the fenced code block (e.g., ```go).
+- **Dashes:** Use a plain hyphen `-`, never an em dash `—` or the `&mdash;` entity. The em dash is
+  wider than it needs to be for the job it does here, and a hyphen reads the same at a glance. This
+  applies everywhere: article prose, UI copy, code comments, commit messages and the docs under
+  `.ai/`. Enforced by `npm run check:prose`.
+  - Watch the line start when rewrapping. A wrapped prose line beginning `- ` is a list item to
+    CommonMark, which can interrupt the paragraph above it. Eleven lines in this repo had exactly
+    that shape after the em dashes were replaced; each was rejoined to the line above.
 - **Callouts:** The content engine supports GitHub-style blockquote alerts (e.g., `> [!NOTE]`, `> [!WARNING]`, `> [!IMPORTANT]`). Use them for critical architectural constraints or "Lessons Learned."
 
 ## 3. Article Structure Template

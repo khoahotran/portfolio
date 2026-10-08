@@ -1,23 +1,23 @@
 /**
- * Redlock (Antirez, 2014) — a distributed-lock algorithm meant to work with N independent Redis
+ * Redlock (Antirez, 2014) - a distributed-lock algorithm meant to work with N independent Redis
  * masters instead of one, so a single node's crash can't strand a lock. A client tries to acquire
  * the same key on all N instances, one at a time, using a short per-node timeout so a down node
  * can't stall the whole attempt. It considers the lock acquired only if it won on a *majority*
  * (quorum) of instances, and only if the time it took to do so leaves enough of the lock's TTL
- * remaining to be worth anything — trying every node, even after quorum, still costs real time.
+ * remaining to be worth anything - trying every node, even after quorum, still costs real time.
  *
  * This models both halves of the actual argument, not just the acquisition step:
  *
- * 1. `attemptRedlockAcquisition` — the algorithm as specified. Real quorum arithmetic, real
+ * 1. `attemptRedlockAcquisition` - the algorithm as specified. Real quorum arithmetic, real
  *    elapsed-time accounting against a real TTL budget.
- * 2. `simulatePauseAfterAcquire` — the specific flaw Martin Kleppmann's 2016 critique centers on
+ * 2. `simulatePauseAfterAcquire` - the specific flaw Martin Kleppmann's 2016 critique centers on
  *    ("How to do distributed locking"): the lock's expiry is a clock on the *storage* nodes,
  *    completely decoupled from what the client that "holds" it is actually doing. A GC pause, a
- *    slow disk write, a descheduled VM — any stall between acquiring the lock and finishing the
- *    guarded work — can run past the TTL. The lock then expires on the storage side while the
+ *    slow disk write, a descheduled VM - any stall between acquiring the lock and finishing the
+ *    guarded work - can run past the TTL. The lock then expires on the storage side while the
  *    client still believes it holds it, and a second client can win a fresh quorum in the gap.
  *    Antirez's rebuttal is that Redlock was never meant to guarantee this without an additional
- *    fencing token checked by the resource being protected — Redlock alone only bounds *how
+ *    fencing token checked by the resource being protected - Redlock alone only bounds *how
  *    quickly* that can happen, it doesn't prevent it. Both halves are testable outputs here, not
  *    prose asserting one side of the debate.
  */
@@ -32,15 +32,15 @@ export interface NodeAcquireAttempt {
 
 export interface RedlockAcquisition {
   attempts: NodeAcquireAttempt[];
-  /** Majority of nodeCount — floor(n/2) + 1. */
+  /** Majority of nodeCount - floor(n/2) + 1. */
   quorum: number;
   acquiredCount: number;
-  /** Sum of every attempt's cost — Redlock tries every node in sequence, even after quorum, since a
+  /** Sum of every attempt's cost - Redlock tries every node in sequence, even after quorum, since a
    * later unlock needs to reach every node it might have locked. */
   elapsedMs: number;
   /** ttlMs - elapsedMs, clamped to 0. What's left of the lock's validity once acquisition itself is paid for. */
   remainingValidityMs: number;
-  /** Reached quorum AND remainingValidityMs > 0 — the two independent conditions Redlock actually requires. */
+  /** Reached quorum AND remainingValidityMs > 0 - the two independent conditions Redlock actually requires. */
   acquired: boolean;
 }
 
@@ -87,7 +87,7 @@ export interface PauseVulnerability {
   lockExpiredDuringPause: boolean;
   /**
    * Whether a second client racing for the same key could win a fresh quorum before the first
-   * client resumes. Identical to `lockExpiredDuringPause` here — the storage nodes have no idea
+   * client resumes. Identical to `lockExpiredDuringPause` here - the storage nodes have no idea
    * a pause is happening, so the instant the TTL lapses, the key is simply free again. This
    * equality *is* the finding: nothing about "client A is still running" holds the lock open.
    */
@@ -96,7 +96,7 @@ export interface PauseVulnerability {
 
 /**
  * `remainingValidityMs` must come from an already-`acquired` `RedlockAcquisition` (there is nothing
- * to pause after a failed acquisition) — callers that violate this get a thrown error, not a
+ * to pause after a failed acquisition) - callers that violate this get a thrown error, not a
  * plausible-looking result for a state that can't occur, same precondition-rejection convention as
  * `simulateBullyElection`'s dead-initiator guard.
  */

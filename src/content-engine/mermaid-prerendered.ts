@@ -2,14 +2,14 @@
  * Reuses the mermaid SVG that prerendering already produced, instead of rendering it again.
  *
  * scripts/prerender.mjs runs every diagram through mermaid and writes the resulting SVG into the
- * HTML — on the two largest pages that is most of their 185 KB. React then discards all of it on
+ * HTML - on the two largest pages that is most of their 185 KB. React then discards all of it on
  * mount (see src/boot-reveal.ts), and MarkdownContent renders each diagram again from scratch.
  * Measured on a page with four diagrams: they reappeared at 756ms, 964ms, 1072ms and 1194ms, each
  * one resizing the page as it landed.
  *
  * So the prerendered SVG was downloaded, parsed, thrown away, and recomputed. This module keeps it:
  * the markup is captured before React can delete it, and `renderMermaidInto` uses it when the
- * source matches. Two things follow — diagrams are present in the first painted frame rather than
+ * source matches. Two things follow - diagrams are present in the first painted frame rather than
  * arriving over the next second, and `mermaid.core` (634 KB) is never fetched on a first visit
  * where every diagram is already in hand.
  *
@@ -23,7 +23,7 @@ const prerendered = new Map<string, string>();
 let captured = false;
 
 export function capturePrerenderedDiagrams(): void {
-  // Must run before React's first render — createRoot deletes #root's children, and that is where
+  // Must run before React's first render - createRoot deletes #root's children, and that is where
   // the prerendered diagrams live.
   if (captured) return;
   captured = true;

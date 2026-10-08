@@ -12,7 +12,7 @@ interface Props {
  * (e.g. '/projects/aegis' -> '/portfolio/projects/aegis'), and opens external
  * links safely. Content is compiled to raw HTML by the content engine and
  * injected via dangerouslySetInnerHTML, so anchors inside it are plain DOM
- * nodes with no knowledge of Vite's `base` config — without this, every
+ * nodes with no knowledge of Vite's `base` config - without this, every
  * internal link and lab button in Markdown 404s once the site is deployed
  * under a subpath. Runs as a DOM pass (not a string transform) so it stays
  * correct for every interaction: click, middle-click, copy-link, and no-JS.
@@ -39,7 +39,7 @@ function normalizeLinks(container: HTMLElement) {
     }
 
     if (/^[a-z][a-z0-9+.-]*:/i.test(href) || href.startsWith('//')) {
-      // Other schemes (mailto:, tel:...) or protocol-relative URLs — leave alone.
+      // Other schemes (mailto:, tel:...) or protocol-relative URLs - leave alone.
       return;
     }
 
@@ -80,7 +80,7 @@ function handleLinkClick(event: MouseEvent, navigate: ReturnType<typeof useNavig
 /**
  * Wraps standalone images (a paragraph whose only child is an <img>) in a
  * <figure>, promoting `alt` to a <figcaption>, and defers their load.
- * Images inline with text are left as-is — only block-level images are
+ * Images inline with text are left as-is - only block-level images are
  * figures. `.markdown-body img` has no layout rules otherwise, so an
  * oversized screenshot would blow out the article column.
  */
@@ -113,7 +113,7 @@ function enhanceImages(container: HTMLElement) {
  * Adds a language label + copy-to-clipboard button above every
  * language-tagged code block. Fenced blocks with no language (the ASCII
  * diagrams and decision trees used throughout this content) are
- * intentionally left untouched — they get no label and no toolbar.
+ * intentionally left untouched - they get no label and no toolbar.
  */
 function enhanceCodeBlocks(container: HTMLElement) {
   const codeBlocks = container.querySelectorAll<HTMLElement>('pre > code[class*="language-"]');
@@ -189,8 +189,8 @@ function enhanceHeadingAnchors(container: HTMLElement) {
 }
 
 // Matches lucide-react's CheckCircle2 / XCircle path data (same stroke props
-// as defaultAttributes.js) so a raw ✅/❌ emoji — inconsistent across
-// platforms/fonts and unreadable to some screen readers — renders as the same
+// as defaultAttributes.js) so a raw ✅/❌ emoji - inconsistent across
+// platforms/fonts and unreadable to some screen readers - renders as the same
 // icon already used elsewhere in the app (e.g. SagaStateMachinePage), instead
 // of a second, one-off visual language.
 const CHECK_SVG =
@@ -206,7 +206,7 @@ const STATUS_MARK_PATTERN = /[✅❌]\s?/g;
  * some platforms render inconsistently. Skips code/pre (a real ✅ inside a
  * code sample should stay literal text) and `.mermaid-diagram` (its label
  * text lives in a `data-diagram` source string at this point, not text nodes
- * — mermaid's own SVG output can't host an embedded lucide icon).
+ * - mermaid's own SVG output can't host an embedded lucide icon).
  */
 function enhanceStatusMarks(container: HTMLElement) {
   const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
@@ -280,7 +280,7 @@ function MarkdownContent({ html }: Props) {
 
   // useLayoutEffect, not useEffect: a diagram whose SVG was already produced by prerendering is
   // restored synchronously (see content-engine/mermaid-prerendered.ts), and useEffect runs *after*
-  // the browser paints — which showed the article, then slotted every diagram in 184ms later and
+  // the browser paints - which showed the article, then slotted every diagram in 184ms later and
   // pushed the page down. Running before paint puts them in the same first frame as the text. The
   // uncached path is unaffected: it is async either way, so this only moves when its promise starts.
   useLayoutEffect(() => {

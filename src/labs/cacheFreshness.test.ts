@@ -24,7 +24,7 @@ describe('simulateCachePolicy', () => {
   });
 
   describe('ttl-blocking', () => {
-    it('errors once TTL expires if the origin is down at that moment — no fallback exists', () => {
+    it('errors once TTL expires if the origin is down at that moment - no fallback exists', () => {
       const result = simulateCachePolicy('ttl-blocking', {
         ...BASE,
         outageStartTick: 0,
@@ -38,7 +38,7 @@ describe('simulateCachePolicy', () => {
   });
 
   describe('stale-while-revalidate', () => {
-    it('never blocks the request — latency stays fast even while serving stale content in the grace window', () => {
+    it('never blocks the request - latency stays fast even while serving stale content in the grace window', () => {
       const result = simulateCachePolicy('stale-while-revalidate', {
         ...BASE,
         swrWindowTicks: 20,
@@ -48,7 +48,7 @@ describe('simulateCachePolicy', () => {
       });
       const inGraceWindow = result.requests.find((r) => r.tick === 15)!;
       expect(inGraceWindow.error).toBe(false);
-      expect(inGraceWindow.latencyMs).toBe(1); // fast — SWR never pays origin latency to serve stale
+      expect(inGraceWindow.latencyMs).toBe(1); // fast - SWR never pays origin latency to serve stale
     });
 
     it('does not error during an outage that ttl-blocking would error on, given the same timeline', () => {
@@ -88,11 +88,11 @@ describe('simulateCachePolicy', () => {
   });
 
   describe('stale-if-error', () => {
-    it('always attempts the origin once expired — pays origin latency even when it falls back to stale', () => {
+    it('always attempts the origin once expired - pays origin latency even when it falls back to stale', () => {
       const result = simulateCachePolicy('stale-if-error', {
         ...BASE,
         originUpdateIntervalTicks: 8, // short enough that the origin's true content actually
-        // changes between tick 0 (when the cache was warmed) and tick 15 (the fallback request) —
+        // changes between tick 0 (when the cache was warmed) and tick 15 (the fallback request) -
         // without a real version change, "served stale" and "served fresh" would be indistinguishable.
         sieWindowTicks: 20,
         outageStartTick: 0,
@@ -119,7 +119,7 @@ describe('simulateCachePolicy', () => {
     });
   });
 
-  it('is fully deterministic — same inputs, same result, no randomness', () => {
+  it('is fully deterministic - same inputs, same result, no randomness', () => {
     const opts: CacheSimOptions = { ...BASE, swrWindowTicks: 10, sieWindowTicks: 10 };
     const a = simulateCachePolicy('stale-while-revalidate', opts);
     const b = simulateCachePolicy('stale-while-revalidate', opts);

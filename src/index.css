@@ -1,8 +1,25 @@
+/* Self-hosted variable fonts. Imported here rather than linked from a CDN in index.html so the
+ * boot path owns no third-party request: the inline boot script in index.html hides #root until
+ * React commits, and a blocking stylesheet from another origin would sit in front of that with a
+ * failure mode nothing in this repo controls.
+ *
+ * All three ship a `vietnamese` subset, which is a hard requirement rather than a nicety - the
+ * largest piece of type on the site is "Trần Nguyễn Anh Khoa", and a face without those glyphs
+ * either drops the diacritics or stacks them wrong. Verified present in node_modules before
+ * choosing these packages. Browsers fetch only the subsets a page actually uses, via unicode-range.
+ *
+ * `font-display: swap` is what the packages already set: text paints immediately in the fallback
+ * and reflows once the face arrives. scripts/check-responsive.mjs already observes that reflow (see
+ * its ResizeObserver note), so it is a known, handled behaviour rather than a new one. */
+@import '@fontsource-variable/inter/index.css';
+@import '@fontsource-variable/inter-tight/index.css';
+@import '@fontsource-variable/jetbrains-mono/index.css';
+
 /* ── Design tokens ────────────────────────────────────────────────────────────
  *
  * The Tailwind palettes in tailwind.config.js resolve to these variables, so every existing
  * `bg-slate-50` / `text-slate-900` / `border-teal-200` class is theme-aware without being rewritten
- * (885 colour classes across 43 files — see that file's header for why this route was taken).
+ * (885 colour classes across 43 files - see that file's header for why this route was taken).
  *
  * Values are space-separated RGB channels, not hex, because Tailwind composes them as
  * `rgb(var(--c-x) / <alpha-value>)` so opacity modifiers keep working.
@@ -13,8 +30,8 @@
  *
  * DARK mirrors each hue ramp (50<->900 … 500<->500), which maps tinted `-50/-100` surfaces and
  * `-600/-700` text onto their dark-mode equivalents automatically. The neutral ramp is hand-tuned
- * instead: a mirror would send slate-400 — 34 uses, already flagged as borderline contrast in
- * .ai/audit-followups.md item 2 — to #475569, which is unreadable on a #020617 page. Steps 400-600
+ * instead: a mirror would send slate-400 - 34 uses, already flagged as borderline contrast in
+ * .ai/audit-followups.md item 2 - to #475569, which is unreadable on a #020617 page. Steps 400-600
  * are pinned to values that clear AA on the dark surfaces.
  * ─────────────────────────────────────────────────────────────────────────── */
 
@@ -98,21 +115,21 @@
     --c-indigo-800: 55 48 163;
     --c-indigo-900: 49 46 129;
 
-  /* Role tokens — see the `surface`/`inverse`/`panel`/`accent` note in tailwind.config.js */
+  /* Role tokens - see the `surface`/`inverse`/`panel`/`accent` note in tailwind.config.js */
   --c-surface: 255 255 255;
   --c-surface-fg: 15 23 42;
   --c-inverse: 15 23 42;
   --c-inverse-fg: 255 255 255;
   --c-panel: 15 23 42;
   --c-panel-fg: 226 232 240;
-  /* teal-700, not teal-600: white on teal-600 measures 3.74:1 and fails AA — see
+  /* teal-700, not teal-600: white on teal-600 measures 3.74:1 and fails AA - see
    * `npm run check:contrast`. Same hue, legible label. */
   --c-accent: 15 118 110;
   --c-accent-fg: 255 255 255;
   --c-danger: 225 29 72;
   --c-danger-fg: 255 255 255;
 
-  /* Code surface — deliberately identical in both themes. The syntax palette below is One Dark,
+  /* Code surface - deliberately identical in both themes. The syntax palette below is One Dark,
    * tuned for a dark background; letting `pre` follow the inverting slate ramp would put those
    * light token colours on a near-white surface and make every code block unreadable. A code block
    * is a fixed dark surface, the same way `panel` is. */
@@ -124,17 +141,32 @@
   --c-code-chrome-fg: 203 213 225;
   --c-code-accent: 45 212 191;
 
-  /* Diagram surface — also identical in both themes, for the mirror-image reason to the code
-   * surface above. Mermaid is initialised with `theme: 'neutral'` (src/content-engine/mermaid.ts)
-   * and 20 `classDef` rules across 12 content files hardcode light fills like `fill:#f0fdf4`.
-   * Switching Mermaid to its dark theme would pair its light label colour with those light fills
-   * and make the labels unreadable, and re-theming 20 classDefs in Markdown to follow a CSS
-   * variable is not something Mermaid supports. So diagrams keep a light card in both themes,
-   * which also means a diagram looks the same to a reader whichever theme they are in. */
+  /* Diagram surface and node palette.
+   *
+   * This used to be pinned to the light values in both themes, with a note saying a dark diagram
+   * was not reachable: mermaid writes `classDef` fills as inline `!important`, which no stylesheet
+   * can override, so a dark card would have carried light nodes and near-black labels. That was
+   * true of the setup as it stood, and false as a general claim - the fills were hardcoded in
+   * Markdown, and Markdown is editable. The 16 classDef rules now carry only their class name, the
+   * colour lives here, and the diagram follows the page.
+   *
+   * Four roles, read off the class names the articles already used: own code, data store, outside
+   * the system, async work. */
   --c-diagram-bg: 248 250 252;
   --c-diagram-border: 226 232 240;
   --c-diagram-skeleton-a: 241 245 249;
   --c-diagram-skeleton-b: 226 232 240;
+  --c-diagram-text: 15 23 42;
+  --c-diagram-line: 100 116 139;
+  --c-diagram-cluster: 241 245 249;
+  --c-diagram-own: 240 253 244;
+  --c-diagram-own-line: 134 239 172;
+  --c-diagram-data: 239 246 255;
+  --c-diagram-data-line: 147 197 253;
+  --c-diagram-outside: 248 250 252;
+  --c-diagram-outside-line: 203 213 225;
+  --c-diagram-async: 254 240 138;
+  --c-diagram-async-line: 253 224 71;
 }
 
 .dark {
@@ -229,7 +261,7 @@
   --c-danger: 244 63 94;
   --c-danger-fg: 76 5 25;
 
-  /* Identical to the light values on purpose — see the note in :root. */
+  /* Identical to the light values on purpose - see the note in :root. */
   --c-code-bg: 15 23 42;
   --c-code-fg: 226 232 240;
   --c-code-border: 51 65 85;
@@ -238,11 +270,24 @@
   --c-code-chrome-fg: 203 213 225;
   --c-code-accent: 45 212 191;
 
-  /* Identical to the light values on purpose — see the note in :root. */
-  --c-diagram-bg: 248 250 252;
-  --c-diagram-border: 226 232 240;
-  --c-diagram-skeleton-a: 241 245 249;
-  --c-diagram-skeleton-b: 226 232 240;
+  /* The diagram card now follows the page - see the note in :root for why it could not before.
+   * Fills are deep, strokes are the mid step of the same hue so the role still reads, and labels
+   * invert. Checked against check:contrast rather than by eye. */
+  --c-diagram-bg: 15 23 42;
+  --c-diagram-border: 51 65 85;
+  --c-diagram-skeleton-a: 30 41 59;
+  --c-diagram-skeleton-b: 51 65 85;
+  --c-diagram-text: 226 232 240;
+  --c-diagram-line: 148 163 184;
+  --c-diagram-cluster: 30 41 59;
+  --c-diagram-own: 20 59 44;
+  --c-diagram-own-line: 52 148 103;
+  --c-diagram-data: 23 48 85;
+  --c-diagram-data-line: 59 118 191;
+  --c-diagram-outside: 30 41 59;
+  --c-diagram-outside-line: 100 116 139;
+  --c-diagram-async: 68 56 12;
+  --c-diagram-async-line: 161 134 32;
 }
 
 @tailwind base;
@@ -254,7 +299,42 @@ html {
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  @apply bg-slate-50 text-slate-900 antialiased font-sans;
+}
+
+/* Tabular figures, opt-in per element rather than on `body`.
+   Setting `font-variant-numeric: tabular-nums` globally looked right until it was rendered: in
+   Inter the `tnum` feature also widens U+002D to a digit cell, so ordinary prose came out as
+   "high - performance" and "event - driven". The need is real but narrow - a lab re-rendering a
+   metric on every slider step jitters sideways with proportional digits - so it belongs on the
+   number, not on the document. `text-rendering: optimizeLegibility` went with it: Inter kerns
+   correctly without it, and it buys nothing here but layout cost. */
+.tabular-figures {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Headings take the display face. Applied here rather than per component because 43 files set
+   heading classes by hand, and `font-display` on each of them is the kind of per-call-site repeat
+   this token layer exists to end. A component that genuinely wants body type on a heading can
+   still say `font-sans`. */
+h1,
+h2,
+h3 {
+  @apply font-display;
+}
+
+/* Honour the OS-level setting. Nothing in src/ checked this before, while `animate-fade-in` was
+   applied to nearly every <main> - so a reader who had asked their system for less motion still
+   got the full set. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @layer utilities {
@@ -321,7 +401,7 @@ body {
 }
 
 /* Constrain the text flow to an optimal reading measure (~70ch) without
-   capping tables, code blocks, figures, or diagrams — those stay full width
+   capping tables, code blocks, figures, or diagrams - those stay full width
    so wide content (e.g. comparison tables) still gets the available column. */
 .markdown-body p,
 .markdown-body li,
@@ -348,11 +428,11 @@ body {
 
 /*
  * Linked inline code (e.g. a Markdown link wrapping a `code span`) sits on the inline-code
- * background (--c-slate-200) instead of the page background, and inline code is 0.86em smaller —
+ * background (--c-slate-200) instead of the page background, and inline code is 0.86em smaller -
  * both drop it below the "large text" AA exemption. teal-700 measures 5.47:1 on the page background
  * but only 4.44:1 on slate-200 at that smaller size, just under the 4.5:1 threshold. Caught by
  * `npm run check:contrast` on the first article that ever used this pattern (see
- * .ai/decision-log.md — the article in question is literally about measuring contrast).
+ * .ai/decision-log.md - the article in question is literally about measuring contrast).
  * teal-800 clears it with real margin (6.15:1) without changing the far more common case of a
  * plain link on the page background, which was already fine.
  */
@@ -361,23 +441,38 @@ body {
 }
 
 /* ── Back-navigation links (ArticleHeader, LabBackLink) ──────────────────
-   Previously a bare inline `text-xs` link — a ~24px-tall tap target next to
+   Previously a bare inline `text-micro` link - a ~24px-tall tap target next to
    the site's main content, easy to miss or mis-tap on mobile (WCAG 2.5.5
    recommends 44x44px). One shared rule so every "back" link updates
    together instead of drifting per-component. The negative margin keeps the
    larger padded box optically aligned with the content edge above/below it. */
 .btn-back {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  min-height: 2.75rem;
-  margin: -0.5rem 0 -0.5rem -0.75rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.6rem;
+  margin-left: -0.5rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.5rem;
   font-size: 0.8rem;
   font-weight: 600;
   color: rgb(var(--c-teal-700));
   transition: background-color 0.15s, color 0.15s;
+}
+
+/* The 44px touch target, carried by a hit area rather than by the element's own box.
+ *
+ * This used to be `min-height: 2.75rem` with negative vertical margins. The margins cancelled the
+ * *layout* space, but the element still painted 44px tall, so the hover background reached down
+ * over the heading underneath it. Giving the padding box the height of its text and extending only
+ * the hit area keeps the target size without painting anything outside the label. */
+.btn-back::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: 2.75rem;
+  transform: translateY(-50%);
 }
 
 .btn-back:hover {
@@ -391,7 +486,7 @@ body {
 
 /* ── Pill toggle button (lab pause/resume controls) ──────────────────────
    Same small rounded-pill treatment used for every play/pause style toggle
-   across the interactive labs — one place to restyle instead of editing
+   across the interactive labs - one place to restyle instead of editing
    each lab page's className string individually. */
 .btn-pill {
   display: inline-flex;
@@ -412,7 +507,7 @@ body {
 }
 
 /* CTA buttons embedded as raw HTML (e.g. "View Interactive Benchmark" links to a
-   /labs/<id> lab) set their own Tailwind `text-white` — without this override the
+   /labs/<id> lab) set their own Tailwind `text-white` - without this override the
    blanket `.markdown-body a` rule above wins the cascade (equal specificity, later
    source order) and renders them teal-on-teal, invisible against their own
    teal/slate background. */
@@ -478,7 +573,7 @@ body {
 
 /* ── Code block toolbar (language label + copy button), added by
    MarkdownContent's enhanceCodeBlocks. Only present on language-tagged
-   blocks — ASCII-diagram fences have no toolbar and keep the padding above. */
+   blocks - ASCII-diagram fences have no toolbar and keep the padding above. */
 
 .markdown-body pre.has-toolbar {
   padding-top: 2.6rem;
@@ -536,7 +631,7 @@ body {
 
 /* ── Syntax highlighting (rehype-highlight / highlight.js token classes) ──
    markdown.ts runs rehype-highlight, which emits `.hljs-*` scope classes,
-   but no theme ever styled them — every language-tagged block rendered in
+   but no theme ever styled them - every language-tagged block rendered in
    one flat color. Palette tuned for the dark `pre` surface above. */
 
 .hljs-comment,
@@ -628,7 +723,7 @@ body {
 /* ── GFM-style callouts (`> [!NOTE]`, `> [!WARNING]`, ...) ──────────────
    Produced by the rehypeCallout plugin in markdown.ts, which replaces the
    marked blockquote with one of these divs. Not nested under
-   `.markdown-body blockquote` above — callouts are not italic quotes. */
+   `.markdown-body blockquote` above - callouts are not italic quotes. */
 
 .markdown-body .callout {
   margin: 1.2rem 0;
@@ -751,7 +846,7 @@ body {
 }
 
 /* ── Table of contents (TableOfContents.tsx) ─────────────────────────────
-   Was flat text-sm links with only a color/weight change on the active item —
+   Was flat text-meta links with only a color/weight change on the active item -
    hard to scan and gave depth-2 vs depth-3 headings no visible rank. A
    continuous left rail plus a solid active segment reads as a position
    marker; sub-headings get extra indent and a lighter, smaller face so the
@@ -795,56 +890,24 @@ body {
   color: rgb(var(--c-teal-700));
 }
 
+/* Display math scrolls rather than widening the page.
+ *
+ * KaTeX lays a display block out at its natural width, and `\text{}` runs render in the document
+ * font - so changing the body face to Inter, which is wider than the previous fallback, pushed the
+ * formula in throughput-simulation-notes to 350px against a 320px viewport. check:responsive caught
+ * it. The font change is what exposed this, but the missing rule was always the bug: a formula
+ * wider than the phone is a scroll container, never a reason for the whole page to scroll
+ * sideways. */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
+}
+
 /* ── Mermaid diagram container ─────────────────────────────────────────── */
 
-/* Header nav strip — see useScrollEdges() in SiteHeader.tsx.
- *
- * The strip scrolls horizontally on narrow screens. Its native scrollbar rendered on top of the
- * link row and covered the labels, so it is hidden and replaced by a fade at whichever edge
- * actually has content scrolled out of view. The data-scroll-* attributes are set from the real
- * scrollLeft, so on a wide screen where everything fits neither fade appears and no link is dimmed.
- *
- * Hiding a scrollbar removes a visible affordance, so the fade has to carry that job on its own —
- * and the strip stays a real scroll container, so wheel, trackpad, touch, and keyboard (the links
- * are focusable, and focus scrolls them into view) all still work. */
-.nav-strip {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* legacy Edge */
-  --nav-fade: 1.75rem;
-}
 
-.nav-strip::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
-}
-
-.nav-strip[data-scroll-end] {
-  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--nav-fade)), transparent 100%);
-  mask-image: linear-gradient(to right, #000 calc(100% - var(--nav-fade)), transparent 100%);
-}
-
-.nav-strip[data-scroll-start] {
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--nav-fade));
-  mask-image: linear-gradient(to right, transparent 0, #000 var(--nav-fade));
-}
-
-.nav-strip[data-scroll-start][data-scroll-end] {
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    #000 var(--nav-fade),
-    #000 calc(100% - var(--nav-fade)),
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    #000 var(--nav-fade),
-    #000 calc(100% - var(--nav-fade)),
-    transparent 100%
-  );
-}
-
-/* Boot curtain — see src/boot-reveal.ts.
+/* Boot curtain - see src/boot-reveal.ts.
  *
  * The prerendered page sits in #root for crawlers, but React discards it on mount and every route
  * is lazy(), so painting it would show real content that then vanishes behind a spinner. Hiding
@@ -890,6 +953,92 @@ body {
   height: auto;
 }
 
+/* Diagram node colours, by role rather than by hex.
+ *
+ * The 16 `classDef` rules in content/ used to carry literal light fills (`fill:#f0fdf4`), which
+ * mermaid writes onto each node as an inline `style` with `!important`. Nothing in a stylesheet can
+ * override that - inline and author `!important` land in the same cascade bucket, and the style
+ * attribute wins - so the whole diagram stayed light while the page around it went dark, and the
+ * only honest options were to leave it or to change the content. This is the change: the content
+ * keeps the class names, which carry the meaning, and loses the hex, which was presentation sitting
+ * in a Markdown file.
+ *
+ * Ten class names across five articles collapse to four roles:
+ *   own code  - service, core, api, mod
+ *   data      - db, storage
+ *   outside   - external, frontend
+ *   async     - queue, compute
+ *
+ * `!important` is needed here because mermaid emits its base node styles inside the SVG under an
+ * id selector (`#mermaid-1 .node rect`), which outranks any class selector we can write. */
+.mermaid-diagram .node.service > rect,
+.mermaid-diagram .node.core > rect,
+.mermaid-diagram .node.api > rect,
+.mermaid-diagram .node.mod > rect {
+  fill: rgb(var(--c-diagram-own)) !important;
+  stroke: rgb(var(--c-diagram-own-line)) !important;
+}
+
+.mermaid-diagram .node.db > rect,
+.mermaid-diagram .node.storage > rect {
+  fill: rgb(var(--c-diagram-data)) !important;
+  stroke: rgb(var(--c-diagram-data-line)) !important;
+}
+
+.mermaid-diagram .node.external > rect,
+.mermaid-diagram .node.frontend > rect {
+  fill: rgb(var(--c-diagram-outside)) !important;
+  stroke: rgb(var(--c-diagram-outside-line)) !important;
+}
+
+.mermaid-diagram .node.queue > rect,
+.mermaid-diagram .node.compute > rect {
+  fill: rgb(var(--c-diagram-async)) !important;
+  stroke: rgb(var(--c-diagram-async-line)) !important;
+}
+
+/* Everything mermaid draws in near-black against its own light theme: node labels, edge labels,
+ * cluster titles, and the edge lines and arrowheads themselves. On a dark card these are the part
+ * that actually becomes unreadable, and they are what made "switch mermaid to its dark theme" the
+ * wrong fix - that would have paired its light label colour with the light fills above. */
+.mermaid-diagram .node .nodeLabel,
+.mermaid-diagram .node foreignObject div,
+.mermaid-diagram .edgeLabel,
+.mermaid-diagram .edgeLabel p,
+.mermaid-diagram .cluster-label .nodeLabel {
+  color: rgb(var(--c-diagram-text)) !important;
+  fill: rgb(var(--c-diagram-text)) !important;
+}
+
+/* Edge labels sit in a foreignObject, so the plate behind them is an HTML `background-color` on
+ * `.edgeLabel` and on the `<p>` inside it, not only the `<rect>`. Overriding the rect alone left a
+ * white pill with light text on it in dark mode, which the screenshot showed and the token did
+ * not. */
+.mermaid-diagram .edgeLabel,
+.mermaid-diagram .edgeLabel p,
+.mermaid-diagram .edgeLabel rect,
+.mermaid-diagram .edgeLabel .labelBkg,
+.mermaid-diagram .labelBkg {
+  fill: rgb(var(--c-diagram-bg)) !important;
+  background-color: rgb(var(--c-diagram-bg)) !important;
+}
+
+.mermaid-diagram .edgePath .path,
+.mermaid-diagram .flowchart-link {
+  stroke: rgb(var(--c-diagram-line)) !important;
+}
+
+.mermaid-diagram .marker,
+.mermaid-diagram .marker path {
+  fill: rgb(var(--c-diagram-line)) !important;
+  stroke: rgb(var(--c-diagram-line)) !important;
+}
+
+.mermaid-diagram .cluster > rect {
+  fill: rgb(var(--c-diagram-cluster)) !important;
+  stroke: rgb(var(--c-diagram-outside-line)) !important;
+}
+
 .mermaid-diagram .mermaid-error {
   background: rgb(254 242 242);
   border: 1px solid rgb(254 202 202);
@@ -926,7 +1075,7 @@ body {
  *
  * Everything expressed through the tokenised Tailwind palettes flips automatically (see the token
  * block at the top of this file). What is left are the rules that hardcode a hue outside those
- * seven palettes — the five GitHub callout types use blue/purple/green/yellow/red — plus two
+ * seven palettes - the five GitHub callout types use blue/purple/green/yellow/red - plus two
  * status colours. Those get explicit overrides here rather than four more variable ramps that
  * nothing else would use.
  *
@@ -992,11 +1141,11 @@ body {
  * utility string embedded in Markdown, and they were broken twice over:
  *
  *  1. Tailwind never scanned `content/`, so `bg-teal-600` / `bg-slate-900` generated no CSS at all
- *     and the buttons rendered as white text on the page background — invisible. (Fixed by adding
+ *     and the buttons rendered as white text on the page background - invisible. (Fixed by adding
  *     the glob in tailwind.config.js.)
  *  2. Once the background did generate, `.markdown-body a` (specificity 0,1,1) still beat the
  *     `.text-accent-fg` utility (0,1,0), so the label kept the link colour and measured 1:1 in
- *     light and 1.2:1 in dark — see `npm run check:contrast`.
+ *     light and 1.2:1 in dark - see `npm run check:contrast`.
  *
  * A component class fixes the specificity properly instead of fighting it, and collapses eleven
  * copies of an unmaintainable class string down to one name per variant.

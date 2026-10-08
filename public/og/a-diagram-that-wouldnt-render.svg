@@ -11,5 +11,5 @@
   <text x="72" y="260" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Field Note: A Diagram That</text>
   <text x="72" y="324" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Wouldn&apos;t Render</text>
   <text x="72" y="414" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">A sequence diagram in a new case study failed to parse.</text>
-  <text x="72" y="454" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">The cause wasn&apos;t the character I suspected first — and…</text>
+  <text x="72" y="454" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">The cause wasn&apos;t the character I suspected first - and…</text>
 </svg>

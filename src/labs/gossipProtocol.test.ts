@@ -7,14 +7,14 @@ describe('simulateGossip', () => {
     expect(simulateGossip(-1, 2, 10)).toEqual([]);
   });
 
-  it('stalls immediately when fanout is 0 — patient zero never pushes', () => {
+  it('stalls immediately when fanout is 0 - patient zero never pushes', () => {
     const rounds = simulateGossip(10, 0, 10);
     expect(rounds).toEqual([]);
   });
 
   it('treats a negative fanout as zero rather than "almost everyone"', () => {
     // Regression test: `candidates.slice(0, fanout)` with a negative fanout means "everything
-    // except the last N elements" in JS, not "nothing" — a real bug this exact case caught before
+    // except the last N elements" in JS, not "nothing" - a real bug this exact case caught before
     // the `Math.max(0, ...)` clamp was added. Unreachable via the shipped lab (slider min is 0),
     // but pickRandomPeers/simulateGossip are exported and used directly in this test.
     const rounds = simulateGossip(10, -1, 10);
@@ -34,7 +34,7 @@ describe('simulateGossip', () => {
     const rounds = simulateGossip(nodeCount, 3, 30);
     const last = rounds[rounds.length - 1];
     expect(last.infectedCount).toBe(nodeCount);
-    // O(log n) convergence is the whole point of push gossip — for n=50 this should be well
+    // O(log n) convergence is the whole point of push gossip - for n=50 this should be well
     // under a linear number of rounds, not just "eventually" under the generous 30-round cap.
     expect(rounds.length).toBeLessThan(15);
   });
@@ -69,7 +69,7 @@ describe('simulateGossip', () => {
   });
 
   it('respects maxRounds as a hard cap even if not fully converged', () => {
-    // fanout 1 on a large population, capped very low — should not silently run past maxRounds.
+    // fanout 1 on a large population, capped very low - should not silently run past maxRounds.
     const rounds = simulateGossip(200, 1, 2);
     expect(rounds.length).toBeLessThanOrEqual(2);
   });

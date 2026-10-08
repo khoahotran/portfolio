@@ -3,20 +3,20 @@ title: "gRPC Service Mesh in Go: Designing the Aegis Auth Platform"
 date: "2026-06-28"
 tags: ["go", "grpc", "distributed-systems", "security", "opentelemetry", "api-design"]
 related: ["projects/aegis", "system-design/designing-a-multi-service-auth-platform", "research/distributed-tracing-with-opentelemetry-and-jaeger", "experiments/grpc-vs-rest-when-the-smaller-payload-loses"]
-summary: "A walkthrough of Aegis — a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation."
+summary: "A walkthrough of Aegis - a modular auth platform built on gRPC inter-service communication, a GraphQL gateway, Kafka audit logging, and full OpenTelemetry trace propagation."
 ---
 
 ## Why gRPC for an Auth Platform?
 
 When designing **Aegis**, the first question was: why gRPC over REST for internal service communication?
 
-The answer is schema contracts. In a security-sensitive system, the worst possible outcome is two services silently disagreeing about the shape of an authorization request. With REST and JSON, a field rename or type change ships invisibly. With gRPC and Protocol Buffers, the compiler rejects it — the contract is enforced at build time.
+The answer is schema contracts. In a security-sensitive system, the worst possible outcome is two services silently disagreeing about the shape of an authorization request. With REST and JSON, a field rename or type change ships invisibly. With gRPC and Protocol Buffers, the compiler rejects it - the contract is enforced at build time.
 
 Beyond contracts, gRPC gives us:
-- **Multiplexed HTTP/2 streams** — multiple in-flight RPC calls on a single connection
-- **Bidirectional streaming** — useful for token refresh event propagation
-- **Built-in deadlines** — every call carries a timeout, preventing runaway goroutines
-- **Interceptor chains** — a clean place to inject auth, tracing, and retry logic without polluting business code
+- **Multiplexed HTTP/2 streams** - multiple in-flight RPC calls on a single connection
+- **Bidirectional streaming** - useful for token refresh event propagation
+- **Built-in deadlines** - every call carries a timeout, preventing runaway goroutines
+- **Interceptor chains** - a clean place to inject auth, tracing, and retry logic without polluting business code
 
 ---
 
@@ -27,7 +27,7 @@ Aegis is composed of four services. Each owns a distinct domain responsibility w
 ```mermaid
 graph TD
     Client["External Client\n(Web / Mobile)"]
-    GW["API Gateway\n(GraphQL — gqlgen)"]
+    GW["API Gateway\n(GraphQL - gqlgen)"]
     IS["Identity Service\n(User registration, JWT issuance)"]
     PS["Policy Service\n(RBAC evaluation, Redis cache)"]
     AS["Audit Service\n(Kafka consumer → PostgreSQL)"]
@@ -48,7 +48,7 @@ graph TD
     GW & IS & PS & AS -->|OTel traces| Jaeger
 ```
 
-> **Design principle:** The gateway is the only component that speaks to external clients. Internal services have no HTTP surface — only gRPC ports. This makes lateral movement from the external network impossible without going through the gateway's auth layer.
+> **Design principle:** The gateway is the only component that speaks to external clients. Internal services have no HTTP surface - only gRPC ports. This makes lateral movement from the external network impossible without going through the gateway's auth layer.
 
 ---
 
@@ -134,7 +134,7 @@ message EvaluateResponse {
 
 ## The Interceptor Chain
 
-gRPC interceptors are middleware for RPC calls. We stack three interceptors on every service — handling authentication, tracing, and panic recovery — without touching business logic:
+gRPC interceptors are middleware for RPC calls. We stack three interceptors on every service - handling authentication, tracing, and panic recovery - without touching business logic:
 
 ```go
 package server
@@ -152,7 +152,7 @@ import (
 // NewServer builds a gRPC server with the standard interceptor stack.
 func NewServer(jwtSecret []byte) *grpc.Server {
     return grpc.NewServer(
-        // 1. OpenTelemetry tracing — injects span context into every RPC
+        // 1. OpenTelemetry tracing - injects span context into every RPC
         grpc.StatsHandler(otelgrpc.NewServerHandler()),
 
         // 2. Chain of unary interceptors
@@ -223,7 +223,7 @@ func recoveryInterceptor(
 
 ## OpenTelemetry Trace Propagation
 
-Every service initializes the OTel SDK at startup and exports traces to Jaeger. Trace context is automatically propagated across gRPC calls via the `otelgrpc` handler — no manual span passing required:
+Every service initializes the OTel SDK at startup and exports traces to Jaeger. Trace context is automatically propagated across gRPC calls via the `otelgrpc` handler - no manual span passing required:
 
 ```go
 package telemetry
@@ -291,7 +291,7 @@ This makes tracing authentication failures down to exact database query latency 
 
 ## Kafka Audit Log: At-Least-Once Delivery
 
-Every authentication event (login, failed attempt, token refresh, permission denial) is published to a Kafka topic and consumed by the Audit Service. Because Kafka guarantees at-least-once delivery, the consumer should be idempotent to avoid duplicate audit rows on redelivery. The snippet below illustrates a standard way to do that with an `EventID`-keyed upsert — it is a reference pattern, not a description of the consumer currently committed to the Aegis repository (see the note after the code):
+Every authentication event (login, failed attempt, token refresh, permission denial) is published to a Kafka topic and consumed by the Audit Service. Because Kafka guarantees at-least-once delivery, the consumer should be idempotent to avoid duplicate audit rows on redelivery. The snippet below illustrates a standard way to do that with an `EventID`-keyed upsert - it is a reference pattern, not a description of the consumer currently committed to the Aegis repository (see the note after the code):
 
 ```go
 package audit
@@ -323,7 +323,7 @@ func (c *Consumer) Run(ctx context.Context) {
         msg, err := c.reader.ReadMessage(ctx)
         if err != nil {
             if ctx.Err() != nil {
-                return // Context cancelled — clean shutdown
+                return // Context cancelled - clean shutdown
             }
             c.logger.Error("kafka read error", zap.Error(err))
             continue
@@ -347,13 +347,13 @@ func (c *Consumer) Run(ctx context.Context) {
 }
 ```
 
-> **Current implementation vs. this snippet:** the Aegis repository's actual consumer, `consumer.go` in the audit service, does not yet implement this deduplication step — it performs a plain insert with no conflict handling, and the `AuditLog` table has no `EventID` or other field to key a conflict on. The pattern above is the standard, recommended way to close that gap; it is not a description of the code currently committed.
+> **Current implementation vs. this snippet:** the Aegis repository's actual consumer, `consumer.go` in the audit service, does not yet implement this deduplication step - it performs a plain insert with no conflict handling, and the `AuditLog` table has no `EventID` or other field to key a conflict on. The pattern above is the standard, recommended way to close that gap; it is not a description of the code currently committed.
 
 ---
 
 ## Token Bucket Rate Limiting
 
-The gateway enforces per-user rate limiting using Redis. The snippet below illustrates a token-bucket pattern implemented as an atomic Lua script — each user gets 100 tokens refilled per minute, and the script-level atomicity prevents race conditions under concurrent load. This is a reference pattern, not a description of the limiter currently committed to the Aegis repository (see the note after the code):
+The gateway enforces per-user rate limiting using Redis. The snippet below illustrates a token-bucket pattern implemented as an atomic Lua script - each user gets 100 tokens refilled per minute, and the script-level atomicity prevents race conditions under concurrent load. This is a reference pattern, not a description of the limiter currently committed to the Aegis repository (see the note after the code):
 
 ```go
 package ratelimit
@@ -419,13 +419,13 @@ func (l *Limiter) Allow(ctx context.Context, subjectID string) (bool, error) {
 }
 ```
 
-> **Current implementation vs. this snippet:** the Aegis repository's actual rate limiter, `ratelimit.go` in the shared rate-limit package, is not a token bucket — it's a simpler Redis `INCR`/`EXPIRE` fixed-window counter (100 requests/minute per IP, 1000/minute per user). Both approaches stop the same class of credential-stuffing abuse; the trade-off is precision, not correctness — a fixed window can allow a short burst right at the window boundary that a token bucket smooths out. The Lua-scripted token bucket above is the more precise pattern, not the code currently running.
+> **Current implementation vs. this snippet:** the Aegis repository's actual rate limiter, `ratelimit.go` in the shared rate-limit package, is not a token bucket - it's a simpler Redis `INCR`/`EXPIRE` fixed-window counter (100 requests/minute per IP, 1000/minute per user). Both approaches stop the same class of credential-stuffing abuse; the trade-off is precision, not correctness - a fixed window can allow a short burst right at the window boundary that a token bucket smooths out. The Lua-scripted token bucket above is the more precise pattern, not the code currently running.
 
 ---
 
 ## Performance Characteristics
 
-These figures describe the architecture's intended latency budget — design targets and expected ranges derived from the components involved (a Redis lookup, an intentionally-tuned Argon2id cost parameter, a Kafka consumer's poll cadence), not the output of a controlled load test. No load-testing tool, request volume, hardware environment, or percentile breakdown is claimed for these numbers.
+These figures describe the architecture's intended latency budget - design targets and expected ranges derived from the components involved (a Redis lookup, an intentionally-tuned Argon2id cost parameter, a Kafka consumer's poll cadence), not the output of a controlled load test. No load-testing tool, request volume, hardware environment, or percentile breakdown is claimed for these numbers.
 
 | Component | Metric | Value |
 |:---|:---|:---|
@@ -435,7 +435,7 @@ These figures describe the architecture's intended latency budget — design tar
 | **JWT validation (interceptor)** | Overhead | < 1ms per call |
 | **Audit event lag** | Kafka consumer | < 200ms end-to-end |
 
-> Argon2id is deliberately slow — that is the point. Slower verification directly raises the cost of an offline brute-force attack, since an attacker's guess rate is bounded by how fast they can compute the hash — and Argon2id's memory-hardness resists GPU/ASIC acceleration in a way a simple iteration-count increase does not. The exact cost advantage over any specific bcrypt configuration depends on the work factors chosen for each, so no fixed multiplier is claimed here; the goal is a verification cost that stays imperceptible to a real login while meaningfully taxing an attacker.
+> Argon2id is deliberately slow - that is the point. Slower verification directly raises the cost of an offline brute-force attack, since an attacker's guess rate is bounded by how fast they can compute the hash - and Argon2id's memory-hardness resists GPU/ASIC acceleration in a way a simple iteration-count increase does not. The exact cost advantage over any specific bcrypt configuration depends on the work factors chosen for each, so no fixed multiplier is claimed here; the goal is a verification cost that stays imperceptible to a real login while meaningfully taxing an attacker.
 
 <a href="/labs/go-vs-ts-concurrency" class="lab-cta">
   View the Interactive Go vs TS Concurrency Benchmark
@@ -446,7 +446,7 @@ These figures describe the architecture's intended latency budget — design tar
 
 ## Key Takeaways
 
-1. **Protobuf contracts catch breaking changes at compile time.** This is the single most valuable property of gRPC for a security-sensitive microservice — silent schema drift cannot happen.
+1. **Protobuf contracts catch breaking changes at compile time.** This is the single most valuable property of gRPC for a security-sensitive microservice - silent schema drift cannot happen.
 2. **Stack interceptors, not business logic.** Auth, tracing, rate limiting, and recovery belong in the interceptor chain, not inside handler functions. Handlers should only execute domain logic.
-3. **Propagate trace context through every hop.** With OTel + `otelgrpc`, a single trace ID follows a request from GraphQL resolver through three gRPC services to the Kafka consumer — making latency investigations trivial.
+3. **Propagate trace context through every hop.** With OTel + `otelgrpc`, a single trace ID follows a request from GraphQL resolver through three gRPC services to the Kafka consumer - making latency investigations trivial.
 4. **Design rate limiting with Redis Lua scripts.** Atomic read-modify-write operations on token buckets must be script-level atomic to prevent race conditions under concurrent load.
