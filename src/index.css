@@ -849,52 +849,6 @@ h3 {
 
 /* ── Mermaid diagram container ─────────────────────────────────────────── */
 
-/* Header nav strip — see useScrollEdges() in SiteHeader.tsx.
- *
- * The strip scrolls horizontally on narrow screens. Its native scrollbar rendered on top of the
- * link row and covered the labels, so it is hidden and replaced by a fade at whichever edge
- * actually has content scrolled out of view. The data-scroll-* attributes are set from the real
- * scrollLeft, so on a wide screen where everything fits neither fade appears and no link is dimmed.
- *
- * Hiding a scrollbar removes a visible affordance, so the fade has to carry that job on its own —
- * and the strip stays a real scroll container, so wheel, trackpad, touch, and keyboard (the links
- * are focusable, and focus scrolls them into view) all still work. */
-.nav-strip {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* legacy Edge */
-  --nav-fade: 1.75rem;
-}
-
-.nav-strip::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
-}
-
-.nav-strip[data-scroll-end] {
-  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--nav-fade)), transparent 100%);
-  mask-image: linear-gradient(to right, #000 calc(100% - var(--nav-fade)), transparent 100%);
-}
-
-.nav-strip[data-scroll-start] {
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--nav-fade));
-  mask-image: linear-gradient(to right, transparent 0, #000 var(--nav-fade));
-}
-
-.nav-strip[data-scroll-start][data-scroll-end] {
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    #000 var(--nav-fade),
-    #000 calc(100% - var(--nav-fade)),
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    #000 var(--nav-fade),
-    #000 calc(100% - var(--nav-fade)),
-    transparent 100%
-  );
-}
 
 /* Boot curtain — see src/boot-reveal.ts.
  *

@@ -1,148 +1,106 @@
-import { Home, Moon, Sun } from 'lucide-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Moon, Search, Sun } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import CommandPalette from '../ui/CommandPalette';
 import { useTheme } from '../../theme/useTheme';
 
-const navClass = ({ isActive }: { isActive: boolean }) =>
-  `shrink-0 text-micro font-semibold uppercase tracking-wide transition ${
-    isActive ? 'text-teal-700' : 'text-slate-500 hover:text-slate-900'
-  }`;
-
 /**
- * Tracks whether the nav strip has content scrolled out of view on either side.
+ * Four destinations, and nothing that scrolls.
  *
- * The strip scrolls horizontally on narrow screens, and its native scrollbar sat on top of the
- * link row — covering the labels it was meant to help reach. Hiding the bar alone would leave no
- * hint that there is more to the left or right, so the edges get a fade instead, and the fade has
- * to follow the scroll position: a permanent one would dim the first and last link on wide screens
- * where the strip fits and nothing scrolls at all.
+ * The previous header carried eleven equally weighted links in a horizontally scrolling strip. It
+ * overflowed at 1440px — "Tags" rendered as a clipped "T" on a standard desktop — and at 390px a
+ * reader saw four of the eleven with no affordance for the rest. The scroll-position fades added
+ * for that strip were solving the wrong problem: the fault was never that the overflow was
+ * unsignposted, it was that eleven peer destinations is a sitemap rather than a navigation.
+ *
+ * What the five writing collections cost here was the whole argument: Blog, Research, Experiments,
+ * System Design and Field Notes are the author's taxonomy, and they now live as filters inside
+ * Writing. Their routes are untouched — see WritingIndexPage.
+ *
+ * Four labels total about 210px at 320px wide, so the same markup serves every breakpoint: no
+ * hamburger, no scroll strip, no fade. Cmd-K is an accelerator layered on top, never the way in —
+ * the four labels stay visible for a reader who has never pressed it.
  */
-function useScrollEdges() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [edges, setEdges] = useState({ start: false, end: false });
 
-  const measure = useCallback(() => {
-    const el = ref.current;
-    if (!el) return;
-    // 1px of slack: fractional scroll offsets otherwise leave the end fade stuck on at the far end.
-    const maxScroll = el.scrollWidth - el.clientWidth;
-    setEdges({ start: el.scrollLeft > 1, end: el.scrollLeft < maxScroll - 1 });
-  }, []);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    measure();
-    el.addEventListener('scroll', measure, { passive: true });
-    // Width changes without a scroll event — viewport resize, or a font finishing loading and
-    // reflowing the labels — can start or stop the overflow on their own.
-    const observer = new ResizeObserver(measure);
-    observer.observe(el);
-    return () => {
-      el.removeEventListener('scroll', measure);
-      observer.disconnect();
-    };
-  }, [measure]);
-
-  return { ref, edges };
-}
+const navClass = ({ isActive }: { isActive: boolean }) =>
+  `shrink-0 rounded-control px-1 py-1 text-micro font-medium transition-colors sm:px-2 sm:text-meta ${
+    isActive ? 'text-teal-700' : 'text-slate-600 hover:text-slate-900'
+  }`;
 
 function SiteHeader() {
   const { theme, toggle } = useTheme();
-  const { ref: navStripRef, edges } = useScrollEdges();
+  const [paletteOpen, setPaletteOpen] = useState(false);
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        setPaletteOpen((open) => !open);
+      }
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-40 h-12 border-b border-slate-200 bg-surface/90 backdrop-blur">
-      <div className="mx-auto flex h-full w-full max-w-6xl items-center gap-3 px-4 md:px-6">
-        <NavLink
-          to="/"
-          aria-label="Go to home"
-          className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-teal-400 hover:text-teal-700"
-        >
-          <Home size={16} />
-        </NavLink>
+    <>
+      <header className="sticky top-0 z-40 h-14 border-b border-slate-200 bg-surface/90 backdrop-blur">
+        <div className="mx-auto flex h-full w-full max-w-6xl items-center gap-1 px-3 sm:gap-2 sm:px-4 md:px-6">
+          {/* The wordmark doubles as the home link, which is what the house icon used to do with
+              no label at all. A name is the right thing to lead a personal site with. */}
+          {/* Initials below 640px. Four labels plus two controls plus the full wordmark measured
+              411px against a 320px viewport — the gate caught it — and the name is the one element
+              here that a reader can still identify from two letters. */}
+          <NavLink
+            to="/"
+            aria-label="Khoa Tran, home"
+            className="mr-auto shrink-0 font-display text-meta font-bold tracking-tight text-slate-900 transition-colors hover:text-teal-700 sm:text-body"
+          >
+            <span className="sm:hidden" aria-hidden="true">
+              KT
+            </span>
+            <span className="hidden sm:inline" aria-hidden="true">
+              Khoa Tran
+            </span>
+          </NavLink>
 
-        {/* overflow-x-auto: with the full set of destinations this doesn't fit on narrow
-            screens without wrapping the header to multiple lines, so it scrolls horizontally
-            instead. Split into two labeled <nav> landmarks below (Primary, Explore) so a
-            first-time reader — sighted or on a screen reader — gets a grouping cue instead of
-            one flat wall of equally-weighted links, and reordered so Projects and Search, the
-            two destinations most load-bearing for a first-time technical reader, land inside
-            the visible window on the narrowest tested viewports (320-390px) without scrolling. */}
-        <div
-          ref={navStripRef}
-          data-scroll-start={edges.start || undefined}
-          data-scroll-end={edges.end || undefined}
-          className="nav-strip flex min-w-0 flex-1 items-center gap-3 overflow-x-auto sm:gap-5"
-        >
-          <nav className="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Primary">
+          <nav className="flex items-center gap-0.5 sm:gap-2" aria-label="Primary">
             <NavLink to="/about" className={navClass}>
               About
             </NavLink>
             <NavLink to="/projects" className={navClass}>
-              Projects
+              Work
             </NavLink>
-            <NavLink to="/search" className={navClass}>
-              Search
-            </NavLink>
-            <NavLink to="/graph" className={navClass}>
-              Ecosystem
-            </NavLink>
-          </nav>
-
-          <span aria-hidden="true" className="h-4 w-px shrink-0 bg-slate-200" />
-          {/* Purely visual — the adjacent nav's own aria-label already announces this
-              grouping to assistive tech, so this text is hidden from the a11y tree to
-              avoid announcing "Explore" twice back to back. */}
-          <span
-            aria-hidden="true"
-            className="shrink-0 text-nano font-bold uppercase tracking-widest text-slate-500"
-          >
-            Explore
-          </span>
-
-          <nav className="flex shrink-0 items-center gap-3 sm:gap-5" aria-label="Explore">
-            <NavLink to="/blog" className={navClass}>
-              Blog
-            </NavLink>
-            <NavLink to="/research" className={navClass}>
-              Research
-            </NavLink>
-            <NavLink to="/experiments" className={navClass}>
-              Experiments
+            <NavLink to="/writing" className={navClass}>
+              Writing
             </NavLink>
             <NavLink to="/labs" className={navClass}>
               Labs
             </NavLink>
-            <NavLink to="/system-design" className={navClass}>
-              System Design
-            </NavLink>
-            <NavLink to="/field-notes" className={navClass}>
-              Field Notes
-            </NavLink>
-            {/* Appended last, not interleaved — the ordering comment above this nav already
-                prioritizes Projects/Search landing inside the un-scrolled window on the narrowest
-                tested viewports; Tags is a secondary browse surface over the same content, not a
-                new destination that ordering was tuned around. */}
-            <NavLink to="/tags" className={navClass}>
-              Tags
-            </NavLink>
           </nav>
-        </div>
 
-        {/* Deliberately a sibling of the scrolling nav, not a child: at 320px that row already
-            overflows, and a control placed inside it would be scrolled off-screen with no
-            affordance suggesting it exists. */}
-        <button
-          type="button"
-          onClick={toggle}
-          aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-          className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-teal-400 hover:text-teal-700"
-        >
-          {theme === 'dark' ? <Sun size={15} aria-hidden="true" /> : <Moon size={15} aria-hidden="true" />}
-        </button>
-      </div>
-    </header>
+          <button
+            type="button"
+            onClick={() => setPaletteOpen(true)}
+            aria-label="Search the site"
+            className="ml-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-pill border border-slate-200 text-slate-600 transition hover:border-teal-400 hover:text-teal-700 sm:h-8 sm:w-8"
+          >
+            <Search size={15} aria-hidden="true" />
+          </button>
+
+          <button
+            type="button"
+            onClick={toggle}
+            aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+            className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-pill border border-slate-200 text-slate-600 transition hover:border-teal-400 hover:text-teal-700 sm:h-8 sm:w-8"
+          >
+            {theme === 'dark' ? <Sun size={15} aria-hidden="true" /> : <Moon size={15} aria-hidden="true" />}
+          </button>
+        </div>
+      </header>
+
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
+    </>
   );
 }
 

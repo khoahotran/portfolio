@@ -29,6 +29,7 @@ export const staticRoutes = [
   '/',
   '/about',
   '/graph',
+  '/writing',
   ...collections.map((collection) => `/${collection}`),
   '/labs',
   ...labIds.map((id) => `/labs/${id}`),

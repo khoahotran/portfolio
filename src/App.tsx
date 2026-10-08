@@ -13,6 +13,7 @@ const PortfolioHome = lazy(() => import('./pages/PortfolioHome'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const KnowledgeGraphPage = lazy(() => import('./pages/KnowledgeGraphPage'));
 const LabsIndexPage = lazy(() => import('./pages/LabsIndexPage'));
+const WritingIndexPage = lazy(() => import('./pages/WritingIndexPage'));
 const TagsIndexPage = lazy(() => import('./pages/TagsIndexPage'));
 const TagDetailPage = lazy(() => import('./pages/TagDetailPage'));
 const ContentListPage = lazy(() => import('./pages/content/ContentListPage'));
@@ -60,6 +61,9 @@ function AppRoutes() {
           <Route path="/" element={<PortfolioHome />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/graph" element={<KnowledgeGraphPage />} />
+          {/* One browse surface over the five writing collections. Their own list routes stay —
+              see the note at the top of WritingIndexPage. */}
+          <Route path="/writing" element={<WritingIndexPage />} />
           <Route
             path="/projects"
             element={
