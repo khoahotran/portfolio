@@ -1,3 +1,10 @@
+import About from '../components/About';
+import Experience from '../components/Experience';
+import Metrics from '../components/Metrics';
+import Projects from '../components/Projects';
+import Skills from '../components/Skills';
+import Education from '../components/Education';
+import Certifications from '../components/Certifications';
 import { useSeo } from '../seo/useSeo';
 
 function AboutPage() {
@@ -168,6 +175,21 @@ function AboutPage() {
         </div>
       </section>
 
+      {/*
+        Everything below moved off the homepage in P4.
+        /about previously opened with "About & Philosophy" and then re-stated the same identity
+        material the homepage was already showing — two competing answers to "who is this", neither
+        of them complete. The homepage now leads with evidence and stops; this page owns the full
+        record. Nothing was dropped in the move: the components are the same ones, rendered here
+        instead of there.
+      */}
+      <About />
+      <Experience />
+      <Metrics />
+      <Projects sectionIds={['personal', 'university']} id="other-projects" showHeader={false} />
+      <Skills />
+      <Education />
+      <Certifications />
     </main>
   );
 }

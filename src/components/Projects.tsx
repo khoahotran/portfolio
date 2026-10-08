@@ -67,9 +67,15 @@ interface ProjectsProps {
    * than repeating the same heading text a second time further down.
    */
   showHeader?: boolean;
+  /**
+   * Renders the cards without this component's own <section> wrapper, so a caller that already
+   * owns the band (the homepage's Section, which sets the rhythm and the heading) does not nest
+   * one <section> inside another and apply `py-24` on top of its own padding.
+   */
+  bare?: boolean;
 }
 
-export default function Projects({ sectionIds, id = 'projects', showHeader = true }: ProjectsProps) {
+export default function Projects({ sectionIds, id = 'projects', showHeader = true, bare = false }: ProjectsProps) {
   // Flagship case studies (Aegis, Core Banking, QuantAlpha — each with its own
   // content/projects/*.md deep dive) lead, ahead of Professional Experience:
   // they're the strongest evidence of architectural depth in the portfolio,
@@ -83,9 +89,8 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
   ];
   const sections = sectionIds ? allSections.filter((s) => sectionIds.includes(s.id)) : allSections;
 
-  return (
-    <section id={id} className="py-24 px-6 bg-slate-50">
-      <div className="max-w-6xl mx-auto">
+  const body = (
+    <>
         {showHeader && (
           <div className="flex items-baseline justify-between mb-12">
             <h2 className="text-meta uppercase tracking-widest text-teal-700 font-medium italic">
@@ -264,7 +269,16 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
             </div>
           );
         })}
-      </div>
+    </>
+  );
+
+  if (bare) {
+    return body;
+  }
+
+  return (
+    <section id={id} className="py-24 px-6 bg-slate-50">
+      <div className="max-w-6xl mx-auto">{body}</div>
     </section>
   );
 }

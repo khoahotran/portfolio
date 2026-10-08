@@ -157,6 +157,10 @@ async function main() {
           for (let attempt = 0; attempt <= MAX_RETRIES; attempt += 1) {
             try {
               await page.goto(`${base}${route}`, { waitUntil: 'networkidle', timeout: 25_000 });
+              // Font metrics decide which contrast threshold applies: WCAG relaxes 4.5:1 to 3:1
+              // for large text, and `font-display: swap` means the fallback face is live until
+              // the woff2 arrives. Measuring mid-swap can read a size from the wrong face.
+              await page.evaluate(() => document.fonts.ready);
               await page.waitForTimeout(200);
               for (const f of await page.evaluate(auditPage)) results.push({ route, colorScheme, ...f });
               visited = true;

@@ -189,6 +189,12 @@ async function checkRoute(browser, base, path) {
 
     try {
       await page.goto(`${base}${path}`, { waitUntil: 'networkidle', timeout: 20000 });
+      // Webfonts first, then settle. The site self-hosts Inter with `font-display: swap`, so a
+      // page paints in the fallback face and reflows when the woff2 lands. Measuring layout in
+      // that window reports whichever face happened to be active, which made this check
+      // intermittently fail on a route whose real scrollWidth was fine — a flake introduced by
+      // the font change, not by the page. `document.fonts.ready` is the defined signal for it.
+      await page.evaluate(() => document.fonts.ready);
       await page.waitForTimeout(300); // let mermaid/highlight/rAF settle
     } catch (error) {
       failures.push({ viewport: vp.name, kind: 'navigation', detail: error.message });

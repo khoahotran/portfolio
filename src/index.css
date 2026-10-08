@@ -4,7 +4,7 @@
  * failure mode nothing in this repo controls.
  *
  * All three ship a `vietnamese` subset, which is a hard requirement rather than a nicety — the
- * largest piece of type on the site is "Tr\u1ea7n Nguy\u1ec5n Anh Khoa", and a face without those glyphs
+ * largest piece of type on the site is "Trần Nguyễn Anh Khoa", and a face without those glyphs
  * either drops the diacritics or stacks them wrong. Verified present in node_modules before
  * choosing these packages. Browsers fetch only the subsets a page actually uses, via unicode-range.
  *
@@ -845,6 +845,20 @@ h3 {
 .toc-sub .toc-link--active {
   font-weight: 600;
   color: rgb(var(--c-teal-700));
+}
+
+/* Display math scrolls rather than widening the page.
+ *
+ * KaTeX lays a display block out at its natural width, and `\text{}` runs render in the document
+ * font — so changing the body face to Inter, which is wider than the previous fallback, pushed the
+ * formula in throughput-simulation-notes to 350px against a 320px viewport. check:responsive caught
+ * it. The font change is what exposed this, but the missing rule was always the bug: a formula
+ * wider than the phone is a scroll container, never a reason for the whole page to scroll
+ * sideways. */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 /* ── Mermaid diagram container ─────────────────────────────────────────── */

@@ -146,6 +146,7 @@ async function checkLab(page, base, labId) {
   const tracker = trackErrors(page);
 
   await page.goto(`${base}/labs/${labId}`, { waitUntil: 'networkidle', timeout: 20000 });
+  await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(300);
   tracker.drain(); // ignore anything from load itself — the other gates own that
 
@@ -246,6 +247,9 @@ async function checkHeader(page, base) {
   const failures = [];
   await page.setViewportSize({ width: 320, height: 760 });
   await page.goto(`${base}/`, { waitUntil: 'networkidle', timeout: 20000 });
+  // Header width is measured here, and the labels are set in a webfont that swaps in after first
+  // paint — see the matching note in check-responsive.mjs.
+  await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(300);
 
   const header = page.locator('header').first();
@@ -304,6 +308,7 @@ async function checkPalette(page, base) {
   const tracker = trackErrors(page);
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto(`${base}/`, { waitUntil: 'networkidle', timeout: 20000 });
+  await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(300);
   tracker.drain();
 
