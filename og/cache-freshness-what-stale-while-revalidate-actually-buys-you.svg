@@ -11,5 +11,5 @@
   <text x="72" y="260" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Cache Freshness: What</text>
   <text x="72" y="324" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Stale-While-Revalidate…</text>
   <text x="72" y="414" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">Three real cache-freshness policies run against the same</text>
-  <text x="72" y="454" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">origin outage — TTL-blocking errors,…</text>
+  <text x="72" y="454" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">origin outage - TTL-blocking errors,…</text>
 </svg>

@@ -18,7 +18,7 @@
       <link>https://khoahotran.github.io/portfolio/research/database-indexing-btree-vs-brin-for-time-series</link>
       <guid isPermaLink="true">https://khoahotran.github.io/portfolio/research/database-indexing-btree-vs-brin-for-time-series</guid>
       <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
-      <description>Why a Block Range Index, not the default B-Tree, is the right structure for naturally time-ordered data — and why QuantAlpha&apos;s tick-ingestion pipeline hasn&apos;t needed it yet.</description>
+      <description>Why a Block Range Index, not the default B-Tree, is the right structure for naturally time-ordered data - and why QuantAlpha&apos;s tick-ingestion pipeline hasn&apos;t needed it yet.</description>
     </item>
     <item>
       <title>ADR: Why Prerender Instead of Migrating to Next.js</title>

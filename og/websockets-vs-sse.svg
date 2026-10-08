@@ -11,5 +11,5 @@
   <text x="72" y="260" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">WebSockets vs Server-Sent</text>
   <text x="72" y="324" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Events: What Holding 5,000…</text>
   <text x="72" y="414" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">A real harness measuring server memory for thousands of</text>
-  <text x="72" y="454" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">concurrent WebSocket vs SSE connections — written befor…</text>
+  <text x="72" y="454" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">concurrent WebSocket vs SSE connections - written befor…</text>
 </svg>

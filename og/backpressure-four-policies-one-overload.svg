@@ -11,5 +11,5 @@
   <text x="72" y="260" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">Backpressure: Four Policies,</text>
   <text x="72" y="324" font-family="Inter, Arial, sans-serif" font-size="56" fill="#f8fafc" font-weight="700">One Overload</text>
   <text x="72" y="414" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">Block, drop-new, drop-old, and circuit breaker, run</text>
-  <text x="72" y="454" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">against the same producer that outruns its consumer —…</text>
+  <text x="72" y="454" font-family="Inter, Arial, sans-serif" font-size="30" fill="#cbd5e1">against the same producer that outruns its consumer -…</text>
 </svg>
