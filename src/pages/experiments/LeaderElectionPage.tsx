@@ -232,6 +232,13 @@ function LeaderElectionPage() {
                       fill={isDown ? 'rgb(203, 213, 225)' : isLeader ? 'rgb(217, 119, 6)' : 'rgb(13, 148, 136)'}
                       stroke={isInitiator && !isDown ? 'rgb(15, 23, 42)' : 'none'}
                       strokeWidth={0.6}
+                      className="pointer-events-none"
+                    />
+                    <circle
+                      cx={x}
+                      cy={y}
+                      r={10}
+                      fill="transparent"
                       className="cursor-pointer"
                       onClick={() => toggleNode(id)}
                       role="button"

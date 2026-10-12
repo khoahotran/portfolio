@@ -130,6 +130,13 @@ function RedlockPage() {
                       cy={y}
                       r={3.5}
                       fill={isDown ? 'rgb(203, 213, 225)' : attempt?.acquired ? 'rgb(13, 148, 136)' : 'rgb(225, 29, 72)'}
+                      className="pointer-events-none"
+                    />
+                    <circle
+                      cx={x}
+                      cy={y}
+                      r={10}
+                      fill="transparent"
                       className="cursor-pointer"
                       onClick={() => toggleNode(id)}
                       role="button"
