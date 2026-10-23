@@ -57,7 +57,14 @@ function whenReady(ready: () => boolean, act: () => void, timeoutMs: number): ()
 }
 
 function hashTarget(hash: string): HTMLElement | null {
-  return document.getElementById(decodeURIComponent(hash.replace(/^#/, '')));
+  let id = hash.replace(/^#/, '');
+  // A hand-edited URL like `#%E0%A4%A` makes decodeURIComponent throw; that must not take the page down.
+  try {
+    id = decodeURIComponent(id);
+  } catch {
+    // keep the raw id
+  }
+  return document.getElementById(id);
 }
 
 function ScrollManager() {
