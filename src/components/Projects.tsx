@@ -75,6 +75,19 @@ interface ProjectsProps {
   bare?: boolean;
 }
 
+function ArchitectureList({ items }: { items: string[] }) {
+  return (
+    <ul className="mt-3 space-y-2 text-slate-600 text-meta">
+      {items.map((item, i) => (
+        <li key={i} className="flex items-start gap-2">
+          <span className="text-teal-500 mt-1 opacity-50"><Network size={14} /></span>
+          <span className="font-light">{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default function Projects({ sectionIds, id = 'projects', showHeader = true, bare = false }: ProjectsProps) {
   // Flagship case studies (Aegis, Core Banking, QuantAlpha - each with its own
   // content/projects/*.md deep dive) lead, ahead of Professional Experience:
@@ -119,7 +132,7 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
                   {sectionProjects.map((project, index) => (
                     <div
                       key={index}
-                      className="group min-w-0 rounded-xl border border-slate-100 bg-surface p-8 hover:border-teal-500 hover:shadow-2xl hover:shadow-slate-100 transition-all duration-500 flex flex-col h-full"
+                      className="group min-w-0 rounded-xl border border-slate-100 bg-surface p-5 sm:p-8 hover:border-teal-500 hover:shadow-2xl hover:shadow-slate-100 transition-all duration-500 flex flex-col h-full"
                     >
                       <div className="flex items-start justify-between gap-4 mb-4">
                         <div className="min-w-0">
@@ -136,7 +149,7 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
                               href={project.links?.deck}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="hover:text-teal-700 transition-colors"
+                              className="-m-2 p-2 hover:text-teal-700 transition-colors"
                               aria-label="View link"
                             >
                               <ExternalLink size={20} />
@@ -147,7 +160,7 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
                               href={project.links?.live}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="hover:text-teal-700 transition-colors"
+                              className="-m-2 p-2 hover:text-teal-700 transition-colors"
                               aria-label="View live site"
                             >
                               <ExternalLink size={20} />
@@ -158,7 +171,7 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
                               href={project.links?.github}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="hover:text-teal-700 transition-colors"
+                              className="-m-2 p-2 hover:text-teal-700 transition-colors"
                               aria-label="View code"
                             >
                               <Github size={20} />
@@ -173,23 +186,24 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
                         {project.metrics.map((metric, i) => (
                           <span
                             key={i}
-                            className="text-nano uppercase tracking-wider font-bold px-3 py-1 rounded-sm bg-slate-50 text-teal-700 border border-teal-50"
+                            className="text-micro font-semibold px-3 py-1 rounded-sm bg-slate-50 text-teal-700 border border-teal-50"
                           >
                             {metric}
                           </span>
                         ))}
                       </div>
 
-                      <div className="mb-6 flex-grow">
-                        <p className="text-nano uppercase tracking-widest text-slate-500 font-bold mb-3">Architecture</p>
-                        <ul className="space-y-2 text-slate-600 text-meta">
-                          {project.architecture.map((item, i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <span className="text-teal-500 mt-1 opacity-50"><Network size={14} /></span>
-                              <span className="font-light">{item}</span>
-                            </li>
-                          ))}
-                        </ul>
+                      {/* Collapsed below sm: open, the list made each card about 1.2 phone screens tall.
+                          Two copies because a <details> cannot be "open on desktop only" in CSS. */}
+                      <details className="mb-6 flex-grow sm:hidden">
+                        <summary className="cursor-pointer text-nano uppercase tracking-widest text-slate-500 font-bold">
+                          Architecture ({project.architecture.length})
+                        </summary>
+                        <ArchitectureList items={project.architecture} />
+                      </details>
+                      <div className="mb-6 flex-grow hidden sm:block">
+                        <p className="text-nano uppercase tracking-widest text-slate-500 font-bold">Architecture</p>
+                        <ArchitectureList items={project.architecture} />
                       </div>
 
                       <div className="mt-auto pt-6 border-t border-slate-50 flex items-end justify-between">
@@ -199,7 +213,7 @@ export default function Projects({ sectionIds, id = 'projects', showHeader = tru
                             {project.stack.map((tech, i) => (
                               <span
                                 key={i}
-                                className="text-nano font-bold px-2 py-1 rounded-sm bg-inverse text-inverse-fg flex items-center gap-2"
+                                className="text-nano font-semibold px-2 py-1 rounded-sm border border-slate-200 bg-slate-100 text-slate-700 flex items-center gap-2"
                               >
                                 {tech}
                               </span>
