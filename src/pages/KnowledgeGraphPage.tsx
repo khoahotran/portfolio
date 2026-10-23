@@ -106,7 +106,7 @@ function KnowledgeGraphPage() {
   // pages (wired to client-side routing by wireGraphLinks above) - this used
   // to be a diagram with zero links anywhere on the page.
   const graphDefinition = `
-graph TD
+graph LR
     %% Styling
     classDef domain fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,color:#334155,font-weight:bold;
     classDef project fill:#0f172a,stroke:#334155,stroke-width:2px,color:#f8fafc,font-weight:bold;

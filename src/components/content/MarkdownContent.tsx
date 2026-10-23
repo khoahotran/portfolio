@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { renderMermaidInto } from '../../content-engine/mermaid';
 import { scrollToHash } from './scrollToHash';
@@ -261,23 +261,6 @@ function MarkdownContent({ html }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) {
-      return;
-    }
-
-    normalizeLinks(container);
-    enhanceImages(container);
-    enhanceCodeBlocks(container);
-    enhanceHeadingAnchors(container);
-    enhanceStatusMarks(container);
-
-    const onClick = (event: MouseEvent) => handleLinkClick(event, navigate);
-    container.addEventListener('click', onClick);
-    return () => container.removeEventListener('click', onClick);
-  }, [html, navigate]);
-
   // useLayoutEffect, not useEffect: a diagram whose SVG was already produced by prerendering is
   // restored synchronously (see content-engine/mermaid-prerendered.ts), and useEffect runs *after*
   // the browser paints - which showed the article, then slotted every diagram in 184ms later and
@@ -299,6 +282,26 @@ function MarkdownContent({ html }: Props) {
       stale = true;
     };
   }, [html]);
+
+  // Also before paint, and after the diagram pass above (same order as when this was a useEffect):
+  // the code toolbars, figures and status icons are already in the prerendered page, so adding them
+  // a frame after React's first commit made every code block grow by a toolbar's height on screen.
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) {
+      return;
+    }
+
+    normalizeLinks(container);
+    enhanceImages(container);
+    enhanceCodeBlocks(container);
+    enhanceHeadingAnchors(container);
+    enhanceStatusMarks(container);
+
+    const onClick = (event: MouseEvent) => handleLinkClick(event, navigate);
+    container.addEventListener('click', onClick);
+    return () => container.removeEventListener('click', onClick);
+  }, [html, navigate]);
 
   return <div ref={containerRef} className="markdown-body" dangerouslySetInnerHTML={{ __html: html }} />;
 }

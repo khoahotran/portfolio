@@ -65,6 +65,10 @@ function applyDiagramLabel(container: HTMLElement): void {
     svgEl.setAttribute('role', 'img');
     svgEl.setAttribute('aria-label', 'Architecture diagram');
   }
+  // Never shrink below 70% of natural size (labels stay >= ~11px): on a phone the 100%-width rule
+  // scaled diagram text to ~7px. Narrower than that, .mermaid-diagram scrolls sideways instead.
+  const naturalWidth = svgEl?.viewBox?.baseVal?.width;
+  if (svgEl && naturalWidth) svgEl.style.minWidth = `${Math.round(naturalWidth * 0.7)}px`;
 }
 
 /**
