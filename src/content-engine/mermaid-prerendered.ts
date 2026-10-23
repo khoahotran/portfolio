@@ -3,7 +3,7 @@
  *
  * scripts/prerender.mjs runs every diagram through mermaid and writes the resulting SVG into the
  * HTML - on the two largest pages that is most of their 185 KB. React then discards all of it on
- * mount (see src/boot-reveal.ts), and MarkdownContent renders each diagram again from scratch.
+ * mount (see src/main.tsx), and MarkdownContent renders each diagram again from scratch.
  * Measured on a page with four diagrams: they reappeared at 756ms, 964ms, 1072ms and 1194ms, each
  * one resizing the page as it landed.
  *

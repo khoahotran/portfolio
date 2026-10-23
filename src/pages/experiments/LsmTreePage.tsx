@@ -1,5 +1,5 @@
 import { AlertTriangle, CheckCircle2, Layers } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useDeferredValue, useMemo, useState } from 'react';
 import LabBackLink from '../../labs/LabBackLink';
 import ProvenanceNote from '../../labs/ProvenanceNote';
 import { compact, createLsmTree, get, put, runCount, writeAmplification } from '../../labs/lsmTree';
@@ -41,7 +41,12 @@ function LsmTreePage() {
   const [uniqueKeys, setUniqueKeys] = useState(500);
   const [compactEveryNFlushes, setCompactEveryNFlushes] = useState<number | null>(null);
 
-  const result = useMemo(() => runWorkload(totalOps, uniqueKeys, compactEveryNFlushes), [totalOps, uniqueKeys, compactEveryNFlushes]);
+  // Deferred: a 20,000-op run blocks for ~100ms+ on a phone, and recomputing on every slider tick
+  // made the slider itself stutter. The labels update at once; the result follows the latest value.
+  const deferredOps = useDeferredValue(totalOps);
+  const deferredKeys = useDeferredValue(uniqueKeys);
+  const deferredCompact = useDeferredValue(compactEveryNFlushes);
+  const result = useMemo(() => runWorkload(deferredOps, deferredKeys, deferredCompact), [deferredOps, deferredKeys, deferredCompact]);
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 md:px-6 animate-fade-in">

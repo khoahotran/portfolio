@@ -665,3 +665,40 @@ Counting the content before accepting the structure is what disqualified it.
 - **`tabular-nums` cannot go on `body`.** Inter's `tnum` widens U+002D to a digit cell, so prose
   hyphens render as "high - performance". It is opt-in through `.tabular-figures` now. No gate
   measures letterforms; this was caught by looking at the page.
+
+## Decision 25 - A first visit hands over from the prerendered page; navigation owns its own scroll
+
+**Date:** 2026-10-23
+
+**Context:** A UX walkthrough found that the prerendered page was replaced by a blank curtain and then
+by "Loading…" on a first visit, that Back and a repeat visit did not land where a reader expected,
+that 73 routes shifted layout past a CLS of 0.1, and that the palette and `/search` ranked the same
+query differently.
+
+**Decisions:**
+
+1. **Preload, then render.** `main.tsx` loads the current route's code and data (`preloadRoute`)
+   before `createRoot`, so the first commit is the page itself. The `js-booting` curtain is gone;
+   `boot-handover` only suppresses the entrance animation on that first render. `hydrateRoot` is
+   still not used: it fails with #418/#423 on this markup.
+2. **`lazyRoute` replaces `React.lazy`.** It is preloadable and renders synchronously once loaded.
+   A failed import is thrown to the error boundary on every render; retrying inside render looped
+   forever, because React re-renders after an error. Only `preload()` retries.
+3. **Pages read sync `peek*` accessors** over the content-index cache, so a cached page does not
+   commit a loading state for one frame.
+4. **`ScrollManager` owns scroll.** A new pathname resets to the top or the hash; Back restores the
+   saved position (sessionStorage, `scrollRestoration = 'manual'`). It scrolls with
+   `behavior: 'instant'`: html is `scroll-behavior: smooth`, and a smooth page change animates from
+   wherever the reader was, which a walkthrough read as "lands at y=167".
+5. **One search scorer** (`src/search/site-search.ts`) for the palette and `/search`: AND across
+   words, prefix match, one typo for words of 5+ letters, field weights. `fuse.js` was removed.
+
+**Consequences:**
+
+- A walkthrough that measures scroll must wait for it to finish or disable smooth scrolling; the
+  first run of this change reported a regression that was the measurement.
+- The three browser gates fail with `ERR_NETWORK_CHANGED` when something on the host churns network
+  interfaces (docker/testcontainers did). Running them in `unshare -rn` with only loopback up is
+  immune to it; a red run full of that one error is the environment, not the page.
+- Jank numbers taken at a load average of ~19 on 8 cores were 2x worse for pages this change never
+  touched. Compare against HEAD interleaved under the same load, not against an older run.

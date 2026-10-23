@@ -19,10 +19,11 @@ import { heroData } from '../data/portfolioData';
  */
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-slate-100 bg-surface">
+    <section className="relative overflow-hidden border-b border-slate-100 bg-surface px-4 md:px-6">
+      {/* Padding outside the max-width, as Section does, so the hero shares the section edge. */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(20,184,166,0.06),transparent_30%),radial-gradient(circle_at_85%_0%,rgba(14,165,233,0.05),transparent_35%)]" />
 
-      <div className="relative mx-auto flex min-h-[72vh] max-w-5xl flex-col justify-center px-4 py-band-standard md:px-6">
+      <div className="relative mx-auto flex min-h-[72vh] max-w-5xl flex-col justify-center py-band-standard">
         <p className="text-micro font-semibold uppercase tracking-[0.25em] text-teal-700">
           {heroData.role}
         </p>
@@ -37,7 +38,7 @@ export default function Hero() {
             Get in touch
           </ButtonAnchor>
           <span className="ml-1 flex items-center gap-4 text-slate-500">
-            <a href={`mailto:${heroData.email}`} aria-label="Email" className="transition-colors hover:text-teal-700">
+            <a href={`mailto:${heroData.email}`} aria-label="Email" className="-m-2 p-2 transition-colors hover:text-teal-700">
               <Mail size={20} />
             </a>
             <a
@@ -45,7 +46,7 @@ export default function Hero() {
               aria-label="GitHub profile"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-teal-700"
+              className="-m-2 p-2 transition-colors hover:text-teal-700"
             >
               <Github size={20} />
             </a>
@@ -54,7 +55,7 @@ export default function Hero() {
               aria-label="LinkedIn profile"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-teal-700"
+              className="-m-2 p-2 transition-colors hover:text-teal-700"
             >
               <Linkedin size={20} />
             </a>

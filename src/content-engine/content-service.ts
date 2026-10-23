@@ -1,4 +1,4 @@
-import { loadCollectionIndex, loadContentIndex, loadSearchIndex } from './content-index';
+import { loadCollectionIndex, loadContentIndex, loadSearchIndex, peekContentIndex, peekSearchIndex } from './content-index';
 import { getRawContentBySlug, prefetchRawContentBySlug } from './content-source';
 import type { ContentCollection, ContentDetail, ContentIndexItem, SearchIndexItem } from './types';
 
@@ -44,6 +44,47 @@ export async function getSearchIndex(): Promise<SearchIndexItem[]> {
   return items.filter(shouldInclude);
 }
 
+/*
+ * Synchronous twins of the loaders above: the same filtering over the already-loaded index, or
+ * `null` when it has not loaded yet. Pages initialise state from these so that a route whose data
+ * is cached (every navigation after the first, and a first visit preloaded in main.tsx) renders
+ * complete on its first commit rather than committing a loading state and then the content.
+ */
+export function peekAllContentIndex(): ContentIndexItem[] | null {
+  return peekContentIndex()?.filter(shouldInclude) ?? null;
+}
+
+export function peekCollectionIndex(collection: ContentCollection): ContentIndexItem[] | null {
+  return peekAllContentIndex()?.filter((item) => item.collection === collection) ?? null;
+}
+
+export function peekLatestContent(limit = 6): ContentIndexItem[] | null {
+  return peekAllContentIndex()?.slice(0, limit) ?? null;
+}
+
+export function peekSearchItems(): SearchIndexItem[] | null {
+  return peekSearchIndex()?.filter(shouldInclude) ?? null;
+}
+
+export function peekContentTags(collection: ContentCollection): string[] | null {
+  const items = peekCollectionIndex(collection);
+  return items ? tagsOf(items) : null;
+}
+
+export function peekContentDetail(collection: ContentCollection, slug: string): ContentDetail | null {
+  return detailCache.get(cacheKey(collection, slug)) ?? null;
+}
+
+export function peekRelatedArticles(
+  currentSlug: string,
+  tags: string[],
+  limit = 3,
+  curatedRelated: string[] = []
+): ContentIndexItem[] | null {
+  const items = peekContentIndex();
+  return items ? relatedFrom(items, currentSlug, tags, limit, curatedRelated) : null;
+}
+
 export async function getLatestContent(limit = 6): Promise<ContentIndexItem[]> {
   const items = await loadContentIndex();
   return items.filter(shouldInclude).slice(0, limit);
@@ -80,7 +121,16 @@ export async function getRelatedArticles(
   limit = 3,
   curatedRelated: string[] = []
 ): Promise<ContentIndexItem[]> {
-  const items = await loadContentIndex();
+  return relatedFrom(await loadContentIndex(), currentSlug, tags, limit, curatedRelated);
+}
+
+function relatedFrom(
+  items: ContentIndexItem[],
+  currentSlug: string,
+  tags: string[],
+  limit: number,
+  curatedRelated: string[]
+): ContentIndexItem[] {
   const eligibleItems = items.filter((item) => shouldInclude(item) && item.slug !== currentSlug);
 
   // Curated links (the `related:` frontmatter field) take priority over the
@@ -145,10 +195,13 @@ export async function getRelatedArticles(
 }
 
 export async function getContentTags(collection: ContentCollection): Promise<string[]> {
-  const index = await getContentIndex(collection);
+  return tagsOf(await getContentIndex(collection));
+}
+
+function tagsOf(items: ContentIndexItem[]): string[] {
   const tags = new Set<string>();
 
-  index.forEach((item) => {
+  items.forEach((item) => {
     item.tags.forEach((tag) => tags.add(tag));
   });
 

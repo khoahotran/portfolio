@@ -1,4 +1,4 @@
-import { ArrowUpRight, FlaskConical, FileText } from 'lucide-react';
+import { ArrowRight, FlaskConical, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Section, SectionHeader } from './ui/Section';
 import { cardClasses } from './ui/card-classes';
@@ -52,9 +52,9 @@ export default function HowIThink({ writingCount }: { writingCount: number | nul
                     ) : (
                       <FileText className="h-3.5 w-3.5 shrink-0 text-slate-500" aria-hidden="true" />
                     )}
-                    <span className="min-w-0 flex-1 truncate">{item.label}</span>
-                    <ArrowUpRight
-                      className="h-3.5 w-3.5 shrink-0 text-slate-400 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    <span className="min-w-0 flex-1">{item.label}</span>
+                    <ArrowRight
+                      className="h-3.5 w-3.5 shrink-0 text-slate-400 transition-transform group-hover:translate-x-0.5"
                       aria-hidden="true"
                     />
                   </Link>

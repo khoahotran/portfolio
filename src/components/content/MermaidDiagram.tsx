@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { renderMermaidInto } from '../../content-engine/mermaid';
 
 interface Props {
@@ -19,7 +19,9 @@ export default function MermaidDiagram({ chart, onRendered }: Props) {
   const onRenderedRef = useRef(onRendered);
   onRenderedRef.current = onRendered;
 
-  useEffect(() => {
+  // Layout effect: a diagram reused from the prerendered page is restored synchronously, so this
+  // puts it in the first painted frame instead of one frame after React replaced the snapshot.
+  useLayoutEffect(() => {
     const container = containerRef.current;
     if (!container) {
       return;

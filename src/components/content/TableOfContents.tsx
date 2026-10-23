@@ -4,6 +4,8 @@ import { scrollToHash } from './scrollToHash';
 
 interface Props {
   toc: TocItem[];
+  /** `inline`: the list alone, for the collapsible mobile TOC inside a <details>. */
+  variant?: 'sidebar' | 'inline';
 }
 
 /**
@@ -13,7 +15,7 @@ interface Props {
  * commit, so by the time this effect runs, the article HTML (with
  * rehype-slug ids) has already been painted.
  */
-function TableOfContents({ toc }: Props) {
+function TableOfContents({ toc, variant = 'sidebar' }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -49,35 +51,41 @@ function TableOfContents({ toc }: Props) {
     return null;
   }
 
+  // The vertical rail is one continuous line (not per-item borders) so the active item's teal
+  // segment reads as a moving position marker rather than N disconnected ticks - depth-3 items sit
+  // further right, giving the two heading levels a visible rank instead of just a font weight.
+  const list = (
+    <ul className="toc-rail space-y-0.5 text-meta leading-snug">
+      {toc.map((item) => {
+        const isActive = activeId === item.id;
+        return (
+          <li key={item.id} className={item.depth === 3 ? 'toc-sub' : undefined}>
+            <a
+              href={`#${item.id}`}
+              onClick={(event) => {
+                event.preventDefault();
+                window.history.replaceState(null, '', `#${item.id}`);
+                scrollToHash(item.id);
+                // In the mobile <details>, get the list out of the way of what the reader jumped to.
+                event.currentTarget.closest('details')?.removeAttribute('open');
+              }}
+              aria-current={isActive ? 'location' : undefined}
+              className={isActive ? 'toc-link toc-link--active' : 'toc-link'}
+            >
+              {item.text}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  );
+
+  if (variant === 'inline') return list;
+
   return (
     <div className="toc sticky top-24 rounded-xl border border-slate-200 bg-surface p-4">
       <h2 className="mb-3 text-micro font-bold uppercase tracking-wider text-slate-500">On this page</h2>
-      {/* The vertical rail is one continuous line (not per-item borders) so the
-          active item's teal segment reads as a moving position marker rather
-          than N disconnected ticks - depth-3 items sit further right, giving
-          the two heading levels a visible rank instead of just a font-weight
-          difference. */}
-      <ul className="toc-rail space-y-0.5 text-meta leading-snug">
-        {toc.map((item) => {
-          const isActive = activeId === item.id;
-          return (
-            <li key={item.id} className={item.depth === 3 ? 'toc-sub' : undefined}>
-              <a
-                href={`#${item.id}`}
-                onClick={(event) => {
-                  event.preventDefault();
-                  window.history.replaceState(null, '', `#${item.id}`);
-                  scrollToHash(item.id);
-                }}
-                aria-current={isActive ? 'location' : undefined}
-                className={isActive ? 'toc-link toc-link--active' : 'toc-link'}
-              >
-                {item.text}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
+      {list}
     </div>
   );
 }

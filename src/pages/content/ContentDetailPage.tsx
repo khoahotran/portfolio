@@ -1,6 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import LoadingState from '../../components/LoadingState';
 import ArticleHeader from '../../components/content/ArticleHeader';
 import ArticleNav from '../../components/content/ArticleNav';
@@ -8,9 +8,14 @@ import ErrorNotice from '../../components/content/ErrorNotice';
 import MarkdownContent from '../../components/content/MarkdownContent';
 import ReadingProgress from '../../components/content/ReadingProgress';
 import RelatedContent from '../../components/content/RelatedContent';
-import { scrollToHash } from '../../components/content/scrollToHash';
 import TableOfContents from '../../components/content/TableOfContents';
-import { getContentDetail, getRelatedArticles, prefetchNextArticle } from '../../content-engine/content-service';
+import {
+  getContentDetail,
+  getRelatedArticles,
+  peekContentDetail,
+  peekRelatedArticles,
+  prefetchNextArticle,
+} from '../../content-engine/content-service';
 import { routeForCollection } from '../../content-engine/format';
 import type { ContentCollection, ContentDetail, ContentIndexItem } from '../../content-engine/types';
 import { resolveImageUrl, useSeo } from '../../seo/useSeo';
@@ -35,10 +40,14 @@ const STRUCTURED_DATA_TYPE: Record<ContentCollection, string> = {
 
 function ContentDetailPage({ collection }: Props) {
   const { slug } = useParams();
-  const location = useLocation();
-  const [detail, setDetail] = useState<ContentDetail | null>(null);
-  const [related, setRelated] = useState<ContentIndexItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Already compiled (preloaded by main.tsx on a first visit, or read before): render it on the
+  // first commit instead of committing "Loading article…" and replacing it a frame later.
+  const [cachedDetail] = useState(() => (slug ? peekContentDetail(collection, slug) : null));
+  const [detail, setDetail] = useState<ContentDetail | null>(cachedDetail);
+  const [related, setRelated] = useState<ContentIndexItem[]>(
+    () => (cachedDetail && slug ? peekRelatedArticles(slug, cachedDetail.tags, 3, cachedDetail.related) : null) ?? []
+  );
+  const [loading, setLoading] = useState(!cachedDetail);
   const [error, setError] = useState(false);
   const [retryToken, setRetryToken] = useState(0);
 
@@ -131,31 +140,19 @@ function ContentDetailPage({ collection }: Props) {
       }
     };
 
-    setLoading(true);
+    // A cached article is already on screen - resetting to the loading state here would replace it
+    // with a spinner for a frame. Scroll position (top, hash, or Back) is ScrollManager's job.
+    if (!slug || !peekContentDetail(collection, slug)) {
+      setLoading(true);
+      setDetail(null);
+    }
     setError(false);
-    setDetail(null);
     void load();
 
     return () => {
       active = false;
     };
   }, [collection, slug, retryToken]);
-
-  useEffect(() => {
-    if (!detail) {
-      return;
-    }
-
-    const timer = window.setTimeout(() => {
-      if (location.hash) {
-        scrollToHash(location.hash);
-      } else {
-        window.scrollTo({ top: 0, behavior: 'auto' });
-      }
-    }, 0);
-
-    return () => window.clearTimeout(timer);
-  }, [detail, location.hash]);
 
   const backRoute = useMemo(() => routeForCollection(collection), [collection]);
 
@@ -196,6 +193,15 @@ function ContentDetailPage({ collection }: Props) {
       <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]">
         <article id="article-content" className="min-w-0">
           <ArticleHeader detail={detail} />
+          {/* Below md the sidebar TOC is hidden, which left a 10,000px article with no way to jump. */}
+          {detail.toc.length > 0 && (
+            <details className="toc mb-6 rounded-xl border border-slate-200 bg-surface p-4 md:hidden">
+              <summary className="cursor-pointer text-micro font-bold uppercase tracking-wider text-slate-500">On this page</summary>
+              <div className="mt-3">
+                <TableOfContents toc={detail.toc} variant="inline" />
+              </div>
+            </details>
+          )}
           <MarkdownContent html={detail.html} />
           <ArticleNav collection={collection} slug={detail.slug} />
           <RelatedContent items={related} />

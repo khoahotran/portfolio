@@ -907,18 +907,17 @@ h3 {
 /* ── Mermaid diagram container ─────────────────────────────────────────── */
 
 
-/* Boot curtain - see src/boot-reveal.ts.
+/* Boot handover - see src/main.tsx and the boot script in index.html.
  *
- * The prerendered page sits in #root for crawlers, but React discards it on mount and every route
- * is lazy(), so painting it would show real content that then vanishes behind a spinner. Hiding
- * #root until React commits means the reader sees one transition (blank, then content), the same
- * as this site did before prerendering existed.
- *
- * Gated on a class the boot script adds, never on the stylesheet alone: if JS is disabled, failed,
- * or the visitor is a crawler that does not run scripts, the class is never added and the
- * prerendered markup stays fully visible. */
-.js-booting #root {
-  display: none;
+ * The prerendered page is visible from the first paint and React swaps in an identical tree once
+ * the route is preloaded. The entrance fade would play on the snapshot and then again on React's
+ * copy, so it is off for the first view; App.tsx removes the class on the first navigation. */
+.boot-handover .animate-fade-in,
+.boot-handover .animate-fade-in-delay-1,
+.boot-handover .animate-fade-in-delay-2 {
+  animation: none;
+  opacity: 1;
+  transform: none;
 }
 
 .mermaid-diagram {

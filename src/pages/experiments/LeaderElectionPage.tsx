@@ -228,16 +228,23 @@ function LeaderElectionPage() {
                     <circle
                       cx={x}
                       cy={y}
-                      r={isLeader ? 4.5 : 3.5}
+                      r={isLeader ? 5.5 : 4.5}
                       fill={isDown ? 'rgb(203, 213, 225)' : isLeader ? 'rgb(217, 119, 6)' : 'rgb(13, 148, 136)'}
                       stroke={isInitiator && !isDown ? 'rgb(15, 23, 42)' : 'none'}
                       strokeWidth={0.6}
+                      className="pointer-events-none"
+                    />
+                    <circle
+                      cx={x}
+                      cy={y}
+                      r={10}
+                      fill="transparent"
                       className="cursor-pointer"
                       onClick={() => toggleNode(id)}
                       role="button"
                       aria-label={`Node ${id}${isDown ? ', down' : ', alive'}${isLeader ? ', leader' : ''} - click to ${isDown ? 'recover' : 'crash'}`}
                     />
-                    <text x={x} y={y + 0.2} fontSize={3} textAnchor="middle" dominantBaseline="middle" fill="white" className="pointer-events-none select-none font-bold">
+                    <text x={x} y={y + 0.2} fontSize={4} textAnchor="middle" dominantBaseline="middle" fill="white" className="pointer-events-none select-none font-bold">
                       {isDown ? '×' : id}
                     </text>
                   </g>

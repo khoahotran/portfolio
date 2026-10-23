@@ -23,9 +23,9 @@ function LabBackLink({ labId }: Props) {
 
   return (
     <div className="mb-4 flex flex-wrap items-center gap-2">
-      <Link to="/experiments" className="btn-back">
+      <Link to="/labs" className="btn-back">
         <ArrowLeft size={16} aria-hidden="true" />
-        Back to Experiments
+        Back to Labs
       </Link>
       {lab?.relatedArticle && (
         <Link

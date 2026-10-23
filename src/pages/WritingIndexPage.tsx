@@ -6,7 +6,7 @@ import TagPill from '../components/TagPill';
 import ErrorNotice from '../components/content/ErrorNotice';
 import { cardClasses } from '../components/ui/card-classes';
 import { Section, SectionHeader } from '../components/ui/Section';
-import { getAllContentIndex } from '../content-engine/content-service';
+import { getAllContentIndex, peekAllContentIndex } from '../content-engine/content-service';
 import { collectionLabel, formatDate, routeForCollection } from '../content-engine/format';
 import type { ContentCollection, ContentIndexItem } from '../content-engine/types';
 import { useSeo } from '../seo/useSeo';
@@ -42,7 +42,9 @@ function WritingIndexPage() {
   });
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const [items, setItems] = useState<ContentIndexItem[] | null>(null);
+  const [items, setItems] = useState<ContentIndexItem[] | null>(
+    () => peekAllContentIndex()?.filter((item) => item.collection !== 'projects') ?? null
+  );
   const [error, setError] = useState(false);
   const [retryToken, setRetryToken] = useState(0);
 
@@ -109,6 +111,7 @@ function WritingIndexPage() {
     <main>
       <Section rhythm="quiet">
         <SectionHeader
+          as="h1"
           kicker="Writing"
           title="Everything I have written down"
           lead="Engineering write-ups, applied research, experiments and field notes. Filter by kind, or by tag."
@@ -148,10 +151,10 @@ function WritingIndexPage() {
                   <TagPill>#{tag}</TagPill>
                 </button>
               ))}
-            <Link to="/tags" className="ml-1 inline-flex items-center gap-1 text-micro font-semibold text-slate-500 hover:text-teal-700">
+            <Link to="/tags" className="-my-1.5 ml-1 inline-flex items-center gap-1 py-1.5 text-micro font-semibold text-slate-500 hover:text-teal-700">
               <Tags className="h-3.5 w-3.5" aria-hidden="true" /> All tags
             </Link>
-            <Link to="/graph" className="inline-flex items-center gap-1 text-micro font-semibold text-slate-500 hover:text-teal-700">
+            <Link to="/graph" className="-my-1.5 inline-flex items-center gap-1 py-1.5 text-micro font-semibold text-slate-500 hover:text-teal-700">
               <Network className="h-3.5 w-3.5" aria-hidden="true" /> Ecosystem graph
             </Link>
           </div>

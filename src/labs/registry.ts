@@ -1,12 +1,11 @@
-import { lazy } from 'react';
-import type { ComponentType } from 'react';
+import { lazyRoute, type PreloadableComponent } from '../routing/lazy-route';
 import type { LabProvenance } from './provenance';
 
 export interface LabDefinition {
   id: string;
   title: string;
   description: string;
-  component: ComponentType;
+  component: PreloadableComponent;
   /**
    * True when this lab's id is also the slug of a real /experiments article
    * (after the filename's date prefix is stripped) - e.g. `go-vs-ts-concurrency`
@@ -49,35 +48,35 @@ export interface LabDefinition {
   provenance: LabProvenance;
 }
 
-const ThroughputSimulationPage = lazy(() => import('../pages/experiments/ThroughputSimulationPage'));
-const RetryStrategyVisualizerPage = lazy(() => import('../pages/experiments/RetryStrategyVisualizerPage'));
-const FailureInjectionDemoPage = lazy(() => import('../pages/experiments/FailureInjectionDemoPage'));
-const QueueVsPubSubPage = lazy(() => import('../pages/experiments/QueueVsPubSubPage'));
-const SagaStateMachinePage = lazy(() => import('../pages/experiments/SagaStateMachinePage'));
-const EventSourcingReplayPage = lazy(() => import('../pages/experiments/EventSourcingReplayPage'));
-const RedisVsBullMQPage = lazy(() => import('../pages/experiments/RedisVsBullMQPage'));
-const GoVsTsConcurrencyPage = lazy(() => import('../pages/experiments/GoVsTsConcurrencyPage'));
-const DbEventReplayBenchmarkPage = lazy(() => import('../pages/experiments/DbEventReplayBenchmarkPage'));
-const RateLimitingAlgorithmsPage = lazy(() => import('../pages/experiments/RateLimitingAlgorithmsPage'));
-const GossipProtocolVisualizerPage = lazy(() => import('../pages/experiments/GossipProtocolVisualizerPage'));
-const WebSocketsVsSsePage = lazy(() => import('../pages/experiments/WebSocketsVsSsePage'));
-const LeaderElectionPage = lazy(() => import('../pages/experiments/LeaderElectionPage'));
-const PgbouncerVsDirectPage = lazy(() => import('../pages/experiments/PgbouncerVsDirectPage'));
-const RedlockPage = lazy(() => import('../pages/experiments/RedlockPage'));
-const BackpressurePage = lazy(() => import('../pages/experiments/BackpressurePage'));
-const GrpcVsRestPage = lazy(() => import('../pages/experiments/GrpcVsRestPage'));
-const CanaryRolloutPage = lazy(() => import('../pages/experiments/CanaryRolloutPage'));
-const CacheFreshnessPage = lazy(() => import('../pages/experiments/CacheFreshnessPage'));
-const ConsistentHashingPage = lazy(() => import('../pages/experiments/ConsistentHashingPage'));
-const IdempotencyStorePage = lazy(() => import('../pages/experiments/IdempotencyStorePage'));
-const VectorClocksPage = lazy(() => import('../pages/experiments/VectorClocksPage'));
-const CrdtPage = lazy(() => import('../pages/experiments/CrdtPage'));
-const BloomFilterPage = lazy(() => import('../pages/experiments/BloomFilterPage'));
-const MerkleTreePage = lazy(() => import('../pages/experiments/MerkleTreePage'));
-const RaftPage = lazy(() => import('../pages/experiments/RaftPage'));
-const TwoPhaseCommitVsSagaPage = lazy(() => import('../pages/experiments/TwoPhaseCommitVsSagaPage'));
-const HyperLogLogPage = lazy(() => import('../pages/experiments/HyperLogLogPage'));
-const LsmTreePage = lazy(() => import('../pages/experiments/LsmTreePage'));
+const ThroughputSimulationPage = lazyRoute(() => import('../pages/experiments/ThroughputSimulationPage'));
+const RetryStrategyVisualizerPage = lazyRoute(() => import('../pages/experiments/RetryStrategyVisualizerPage'));
+const FailureInjectionDemoPage = lazyRoute(() => import('../pages/experiments/FailureInjectionDemoPage'));
+const QueueVsPubSubPage = lazyRoute(() => import('../pages/experiments/QueueVsPubSubPage'));
+const SagaStateMachinePage = lazyRoute(() => import('../pages/experiments/SagaStateMachinePage'));
+const EventSourcingReplayPage = lazyRoute(() => import('../pages/experiments/EventSourcingReplayPage'));
+const RedisVsBullMQPage = lazyRoute(() => import('../pages/experiments/RedisVsBullMQPage'));
+const GoVsTsConcurrencyPage = lazyRoute(() => import('../pages/experiments/GoVsTsConcurrencyPage'));
+const DbEventReplayBenchmarkPage = lazyRoute(() => import('../pages/experiments/DbEventReplayBenchmarkPage'));
+const RateLimitingAlgorithmsPage = lazyRoute(() => import('../pages/experiments/RateLimitingAlgorithmsPage'));
+const GossipProtocolVisualizerPage = lazyRoute(() => import('../pages/experiments/GossipProtocolVisualizerPage'));
+const WebSocketsVsSsePage = lazyRoute(() => import('../pages/experiments/WebSocketsVsSsePage'));
+const LeaderElectionPage = lazyRoute(() => import('../pages/experiments/LeaderElectionPage'));
+const PgbouncerVsDirectPage = lazyRoute(() => import('../pages/experiments/PgbouncerVsDirectPage'));
+const RedlockPage = lazyRoute(() => import('../pages/experiments/RedlockPage'));
+const BackpressurePage = lazyRoute(() => import('../pages/experiments/BackpressurePage'));
+const GrpcVsRestPage = lazyRoute(() => import('../pages/experiments/GrpcVsRestPage'));
+const CanaryRolloutPage = lazyRoute(() => import('../pages/experiments/CanaryRolloutPage'));
+const CacheFreshnessPage = lazyRoute(() => import('../pages/experiments/CacheFreshnessPage'));
+const ConsistentHashingPage = lazyRoute(() => import('../pages/experiments/ConsistentHashingPage'));
+const IdempotencyStorePage = lazyRoute(() => import('../pages/experiments/IdempotencyStorePage'));
+const VectorClocksPage = lazyRoute(() => import('../pages/experiments/VectorClocksPage'));
+const CrdtPage = lazyRoute(() => import('../pages/experiments/CrdtPage'));
+const BloomFilterPage = lazyRoute(() => import('../pages/experiments/BloomFilterPage'));
+const MerkleTreePage = lazyRoute(() => import('../pages/experiments/MerkleTreePage'));
+const RaftPage = lazyRoute(() => import('../pages/experiments/RaftPage'));
+const TwoPhaseCommitVsSagaPage = lazyRoute(() => import('../pages/experiments/TwoPhaseCommitVsSagaPage'));
+const HyperLogLogPage = lazyRoute(() => import('../pages/experiments/HyperLogLogPage'));
+const LsmTreePage = lazyRoute(() => import('../pages/experiments/LsmTreePage'));
 
 /**
  * Single source of truth for the interactive lab routes. Each lab lives at

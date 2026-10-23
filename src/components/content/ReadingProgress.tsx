@@ -46,7 +46,7 @@ function ReadingProgress({ targetId }: Props) {
   }, [targetId]);
 
   return (
-    <div className="sticky top-12 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200">
+    <div className="sticky top-14 z-20 mb-6 h-1 w-full overflow-hidden rounded-full bg-slate-200">
       <div ref={barRef} className="h-full bg-teal-500 transition-[width]" style={{ width: '0%' }} />
     </div>
   );

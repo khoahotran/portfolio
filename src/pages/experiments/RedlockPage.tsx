@@ -128,14 +128,21 @@ function RedlockPage() {
                     <circle
                       cx={x}
                       cy={y}
-                      r={3.5}
+                      r={4.5}
                       fill={isDown ? 'rgb(203, 213, 225)' : attempt?.acquired ? 'rgb(13, 148, 136)' : 'rgb(225, 29, 72)'}
+                      className="pointer-events-none"
+                    />
+                    <circle
+                      cx={x}
+                      cy={y}
+                      r={10}
+                      fill="transparent"
                       className="cursor-pointer"
                       onClick={() => toggleNode(id)}
                       role="button"
                       aria-label={`Node ${id}${isDown ? ', down' : ', alive'} - click to ${isDown ? 'recover' : 'crash'}`}
                     />
-                    <text x={x} y={y + 0.2} fontSize={3} textAnchor="middle" dominantBaseline="middle" fill="white" className="pointer-events-none select-none font-bold">
+                    <text x={x} y={y + 0.2} fontSize={4} textAnchor="middle" dominantBaseline="middle" fill="white" className="pointer-events-none select-none font-bold">
                       {isDown ? '×' : id}
                     </text>
                   </g>

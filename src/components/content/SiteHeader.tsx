@@ -23,7 +23,7 @@ import { useTheme } from '../../theme/useTheme';
  */
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
-  `shrink-0 rounded-control px-1 py-1 text-micro font-medium transition-colors sm:px-2 sm:text-meta ${
+  `shrink-0 rounded-control px-1 py-3.5 text-micro font-medium transition-colors sm:px-2 sm:py-1 sm:text-meta ${
     isActive ? 'text-teal-700' : 'text-slate-600 hover:text-slate-900'
   }`;
 
@@ -54,7 +54,7 @@ function SiteHeader() {
           <NavLink
             to="/"
             aria-label="Khoa Tran, home"
-            className="mr-auto shrink-0 font-display text-meta font-bold tracking-tight text-slate-900 transition-colors hover:text-teal-700 sm:text-body"
+            className="-mx-2 mr-auto shrink-0 px-2 py-3 font-display text-meta font-bold tracking-tight text-slate-900 transition-colors hover:text-teal-700 sm:text-body"
           >
             <span className="sm:hidden" aria-hidden="true">
               KT
@@ -83,7 +83,7 @@ function SiteHeader() {
             type="button"
             onClick={() => setPaletteOpen(true)}
             aria-label="Search the site"
-            className="ml-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-pill border border-slate-200 text-slate-600 transition hover:border-teal-400 hover:text-teal-700 sm:h-8 sm:w-8"
+            className="relative ml-0.5 inline-flex h-7 w-7 after:absolute after:-inset-2 after:content-[''] shrink-0 items-center justify-center rounded-pill border border-slate-200 text-slate-600 transition hover:border-teal-400 hover:text-teal-700 sm:h-8 sm:w-8"
           >
             <Search size={15} aria-hidden="true" />
           </button>
@@ -92,7 +92,7 @@ function SiteHeader() {
             type="button"
             onClick={toggle}
             aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-            className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-pill border border-slate-200 text-slate-600 transition hover:border-teal-400 hover:text-teal-700 sm:h-8 sm:w-8"
+            className="relative inline-flex h-7 w-7 shrink-0 after:absolute after:-inset-2 after:content-[''] items-center justify-center rounded-pill border border-slate-200 text-slate-600 transition hover:border-teal-400 hover:text-teal-700 sm:h-8 sm:w-8"
           >
             {theme === 'dark' ? <Sun size={15} aria-hidden="true" /> : <Moon size={15} aria-hidden="true" />}
           </button>

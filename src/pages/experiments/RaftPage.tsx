@@ -92,7 +92,7 @@ function RaftPage() {
                     <button
                       type="button"
                       onClick={() => togglePeerDown(id)}
-                      className={`rounded px-1.5 py-0.5 text-nano font-bold ${downPeers.has(id) ? 'bg-slate-200 text-slate-500' : 'bg-teal-50 text-teal-700'}`}
+                      className={`rounded px-2.5 py-2 text-nano font-bold ${downPeers.has(id) ? 'bg-slate-200 text-slate-500' : 'bg-teal-50 text-teal-700'}`}
                     >
                       {downPeers.has(id) ? 'down' : 'alive'}
                     </button>
