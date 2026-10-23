@@ -4,7 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import LoadingState from '../../components/LoadingState';
 import TagPill from '../../components/TagPill';
 import ErrorNotice from '../../components/content/ErrorNotice';
-import { getContentIndex, getContentTags } from '../../content-engine/content-service';
+import { getContentIndex, getContentTags, peekCollectionIndex, peekContentTags } from '../../content-engine/content-service';
 import { formatDate, routeForCollection } from '../../content-engine/format';
 import type { ContentCollection, ContentIndexItem } from '../../content-engine/types';
 import { useSeo } from '../../seo/useSeo';
@@ -47,9 +47,9 @@ const ContentCard = memo(function ContentCard({
 
 function ContentListPage({ collection, title, description }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [items, setItems] = useState<ContentIndexItem[]>([]);
-  const [tags, setTags] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState<ContentIndexItem[]>(() => peekCollectionIndex(collection) ?? []);
+  const [tags, setTags] = useState<string[]>(() => peekContentTags(collection) ?? []);
+  const [loading, setLoading] = useState(() => peekCollectionIndex(collection) === null);
   const [error, setError] = useState(false);
   const [retryToken, setRetryToken] = useState(0);
   const selectedTag = searchParams.get('tag');
@@ -64,7 +64,7 @@ function ContentListPage({ collection, title, description }: Props) {
     let active = true;
 
     const load = async () => {
-      setLoading(true);
+      if (peekCollectionIndex(collection) === null) setLoading(true);
       setError(false);
 
       try {

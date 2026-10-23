@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getAllContentIndex } from '../../content-engine/content-service';
+import { getAllContentIndex, peekAllContentIndex } from '../../content-engine/content-service';
 import { routeForCollection } from '../../content-engine/format';
 import type { ContentIndexItem } from '../../content-engine/types';
 
@@ -23,8 +23,16 @@ interface Props {
  * Renders nothing when the article has no `series` - most content doesn't yet, and won't for a
  * while; this is infrastructure for when it does, not a feature with existing content behind it.
  */
+function inSeries(all: ContentIndexItem[], series: string): ContentIndexItem[] {
+  return all.filter((item) => item.series === series).sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0));
+}
+
 function SeriesNav({ series, seriesOrder, slug }: Props) {
-  const [items, setItems] = useState<ContentIndexItem[] | null>(null);
+  // Sits in the article header, above the body: arriving a frame late would push the article down.
+  const [items, setItems] = useState<ContentIndexItem[] | null>(() => {
+    const all = series ? peekAllContentIndex() : null;
+    return all && series ? inSeries(all, series) : null;
+  });
 
   useEffect(() => {
     if (!series) {
@@ -37,10 +45,7 @@ function SeriesNav({ series, seriesOrder, slug }: Props) {
     getAllContentIndex()
       .then((all) => {
         if (!active) return;
-        const inSeries = all
-          .filter((item) => item.series === series)
-          .sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0));
-        setItems(inSeries);
+        setItems(inSeries(all, series));
       })
       .catch(() => {
         // Non-critical enhancement - degrade silently, same convention as ArticleNav.

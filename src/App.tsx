@@ -1,46 +1,46 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { Suspense, useLayoutEffect, useRef } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingState from './components/LoadingState';
+import ScrollManager from './components/ScrollManager';
 import SiteFooter from './components/content/SiteFooter';
 import SiteHeader from './components/content/SiteHeader';
 import { labs } from './labs/registry';
 import NotFoundPage from './pages/NotFoundPage';
 import RouteVitalsTracker from './performance/RouteVitalsTracker';
-import { revealApp } from './boot-reveal';
-
-const PortfolioHome = lazy(() => import('./pages/PortfolioHome'));
-const AboutPage = lazy(() => import('./pages/AboutPage'));
-const KnowledgeGraphPage = lazy(() => import('./pages/KnowledgeGraphPage'));
-const LabsIndexPage = lazy(() => import('./pages/LabsIndexPage'));
-const WritingIndexPage = lazy(() => import('./pages/WritingIndexPage'));
-const TagsIndexPage = lazy(() => import('./pages/TagsIndexPage'));
-const TagDetailPage = lazy(() => import('./pages/TagDetailPage'));
-const ContentListPage = lazy(() => import('./pages/content/ContentListPage'));
-const ContentDetailPage = lazy(() => import('./pages/content/ContentDetailPage'));
-const SearchPage = lazy(() => import('./pages/SearchPage'));
+import {
+  AboutPage,
+  ContentDetailPage,
+  ContentListPage,
+  KnowledgeGraphPage,
+  LabsIndexPage,
+  PortfolioHome,
+  SearchPage,
+  TagDetailPage,
+  TagsIndexPage,
+  WritingIndexPage,
+} from './routing/route-components';
 
 function LoadingFallback() {
   return <LoadingState label="Loading page…" className="mx-auto max-w-6xl px-4" />;
 }
 
 /**
- * Reveals `#root` once React has real content to show.
+ * Ends the boot handover on the first client-side navigation.
  *
- * Rendered inside <Suspense>, so its effect cannot run while the boundary is showing the
- * fallback - React does not commit effects in a suspended subtree. That makes "the route chunk
- * resolved" the signal, with no path matching or timeout to keep in sync. See src/boot-reveal.ts
- * for why #root starts hidden at all.
+ * The prerendered page is on screen from the first paint, and React's first commit replaces it
+ * with an identical tree (main.tsx preloads the route so that commit is complete). index.html sets
+ * `boot-handover` on <html> to switch the entrance fade off for that view - otherwise the swap
+ * replays it and the page visibly fades in a second time. Every later page should still fade in,
+ * so the class goes once the pathname first changes - a query-string change (a /writing filter)
+ * keeps the same <main>, and lifting the guard under it would start its fade mid-page. A layout
+ * effect, so it is gone before the new page's first paint and its animation starts from the top.
  */
-function BootReveal() {
-  useEffect(() => {
-    // Next frame, so React has committed and laid out before anything becomes visible - the
-    // entrance animation then starts from a painted frame rather than mid-flight.
-    const id = requestAnimationFrame(revealApp);
-    return () => cancelAnimationFrame(id);
-  }, []);
-
-  return null;
+function useEndBootHandover(pathname: string) {
+  const firstPathname = useRef(pathname);
+  useLayoutEffect(() => {
+    if (pathname !== firstPathname.current) document.documentElement.classList.remove('boot-handover');
+  }, [pathname]);
 }
 
 /**
@@ -52,11 +52,11 @@ function BootReveal() {
  */
 function AppRoutes() {
   const location = useLocation();
+  useEndBootHandover(location.pathname);
 
   return (
     <ErrorBoundary key={location.pathname}>
       <Suspense fallback={<LoadingFallback />}>
-        <BootReveal />
         <Routes>
           <Route path="/" element={<PortfolioHome />} />
           <Route path="/about" element={<AboutPage />} />
@@ -161,6 +161,7 @@ function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <RouteVitalsTracker />
+      <ScrollManager />
       <div className="min-h-screen bg-slate-50 text-slate-900">
         <a
           href="#main-content"
@@ -169,7 +170,11 @@ function App() {
           Skip to content
         </a>
         <SiteHeader />
-        <div id="main-content">
+        {/* At least a viewport tall, so the footer is never on screen while a route is still loading.
+            It used to sit right under a short "Loading…" state and then get shoved out of view when
+            the content landed - a CLS of ~0.77 on every article, and a footer floating mid-screen
+            on short pages such as the 404. */}
+        <div id="main-content" className="min-h-screen">
           <AppRoutes />
         </div>
         <SiteFooter />

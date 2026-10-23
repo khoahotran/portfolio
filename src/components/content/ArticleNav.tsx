@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getContentIndex } from '../../content-engine/content-service';
+import { getContentIndex, peekCollectionIndex } from '../../content-engine/content-service';
 import { routeForCollection } from '../../content-engine/format';
 import type { ContentCollection, ContentIndexItem } from '../../content-engine/types';
 
@@ -14,29 +14,26 @@ interface Props {
  * (Previous = older, Next = newer) rather than by the index's internal
  * newest-first sort order.
  */
+type Neighbours = [previous: ContentIndexItem | null, next: ContentIndexItem | null];
+
+function neighbours(items: ContentIndexItem[], slug: string): Neighbours {
+  const currentIndex = items.findIndex((item) => item.slug === slug);
+  // items are sorted newest-first: the following entry is older (Previous),
+  // the preceding entry is newer (Next).
+  return currentIndex === -1 ? [null, null] : [items[currentIndex + 1] ?? null, items[currentIndex - 1] ?? null];
+}
+
 function ArticleNav({ collection, slug }: Props) {
-  const [previous, setPrevious] = useState<ContentIndexItem | null>(null);
-  const [next, setNext] = useState<ContentIndexItem | null>(null);
+  const [[previous, next], setNeighbours] = useState<Neighbours>(() => {
+    const items = peekCollectionIndex(collection);
+    return items ? neighbours(items, slug) : [null, null];
+  });
 
   useEffect(() => {
     let active = true;
 
     void getContentIndex(collection).then((items) => {
-      if (!active) {
-        return;
-      }
-
-      const currentIndex = items.findIndex((item) => item.slug === slug);
-      if (currentIndex === -1) {
-        setPrevious(null);
-        setNext(null);
-        return;
-      }
-
-      // items are sorted newest-first: the following entry is older (Previous),
-      // the preceding entry is newer (Next).
-      setPrevious(items[currentIndex + 1] ?? null);
-      setNext(items[currentIndex - 1] ?? null);
+      if (active) setNeighbours(neighbours(items, slug));
     }).catch(() => {
       // Prev/next is a non-critical enhancement - degrade silently rather
       // than surfacing an error for a missing navigation widget.

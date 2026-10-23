@@ -52,16 +52,18 @@ interface SectionHeaderProps {
   title: string;
   lead?: string;
   align?: 'left' | 'center';
+  /** `h1` when the header opens a page rather than a band within one. */
+  as?: 'h1' | 'h2';
 }
 
-export function SectionHeader({ kicker, title, lead, align = 'left' }: SectionHeaderProps) {
+export function SectionHeader({ kicker, title, lead, align = 'left', as: Heading = 'h2' }: SectionHeaderProps) {
   const centered = align === 'center';
   return (
     <header className={centered ? 'text-center' : undefined}>
       {kicker && (
         <p className="mb-4 text-micro font-semibold uppercase tracking-widest text-teal-700">{kicker}</p>
       )}
-      <h2 className="text-d2 font-bold text-slate-900">{title}</h2>
+      <Heading className="text-d2 font-bold text-slate-900">{title}</Heading>
       {lead && (
         <p className={`mt-4 text-lead text-slate-600 ${centered ? 'mx-auto max-w-2xl' : 'max-w-2xl'}`}>{lead}</p>
       )}

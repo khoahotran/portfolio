@@ -70,3 +70,37 @@ describe('getRelatedArticles', () => {
     expect(related.some((item) => item.slug === 'a')).toBe(false);
   });
 });
+
+/**
+ * The synchronous `peek*` accessors exist so a page can render complete on its first commit once
+ * the index is cached. They must return exactly what the async loaders return, and `null` (never
+ * an empty list) before anything has loaded - an empty list would render "no articles" instead of
+ * the page's loading state.
+ */
+describe('peek accessors', () => {
+  it('return null before the index has loaded', async () => {
+    vi.resetModules();
+    const fresh = await import('./content-service');
+    expect(fresh.peekAllContentIndex()).toBeNull();
+    expect(fresh.peekCollectionIndex('blog')).toBeNull();
+    expect(fresh.peekLatestContent(3)).toBeNull();
+    expect(fresh.peekContentTags('blog')).toBeNull();
+    expect(fresh.peekRelatedArticles('a', ['go'])).toBeNull();
+    expect(fresh.peekContentDetail('blog', 'a')).toBeNull();
+    expect(fresh.peekSearchItems()).toBeNull();
+  });
+
+  it('match the async loaders once the index has loaded', async () => {
+    vi.resetModules();
+    const fresh = await import('./content-service');
+    const all = await fresh.getAllContentIndex();
+    expect(fresh.peekAllContentIndex()).toEqual(all);
+    expect(fresh.peekCollectionIndex('blog')).toEqual(await fresh.getContentIndex('blog'));
+    expect(fresh.peekLatestContent(2)).toEqual(await fresh.getLatestContent(2));
+    expect(fresh.peekContentTags('blog')).toEqual(await fresh.getContentTags('blog'));
+    expect(fresh.peekRelatedArticles('x', ['go', 'redis'], 3)).toEqual(await fresh.getRelatedArticles('x', ['go', 'redis'], 3));
+    expect(fresh.peekRelatedArticles('x', [], 1, ['blog/a', 'research/b'])).toEqual(
+      await fresh.getRelatedArticles('x', [], 1, ['blog/a', 'research/b'])
+    );
+  });
+});

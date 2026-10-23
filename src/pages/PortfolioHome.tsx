@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getAllContentIndex, getLatestContent } from '../content-engine/content-service';
+import { getAllContentIndex, getLatestContent, peekAllContentIndex, peekLatestContent } from '../content-engine/content-service';
 import { collectionLabel, formatDate, routeForCollection } from '../content-engine/format';
 import type { ContentIndexItem } from '../content-engine/types';
 import { contactData, educationData, heroData } from '../data/portfolioData';
@@ -82,8 +82,10 @@ function PortfolioHome() {
    * it repeated the navigation verbatim, and HowIThink does its job properly by citing labs as
    * evidence rather than listing them as destinations.
    */
-  const [writingCount, setWritingCount] = useState<number | null>(null);
-  const [latest, setLatest] = useState<ContentIndexItem[] | null>(null);
+  const [writingCount, setWritingCount] = useState<number | null>(
+    () => peekAllContentIndex()?.filter((item) => item.collection !== 'projects').length ?? null
+  );
+  const [latest, setLatest] = useState<ContentIndexItem[] | null>(() => peekLatestContent(3));
 
   useEffect(() => {
     let active = true;
@@ -137,7 +139,7 @@ function PortfolioHome() {
             <p className="text-micro font-semibold uppercase tracking-widest text-teal-700">
               Recently published
             </p>
-            <Link to="/writing" className="text-micro font-semibold text-slate-500 hover:text-teal-700">
+            <Link to="/writing" className="-my-2 py-2 text-micro font-semibold text-slate-500 hover:text-teal-700">
               All writing &rarr;
             </Link>
           </div>

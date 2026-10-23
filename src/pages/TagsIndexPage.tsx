@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import LoadingState from '../components/LoadingState';
 import ErrorNotice from '../components/content/ErrorNotice';
-import { getAllContentIndex } from '../content-engine/content-service';
+import { getAllContentIndex, peekAllContentIndex } from '../content-engine/content-service';
 import type { ContentIndexItem } from '../content-engine/types';
 import { useSeo } from '../seo/useSeo';
 
@@ -26,14 +26,14 @@ function TagsIndexPage() {
     description: 'Browse every write-up by topic, across all collections.',
   });
 
-  const [items, setItems] = useState<ContentIndexItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState<ContentIndexItem[]>(() => peekAllContentIndex() ?? []);
+  const [loading, setLoading] = useState(() => peekAllContentIndex() === null);
   const [error, setError] = useState(false);
   const [retryToken, setRetryToken] = useState(0);
 
   useEffect(() => {
     let active = true;
-    setLoading(true);
+    if (peekAllContentIndex() === null) setLoading(true);
     setError(false);
 
     getAllContentIndex()
