@@ -1,9 +1,10 @@
-import Fuse, { type FuseResult } from 'fuse.js';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import LoadingState from '../components/LoadingState';
 import ErrorNotice from '../components/content/ErrorNotice';
-import { getSearchIndex } from '../content-engine/content-service';
+import { getSearchIndex, peekSearchItems } from '../content-engine/content-service';
+import { labs } from '../labs/registry';
+import { createSiteSearch } from '../search/site-search';
 import { collectionLabel, routeForCollection } from '../content-engine/format';
 import type { ContentCollection, SearchIndexItem } from '../content-engine/types';
 import { useSeo } from '../seo/useSeo';
@@ -17,42 +18,10 @@ const ALL_COLLECTIONS: ContentCollection[] = [
   'projects',
 ];
 
-/**
- * ignoreLocation (see the Fuse config below) fixes recall but on its own
- * regresses ranking for exact project/article names - e.g. "Aegis" no longer
- * surfaces the Aegis project page first, because a blog post that merely
- * mentions Aegis several times can out-score it under Fuse's own similarity
- * metric. This re-sorts an exact or prefix title match to the front before
- * falling back to Fuse's score for everything else, without touching the
- * underlying search itself.
- */
-function boostExactTitleMatches(
-  results: FuseResult<SearchIndexItem>[],
-  query: string
-): SearchIndexItem[] {
-  const q = query.trim().toLowerCase();
-
-  const rank = (title: string) => {
-    const t = title.toLowerCase();
-    if (t === q) return 0;
-    if (t.startsWith(q)) return 1;
-    if (t.includes(q)) return 2;
-    return 3;
-  };
-
-  return [...results]
-    .sort((a, b) => {
-      const rankDiff = rank(a.item.title) - rank(b.item.title);
-      if (rankDiff !== 0) return rankDiff;
-      return (a.score ?? 0) - (b.score ?? 0);
-    })
-    .map((result) => result.item);
-}
-
 function SearchPage() {
   const [params, setParams] = useSearchParams();
-  const [docs, setDocs] = useState<SearchIndexItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [docs, setDocs] = useState<SearchIndexItem[]>(() => peekSearchItems() ?? []);
+  const [loading, setLoading] = useState(() => peekSearchItems() === null);
   const [error, setError] = useState(false);
   const [retryToken, setRetryToken] = useState(0);
   const query = params.get('q') ?? '';
@@ -72,7 +41,7 @@ function SearchPage() {
     let active = true;
 
     const load = async () => {
-      setLoading(true);
+      if (peekSearchItems() === null) setLoading(true);
       setError(false);
 
       try {
@@ -98,43 +67,22 @@ function SearchPage() {
     };
   }, [retryToken]);
 
-  const fuse = useMemo(
-    () =>
-      new Fuse(docs, {
-        includeScore: true,
-        // Fuse's default `location: 0, distance: 100` means a match past roughly
-        // the first ~34 characters of a field scores above any reasonable
-        // threshold and gets discarded - measured: "Argon2id" (in 5 articles),
-        // "rate limiting" (in 4), and "core banking" (in 6, only 1 returned) all
-        // undercounted results because of this. ignoreLocation removes that
-        // position penalty; the threshold is tightened from 0.34 to compensate
-        // for the resulting looser matching.
-        //
-        // 0.25 alone let a short acronym (<=4 chars) match on a single edit against
-        // almost anything: "BRIN" (in 1 article) returned 32/33; "RBAC" (in 3) returned
-        // 32/33. Tightened to 0.20 - verified against a 24-query battery (exact/partial
-        // titles, tech names, project names, tags, rare keywords, multi-word, case
-        // variants, no-result queries): every previously-correct top hit is unchanged,
-        // and BRIN/RBAC/saga/CQRS all drop back down to their real counts.
-        ignoreLocation: true,
-        threshold: 0.2,
-        minMatchCharLength: 2,
-        keys: [
-          { name: 'title', weight: 0.45 },
-          { name: 'summary', weight: 0.3 },
-          { name: 'tags', weight: 0.15 },
-          { name: 'searchableText', weight: 0.1 },
-        ],
-      }),
+  const search = useMemo(
+    () => createSiteSearch(docs.map((item) => ({ ...item, id: `${item.collection}/${item.slug}`, body: item.searchableText }))),
     [docs]
+  );
+  const labSearch = useMemo(() => createSiteSearch(labs.map((lab) => ({ id: lab.id, title: lab.title, summary: lab.description }))), []);
+  const labMatches = useMemo(
+    () => (query.trim() && !selectedCollection ? labSearch(query, 4).map((hit) => hit.doc) : []),
+    [labSearch, query, selectedCollection]
   );
 
   const RESULT_CAP = 20;
 
   const matched = useMemo(() => {
-    const base = query.trim() ? boostExactTitleMatches(fuse.search(query), query) : docs;
+    const base: SearchIndexItem[] = query.trim() ? search(query).map((hit) => hit.doc) : docs;
     return selectedCollection ? base.filter((item) => item.collection === selectedCollection) : base;
-  }, [docs, fuse, query, selectedCollection]);
+  }, [docs, search, query, selectedCollection]);
 
   const results = useMemo(() => {
     // The empty-query default listing shows 12 as a lighter "browse" cap; an
@@ -200,6 +148,20 @@ function SearchPage() {
               ? `Showing ${results.length} of ${matched.length} results`
               : `${matched.length} result${matched.length === 1 ? '' : 's'}`}
           </p>
+        )}
+        {labMatches.length > 0 && (
+          <div className="rounded-xl border border-teal-100 bg-teal-50/50 p-4">
+            <p className="text-nano font-bold uppercase tracking-wide text-teal-700">Interactive labs</p>
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {labMatches.map((lab) => (
+                <li key={lab.id}>
+                  <Link to={`/labs/${lab.id}`} className="inline-flex rounded-full border border-teal-200 bg-surface px-3 py-1 text-micro font-semibold text-teal-700 hover:border-teal-500">
+                    {lab.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
         {!loading &&
           !error &&
